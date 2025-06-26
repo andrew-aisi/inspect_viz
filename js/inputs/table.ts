@@ -249,7 +249,9 @@ export class Table extends Input {
     // out what query we want to run
     query(filter: FilterExpr[] = []) {
         // Select the columns
-        let query = Query.from(this.options_.from).select(this.schema_.map(s => s.column));
+        let query = Query.from(this.options_.from).select(
+            this.schema_.length ? this.schema_.map(s => s.column) : '*'
+        );
 
         // apply the external filter
         query = query.where(...filter);
