@@ -19,6 +19,8 @@ def table(
     width: float | dict[str, float] | None = None,
     max_width: float | None = None,
     height: float | None = None,
+    sorting: bool | None = None,
+    filtering: bool | None = None,
     pagination: bool | None = None,
     paginationPageSize: int | None = None,
     paginationPageSizeSelector: list[int] | bool | None = None,
@@ -36,6 +38,8 @@ def table(
        width: If a number, sets the total width of the table widget, in pixels. If an object, provides per-column pixel width values. Column names should be object keys, mapped to numeric width values.
        max_width: The maximum width of the table widget, in pixels.
        height: The height of the table widget, in pixels.
+       sorting: Set whether sorting is enabled.
+       filtering: Set whether filtering is enabled.
        pagination: Set whether pagination is enabled.
        paginationPageSize: How many rows to load per page. If paginationAutoPageSize is specified, this property is ignored.
        paginationPageSizeSelector: Determines if the page size selector is shown in the pagination panel or not. Set to an list of values to show the page size selector with custom list of possible page sizes. Set to true to show the page size selector with the default page sizes [20, 50, 100]. Set to false to hide the page size selector.
@@ -59,6 +63,8 @@ def table(
             else width,
             "maxWidth": max_width,
             "height": height,
+            "sorting": sorting,
+            "filtering": filtering,
             "pagination": pagination,
             "paginationPageSize": paginationPageSize,
             "paginationPageSizeSelector": paginationPageSizeSelector,

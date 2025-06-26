@@ -64,6 +64,8 @@ export interface TableOptions extends InputOptions {
     paginationAutoPageSize?: boolean;
     paginationPageSize?: number;
     paginationPageSizeSelector?: number[] | boolean;
+    sorting?: boolean;
+    filtering?: boolean;
 }
 
 interface ColSortModel {
@@ -139,8 +141,7 @@ export class Table extends Input {
             columnDefs: [],
             rowData: [],
             defaultColDef: {
-                sortable: true,
-                filter: true,
+                sortable: options_.sorting !== false,
                 resizable: true,
             },
             onFilterChanged: () => {
@@ -218,7 +219,7 @@ export class Table extends Input {
                 comparator: (_valueA, _valueB) => {
                     return 0;
                 },
-                filter: filterForColumnType(type),
+                filter: this.options_.filtering === false ? false : filterForColumnType(type),
                 valueFormatter: params => {
                     // Format the value if a format is provided
                     const value = params.value;

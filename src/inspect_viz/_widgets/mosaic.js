@@ -1104,8 +1104,7 @@ var Table = class extends Input {
       columnDefs: [],
       rowData: [],
       defaultColDef: {
-        sortable: true,
-        filter: true,
+        sortable: options_.sorting !== false,
         resizable: true
       },
       onFilterChanged: () => {
@@ -1180,7 +1179,7 @@ var Table = class extends Input {
         comparator: (_valueA, _valueB) => {
           return 0;
         },
-        filter: filterForColumnType(type),
+        filter: this.options_.filtering === false ? false : filterForColumnType(type),
         valueFormatter: (params) => {
           const value = params.value;
           if (formatter && value !== null && value !== void 0) {
