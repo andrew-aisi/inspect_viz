@@ -1,0 +1,32 @@
+---
+title: "inspect_viz.plot"
+---
+
+## Plot
+
+### plot
+### PlotAttributes
+
+## Legend
+
+### legend
+### Legend
+
+## Defaults 
+
+### plot_defaults
+### PlotDefaults
+
+## Types
+
+### PositionScale
+### Projection
+### ContinuousScale
+### ColorScale
+### ColorScheme
+### Interpolate
+### LabelArrow
+
+
+
+

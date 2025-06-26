@@ -1,0 +1,13 @@
+
+execute: 
+  echo: false
+  daemon: false
+  ipynb-shell-interactivity: all
+
+format:
+  html:
+    code-tools: true
+    page-layout: article
+    fig-width: 7
+    fig-height: 4
+

@@ -1,0 +1,25 @@
+---
+title: "Bias Parameter"
+---
+
+Use the slider to create bias offsets for the y-axis.
+
+```{python}
+from inspect_viz import Data, Param
+from inspect_viz.input import slider
+from inspect_viz.mark import area_y
+from inspect_viz.plot import plot
+from inspect_viz.transform import sql
+
+random_walk = Data.from_file("random-walk.parquet")
+bias = Param(0)
+```
+
+```{python}
+slider(label="Bias", target=bias, min=0, max=1000, step=1, value=100)
+```
+
+```{python}
+plot(area_y(random_walk, x="t", y=sql(f"v + {bias}"), fill="steelblue"))
+```
+

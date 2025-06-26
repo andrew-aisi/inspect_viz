@@ -1,0 +1,20 @@
+---
+title: Inspect Viz Examples
+format: 
+   html: 
+      code-tools: false
+      page-layout: full
+---
+
+These examples demonstrate various plotting and interactivity features. If you are just beginning to use Inspect Viz you review the [Getting Started](../index.qmd) article before exploring these examples.
+
+|  |  |
+|------------------------------------|------------------------------------|
+| [Penguins Explorer](penguins/index.qmd) | Dot plots, tables, color and symbol channels, filtering inputs. |
+| [Bias Parameter](bias-parameter/index.qmd) | Area plots; slider inputs; channel expressions. |
+| [Seattle Weather](seattle-weather/index.qmd) | Dot plots; bar plots; color and radius channels; x-interval selections, interactive legend. |
+| [Athletes (Regression)](athletes-regression/index.qmd) | Dot plots; regression lines; tables, filtering inputs, xy selections. |
+| [Athletes (Error Bars)](athletes-errorbars/index.qmd) | Error bars; text annotations; params, slider inputs. |
+
+
+: {tbl-colwidths=\[30,70\]}

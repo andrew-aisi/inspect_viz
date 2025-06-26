@@ -1,0 +1,164 @@
+---
+title: Inspect Viz Concepts
+---
+
+Inspect Viz is a data visualization library for [Inspect AI](https://inspect.aisi.org.uk/) built on the [Mosaic](https://idl.uw.edu/mosaic/vgplot/) web-based visualization framework. This article describes the core components of the framework and how to use them from Python.
+
+::: {.callout-note}
+Inspect Viz will also soon include high-level plots, tables, and interactive widgets pre-built to work with data from Inspect logs, but these components are not yet available.
+:::
+
+## Data
+
+Create datasets for plotting using the `Data` class, which can read data from Python data frames (Pandas, Polars, PyArrow, etc.) as well as external files (csv, json, parquet, etc.). For example:
+
+```python
+from inspect_ai import Data
+from inspect_ai.mark import dot
+from inspect_ai.plot import plot
+
+penquins = Data.from_dataframe(penguins_df)
+
+plot( 
+   dot(penguins, x="body_mass", y="flipper_length")
+)
+```
+
+The `Data` class is not a traditional Python data frame, but rather a dynamic data source for plots that can be filtered using input widgets and interactors.
+
+## Plots
+
+A `plot()` produces a single visualization as a Web element. A plot is defined as a list of directives defining [marks](reference/inspect_viz.mark.qmd), [interactors](reference/inspect_viz.interactor.qmd), [legends](reference/inspect_viz.plot.qmd#legend), and [attributes](reference/inspect_viz.plot.qmd#plotattributes),
+
+Similar to other grammars, a `plot` consists of _marks_---graphical primitives such as bars, areas, and lines---which serve as chart layers. Plots use the semantics of Observable Plot, such that each `plot` has a dedicated set of encoding _channels_ with named _scale_ mappings such as `x`, `y`, `color`, `opacity`, etc.
+
+Plots support faceting of the `x` and `y` dimensions, producing associated `fx` and `fy` scales.
+Plots are rendered to SVG output using [Observable Plot](https://observablehq.com/plot/what-is-plot).
+
+### Attributes
+
+_Attributes_ are plot-level settings such as `width`, `height`, margins, and scale options (e.g., `x_domain`, `color_range`, `y_tick_format`). Attributes may be `Param`-valued, in which case a plot updates upon param changes.
+
+Inspect Viz includes a special `fixed` scale domain setting (e.g., `x_domain="fixed"`), which instructs a plot to first calculate a scale domain in a data-driven manner, but then keep that domain fixed across subsequent updates. Fixed domains enable stable configurations without requiring a hard-wired domain to be known in advance, preventing disorienting scale domain "jumps" that hamper comparison across filter interactions.
+
+For example, here we specify a plot with a fixed x-domain, no y-axis, and a height of 250 pixels:
+
+```python
+plot(
+    density_y(flights, x="delay", fill="steelblue"),
+    x_domain="fixed",
+    y_axis=None,
+    height=250,
+)
+```
+
+## Marks
+
+_Marks_ are graphical primitives, often with accompanying data transforms, that serve as chart layers. Marks accept a `Data` source (which are queried as required) and a set of supported options, including encoding *channels* (such as `x`, `y`, `fill`, and `stroke`) that can encode data *fields*.
+
+A data field may be a column reference or query expression, including dynamic param values. Common expressions include aggregates (`count()`, `sum()`, `avg()`, `median()`, _etc._), window functions, date functions, and a `bin()` transform.
+
+For example, here is a plot with two marks. (a dot pot and a regression line):
+
+```python
+plot(
+    dot(athletes,  x="weight", y="height"),
+    regression_y(athletes, x="weight", y="height", stroke="sex")
+)
+```
+
+Marks support dual modes of operation: if an explicit array of data values is provided instead of a backing `Data` reference, the values will be visualized without issuing any queries to the database. This functionality is particularly useful for adding manual annotations, such as custom rules or text labels.
+
+### Basic
+
+Basic marks, such as `dot()`, `bar_x()`, `bar_y()`, `rect()`, `cell()`, `text()`, `tick()`, and `rule()`, mirror their namesakes in [Observable Plot](https://observablehq.com/plot/). Variants such as `bar_x()` and `bar_y()` indicate spatial orientation and data type assumptions. `bar_y()` indicates vertical bars---continuous `y` over an ordinal `x` domain---whereas `rect_y()` indicates a continuous `x` domain.
+
+Basic marks follow a straightforward query construction process:
+
+- Iterate over all encoding channels to build a `SELECT` query.
+- If no aggregates are encountered, query all fields directly.
+- If aggregates are present, include non-aggregate fields as `GROUP BY` criteria.
+- If provided, map filtering criteria to a SQL `WHERE` clause.
+
+### Connected
+
+The `area()` and `line()` marks connect consecutive sample points.
+Connected marks are treated similarly to basic marks, with one notable addition: the queries for spatially oriented marks (`area_y()`, `line_x()`) can apply [M4 optimization](https://observablehq.com/@uwdata/m4-scalable-time-series-visualization). The query construction method uses plot width and data min/max information to determine the pixel resolution of the mark range. When the data points outnumber available pixels, M4 performs perceptually faithful pixel-aware binning of the series, limiting the number of drawn points. This optimization offers dramatic data reductions for both single and multiple series.
+
+Separately, a `regression_y()` mark  is available for linear regression fits. Regression calculations and associated statistics are performed in-database in a single aggregate query. The mark then draws the regression line and optional confidence interval area.
+
+### Density
+
+The `density_y()` mark performs 1D kernel density estimation (KDE).
+The `density_y()` mark defaults to areas, but supports a `type` option to instead use lines, points, or other basic marks. The generated query performs _linear binning_, an alternative to standard binning that proportionally distributes the weight of a point between adjacent bins to provide greater accuracy for density estimation. The query uses subqueries for the "left" and "right" bins, then aggregates the results. The query result is a 1D grid of binned values which are then smoothed. As smoothing is performed in the browser, interactive bandwidth updates are processed immediately.
+
+The `density()`, `contour()`, `heatmap()`, and `raster()` marks compute densities over a 2D domain using either linear (default) or standard binning. Smoothing again is performed in browser; setting the `bandwidth` option to zero disables smoothing. The `contour()` mark then performs contour generation, whereas the `raster()` mark generates a colored bitmap. The `heatmap()` mark is a convenient shortcut for a `raster()` that performs smoothing by default. Dynamic changes of bandwidth, contour thresholds, and color scales are handled immediately in browser.
+
+The `hexbin()` mark pushes hexagonal binning and aggregation to the database. Color and size channels may be mapped to `count()` or other aggregates. Hexagon plotting symbols can be replaced by other basic marks (such as `text()`) via the `type` option.
+
+The `dense_line()` mark creates a density map of line segments, rather than points.
+Line density estimation is pushed to the database. To ensure that steep lines are not over-represented, we approximate arc-length normalization for each segment by normalizing by the number of filled raster cells on a per-column basis. We then aggregate the resulting weights for all series to produce the line densities.
+
+## Inputs
+
+Inputs are used to create interactive visualizations by targeting either `Param` values or `Selection` ranges. Available inputs include:
+
+- `select()`
+- `slider()`
+- `search()`
+- `checkbox()`
+- `radio_group()`
+- `checkbox_group()`
+
+For example, here is a `slider()` input targeting a `Param`:
+
+```python
+bias = Param(0)
+slider(label="Bias", target=bias, min=0, max=1000, step=1, value=100)
+```
+
+Here is a `select()` input that filters `Data` by column:
+
+```python
+select(penguins, label="Species", column="species")
+```
+
+All input widgets can write updates to a provided param or selection. Param values are updated to match the input value. Selections are provided a predicate clause. This linking can be bidirectional: an input component will also subscribe to a param and track its value updates. Two-way linking is also supported for selections using single resolution, where there is no ambiguity regarding the value.
+
+## Interactors
+
+_Interactors_ imbue plots with interactive behavior. Most interactors listen to input events from rendered plot SVG elements to update bound [_selections_](reference/inspect_viz.qmd#selection). Interactors take facets into account to properly handle input events across subplots.
+
+The `toggle()` interactor selects individual points (e.g., by click or shift-click) and generates a selection clause over specified fields of those points. Directives such as `toggle_color()`, `toggle_x()`, and `toggle_y()` simplify specification of which channel fields are included in the resulting predicates.
+
+The `nearest_x()` and `nearest_y()` interactors select the nearest value along the `x` or `y` encoding channel.
+
+The `interval_x()` and `interval_y()` interactors create 1D interval brushes.
+The `interval_xy()` interactor creates a 2D brush.
+Interval interactors accept a `pixel_size` parameter that sets the brush resolution: values may snap to a grid whose bins are larger than screen pixels and this can be leveraged to optimize query latency.
+
+The `pan_zoom()` interactor produces interval selections over corresponding `x` or `y` scale domains. Setting these selections to a plot's `x_domain` and/or `y_domain` attributes will cause the plot to pan and zoom in response.
+
+The `highlight()` interactor updates the rendered state of a visualization in response to a Selection.
+Non-selected points are set to translucent, neutral gray, or other specified visual properties.
+Selected points maintain normal encodings.
+We perform highlighting by querying the database for a selection bit vector and then modifying the rendered SVG.
+
+## Legends
+
+_Legends_ can be added to `plot` specifications or included as standalone elements.
+
+The `name` directive gives a `plot` a unique name.
+A standalone legend can reference a named plot `legend(..., for_plot="penguins")` to avoid respecifying scale domains and ranges.
+
+Legends also act as interactors, taking a bound Selection as a `target` parameter.
+For example, discrete legends use the logic of the `toggle` interactor to enable point selections.
+Two-way binding is supported for Selections using _single_ resolution, enabling legends and other interactors to share state.
+
+## Layout
+
+Layout helpers combine elements such as [plots](reference/inspect_viz.plot.qmd#plot) and [inputs](reference/inspect_viz.input.qmd) into multi-view dashboard displays.
+The `vconcat()` (vertical concatenation) and `hconcat()` (horizontal concatenation) methods accept a list of elements and position them using CSS `flexbox` layout.
+Layout helpers can be used with plots, inputs, and arbitrary Web content such as images and videos.
+To ensure spacing, the `vspace()` and `hspace()` functions add padding between elements in a layout.
+

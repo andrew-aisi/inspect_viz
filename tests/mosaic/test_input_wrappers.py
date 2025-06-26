@@ -1,0 +1,45 @@
+from inspect_viz import Data
+from inspect_viz._core.selection import Selection
+from inspect_viz.input import search, slider
+from inspect_viz.table import table
+
+from ._schema import Search, Slider, Table
+from .utils import check_component
+
+
+def test_search_wrapper(penguins: Data) -> None:
+    check_component(
+        search(penguins, label="Species", column="species", type="regexp"), Search
+    )
+
+
+def test_slider_wrapper(penguins: Data) -> None:
+    check_component(
+        slider(
+            penguins,
+            label="Species",
+            column="species",
+            value=1,
+            min=1,
+            max=22,
+            field="species",
+            step=1,
+            width=200,
+        ),
+        Slider,
+    )
+
+
+def test_table_wrapper(penguins: Data) -> None:
+    check_component(
+        table(
+            penguins,
+            filter_by=Selection("intersect"),
+            align={"bill_length": "left"},
+            columns=["bill_length", "bill_depth"],
+            width={"bill_length": 10},
+            max_width=22,
+            height=200,
+        ),
+        Table,
+    )

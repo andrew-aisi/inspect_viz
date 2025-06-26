@@ -1,0 +1,31 @@
+---
+title: inspect_viz.interactor
+---
+
+## Selection
+
+### interval_x
+### interval_y
+### interval_xy
+### nearest_x
+### nearest_y
+### toggle
+### toggle_x
+### toggle_y
+### toggle_color
+### region
+### highlight
+
+## Navigation
+
+### pan
+### pan_x
+### pan_y
+### pan_zoom
+### pan_zoom_x
+### pan_zoom_y
+
+## Types
+
+### Interactor
+### Brush

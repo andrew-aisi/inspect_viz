@@ -1,0 +1,55 @@
+---
+title: inspect_viz.transform
+---
+
+## SQL
+
+### sql
+### agg
+
+## Column
+
+### column
+### bin
+### date_day
+### date_month
+### date_month_day
+
+## Aggregate
+
+### avg
+### count
+### sum
+### min
+### max
+### median
+### mode
+### first
+### last
+### product
+### quantile
+### stddev
+### stddev_pop
+### variance
+### var_pop
+### argmin
+### argmax
+
+## Window
+
+### row_number
+### rank
+### dense_rank
+### percent_rank
+### cume_dist
+### n_tile
+### lag
+### lead
+### first_value
+### last_value
+### nth_value
+
+## Types
+
+### Transform
+### WindowOptions

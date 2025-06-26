@@ -1,0 +1,11 @@
+---
+title: inspect_viz.input
+---
+
+### select
+### slider
+### search
+### checkbox
+### radio_group
+### checkbox_group
+
