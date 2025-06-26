@@ -60,6 +60,10 @@ export interface TableOptions extends InputOptions {
     width?: number | Record<string, number>;
     maxWidth?: number;
     height?: number;
+    pagination?: boolean;
+    paginationAutoPageSize?: boolean;
+    paginationPageSize?: number;
+    paginationPageSizeSelector?: number[] | boolean;
 }
 
 interface ColSortModel {
@@ -127,6 +131,10 @@ export class Table extends Input {
 
         // initialize grid options
         this.gridOptions_ = {
+            pagination: !!options_.pagination,
+            paginationAutoPageSize: !!options_.paginationAutoPageSize,
+            paginationPageSizeSelector: options_.paginationPageSizeSelector,
+            paginationPageSize: options_.paginationPageSize,
             animateRows: false,
             columnDefs: [],
             rowData: [],

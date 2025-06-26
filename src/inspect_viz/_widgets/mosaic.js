@@ -1096,6 +1096,10 @@ var Table = class extends Input {
     this.gridContainer_.style.height = "100%";
     this.element.appendChild(this.gridContainer_);
     this.gridOptions_ = {
+      pagination: !!options_.pagination,
+      paginationAutoPageSize: !!options_.paginationAutoPageSize,
+      paginationPageSizeSelector: options_.paginationPageSizeSelector,
+      paginationPageSize: options_.paginationPageSize,
       animateRows: false,
       columnDefs: [],
       rowData: [],

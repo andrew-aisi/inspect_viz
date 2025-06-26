@@ -19,6 +19,10 @@ def table(
     width: float | dict[str, float] | None = None,
     max_width: float | None = None,
     height: float | None = None,
+    pagination: bool | None = None,
+    paginationPageSize: int | None = None,
+    paginationPageSizeSelector: list[int] | bool | None = None,
+    paginationAutoPageSize: bool | None = None,
 ) -> Component:
     """Tabular display of data.
 
@@ -32,6 +36,10 @@ def table(
        width: If a number, sets the total width of the table widget, in pixels. If an object, provides per-column pixel width values. Column names should be object keys, mapped to numeric width values.
        max_width: The maximum width of the table widget, in pixels.
        height: The height of the table widget, in pixels.
+       pagination: Set whether pagination is enabled.
+       paginationPageSize: How many rows to load per page. If paginationAutoPageSize is specified, this property is ignored.
+       paginationPageSizeSelector: Determines if the page size selector is shown in the pagination panel or not. Set to an list of values to show the page size selector with custom list of possible page sizes. Set to true to show the page size selector with the default page sizes [20, 50, 100]. Set to false to hide the page size selector.
+       paginationAutoPageSize: Set to true so that the number of rows to load per page is automatically adjusted by the grid so each page shows enough rows to just fill the area designated for the grid. If false, paginationPageSize is used.
     """
     config: dict[str, JsonValue] = dict_remove_none(
         {
@@ -51,6 +59,10 @@ def table(
             else width,
             "maxWidth": max_width,
             "height": height,
+            "pagination": pagination,
+            "paginationPageSize": paginationPageSize,
+            "paginationPageSizeSelector": paginationPageSizeSelector,
+            "paginationAutoPageSize": paginationAutoPageSize,
         }
     )
 
