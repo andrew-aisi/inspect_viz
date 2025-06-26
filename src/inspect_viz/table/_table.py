@@ -16,24 +16,27 @@ class Column(BaseModel):
         label: The text label for the column header. If not specified, the column name is used.
         align: Text alignment for the column. Valid values are "left", "right",
             "center", and "justify". By default, numbers are right-aligned and other values are left-aligned.
-        headerAlign: Text alignment for the column header. Valid values are "left", "right",
-            "center", and "justify". By default, left aligned.
         width: Column width in pixels.
+        sortable: Whether sorting is enabled for this column.
+        filterable: Whether filtering is enabled for this column.
         resizable: Whether the column width can be adjusted by the user.
         minWidth: Minimum column width in pixels.
         maxWidth: Maximum column width in pixels.
-        sortable: Whether sorting is enabled for this column.
-        filterable: Whether filtering is enabled for this column.
-
         format: Format string for column values. Use d3-format for numeric columns or d3-time-format for datetime columns.
         autoHeight: Whether the column cell height is automatically adjusted based on content.
-        autoHeaderHeight: Whether the column header cell height is automatically adjusted based on content.
+        wrapText: Whether the column text is wrapped to fit within the cell.
+        headerAlign: Text alignment for the column header. Valid values are "left", "right",
+            "center", and "justify". By default, left aligned.
+        headerAutoHeight: Whether the column header cell height is automatically adjusted based on content.
+        headerWrapText: Whether the column header text is wrapped to fit within the header cell.
+
+
     """
 
     name: str
     label: str | None = None
     align: Literal["left", "right", "center", "justify"] | None = None
-    headerAlign: Literal["left", "right", "center", "justify"] | None = None
+
     format: str | None = None
     width: float | None = None
     minWidth: float | None = None
@@ -42,7 +45,10 @@ class Column(BaseModel):
     filterable: bool | None = None
     resizable: bool | None = None
     autoHeight: bool | None = None
-    autoHeaderHeight: bool | None = None
+    wrapText: bool | None = None
+    headerAlign: Literal["left", "right", "center", "justify"] | None = None
+    headerAutoHeight: bool | None = None
+    headerWrapText: bool | None = None
 
 
 def table(

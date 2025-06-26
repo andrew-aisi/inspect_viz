@@ -1183,7 +1183,9 @@ var Table = class extends Input {
       const minWidth = columnOptions.minWidth;
       const maxWidth = columnOptions.maxWidth;
       const autoHeight = columnOptions.autoHeight;
-      const autoHeaderHeight = columnOptions.autoHeaderHeight;
+      const autoHeaderHeight = columnOptions.headerAutoHeight;
+      const wrapText = columnOptions.wrapText;
+      const wrapHeaderText = columnOptions.headerWrapText;
       const colDef = {
         field: column2,
         headerName: columnOptions.label || column2,
@@ -1199,6 +1201,8 @@ var Table = class extends Input {
         maxWidth,
         autoHeight,
         autoHeaderHeight,
+        wrapText,
+        wrapHeaderText,
         valueFormatter: (params) => {
           const value = params.value;
           if (formatter && value !== null && value !== void 0) {

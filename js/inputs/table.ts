@@ -56,7 +56,6 @@ export interface Column {
     name: string;
     label?: string;
     align?: 'left' | 'right' | 'center' | 'justify';
-    headerAlign?: 'left' | 'right' | 'center' | 'justify';
     format?: string;
     sortable?: boolean;
     filterable?: boolean;
@@ -65,7 +64,10 @@ export interface Column {
     minWidth?: number;
     maxWidth?: number;
     autoHeight?: boolean;
-    autoHeaderHeight?: boolean;
+    wrapText?: boolean;
+    headerAutoHeight?: boolean;
+    headerAlign?: 'left' | 'right' | 'center' | 'justify';
+    headerWrapText?: boolean;
 }
 
 export interface TableOptions extends InputOptions {
@@ -248,8 +250,13 @@ export class Table extends Input {
             const minWidth = columnOptions.minWidth;
             const maxWidth = columnOptions.maxWidth;
 
+            // auto height
             const autoHeight = columnOptions.autoHeight;
-            const autoHeaderHeight = columnOptions.autoHeaderHeight;
+            const autoHeaderHeight = columnOptions.headerAutoHeight;
+
+            // wrap text
+            const wrapText = columnOptions.wrapText;
+            const wrapHeaderText = columnOptions.headerWrapText;
 
             const colDef: ColDef = {
                 field: column,
@@ -266,6 +273,8 @@ export class Table extends Input {
                 maxWidth,
                 autoHeight,
                 autoHeaderHeight,
+                wrapText,
+                wrapHeaderText,
                 valueFormatter: params => {
                     // Format the value if a format is provided
                     const value = params.value;
