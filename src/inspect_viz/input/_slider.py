@@ -37,10 +37,23 @@ def slider(
        step: The slider step, the amount to increment between consecutive values.
        width: The width of the slider in screen pixels (defaults to 200)
     """
+    # resolve selection mode
+    select = select or ("interval" if isinstance(value, tuple) else "point")
+
+    # value must correspond to selection mode
+    if value is not None:
+        if select == "interval" and not isinstance(value, tuple):
+            raise ValueError(
+                "slider `value` must be a tuple for interval selection mode"
+            )
+        if select == "point" and not isinstance(value, float | int):
+            raise ValueError("slider 'value' must be a number for point selection")
+
+    # base config
     config: dict[str, Any] = dict_remove_none(
         {
             "input": "slider",
-            "select": select or ("interval" if isinstance(value, tuple) else "point"),
+            "select": select,
             "value": value,
             "min": min,
             "max": max,
@@ -48,18 +61,25 @@ def slider(
             "width": width,
         }
     )
-
     config = (
         config
         | label_param(label)
         | data_params(data, column, target, field, filter_by)
     )
 
+    # validate that we have a target
     if "as" not in config:
         if not target:
             raise ValueError("You must pass a 'target' value for a slider input")
         else:
             config["as"] = target
+
+    # if we don't have data then we need a min and max
+    if "from" not in config:
+        if "min" not in config or "max" not in config:
+            raise ValueError(
+                "slider: you must pass a 'min' and 'max' if no 'data' parameter is provided."
+            )
 
     # return widget
     return Component(config=config)

@@ -29,6 +29,7 @@
 .mosaic-widget label {
     display: inline-flex;
     align-items: center;
+    white-space: nowrap;
 }
 
 .mosaic-widget label>select,

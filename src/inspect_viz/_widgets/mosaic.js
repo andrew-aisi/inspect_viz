@@ -433,19 +433,10 @@ var Slider = class extends Input {
       container.innerText = label;
       this.element.appendChild(container);
     }
-    const { value, width, min: min3, max: max3, step } = options_;
+    let { value, width, min: min3, max: max3 } = options_;
     this.slider_ = document.createElement("div");
     this.slider_.classList.add("noUi-round");
     this.slider_.setAttribute("id", id);
-    this.sliderApi_ = createSlider(this.slider_, {
-      range: {
-        min: min3 || (Array.isArray(value) ? value[0] : value ? value : 0),
-        max: max3 || (Array.isArray(value) ? value[1] : value ? value : 0)
-      },
-      connect: this.options_.select === "interval" ? true : void 0,
-      step,
-      start: value || 0
-    });
     if (width != void 0) {
       this.slider_.style.width = `${+width}px`;
     }
@@ -454,8 +445,12 @@ var Slider = class extends Input {
     } else {
       this.element.appendChild(this.slider_);
     }
+    this.sliderApi_ = createSlider(this.slider_, {
+      range: { min: 0, max: 0 },
+      connect: options_.select === "interval",
+      start: options_.select === "interval" ? [0, 0] : 0
+    });
     this.curval_ = document.createElement("label");
-    this.curval_.setAttribute("for", id);
     this.curval_.setAttribute("class", "slider-value");
     this.element.appendChild(this.curval_);
     if (this.options_.as?.value === void 0) {
@@ -477,10 +472,17 @@ var Slider = class extends Input {
     } else {
       setupActivationListeners(this, this.slider_);
     }
+    if (!options_.from) {
+      min3 = min3 ?? (Array.isArray(value) ? value[0] : value ?? 0);
+      max3 = max3 ?? (Array.isArray(value) ? value[1] : value ?? 0);
+      const start = value ?? (options_.select === "interval" ? [0, 0] : 0);
+      this.updateSlider(min3, max3, start);
+    }
   }
   slider_;
   sliderApi_;
   curval_;
+  firstQuery_ = false;
   updateCurrentValue() {
     const value = this.sliderValue;
     if (Array.isArray(value)) {
@@ -508,16 +510,29 @@ var Slider = class extends Input {
   }
   query(filter = []) {
     const { from, column: column2 } = this.options_;
-    if (!from || !column2 || this.options_.min != null && this.options_.max != null) {
+    if (!from || !column2) {
       return null;
     }
     return Query2.select({ min: min(column2), max: max(column2) }).from(from).where(...filter);
   }
   queryResult(data) {
     const { min: dataMin, max: dataMax } = Array.from(data)[0];
-    const min3 = this.options_.min || dataMin;
-    const max3 = this.options_.max || dataMax;
-    const step = this.options_.step || (max3 - min3) / 500;
+    const min3 = this.options_.min ?? dataMin;
+    const max3 = this.options_.max ?? dataMax;
+    let start = this.sliderValue;
+    if (!this.firstQuery_) {
+      this.firstQuery_ = true;
+      if (this.options_.value === void 0) {
+        start = this.options_.select === "interval" ? [min3, max3] : max3;
+      } else {
+        start = this.options_.value;
+      }
+    }
+    this.updateSlider(min3, max3, start);
+    return this;
+  }
+  updateSlider(min3, max3, start) {
+    const step = this.options_.step ?? (min3 >= 5 || max3 >= 5 ? 1 : void 0);
     this.sliderApi_.updateOptions(
       {
         range: {
@@ -525,7 +540,7 @@ var Slider = class extends Input {
           max: max3
         },
         step,
-        start: this.sliderValue
+        start
       },
       true
     );
@@ -548,7 +563,9 @@ var Slider = class extends Input {
         pixelSize: this.options_.step || void 0
       });
     } else {
-      return clausePoint3(field, Array.isArray(value) ? value[0] : value, { source: this });
+      return clausePoint3(field, Array.isArray(value) ? value[0] : value, {
+        source: this
+      });
     }
   }
   publish(value) {
@@ -1187,7 +1204,9 @@ var Table = class extends Input {
   // mosaic calls this every time it needs to show data to find
   // out what query we want to run
   query(filter = []) {
-    let query = Query4.from(this.options_.from).select(this.schema_.map((s) => s.column));
+    let query = Query4.from(this.options_.from).select(
+      this.schema_.length ? this.schema_.map((s) => s.column) : "*"
+    );
     query = query.where(...filter);
     Object.keys(this.filterModel_).forEach((colId) => {
       const filter2 = this.filterModel_[colId];
