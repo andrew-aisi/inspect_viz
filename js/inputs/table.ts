@@ -82,7 +82,7 @@ export interface TableOptions extends InputOptions {
     paginationPageSizeSelector?: number[] | boolean;
     sorting?: boolean;
     filtering?: boolean;
-    headerHeight?: number;
+    headerHeight?: number | 'auto';
     rowHeight?: number;
 }
 
@@ -155,6 +155,9 @@ export class Table extends Input {
         this.gridContainer_.style.height = '100%';
         this.element.appendChild(this.gridContainer_);
 
+        const headerHeightPixels =
+            typeof options_.headerHeight === 'string' ? undefined : options_.headerHeight;
+
         // initialize grid options
         this.gridOptions_ = {
             // always pass filter to allow server-side filtering
@@ -164,7 +167,7 @@ export class Table extends Input {
             paginationPageSizeSelector: options_.paginationPageSizeSelector,
             paginationPageSize: options_.paginationPageSize,
             animateRows: true,
-            headerHeight: options_.headerHeight,
+            headerHeight: headerHeightPixels,
             rowHeight: options_.rowHeight,
             columnDefs: [],
             rowData: [],
@@ -252,7 +255,8 @@ export class Table extends Input {
 
             // auto height
             const autoHeight = columnOptions.autoHeight;
-            const autoHeaderHeight = columnOptions.headerAutoHeight;
+            const autoHeaderHeight =
+                this.options_.headerHeight === 'auto' && columnOptions.headerAutoHeight !== false;
 
             // wrap text
             const wrapText = columnOptions.wrapText;
@@ -261,9 +265,10 @@ export class Table extends Input {
             const colDef: ColDef = {
                 field: column,
                 headerName: columnOptions.label || column,
-                cellStyle: { textAlign: align },
                 headerClass: headerClz(headerAlignment),
+                cellStyle: { textAlign: align },
                 comparator: (_valueA, _valueB) => {
+                    // Sorting is handled by the database, so never client sort
                     return 0;
                 },
                 filter: !filterable ? false : filterForColumnType(type),

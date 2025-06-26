@@ -1103,6 +1103,7 @@ var Table = class extends Input {
     this.gridContainer_.style.width = "100%";
     this.gridContainer_.style.height = "100%";
     this.element.appendChild(this.gridContainer_);
+    const headerHeightPixels = typeof options_.headerHeight === "string" ? void 0 : options_.headerHeight;
     this.gridOptions_ = {
       // always pass filter to allow server-side filtering
       alwaysPassFilter: () => true,
@@ -1111,7 +1112,7 @@ var Table = class extends Input {
       paginationPageSizeSelector: options_.paginationPageSizeSelector,
       paginationPageSize: options_.paginationPageSize,
       animateRows: true,
-      headerHeight: options_.headerHeight,
+      headerHeight: headerHeightPixels,
       rowHeight: options_.rowHeight,
       columnDefs: [],
       rowData: [],
@@ -1183,14 +1184,14 @@ var Table = class extends Input {
       const minWidth = columnOptions.minWidth;
       const maxWidth = columnOptions.maxWidth;
       const autoHeight = columnOptions.autoHeight;
-      const autoHeaderHeight = columnOptions.headerAutoHeight;
+      const autoHeaderHeight = this.options_.headerHeight === "auto" && columnOptions.headerAutoHeight !== false;
       const wrapText = columnOptions.wrapText;
       const wrapHeaderText = columnOptions.headerWrapText;
       const colDef = {
         field: column2,
         headerName: columnOptions.label || column2,
-        cellStyle: { textAlign: align },
         headerClass: headerClz(headerAlignment),
+        cellStyle: { textAlign: align },
         comparator: (_valueA, _valueB) => {
           return 0;
         },
