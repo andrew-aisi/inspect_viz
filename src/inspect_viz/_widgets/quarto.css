@@ -59,3 +59,13 @@
     border: 1px solid var(--bs-border-color);
     border-radius: var(--bs-border-radius);
 }
+
+/* remove small top and bottom margin when widgets appear in cards */
+.card-body .mosaic-widget {
+    margin: 0;
+}
+
+/* remove border from ag-grid wrapper (table) when in card */
+.card-body .mosaic-widget .ag-root-wrapper {
+    border: none;
+}
