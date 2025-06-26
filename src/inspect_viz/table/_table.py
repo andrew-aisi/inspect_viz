@@ -31,6 +31,8 @@ class ColumnOptions(BaseModel):
     sortable: bool | None = None
     filterable: bool | None = None
     resizable: bool | None = None
+    minWidth: float | None = None
+    maxWidth: float | None = None
 
 
 def table(
@@ -48,8 +50,8 @@ def table(
     paginationPageSize: int | None = None,
     paginationPageSizeSelector: list[int] | bool | None = None,
     paginationAutoPageSize: bool | None = None,
-    headerHeight: int | None = None,
-    rowHeight: int | None = None,
+    headerHeight: float | None = None,
+    rowHeight: float | None = None,
 ) -> Component:
     """Tabular display of data.
 

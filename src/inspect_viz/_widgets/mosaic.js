@@ -1174,6 +1174,8 @@ var Table = class extends Input {
       const sortable = this.options_.sorting !== false && columnOptions.sortable !== false;
       const filterable = this.options_.filtering !== false && columnOptions.filterable !== false;
       const resizable = columnOptions.resizable !== false;
+      const minWidth = columnOptions.minWidth;
+      const maxWidth = columnOptions.maxWidth;
       const colDef = {
         field: column2,
         headerName: column2,
@@ -1185,6 +1187,8 @@ var Table = class extends Input {
         filter: !filterable ? false : filterForColumnType(type),
         sortable,
         resizable,
+        minWidth,
+        maxWidth,
         valueFormatter: (params) => {
           const value = params.value;
           if (formatter && value !== null && value !== void 0) {

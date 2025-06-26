@@ -60,6 +60,8 @@ export interface ColumnOptions {
     filterable?: boolean;
     width?: number;
     resizable?: boolean;
+    minWidth?: number;
+    maxWidth?: number;
 }
 
 export interface TableOptions extends InputOptions {
@@ -233,6 +235,9 @@ export class Table extends Input {
             // Sizing
             const resizable = columnOptions.resizable !== false;
 
+            const minWidth = columnOptions.minWidth;
+            const maxWidth = columnOptions.maxWidth;
+
             const colDef: ColDef = {
                 field: column,
                 headerName: column,
@@ -242,8 +247,10 @@ export class Table extends Input {
                     return 0;
                 },
                 filter: !filterable ? false : filterForColumnType(type),
-                sortable: sortable,
-                resizable: resizable,
+                sortable,
+                resizable,
+                minWidth,
+                maxWidth,
                 valueFormatter: params => {
                     // Format the value if a format is provided
                     const value = params.value;
