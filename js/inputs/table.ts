@@ -60,6 +60,7 @@ export interface Column {
     sortable?: boolean;
     filterable?: boolean;
     width?: number;
+    flex?: number;
     resizable?: boolean;
     minWidth?: number;
     maxWidth?: number;
@@ -262,6 +263,9 @@ export class Table extends Input {
             const wrapText = columnOptions.wrapText;
             const wrapHeaderText = columnOptions.headerWrapText;
 
+            // flex
+            const flex = columnOptions.flex;
+
             const colDef: ColDef = {
                 field: column,
                 headerName: columnOptions.label || column,
@@ -272,6 +276,7 @@ export class Table extends Input {
                     return 0;
                 },
                 filter: !filterable ? false : filterForColumnType(type),
+                flex,
                 sortable,
                 resizable,
                 minWidth,
@@ -295,7 +300,7 @@ export class Table extends Input {
             const width = columnOptions.width;
             if (width) {
                 colDef.width = width;
-            } else {
+            } else if (flex === undefined || flex === null) {
                 colDef.flex = 1;
             }
 

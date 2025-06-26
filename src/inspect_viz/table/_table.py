@@ -17,6 +17,7 @@ class Column(BaseModel):
         align: Text alignment for the column. Valid values are "left", "right",
             "center", and "justify". By default, numbers are right-aligned and other values are left-aligned.
         width: Column width in pixels.
+        flex: The flex value of the table widget, used to determine how much space it should take relative to other widgets in a layout. If specified, width is ignored.
         sortable: Whether sorting is enabled for this column.
         filterable: Whether filtering is enabled for this column.
         resizable: Whether the column width can be adjusted by the user.
@@ -39,6 +40,7 @@ class Column(BaseModel):
 
     format: str | None = None
     width: float | None = None
+    flex: float | None = None
     minWidth: float | None = None
     maxWidth: float | None = None
     sortable: bool | None = None

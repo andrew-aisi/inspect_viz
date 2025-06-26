@@ -1187,6 +1187,7 @@ var Table = class extends Input {
       const autoHeaderHeight = this.options_.headerHeight === "auto" && columnOptions.headerAutoHeight !== false;
       const wrapText = columnOptions.wrapText;
       const wrapHeaderText = columnOptions.headerWrapText;
+      const flex = columnOptions.flex;
       const colDef = {
         field: column2,
         headerName: columnOptions.label || column2,
@@ -1196,6 +1197,7 @@ var Table = class extends Input {
           return 0;
         },
         filter: !filterable ? false : filterForColumnType(type),
+        flex,
         sortable,
         resizable,
         minWidth,
@@ -1215,7 +1217,7 @@ var Table = class extends Input {
       const width = columnOptions.width;
       if (width) {
         colDef.width = width;
-      } else {
+      } else if (flex === void 0 || flex === null) {
         colDef.flex = 1;
       }
       return colDef;
