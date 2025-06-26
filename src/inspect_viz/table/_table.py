@@ -25,6 +25,8 @@ def table(
     paginationPageSize: int | None = None,
     paginationPageSizeSelector: list[int] | bool | None = None,
     paginationAutoPageSize: bool | None = None,
+    headerHeight: int | None = None,
+    rowHeight: int | None = None,
 ) -> Component:
     """Tabular display of data.
 
@@ -44,6 +46,8 @@ def table(
        paginationPageSize: How many rows to load per page. If paginationAutoPageSize is specified, this property is ignored.
        paginationPageSizeSelector: Determines if the page size selector is shown in the pagination panel or not. Set to an list of values to show the page size selector with custom list of possible page sizes. Set to true to show the page size selector with the default page sizes [20, 50, 100]. Set to false to hide the page size selector.
        paginationAutoPageSize: Set to true so that the number of rows to load per page is automatically adjusted by the grid so each page shows enough rows to just fill the area designated for the grid. If false, paginationPageSize is used.
+       headerHeight: The height of the table header, in pixels.
+       rowHeight: The height of each table row, in pixels.
     """
     config: dict[str, JsonValue] = dict_remove_none(
         {
@@ -69,6 +73,8 @@ def table(
             "paginationPageSize": paginationPageSize,
             "paginationPageSizeSelector": paginationPageSizeSelector,
             "paginationAutoPageSize": paginationAutoPageSize,
+            "headerHeight": headerHeight,
+            "rowHeight": rowHeight,
         }
     )
 

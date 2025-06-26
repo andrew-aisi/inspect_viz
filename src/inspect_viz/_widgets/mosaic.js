@@ -1100,11 +1100,15 @@ var Table = class extends Input {
     this.gridContainer_.style.height = "100%";
     this.element.appendChild(this.gridContainer_);
     this.gridOptions_ = {
+      // always pass filter to allow server-side filtering
+      alwaysPassFilter: () => true,
       pagination: !!options_.pagination,
       paginationAutoPageSize: !!options_.paginationAutoPageSize,
       paginationPageSizeSelector: options_.paginationPageSizeSelector,
       paginationPageSize: options_.paginationPageSize,
-      animateRows: false,
+      animateRows: true,
+      headerHeight: options_.headerHeight,
+      rowHeight: options_.rowHeight,
       columnDefs: [],
       rowData: [],
       defaultColDef: {
@@ -1136,9 +1140,6 @@ var Table = class extends Input {
           this.currentRow_ = -1;
           this.options_.as.update(this.clause());
         }
-      },
-      onGridReady: () => {
-        this.patchColumns();
       }
     };
   }
@@ -1251,21 +1252,6 @@ var Table = class extends Input {
     }
     this.grid_.setGridOption("rowData", rowData);
   });
-  patchColumns() {
-    if (!this.grid_) {
-      return;
-    }
-    const columns = this.grid_.getColumns();
-    if (columns) {
-      columns.forEach(async (column2) => {
-        const colId = column2.getColId();
-        const filterInstance = await this.grid_.getColumnFilterInstance(colId);
-        if (filterInstance && typeof filterInstance.doesFilterPass === "function") {
-          filterInstance.doesFilterPass = () => true;
-        }
-      });
-    }
-  }
   // all mosaic inputs implement this, not exactly sure what it does
   activate() {
     if (isSelection4(this.options_.as)) {

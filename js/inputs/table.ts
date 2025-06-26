@@ -66,6 +66,8 @@ export interface TableOptions extends InputOptions {
     paginationPageSizeSelector?: number[] | boolean;
     sorting?: boolean;
     filtering?: boolean;
+    headerHeight?: number;
+    rowHeight?: number;
 }
 
 interface ColSortModel {
@@ -137,11 +139,15 @@ export class Table extends Input {
 
         // initialize grid options
         this.gridOptions_ = {
+            // always pass filter to allow server-side filtering
+            alwaysPassFilter: () => true,
             pagination: !!options_.pagination,
             paginationAutoPageSize: !!options_.paginationAutoPageSize,
             paginationPageSizeSelector: options_.paginationPageSizeSelector,
             paginationPageSize: options_.paginationPageSize,
-            animateRows: false,
+            animateRows: true,
+            headerHeight: options_.headerHeight,
+            rowHeight: options_.rowHeight,
             columnDefs: [],
             rowData: [],
             defaultColDef: {
@@ -186,10 +192,6 @@ export class Table extends Input {
                     this.currentRow_ = -1;
                     this.options_.as.update(this.clause());
                 }
-            },
-            onGridReady: () => {
-                // Patch the filters to always return true
-                this.patchColumns();
             },
         };
     }
@@ -315,27 +317,6 @@ export class Table extends Input {
 
         this.grid_.setGridOption('rowData', rowData);
     });
-
-    private patchColumns() {
-        if (!this.grid_) {
-            return;
-        }
-
-        const columns = this.grid_.getColumns();
-        if (columns) {
-            columns.forEach(async column => {
-                const colId = column.getColId();
-                const filterInstance = await this.grid_!.getColumnFilterInstance(colId);
-
-                // Patch filters to always return true
-                // This is a workaround to disable client side filtering so we can implement
-                // filtering using the query method instead.
-                if (filterInstance && typeof filterInstance.doesFilterPass === 'function') {
-                    filterInstance.doesFilterPass = () => true;
-                }
-            });
-        }
-    }
 
     // all mosaic inputs implement this, not exactly sure what it does
     activate() {
