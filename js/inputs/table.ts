@@ -85,6 +85,7 @@ export interface TableOptions extends InputOptions {
     paginationPageSizeSelector?: number[] | boolean;
     sorting?: boolean;
     filtering?: boolean;
+    filterLocation?: 'header' | 'secondary';
     headerHeight?: number | 'auto';
     rowHeight?: number;
     select?: 'hover' | 'single' | 'multiple' | 'none';
@@ -364,6 +365,9 @@ export class Table extends Input {
         // flex
         const flex = columnOptions.flex;
 
+        // Position the filter below the header
+        const floatingFilter = this.options_.filterLocation === 'secondary';
+
         const colDef: ColDef = {
             field: column,
             headerName: columnOptions.label || column,
@@ -383,6 +387,7 @@ export class Table extends Input {
             autoHeaderHeight,
             wrapText,
             wrapHeaderText,
+            floatingFilter,
             valueFormatter: params => {
                 // Format the value if a format is provided
                 const value = params.value;

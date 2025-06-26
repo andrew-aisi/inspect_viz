@@ -37,7 +37,6 @@ class Column(BaseModel):
     name: str
     label: str | None = None
     align: Literal["left", "right", "center", "justify"] | None = None
-
     format: str | None = None
     width: float | None = None
     flex: float | None = None
@@ -63,13 +62,14 @@ def table(
     height: float | None = None,
     sorting: bool | None = None,
     filtering: bool | None = None,
+    filter_location: Literal["header", "secondary"] | None = None,
     pagination: bool | None = None,
     paginationPageSize: int | None = None,
     paginationPageSizeSelector: list[int] | bool | None = None,
     paginationAutoPageSize: bool | None = None,
     headerHeight: float | None = None,
     rowHeight: float | None = None,
-    select: Literal["hover", "single", "multiple", "none"] = "hover",
+    select: Literal["hover", "single", "multiple", "none"] | None = None,
     selectAll: Literal["all", "filtered", "currentPage"] | None = None,
 ) -> Component:
     """Tabular display of data.
@@ -87,6 +87,7 @@ def table(
        height: The height of the table widget, in pixels.
        sorting: Set whether sorting is enabled.
        filtering: Set whether filtering is enabled.
+       filter_location: Set the location of the filter input. Valid values are "header" or "secondary". If set to "header", the filter input is shown in the table header. If set to "secondary", the filter input is shown in a row beneath the header.
        pagination: Set whether pagination is enabled.
        paginationPageSize: How many rows to load per page. If paginationAutoPageSize is specified, this property is ignored.
        paginationPageSizeSelector: Determines if the page size selector is shown in the pagination panel or not. Set to an list of values to show the page size selector with custom list of possible page sizes. Set to true to show the page size selector with the default page sizes [20, 50, 100]. Set to false to hide the page size selector.
@@ -107,6 +108,7 @@ def table(
             "height": height,
             "sorting": sorting,
             "filtering": filtering,
+            "filterLocation": filter_location,
             "pagination": pagination,
             "paginationPageSize": paginationPageSize,
             "paginationPageSizeSelector": paginationPageSizeSelector,

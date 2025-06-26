@@ -822,6 +822,7 @@ var Table = class extends Input {
     const wrapText = columnOptions.wrapText;
     const wrapHeaderText = columnOptions.headerWrapText;
     const flex = columnOptions.flex;
+    const floatingFilter = this.options_.filterLocation === "secondary";
     const colDef = {
       field: column,
       headerName: columnOptions.label || column,
@@ -840,6 +841,7 @@ var Table = class extends Input {
       autoHeaderHeight,
       wrapText,
       wrapHeaderText,
+      floatingFilter,
       valueFormatter: (params) => {
         const value = params.value;
         if (formatter && value !== null && value !== void 0) {
