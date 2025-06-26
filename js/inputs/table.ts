@@ -25,6 +25,7 @@ import {
     not,
     or,
     prefix,
+    suffix,
     Query,
     SelectQuery,
 } from 'https://cdn.jsdelivr.net/npm/@uwdata/mosaic-sql@0.16.2/+esm';
@@ -44,22 +45,51 @@ import {
     IMultiFilterModel,
     SetFilterModel,
     ICombinedSimpleModel,
+    RowSelectionOptions,
 } from 'https://cdn.jsdelivr.net/npm/ag-grid-community@33.3.2/+esm';
 
 import * as d3Format from 'https://cdn.jsdelivr.net/npm/d3-format@3.1.0/+esm';
 import * as d3TimeFormat from 'https://cdn.jsdelivr.net/npm/d3-time-format@4.1.0/+esm';
 import { Input, InputOptions } from './input';
 import { generateId } from '../util/id';
-import { suffix } from '@uwdata/mosaic-sql';
+import { JSType } from '@uwdata/mosaic-core';
+
+export interface Column {
+    name: string;
+    label?: string;
+    align?: 'left' | 'right' | 'center' | 'justify';
+    format?: string;
+    sortable?: boolean;
+    filterable?: boolean;
+    width?: number;
+    flex?: number;
+    resizable?: boolean;
+    minWidth?: number;
+    maxWidth?: number;
+    autoHeight?: boolean;
+    wrapText?: boolean;
+    headerAutoHeight?: boolean;
+    headerAlign?: 'left' | 'right' | 'center' | 'justify';
+    headerWrapText?: boolean;
+}
 
 export interface TableOptions extends InputOptions {
     from: string;
-    columns?: string[];
-    align?: Record<string, 'left' | 'right' | 'center' | 'justify'>;
-    format?: Record<string, string>;
-    width?: number | Record<string, number>;
+    columns?: Array<string | Column>;
+    width?: number;
     maxWidth?: number;
     height?: number;
+    pagination?: boolean;
+    paginationAutoPageSize?: boolean;
+    paginationPageSize?: number;
+    paginationPageSizeSelector?: number[] | boolean;
+    sorting?: boolean;
+    filtering?: boolean;
+    filterLocation?: 'header' | 'secondary';
+    headerHeight?: number | 'auto';
+    rowHeight?: number;
+    select?: 'hover' | 'single' | 'multiple' | 'none';
+    selectAll?: 'all' | 'filtered' | 'currentPage';
 }
 
 interface ColSortModel {
@@ -69,11 +99,9 @@ interface ColSortModel {
 
 export class Table extends Input {
     private readonly id_: string;
-    private readonly columns_: string[];
-    private readonly align_: Record<string, 'left' | 'right' | 'center' | 'justify'>;
-    private readonly format_: Record<string, string> = {};
-    private readonly height_: number;
-    private readonly widths_: Record<string, number>;
+    private readonly columns_: Column[];
+    private readonly columnOptions_: Record<string, Column>;
+    private readonly height_: number | undefined;
 
     private readonly gridContainer_: HTMLDivElement;
     private grid_: GridApi | null = null;
@@ -99,11 +127,15 @@ export class Table extends Input {
         this.id_ = generateId();
 
         // defaults
-        this.columns_ = this.options_.columns || ['*'];
-        this.align_ = this.options_.align || {};
-        this.format_ = this.options_.format || {};
-        this.height_ = this.options_.height || 500;
-        this.widths_ = typeof this.options_.width === 'object' ? this.options_.width : {};
+        this.columns_ = resolveColumns(this.options_.columns || ['*']);
+        this.columnOptions_ = this.columns_.reduce(
+            (acc, col) => {
+                acc[col.name] = col;
+                return acc;
+            },
+            {} as Record<string, Column>
+        );
+        this.height_ = this.options_.height;
 
         // state
         this.currentRow_ = -1;
@@ -116,7 +148,11 @@ export class Table extends Input {
         if (this.options_.maxWidth) {
             this.element.style.maxWidth = `${this.options_.maxWidth}px`;
         }
-        this.element.style.height = `${this.height_}px`;
+        if (this.options_.height) {
+            this.element.style.height = `${this.height_}px`;
+        } else {
+            this.element.style.height = '100%';
+        }
 
         // create grid container
         this.gridContainer_ = document.createElement('div');
@@ -125,60 +161,8 @@ export class Table extends Input {
         this.gridContainer_.style.height = '100%';
         this.element.appendChild(this.gridContainer_);
 
-        // initialize grid options
-        this.gridOptions_ = {
-            animateRows: false,
-            columnDefs: [],
-            rowData: [],
-            defaultColDef: {
-                sortable: true,
-                filter: true,
-                resizable: true,
-            },
-            onFilterChanged: () => {
-                // Capture the filter model for server-side use
-                this.filterModel_ = this.grid_?.getFilterModel() || {};
-
-                // Trigger server-side query
-                this.requestQuery();
-            },
-            onSortChanged: () => {
-                if (this.grid_) {
-                    // make a sort model
-                    const sortModel = this.grid_
-                        .getColumnState()
-                        .filter(col => col.sort)
-                        .map(col => ({ colId: col.colId, sort: col.sort }));
-                    this.sortModel_ = sortModel;
-
-                    // requery using the new sort model
-                    this.requestQuery();
-                }
-            },
-            onCellMouseOver: event => {
-                if (isSelection(this.options_.as)) {
-                    const rowIndex = event.rowIndex;
-                    if (
-                        rowIndex !== undefined &&
-                        rowIndex !== null &&
-                        rowIndex !== this.currentRow_
-                    ) {
-                        this.currentRow_ = rowIndex;
-                        this.options_.as.update(this.clause([rowIndex]));
-                    }
-                }
-            },
-            onCellMouseOut: () => {
-                if (isSelection(this.options_.as)) {
-                    this.currentRow_ = -1;
-                    this.options_.as.update(this.clause());
-                }
-            },
-            onGridReady: () => {
-                // Patch the filters to always return true
-                this.patchColumns();
-            },
-        };
+        // create grid options
+        this.gridOptions_ = this.createGridOptions(this.options_);
     }
 
     // contribute a selection clause back to the target selection
@@ -195,43 +179,13 @@ export class Table extends Input {
     async prepare() {
         // query for column schema information
         const table = this.options_.from;
-        const fields = this.columns_.map(column => ({ column, table }));
+        const fields = this.columns_.map(column => ({ column: column.name, table }));
         this.schema_ = await queryFieldInfo(this.coordinator!, fields);
 
         // create column definitions for ag-grid
-        const columnDefs: ColDef[] = this.schema_.map(({ column, type }) => {
-            const align = this.align_[column] || (type === 'number' ? 'right' : 'left');
-            const formatter = formatterForType(type, this.format_[column]);
-
-            const colDef: ColDef = {
-                field: column,
-                headerName: column,
-                cellStyle: { textAlign: align },
-                comparator: (_valueA, _valueB) => {
-                    return 0;
-                },
-                filter: filterForColumnType(type),
-                valueFormatter: params => {
-                    // Format the value if a format is provided
-                    const value = params.value;
-                    if (formatter && value !== null && value !== undefined) {
-                        return formatter(value);
-                    }
-                    return value;
-                },
-            };
-
-            // Set columns widths, if explicitly provided
-            const width = this.widths_[column];
-            if (width) {
-                colDef.width = width;
-            } else {
-                colDef.flex = 1;
-            }
-
-            return colDef;
-        });
-
+        const columnDefs: ColDef[] = this.schema_.map(({ column, type }) =>
+            this.createColumnDef(column, type)
+        );
         this.gridOptions_.columnDefs = columnDefs;
 
         // Set the custom grid theme
@@ -303,25 +257,157 @@ export class Table extends Input {
         this.grid_.setGridOption('rowData', rowData);
     });
 
-    private patchColumns() {
-        if (!this.grid_) {
-            return;
-        }
+    private createGridOptions(options: TableOptions): GridOptions {
+        const headerHeightPixels =
+            typeof options.headerHeight === 'string' ? undefined : options.headerHeight;
+        const hoverSelect = options.select === 'hover' || options.select === undefined;
+        const explicitSelection = resolveRowSelection(options);
 
-        const columns = this.grid_.getColumns();
-        if (columns) {
-            columns.forEach(async column => {
-                const colId = column.getColId();
-                const filterInstance = await this.grid_!.getColumnFilterInstance(colId);
+        // initialize grid options
+        return {
+            // always pass filter to allow server-side filtering
+            alwaysPassFilter: () => true,
+            pagination: !!options.pagination,
+            paginationAutoPageSize: !!options.paginationAutoPageSize,
+            paginationPageSizeSelector: options.paginationPageSizeSelector,
+            paginationPageSize: options.paginationPageSize,
+            animateRows: true,
+            headerHeight: headerHeightPixels,
+            rowHeight: options.rowHeight,
+            columnDefs: [],
+            rowData: [],
+            rowSelection: explicitSelection,
+            onFilterChanged: () => {
+                // Capture the filter model for server-side use
+                this.filterModel_ = this.grid_?.getFilterModel() || {};
 
-                // Patch filters to always return true
-                // This is a workaround to disable client side filtering so we can implement
-                // filtering using the query method instead.
-                if (filterInstance && typeof filterInstance.doesFilterPass === 'function') {
-                    filterInstance.doesFilterPass = () => true;
+                // Trigger server-side query
+                this.requestQuery();
+            },
+            onSortChanged: () => {
+                if (this.grid_) {
+                    // make a sort model
+                    const sortModel = this.grid_
+                        .getColumnState()
+                        .filter(col => col.sort)
+                        .map(col => ({ colId: col.colId, sort: col.sort }));
+                    this.sortModel_ = sortModel;
+
+                    // requery using the new sort model
+                    this.requestQuery();
                 }
-            });
+            },
+            onSelectionChanged: event => {
+                if (explicitSelection !== undefined && isSelection(this.options_.as)) {
+                    if (event.selectedNodes) {
+                        // Get the selected rows
+                        const rowIndices = event.selectedNodes
+                            .map(n => n.rowIndex)
+                            .filter(n => n !== null);
+
+                        // Update the selection clause in the target selection
+                        this.options_.as.update(this.clause(rowIndices));
+                    }
+                }
+            },
+            onCellMouseOver: event => {
+                if (hoverSelect && isSelection(this.options_.as)) {
+                    const rowIndex = event.rowIndex;
+                    if (
+                        rowIndex !== undefined &&
+                        rowIndex !== null &&
+                        rowIndex !== this.currentRow_
+                    ) {
+                        this.currentRow_ = rowIndex;
+                        this.options_.as.update(this.clause([rowIndex]));
+                    }
+                }
+            },
+            onCellMouseOut: () => {
+                if (hoverSelect && isSelection(this.options_.as)) {
+                    this.currentRow_ = -1;
+                    this.options_.as.update(this.clause());
+                }
+            },
+        };
+    }
+
+    private createColumnDef(column: string, type: JSType): ColDef {
+        const columnOptions = this.columnOptions_[column] || {};
+
+        // Align, numbers right aligned by default
+        const align = columnOptions.align || (type === 'number' ? 'right' : 'left');
+        const headerAlignment = columnOptions.headerAlign;
+
+        // Format string
+        const formatter = formatterForType(type, columnOptions.format);
+
+        // Sorting / filtering
+        const sortable = this.options_.sorting !== false && columnOptions.sortable !== false;
+        const filterable = this.options_.filtering !== false && columnOptions.filterable !== false;
+
+        // Sizing
+        const resizable = columnOptions.resizable !== false;
+
+        // Min and max width
+        const minWidth = columnOptions.minWidth;
+        const maxWidth = columnOptions.maxWidth;
+
+        // auto height
+        const autoHeight = columnOptions.autoHeight;
+        const autoHeaderHeight =
+            this.options_.headerHeight === 'auto' && columnOptions.headerAutoHeight !== false;
+
+        // wrap text
+        const wrapText = columnOptions.wrapText;
+        const wrapHeaderText = columnOptions.headerWrapText;
+
+        // flex
+        const flex = columnOptions.flex;
+
+        // Position the filter below the header
+        const floatingFilter = this.options_.filterLocation === 'secondary';
+
+        const colDef: ColDef = {
+            field: column,
+            headerName: columnOptions.label || column,
+            headerClass: headerClasses(headerAlignment),
+            cellStyle: { textAlign: align },
+            comparator: (_valueA, _valueB) => {
+                // Sorting is handled by the database, so never client sort
+                return 0;
+            },
+            filter: !filterable ? false : filterForColumnType(type),
+            flex,
+            sortable,
+            resizable,
+            minWidth,
+            maxWidth,
+            autoHeight,
+            autoHeaderHeight,
+            wrapText,
+            wrapHeaderText,
+            floatingFilter,
+            valueFormatter: params => {
+                // Format the value if a format is provided
+                const value = params.value;
+                if (formatter && value !== null && value !== undefined) {
+                    return formatter(value);
+                }
+                return value;
+            },
+        };
+
+        // Set columns widths, if explicitly provided
+        // otherwise use flex to make all columns equal
+        const width = columnOptions.width;
+        if (width) {
+            colDef.width = width;
+        } else if (flex === undefined || flex === null) {
+            colDef.flex = 1;
         }
+
+        return colDef;
     }
 
     // all mosaic inputs implement this, not exactly sure what it does
@@ -331,6 +417,37 @@ export class Table extends Input {
         }
     }
 }
+
+const resolveColumns = (columns: Array<string | Column>): Column[] => {
+    return columns.map(col => {
+        if (typeof col === 'string') {
+            return { name: col };
+        } else if (typeof col === 'object' && col !== null) {
+            return col as Column;
+        } else {
+            throw new Error(`Invalid column definition: ${col}`);
+        }
+    });
+};
+
+const headerClasses = (align?: 'left' | 'right' | 'center' | 'justify'): string[] | undefined => {
+    if (!align) {
+        return undefined;
+    }
+    return [`header-${align}`];
+};
+
+const resolveRowSelection = (options: TableOptions): RowSelectionOptions<any, any> | undefined => {
+    const explicitSelect = options.select === 'single' || options.select === 'multiple';
+    const selectAll = options.selectAll || 'all';
+    return !explicitSelect
+        ? undefined
+        : options.select === 'single'
+          ? {
+                mode: 'singleRow',
+            }
+          : { mode: 'multiRow', selectAll };
+};
 
 const filterForColumnType = (type: string): string => {
     // Select the proper filter type based on the column type
@@ -387,15 +504,14 @@ const filterExpression = (
     query: SelectQuery
 ): ExprNode | undefined => {
     if (isCombinedSimpleModel(filter)) {
-        const exp = filter.operator === 'AND' ? and : or;
+        const operator = filter.operator === 'AND' ? and : or;
         const expressions = filter.conditions
             ?.map((f: any) => {
-                const typedF = f as SupportedFilter;
-                return filterExpression(colId, typedF, query);
+                return filterExpression(colId, f as SupportedFilter, query);
             })
             .filter(e => e !== undefined);
         if (expressions && expressions.length > 0) {
-            return exp(...expressions);
+            return operator(...expressions);
         }
     } else if (isTextFilter(filter)) {
         return simpleExpression(colId, filter.type, filter.filter);

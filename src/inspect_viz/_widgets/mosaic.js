@@ -106,17 +106,17 @@ var ChoiceInput = class extends Input {
     }
   }
   publish(value) {
-    const { as, field, column: column2 } = this.options_;
-    if (isSelection(as) && column2) {
-      let clause = clausePoint(field || column2, void 0, { source: this });
+    const { as, field, column } = this.options_;
+    if (isSelection(as) && column) {
+      let clause = clausePoint(field || column, void 0, { source: this });
       if (Array.isArray(value) && value.length > 0) {
         clause = clausePoints(
-          [field || column2],
+          [field || column],
           value.map((v) => [v]),
           { source: this }
         );
       } else if (value?.length) {
-        clause = clausePoint(field || column2, value, { source: this });
+        clause = clausePoint(field || column, value, { source: this });
       }
       as.update(clause);
     } else if (isParam(as)) {
@@ -124,14 +124,14 @@ var ChoiceInput = class extends Input {
     }
   }
   query(filter = []) {
-    const { from, column: column2 } = this.options_;
+    const { from, column } = this.options_;
     if (!from) {
       return null;
     }
-    if (!column2) {
+    if (!column) {
       throw new Error("You must specify a column along with a data source");
     }
-    return Query.from(from).select({ value: column2 }).distinct().where(...filter).orderby(column2);
+    return Query.from(from).select({ value: column }).distinct().where(...filter).orderby(column);
   }
   queryResult(data) {
     this.setData([{ value: "", label: "All" }, ...this.queryResultOptions(data)]);
@@ -433,7 +433,7 @@ var Slider = class extends Input {
       container.innerText = label;
       this.element.appendChild(container);
     }
-    let { value, width, min: min3, max: max3 } = options_;
+    let { value, width, min: min2, max: max2 } = options_;
     this.slider_ = document.createElement("div");
     this.slider_.classList.add("noUi-round");
     this.slider_.setAttribute("id", id);
@@ -473,10 +473,10 @@ var Slider = class extends Input {
       setupActivationListeners(this, this.slider_);
     }
     if (!options_.from) {
-      min3 = min3 ?? (Array.isArray(value) ? value[0] : value ?? 0);
-      max3 = max3 ?? (Array.isArray(value) ? value[1] : value ?? 0);
+      min2 = min2 ?? (Array.isArray(value) ? value[0] : value ?? 0);
+      max2 = max2 ?? (Array.isArray(value) ? value[1] : value ?? 0);
       const start = value ?? (options_.select === "interval" ? [0, 0] : 0);
-      this.updateSlider(min3, max3, start);
+      this.updateSlider(min2, max2, start);
     }
   }
   slider_;
@@ -509,35 +509,35 @@ var Slider = class extends Input {
     }
   }
   query(filter = []) {
-    const { from, column: column2 } = this.options_;
-    if (!from || !column2) {
+    const { from, column } = this.options_;
+    if (!from || !column) {
       return null;
     }
-    return Query2.select({ min: min(column2), max: max(column2) }).from(from).where(...filter);
+    return Query2.select({ min: min(column), max: max(column) }).from(from).where(...filter);
   }
   queryResult(data) {
     const { min: dataMin, max: dataMax } = Array.from(data)[0];
-    const min3 = this.options_.min ?? dataMin;
-    const max3 = this.options_.max ?? dataMax;
+    const min2 = this.options_.min ?? dataMin;
+    const max2 = this.options_.max ?? dataMax;
     let start = this.sliderValue;
     if (!this.firstQuery_) {
       this.firstQuery_ = true;
       if (this.options_.value === void 0) {
-        start = this.options_.select === "interval" ? [min3, max3] : max3;
+        start = this.options_.select === "interval" ? [min2, max2] : max2;
       } else {
         start = this.options_.value;
       }
     }
-    this.updateSlider(min3, max3, start);
+    this.updateSlider(min2, max2, start);
     return this;
   }
-  updateSlider(min3, max3, start) {
-    const step = this.options_.step ?? (min3 >= 5 || max3 >= 5 ? 1 : void 0);
+  updateSlider(min2, max2, start) {
+    const step = this.options_.step ?? (min2 >= 5 || max2 >= 5 ? 1 : void 0);
     this.sliderApi_.updateOptions(
       {
         range: {
-          min: min3,
-          max: max3
+          min: min2,
+          max: max2
         },
         step,
         start
@@ -547,15 +547,15 @@ var Slider = class extends Input {
     return this;
   }
   clause(value) {
-    let { field, column: column2, min: min3, select = "point" } = this.options_;
-    field = field || column2;
+    let { field, column, min: min2, select = "point" } = this.options_;
+    field = field || column;
     if (!field) {
       throw new Error(
         "You must specify a 'column' or 'field' for a slider targeting a selection."
       );
     }
     if (select === "interval" && value !== void 0) {
-      const domain = Array.isArray(value) ? value : [min3 ?? 0, value];
+      const domain = Array.isArray(value) ? value : [min2 ?? 0, value];
       return clauseInterval(field, domain, {
         source: this,
         bin: "ceil",
@@ -610,22 +610,23 @@ import {
   toDataColumns as toDataColumns2
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
 import {
-  and as and2,
-  asc as asc2,
-  contains as contains2,
-  desc as desc2,
-  eq as eq2,
-  gt as gt2,
-  gte as gte2,
-  isNull as isNull2,
-  literal as literal2,
-  lt as lt2,
-  lte as lte2,
-  neq as neq2,
-  not as not2,
-  or as or2,
-  prefix as prefix2,
-  Query as Query4
+  and,
+  asc,
+  contains,
+  desc,
+  eq,
+  gt,
+  gte,
+  isNull,
+  literal,
+  lt,
+  lte,
+  neq,
+  not,
+  or,
+  prefix,
+  suffix,
+  Query as Query3
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-sql@0.16.2/+esm";
 import {
   createGrid,
@@ -635,452 +636,21 @@ import {
 } from "https://cdn.jsdelivr.net/npm/ag-grid-community@33.3.2/+esm";
 import * as d3Format from "https://cdn.jsdelivr.net/npm/d3-format@3.1.0/+esm";
 import * as d3TimeFormat from "https://cdn.jsdelivr.net/npm/d3-time-format@4.1.0/+esm";
-
-// node_modules/@uwdata/mosaic-sql/src/constants.js
-var COLUMN_REF = "COLUMN_REF";
-var COLUMN_PARAM = "COLUMN_PARAM";
-var TABLE_REF = "TABLE_REF";
-var LITERAL = "LITERAL";
-var ORDER_BY = "ORDER_BY";
-var CAST = "CAST";
-var CASE = "CASE";
-var WHEN = "WHEN";
-var UNARY_OPERATOR = "UNARY";
-var BINARY_OPERATOR = "BINARY";
-var BETWEEN_OPERATOR = "BETWEEN";
-var NOT_BETWEEN_OPERATOR = "NOT_BETWEEN";
-var LOGICAL_OPERATOR = "LOGICAL_OPERATOR";
-var IN_OPERATOR = "IN";
-var FUNCTION = "FUNCTION";
-var AGGREGATE = "AGGREGATE";
-var WINDOW = "WINDOW";
-var WINDOW_DEF = "WINDOW_DEF";
-var WINDOW_FRAME = "WINDOW_FRAME";
-var EXPRESSION = "EXPRESSION";
-var FRAGMENT = "FRAGMENT";
-var PARAM = "PARAM";
-var SELECT_CLAUSE = "SELECT_CLAUSE";
-var FROM_CLAUSE = "FROM_CLAUSE";
-var WINDOW_CLAUSE = "WINDOW_CLAUSE";
-var SELECT_QUERY = "SELECT_QUERY";
-var DESCRIBE_QUERY = "DESCRIBE_QUERY";
-var SET_OPERATION = "SET_OPERATION";
-
-// node_modules/@uwdata/mosaic-sql/src/ast/node.js
-var SQLNode = class {
-  /**
-   * Instantiate a SQL AST node.
-   * @param {string} type The SQL AST node type.
-   */
-  constructor(type) {
-    this.type = type;
-  }
-};
-var ExprNode = class extends SQLNode {
-};
-
-// node_modules/@uwdata/mosaic-sql/src/ast/literal.js
-var LiteralNode = class extends ExprNode {
-  /**
-   * Instantiate an literal node.
-   * @param {*} value The literal value.
-   */
-  constructor(value) {
-    super(LITERAL);
-    this.value = value;
-  }
-  /**
-   * Generate a SQL query string for this node.
-   * @returns {string}
-   */
-  toString() {
-    return literalToSQL(this.value);
-  }
-};
-function literalToSQL(value) {
-  switch (typeof value) {
-    case "number":
-      return Number.isFinite(value) ? `${value}` : "NULL";
-    case "string":
-      return `'${value.replaceAll(`'`, `''`)}'`;
-    case "boolean":
-      return value ? "TRUE" : "FALSE";
-    default:
-      if (value == null) {
-        return "NULL";
-      } else if (value instanceof Date) {
-        const ts = +value;
-        if (Number.isNaN(ts)) return "NULL";
-        const y2 = value.getUTCFullYear();
-        const m = value.getUTCMonth();
-        const d = value.getUTCDate();
-        return ts === Date.UTC(y2, m, d) ? `DATE '${y2}-${m + 1}-${d}'` : `epoch_ms(${ts})`;
-      } else if (value instanceof RegExp) {
-        return `'${value.source}'`;
-      } else {
-        return `${value}`;
-      }
-  }
-}
-
-// node_modules/@uwdata/mosaic-sql/src/ast/param.js
-var ParamNode = class extends ExprNode {
-  /**
-   * Instantiate a param node with a dynamic parameter.
-   * @param {ParamLike} param The dynamic parameter.
-   */
-  constructor(param) {
-    super(PARAM);
-    this.param = param;
-  }
-  /**
-   * Returns the current parameter value.
-   * @returns {*}
-   */
-  get value() {
-    return this.param.value;
-  }
-  /**
-   * Generate a SQL query string for this node.
-   * @returns {string}
-   */
-  toString() {
-    return literalToSQL(this.value);
-  }
-};
-
-// node_modules/@uwdata/mosaic-sql/src/ast/function.js
-var FunctionNode = class extends ExprNode {
-  /**
-   * Instantiate a function node.
-   * @param {string} name The function name.
-   * @param {ExprNode[]} [args=[]] The function arguments.
-   */
-  constructor(name, args = []) {
-    super(FUNCTION);
-    this.name = name;
-    this.args = args;
-  }
-  /**
-   * Generate a SQL query string for this node.
-   * @returns {string}
-   */
-  toString() {
-    const { name, args } = this;
-    return `${name}(${args.join(", ")})`;
-  }
-};
-
-// node_modules/@uwdata/mosaic-sql/src/util/function.js
-function fn(name, ...args) {
-  return new FunctionNode(name, argsList(args).map(asNode));
-}
-function exprList(list, cast2 = asNode) {
-  return list.flat().filter((x2) => x2 != null).map((x2) => cast2(x2));
-}
-function argsList(list) {
-  const n = list.length;
-  let i = n;
-  for (; i > 0 && list[i - 1] === void 0; --i) ;
-  return i < n ? list.slice(0, i) : list;
-}
-
-// node_modules/@uwdata/mosaic-sql/src/util/string.js
-function parseIdentifier(id) {
-  return id.split(".");
-}
-function quoteIdentifier(value) {
-  return `"${value}"`;
-}
-
-// node_modules/@uwdata/mosaic-sql/src/util/type-check.js
-function isString(value) {
-  return typeof value === "string";
-}
-function isArray(value) {
-  return Array.isArray(value);
-}
-function isParamLike(value) {
-  return value && typeof value.addEventListener === "function" && value.dynamic !== false && "value" in value;
-}
-
-// node_modules/@uwdata/mosaic-sql/src/ast/column-ref.js
-var ColumnRefNode = class extends ExprNode {
-  /**
-   * Instantiate a column reference node.
-   * @param {TableRefNode} [table] The table reference.
-   */
-  constructor(type, table) {
-    super(type);
-    this.table = table;
-  }
-  /**
-   * Returns the column name.
-   * @returns {string}
-   */
-  get column() {
-    return null;
-  }
-  /**
-   * Generate a SQL query string for this node.
-   * @returns {string}
-   */
-  toString() {
-    const { column: column2, table } = this;
-    const tref = `${table ?? ""}`;
-    const id = column2 === "*" ? "*" : quoteIdentifier(column2);
-    return (tref ? tref + "." : "") + id;
-  }
-};
-var ColumnNameRefNode = class extends ColumnRefNode {
-  /**
-   * Instantiate a column reference node.
-   * @param {string} name The column name.
-   * @param {TableRefNode} [table] The table reference.
-   */
-  constructor(name, table) {
-    super(COLUMN_REF, table);
-    this.name = name;
-  }
-  /**
-   * Returns the column name.
-   * @returns {string}
-   */
-  get column() {
-    return this.name;
-  }
-};
-
-// node_modules/@uwdata/mosaic-sql/src/ast/column-param.js
-var ColumnParamNode = class extends ColumnRefNode {
-  /**
-   * Instantiate a column param node.
-   * @param {ParamNode} param The column name as a parameter node.
-   * @param {TableRefNode} [table] The table reference.
-   */
-  constructor(param, table) {
-    super(COLUMN_PARAM, table);
-    this.param = param;
-  }
-  /**
-   * Returns the column name.
-   * @returns {string}
-   */
-  get column() {
-    return `${this.param.value}`;
-  }
-};
-
-// node_modules/@uwdata/mosaic-sql/src/functions/column.js
-function column(name, table) {
-  const tref = asTableRef(table);
-  return isParamLike(name) ? new ColumnParamNode(new ParamNode(name), tref) : new ColumnNameRefNode(name, tref);
-}
-
-// node_modules/@uwdata/mosaic-sql/src/functions/literal.js
-function literal(value) {
-  return new LiteralNode(value);
-}
-
-// node_modules/@uwdata/mosaic-sql/src/ast/table-ref.js
-var TableRefNode = class extends ExprNode {
-  /**
-   * Instantiate a table reference node.
-   * @param {string | string[]} table The table name.
-   */
-  constructor(table) {
-    super(TABLE_REF);
-    this.table = [table].flat();
-  }
-  /**
-   * The table name without database or schema namespaces.
-   * @returns {string}
-   */
-  get name() {
-    return this.table[this.table.length - 1];
-  }
-  /**
-   * Generate a SQL query string for this node.
-   * @returns {string}
-   */
-  toString() {
-    return this.table.map((t) => quoteIdentifier(t)).join(".");
-  }
-};
-
-// node_modules/@uwdata/mosaic-sql/src/functions/table-ref.js
-function tableRef(...ids) {
-  const args = exprList(ids, String);
-  return args?.length ? new TableRefNode(args) : void 0;
-}
-
-// node_modules/@uwdata/mosaic-sql/src/util/ast.js
-function asNode(value) {
-  return isString(value) ? parseColumnRef(value) : asLiteral(value);
-}
-function asLiteral(value) {
-  return value instanceof ExprNode ? value : isParamLike(value) ? new ParamNode(value) : literal(value);
-}
-function asTableRef(value) {
-  return isString(value) ? parseTableRef(value) : isArray(value) ? tableRef(value) : value;
-}
-function parseColumnRef(ref) {
-  const ids = parseIdentifier(ref);
-  return column(ids.pop(), tableRef(ids));
-}
-function parseTableRef(ref) {
-  return tableRef(parseIdentifier(ref));
-}
-
-// node_modules/@uwdata/mosaic-sql/src/ast/aggregate.js
-var aggregateNames = [
-  "any_value",
-  "approx_count_distinct",
-  "approx_quantile",
-  "arbitrary",
-  "arg_max",
-  "arg_max_null",
-  "arg_min",
-  "arg_min_null",
-  "array_agg",
-  "avg",
-  "bit_and",
-  "bit_or",
-  "bit_xor",
-  "bitstring_agg",
-  "bool_and",
-  "bool_or",
-  "corr",
-  "count",
-  "covar_pop",
-  "covar_samp",
-  "entropy",
-  "favg",
-  "first",
-  "fsum",
-  "geomean",
-  "kurtosis_pop",
-  "kurtosis",
-  "last",
-  "mad",
-  "max",
-  "max_by",
-  "median",
-  "min",
-  "min_by",
-  "mode",
-  "product",
-  "quantile",
-  "quantile_cont",
-  "quantile_disc",
-  "regr_avgx",
-  "regr_avgy",
-  "regr_count",
-  "regr_intercept",
-  "regr_r2",
-  "regr_sxx",
-  "regr_sxy",
-  "regr_syy",
-  "regr_slope",
-  "reservoir_quantile",
-  "skewness",
-  "stddev",
-  "stddev_pop",
-  "stddev_samp",
-  "string_agg",
-  "sum",
-  "variance",
-  "var_pop",
-  "var_samp"
-];
-
-// node_modules/@uwdata/mosaic-sql/src/functions/string.js
-function strFn(name, expr, ...args) {
-  return fn(name, expr, ...argsList(args).map(asLiteral));
-}
-function suffix(string, search_string) {
-  return strFn("ends_with", string, search_string);
-}
-
-// node_modules/@uwdata/mosaic-sql/src/visit/recurse.js
-var recurse = {
-  [AGGREGATE]: ["args", "filter"],
-  [BETWEEN_OPERATOR]: ["expr", "extent"],
-  [BINARY_OPERATOR]: ["left", "right"],
-  [CASE]: ["expr", "_when", "_else"],
-  [CAST]: ["expr"],
-  [COLUMN_PARAM]: ["param", "table"],
-  [COLUMN_REF]: ["table"],
-  [DESCRIBE_QUERY]: ["query"],
-  [EXPRESSION]: ["node"],
-  [FRAGMENT]: ["spans"],
-  [FROM_CLAUSE]: ["expr"],
-  [FUNCTION]: ["args"],
-  [IN_OPERATOR]: ["expr", "values"],
-  [LOGICAL_OPERATOR]: ["clauses"],
-  [NOT_BETWEEN_OPERATOR]: ["expr", "extent"],
-  [ORDER_BY]: ["expr"],
-  [PARAM]: ["value"],
-  [SELECT_CLAUSE]: ["expr"],
-  [SELECT_QUERY]: ["_with", "_select", "_from", "_where", "_sample", "_groupby", "_having", "_window", "_qualify", "_orderby"],
-  [SET_OPERATION]: ["subqueries", "_orderby"],
-  [UNARY_OPERATOR]: ["expr"],
-  [WHEN]: ["when", "then"],
-  [WINDOW]: ["func", "def"],
-  [WINDOW_CLAUSE]: ["def"],
-  [WINDOW_DEF]: ["partition", "order", "frame"],
-  [WINDOW_FRAME]: ["extent"]
-};
-
-// node_modules/@uwdata/mosaic-sql/src/visit/visitors.js
-var aggrRegExp = new RegExp(`^(${aggregateNames.join("|")})$`);
-
-// node_modules/@uwdata/mosaic-sql/src/transforms/util/time-interval.js
-var YEAR = "year";
-var MONTH = "month";
-var DAY = "day";
-var HOUR = "hour";
-var MINUTE = "minute";
-var SECOND = "second";
-var durationSecond = 1e3;
-var durationMinute = durationSecond * 60;
-var durationHour = durationMinute * 60;
-var durationDay = durationHour * 24;
-var durationWeek = durationDay * 7;
-var durationMonth = durationDay * 30;
-var durationYear = durationDay * 365;
-var units = [
-  { unit: SECOND, step: 1, dt: durationSecond },
-  { unit: SECOND, step: 5, dt: durationSecond * 5 },
-  { unit: SECOND, step: 15, dt: durationSecond * 15 },
-  { unit: SECOND, step: 30, dt: durationSecond * 30 },
-  { unit: MINUTE, step: 1, dt: durationMinute },
-  { unit: MINUTE, step: 5, dt: durationMinute * 5 },
-  { unit: MINUTE, step: 15, dt: durationMinute * 15 },
-  { unit: MINUTE, step: 30, dt: durationMinute * 30 },
-  { unit: HOUR, step: 1, dt: durationHour },
-  { unit: HOUR, step: 3, dt: durationHour * 3 },
-  { unit: HOUR, step: 6, dt: durationHour * 6 },
-  { unit: HOUR, step: 12, dt: durationHour * 12 },
-  { unit: DAY, step: 1, dt: durationDay },
-  { unit: DAY, step: 7, dt: durationWeek },
-  { unit: MONTH, step: 1, dt: durationMonth },
-  { unit: MONTH, step: 3, dt: durationMonth * 3 },
-  { unit: YEAR, step: 1, dt: durationYear }
-];
-
-// js/inputs/table.ts
 var Table = class extends Input {
   constructor(options_) {
     super(options_.filterBy);
     this.options_ = options_;
     ModuleRegistry.registerModules([AllCommunityModule]);
     this.id_ = generateId();
-    this.columns_ = this.options_.columns || ["*"];
-    this.align_ = this.options_.align || {};
-    this.format_ = this.options_.format || {};
-    this.height_ = this.options_.height || 500;
-    this.widths_ = typeof this.options_.width === "object" ? this.options_.width : {};
+    this.columns_ = resolveColumns(this.options_.columns || ["*"]);
+    this.columnOptions_ = this.columns_.reduce(
+      (acc, col) => {
+        acc[col.name] = col;
+        return acc;
+      },
+      {}
+    );
+    this.height_ = this.options_.height;
     this.currentRow_ = -1;
     this.schema_ = [];
     if (typeof this.options_.width === "number") {
@@ -1089,58 +659,22 @@ var Table = class extends Input {
     if (this.options_.maxWidth) {
       this.element.style.maxWidth = `${this.options_.maxWidth}px`;
     }
-    this.element.style.height = `${this.height_}px`;
+    if (this.options_.height) {
+      this.element.style.height = `${this.height_}px`;
+    } else {
+      this.element.style.height = "100%";
+    }
     this.gridContainer_ = document.createElement("div");
     this.gridContainer_.id = this.id_;
     this.gridContainer_.style.width = "100%";
     this.gridContainer_.style.height = "100%";
     this.element.appendChild(this.gridContainer_);
-    this.gridOptions_ = {
-      animateRows: false,
-      columnDefs: [],
-      rowData: [],
-      defaultColDef: {
-        sortable: true,
-        filter: true,
-        resizable: true
-      },
-      onFilterChanged: () => {
-        this.filterModel_ = this.grid_?.getFilterModel() || {};
-        this.requestQuery();
-      },
-      onSortChanged: () => {
-        if (this.grid_) {
-          const sortModel = this.grid_.getColumnState().filter((col) => col.sort).map((col) => ({ colId: col.colId, sort: col.sort }));
-          this.sortModel_ = sortModel;
-          this.requestQuery();
-        }
-      },
-      onCellMouseOver: (event) => {
-        if (isSelection4(this.options_.as)) {
-          const rowIndex = event.rowIndex;
-          if (rowIndex !== void 0 && rowIndex !== null && rowIndex !== this.currentRow_) {
-            this.currentRow_ = rowIndex;
-            this.options_.as.update(this.clause([rowIndex]));
-          }
-        }
-      },
-      onCellMouseOut: () => {
-        if (isSelection4(this.options_.as)) {
-          this.currentRow_ = -1;
-          this.options_.as.update(this.clause());
-        }
-      },
-      onGridReady: () => {
-        this.patchColumns();
-      }
-    };
+    this.gridOptions_ = this.createGridOptions(this.options_);
   }
   id_;
   columns_;
-  align_;
-  format_ = {};
+  columnOptions_;
   height_;
-  widths_;
   gridContainer_;
   grid_ = null;
   gridOptions_;
@@ -1164,35 +698,11 @@ var Table = class extends Input {
   // and do related setup
   async prepare() {
     const table = this.options_.from;
-    const fields = this.columns_.map((column2) => ({ column: column2, table }));
+    const fields = this.columns_.map((column) => ({ column: column.name, table }));
     this.schema_ = await queryFieldInfo(this.coordinator, fields);
-    const columnDefs = this.schema_.map(({ column: column2, type }) => {
-      const align = this.align_[column2] || (type === "number" ? "right" : "left");
-      const formatter = formatterForType(type, this.format_[column2]);
-      const colDef = {
-        field: column2,
-        headerName: column2,
-        cellStyle: { textAlign: align },
-        comparator: (_valueA, _valueB) => {
-          return 0;
-        },
-        filter: filterForColumnType(type),
-        valueFormatter: (params) => {
-          const value = params.value;
-          if (formatter && value !== null && value !== void 0) {
-            return formatter(value);
-          }
-          return value;
-        }
-      };
-      const width = this.widths_[column2];
-      if (width) {
-        colDef.width = width;
-      } else {
-        colDef.flex = 1;
-      }
-      return colDef;
-    });
+    const columnDefs = this.schema_.map(
+      ({ column, type }) => this.createColumnDef(column, type)
+    );
     this.gridOptions_.columnDefs = columnDefs;
     const myTheme = themeBalham.withParams({
       spacing: 4,
@@ -1204,7 +714,7 @@ var Table = class extends Input {
   // mosaic calls this every time it needs to show data to find
   // out what query we want to run
   query(filter = []) {
-    let query = Query4.from(this.options_.from).select(
+    let query = Query3.from(this.options_.from).select(
       this.schema_.length ? this.schema_.map((s) => s.column) : "*"
     );
     query = query.where(...filter);
@@ -1217,7 +727,7 @@ var Table = class extends Input {
     });
     if (this.sortModel_.length > 0) {
       this.sortModel_.forEach((sort) => {
-        query = query.orderby(sort.sort === "asc" ? asc2(sort.colId) : desc2(sort.colId));
+        query = query.orderby(sort.sort === "asc" ? asc(sort.colId) : desc(sort.colId));
       });
     }
     return query;
@@ -1237,27 +747,116 @@ var Table = class extends Input {
     const rowData = [];
     for (let i = 0; i < this.data_.numRows; i++) {
       const row = {};
-      this.schema_.forEach(({ column: column2 }) => {
-        row[column2] = this.data_.columns[column2][i];
+      this.schema_.forEach(({ column }) => {
+        row[column] = this.data_.columns[column][i];
       });
       rowData.push(row);
     }
     this.grid_.setGridOption("rowData", rowData);
   });
-  patchColumns() {
-    if (!this.grid_) {
-      return;
-    }
-    const columns = this.grid_.getColumns();
-    if (columns) {
-      columns.forEach(async (column2) => {
-        const colId = column2.getColId();
-        const filterInstance = await this.grid_.getColumnFilterInstance(colId);
-        if (filterInstance && typeof filterInstance.doesFilterPass === "function") {
-          filterInstance.doesFilterPass = () => true;
+  createGridOptions(options) {
+    const headerHeightPixels = typeof options.headerHeight === "string" ? void 0 : options.headerHeight;
+    const hoverSelect = options.select === "hover" || options.select === void 0;
+    const explicitSelection = resolveRowSelection(options);
+    return {
+      // always pass filter to allow server-side filtering
+      alwaysPassFilter: () => true,
+      pagination: !!options.pagination,
+      paginationAutoPageSize: !!options.paginationAutoPageSize,
+      paginationPageSizeSelector: options.paginationPageSizeSelector,
+      paginationPageSize: options.paginationPageSize,
+      animateRows: true,
+      headerHeight: headerHeightPixels,
+      rowHeight: options.rowHeight,
+      columnDefs: [],
+      rowData: [],
+      rowSelection: explicitSelection,
+      onFilterChanged: () => {
+        this.filterModel_ = this.grid_?.getFilterModel() || {};
+        this.requestQuery();
+      },
+      onSortChanged: () => {
+        if (this.grid_) {
+          const sortModel = this.grid_.getColumnState().filter((col) => col.sort).map((col) => ({ colId: col.colId, sort: col.sort }));
+          this.sortModel_ = sortModel;
+          this.requestQuery();
         }
-      });
+      },
+      onSelectionChanged: (event) => {
+        if (explicitSelection !== void 0 && isSelection4(this.options_.as)) {
+          if (event.selectedNodes) {
+            const rowIndices = event.selectedNodes.map((n) => n.rowIndex).filter((n) => n !== null);
+            this.options_.as.update(this.clause(rowIndices));
+          }
+        }
+      },
+      onCellMouseOver: (event) => {
+        if (hoverSelect && isSelection4(this.options_.as)) {
+          const rowIndex = event.rowIndex;
+          if (rowIndex !== void 0 && rowIndex !== null && rowIndex !== this.currentRow_) {
+            this.currentRow_ = rowIndex;
+            this.options_.as.update(this.clause([rowIndex]));
+          }
+        }
+      },
+      onCellMouseOut: () => {
+        if (hoverSelect && isSelection4(this.options_.as)) {
+          this.currentRow_ = -1;
+          this.options_.as.update(this.clause());
+        }
+      }
+    };
+  }
+  createColumnDef(column, type) {
+    const columnOptions = this.columnOptions_[column] || {};
+    const align = columnOptions.align || (type === "number" ? "right" : "left");
+    const headerAlignment = columnOptions.headerAlign;
+    const formatter = formatterForType(type, columnOptions.format);
+    const sortable = this.options_.sorting !== false && columnOptions.sortable !== false;
+    const filterable = this.options_.filtering !== false && columnOptions.filterable !== false;
+    const resizable = columnOptions.resizable !== false;
+    const minWidth = columnOptions.minWidth;
+    const maxWidth = columnOptions.maxWidth;
+    const autoHeight = columnOptions.autoHeight;
+    const autoHeaderHeight = this.options_.headerHeight === "auto" && columnOptions.headerAutoHeight !== false;
+    const wrapText = columnOptions.wrapText;
+    const wrapHeaderText = columnOptions.headerWrapText;
+    const flex = columnOptions.flex;
+    const floatingFilter = this.options_.filterLocation === "secondary";
+    const colDef = {
+      field: column,
+      headerName: columnOptions.label || column,
+      headerClass: headerClasses(headerAlignment),
+      cellStyle: { textAlign: align },
+      comparator: (_valueA, _valueB) => {
+        return 0;
+      },
+      filter: !filterable ? false : filterForColumnType(type),
+      flex,
+      sortable,
+      resizable,
+      minWidth,
+      maxWidth,
+      autoHeight,
+      autoHeaderHeight,
+      wrapText,
+      wrapHeaderText,
+      floatingFilter,
+      valueFormatter: (params) => {
+        const value = params.value;
+        if (formatter && value !== null && value !== void 0) {
+          return formatter(value);
+        }
+        return value;
+      }
+    };
+    const width = columnOptions.width;
+    if (width) {
+      colDef.width = width;
+    } else if (flex === void 0 || flex === null) {
+      colDef.flex = 1;
     }
+    return colDef;
   }
   // all mosaic inputs implement this, not exactly sure what it does
   activate() {
@@ -1265,6 +864,30 @@ var Table = class extends Input {
       this.options_.as.activate(this.clause([]));
     }
   }
+};
+var resolveColumns = (columns) => {
+  return columns.map((col) => {
+    if (typeof col === "string") {
+      return { name: col };
+    } else if (typeof col === "object" && col !== null) {
+      return col;
+    } else {
+      throw new Error(`Invalid column definition: ${col}`);
+    }
+  });
+};
+var headerClasses = (align) => {
+  if (!align) {
+    return void 0;
+  }
+  return [`header-${align}`];
+};
+var resolveRowSelection = (options) => {
+  const explicitSelect = options.select === "single" || options.select === "multiple";
+  const selectAll = options.selectAll || "all";
+  return !explicitSelect ? void 0 : options.select === "single" ? {
+    mode: "singleRow"
+  } : { mode: "multiRow", selectAll };
 };
 var filterForColumnType = (type) => {
   switch (type) {
@@ -1307,13 +930,12 @@ var formatterForType = (type, formatStr) => {
 };
 var filterExpression = (colId, filter, query) => {
   if (isCombinedSimpleModel(filter)) {
-    const exp2 = filter.operator === "AND" ? and2 : or2;
+    const operator = filter.operator === "AND" ? and : or;
     const expressions = filter.conditions?.map((f) => {
-      const typedF = f;
-      return filterExpression(colId, typedF, query);
+      return filterExpression(colId, f, query);
     }).filter((e) => e !== void 0);
     if (expressions && expressions.length > 0) {
-      return exp2(...expressions);
+      return operator(...expressions);
     }
   } else if (isTextFilter(filter)) {
     return simpleExpression(colId, filter.type, filter.filter);
@@ -1324,7 +946,7 @@ var filterExpression = (colId, filter, query) => {
       return filterExpression(colId, f, query);
     }).filter((e) => e !== void 0);
     if (expr && expr.length > 0) {
-      return and2(...expr);
+      return and(...expr);
     }
   } else if (isDateFilter(filter)) {
     return simpleExpression(colId, filter.type, filter.dateFrom, filter.dateTo || void 0);
@@ -1335,32 +957,32 @@ var filterExpression = (colId, filter, query) => {
 var simpleExpression = (colId, type, filter, filterTo = void 0) => {
   switch (type) {
     case "equals":
-      return eq2(colId, literal2(filter));
+      return eq(colId, literal(filter));
     case "notEqual":
-      return neq2(colId, literal2(filter));
+      return neq(colId, literal(filter));
     case "contains":
-      return contains2(colId, String(filter));
+      return contains(colId, String(filter));
     case "notContains":
-      return not2(contains2(colId, String(filter)));
+      return not(contains(colId, String(filter)));
     case "blank":
-      return isNull2(colId);
+      return isNull(colId);
     case "notBlank":
-      return not2(isNull2(colId));
+      return not(isNull(colId));
     case "startsWith":
-      return prefix2(colId, String(filter));
+      return prefix(colId, String(filter));
     case "endsWith":
       return suffix(colId, String(filter));
     case "greaterThan":
-      return gt2(colId, literal2(filter));
+      return gt(colId, literal(filter));
     case "lessThan":
-      return lt2(colId, literal2(filter));
+      return lt(colId, literal(filter));
     case "greaterThanOrEqual":
-      return gte2(colId, literal2(filter));
+      return gte(colId, literal(filter));
     case "lessThanOrEqual":
-      return lte2(colId, literal2(filter));
+      return lte(colId, literal(filter));
     case "inRange":
       if (filterTo !== void 0 && filterTo !== null) {
-        return gte2(colId, literal2(filter)), lte2(colId, literal2(filterTo));
+        return gte(colId, literal(filter)), lte(colId, literal(filterTo));
       }
       break;
     default:
@@ -1393,7 +1015,7 @@ import {
   isParam as isParam4,
   isSelection as isSelection5
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
-import { Query as Query5 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-sql@0.16.2/+esm";
+import { Query as Query4 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-sql@0.16.2/+esm";
 var Search = class extends Input {
   constructor(options_) {
     super(options_.filterBy);
@@ -1454,7 +1076,7 @@ var Search = class extends Input {
     }
   }
   query(filter = []) {
-    return Query5.from(this.options_.from).select({ list: this.options_.column }).distinct().where(...filter);
+    return Query4.from(this.options_.from).select({ list: this.options_.column }).distinct().where(...filter);
   }
   queryResult(data) {
     this.data_ = data;
@@ -1519,7 +1141,7 @@ async function initDuckdb() {
   URL.revokeObjectURL(worker_url);
   return { db, worker };
 }
-async function waitForTable(conn, table, { interval: interval2 = 250 } = {}) {
+async function waitForTable(conn, table, { interval = 250 } = {}) {
   while (true) {
     try {
       const res = await conn.query(
@@ -1532,10 +1154,10 @@ async function waitForTable(conn, table, { interval: interval2 = 250 } = {}) {
       if (res.numRows) return;
     } catch (err) {
       console.log(
-        `Table ${table} not yet available, trying again in ${interval2}ms (error: ${err})`
+        `Table ${table} not yet available, trying again in ${interval}ms (error: ${err})`
       );
     }
-    await sleep(interval2);
+    await sleep(interval);
   }
 }
 
@@ -1695,9 +1317,9 @@ function parseStackTrace(stack) {
   return functions;
 }
 function escapeHtml(text) {
-  const div2 = document.createElement("div");
-  div2.textContent = text;
-  return div2.innerHTML;
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
 }
 function isVSCodeNotebook() {
   return window.location.protocol === "vscode-webview:" && window.location.search.includes("purpose=notebookRenderer");
