@@ -1,3 +1,3 @@
-from ._table import ColumnOptions, table
+from ._table import Column, table
 
-__all__ = ["table", "ColumnOptions"]
+__all__ = ["table", "Column"]

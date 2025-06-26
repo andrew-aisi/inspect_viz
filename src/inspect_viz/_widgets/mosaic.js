@@ -1076,8 +1076,14 @@ var Table = class extends Input {
     this.options_ = options_;
     ModuleRegistry.registerModules([AllCommunityModule]);
     this.id_ = generateId();
-    this.columns_ = this.options_.columns || ["*"];
-    this.columnOptions_ = this.options_.columnOptions || {};
+    this.columns_ = resolveColumns(this.options_.columns || ["*"]);
+    this.columnOptions_ = this.columns_.reduce(
+      (acc, col) => {
+        acc[col.name] = col;
+        return acc;
+      },
+      {}
+    );
     this.height_ = this.options_.height;
     this.currentRow_ = -1;
     this.schema_ = [];
@@ -1164,7 +1170,7 @@ var Table = class extends Input {
   // and do related setup
   async prepare() {
     const table = this.options_.from;
-    const fields = this.columns_.map((column2) => ({ column: column2, table }));
+    const fields = this.columns_.map((column2) => ({ column: column2.name, table }));
     this.schema_ = await queryFieldInfo(this.coordinator, fields);
     const columnDefs = this.schema_.map(({ column: column2, type }) => {
       const columnOptions = this.columnOptions_[column2] || {};
@@ -1176,9 +1182,11 @@ var Table = class extends Input {
       const resizable = columnOptions.resizable !== false;
       const minWidth = columnOptions.minWidth;
       const maxWidth = columnOptions.maxWidth;
+      const autoHeight = columnOptions.autoHeight;
+      const autoHeaderHeight = columnOptions.autoHeaderHeight;
       const colDef = {
         field: column2,
-        headerName: column2,
+        headerName: columnOptions.label || column2,
         cellStyle: { textAlign: align },
         headerClass: headerClz(headerAlignment),
         comparator: (_valueA, _valueB) => {
@@ -1189,6 +1197,8 @@ var Table = class extends Input {
         resizable,
         minWidth,
         maxWidth,
+        autoHeight,
+        autoHeaderHeight,
         valueFormatter: (params) => {
           const value = params.value;
           if (formatter && value !== null && value !== void 0) {
@@ -1262,6 +1272,17 @@ var Table = class extends Input {
       this.options_.as.activate(this.clause([]));
     }
   }
+};
+var resolveColumns = (columns) => {
+  return columns.map((col) => {
+    if (typeof col === "string") {
+      return { name: col };
+    } else if (typeof col === "object" && col !== null) {
+      return col;
+    } else {
+      throw new Error(`Invalid column definition: ${col}`);
+    }
+  });
 };
 var headerClz = (align) => {
   if (!align) {

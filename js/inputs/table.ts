@@ -52,7 +52,9 @@ import { Input, InputOptions } from './input';
 import { generateId } from '../util/id';
 import { suffix } from '@uwdata/mosaic-sql';
 
-export interface ColumnOptions {
+export interface Column {
+    name: string;
+    label?: string;
     align?: 'left' | 'right' | 'center' | 'justify';
     headerAlign?: 'left' | 'right' | 'center' | 'justify';
     format?: string;
@@ -62,12 +64,13 @@ export interface ColumnOptions {
     resizable?: boolean;
     minWidth?: number;
     maxWidth?: number;
+    autoHeight?: boolean;
+    autoHeaderHeight?: boolean;
 }
 
 export interface TableOptions extends InputOptions {
     from: string;
-    columns?: string[];
-    columnOptions?: Record<string, ColumnOptions>;
+    columns?: Array<string | Column>;
     width?: number;
     maxWidth?: number;
     height?: number;
@@ -88,8 +91,8 @@ interface ColSortModel {
 
 export class Table extends Input {
     private readonly id_: string;
-    private readonly columns_: string[];
-    private readonly columnOptions_: Record<string, ColumnOptions>;
+    private readonly columns_: Column[];
+    private readonly columnOptions_: Record<string, Column>;
     private readonly height_: number | undefined;
 
     private readonly gridContainer_: HTMLDivElement;
@@ -116,8 +119,14 @@ export class Table extends Input {
         this.id_ = generateId();
 
         // defaults
-        this.columns_ = this.options_.columns || ['*'];
-        this.columnOptions_ = this.options_.columnOptions || {};
+        this.columns_ = resolveColumns(this.options_.columns || ['*']);
+        this.columnOptions_ = this.columns_.reduce(
+            (acc, col) => {
+                acc[col.name] = col;
+                return acc;
+            },
+            {} as Record<string, Column>
+        );
         this.height_ = this.options_.height;
 
         // state
@@ -213,7 +222,7 @@ export class Table extends Input {
     async prepare() {
         // query for column schema information
         const table = this.options_.from;
-        const fields = this.columns_.map(column => ({ column, table }));
+        const fields = this.columns_.map(column => ({ column: column.name, table }));
         this.schema_ = await queryFieldInfo(this.coordinator!, fields);
 
         // create column definitions for ag-grid
@@ -235,12 +244,16 @@ export class Table extends Input {
             // Sizing
             const resizable = columnOptions.resizable !== false;
 
+            // Min and max width
             const minWidth = columnOptions.minWidth;
             const maxWidth = columnOptions.maxWidth;
 
+            const autoHeight = columnOptions.autoHeight;
+            const autoHeaderHeight = columnOptions.autoHeaderHeight;
+
             const colDef: ColDef = {
                 field: column,
-                headerName: column,
+                headerName: columnOptions.label || column,
                 cellStyle: { textAlign: align },
                 headerClass: headerClz(headerAlignment),
                 comparator: (_valueA, _valueB) => {
@@ -251,6 +264,8 @@ export class Table extends Input {
                 resizable,
                 minWidth,
                 maxWidth,
+                autoHeight,
+                autoHeaderHeight,
                 valueFormatter: params => {
                     // Format the value if a format is provided
                     const value = params.value;
@@ -351,6 +366,18 @@ export class Table extends Input {
         }
     }
 }
+
+const resolveColumns = (columns: Array<string | Column>): Column[] => {
+    return columns.map(col => {
+        if (typeof col === 'string') {
+            return { name: col };
+        } else if (typeof col === 'object' && col !== null) {
+            return col as Column;
+        } else {
+            throw new Error(`Invalid column definition: ${col}`);
+        }
+    });
+};
 
 const headerClz = (align?: 'left' | 'right' | 'center' | 'justify'): string | undefined => {
     if (!align) {
