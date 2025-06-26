@@ -757,7 +757,7 @@ var Table = class extends Input {
   createGridOptions(options) {
     const headerHeightPixels = typeof options.headerHeight === "string" ? void 0 : options.headerHeight;
     const hoverSelect = options.select === "hover" || options.select === void 0;
-    const explicitSelect = options.select === "single" || options.select === "multiple";
+    const explicitSelection = resolveRowSelection(options);
     return {
       // always pass filter to allow server-side filtering
       alwaysPassFilter: () => true,
@@ -770,9 +770,7 @@ var Table = class extends Input {
       rowHeight: options.rowHeight,
       columnDefs: [],
       rowData: [],
-      rowSelection: !explicitSelect ? void 0 : options.select === "single" ? {
-        mode: "singleRow"
-      } : { mode: "multiRow" },
+      rowSelection: explicitSelection,
       onFilterChanged: () => {
         this.filterModel_ = this.grid_?.getFilterModel() || {};
         this.requestQuery();
@@ -785,7 +783,7 @@ var Table = class extends Input {
         }
       },
       onSelectionChanged: (event) => {
-        if (explicitSelect && isSelection4(this.options_.as)) {
+        if (explicitSelection !== void 0 && isSelection4(this.options_.as)) {
           if (event.selectedNodes) {
             const rowIndices = event.selectedNodes.map((n) => n.rowIndex).filter((n) => n !== null);
             this.options_.as.update(this.clause(rowIndices));
@@ -881,6 +879,13 @@ var headerClasses = (align) => {
     return void 0;
   }
   return [`header-${align}`];
+};
+var resolveRowSelection = (options) => {
+  const explicitSelect = options.select === "single" || options.select === "multiple";
+  const selectAll = options.selectAll || "all";
+  return !explicitSelect ? void 0 : options.select === "single" ? {
+    mode: "singleRow"
+  } : { mode: "multiRow", selectAll };
 };
 var filterForColumnType = (type) => {
   switch (type) {

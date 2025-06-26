@@ -70,6 +70,7 @@ def table(
     headerHeight: float | None = None,
     rowHeight: float | None = None,
     select: Literal["hover", "single", "multiple", "none"] = "hover",
+    selectAll: Literal["all", "filtered", "currentPage"] | None = None,
 ) -> Component:
     """Tabular display of data.
 
@@ -79,6 +80,7 @@ def table(
        columns: A list of column names to include in the table grid. If unspecified, all table columns are included.
        target: The output selection. A selection clause of the form column IN (rows) will be added to the selection for each currently selected table row.
        select: The type of selection to use for the table. Valid values are "hover", "single", "multiple", and "none". Defaults to "hover".
+       selectAll: If select 'multiple' is enabled, controls the behavior of the select all option in the header. Valid values are 'all', 'filtered' or 'currentPage'.
        column_options: A dictionary of column configuration options. The keys are column names and the values are dictionaries with column options.
        width: The total width of the table widget, in pixels.
        max_width: The maximum width of the table widget, in pixels.
@@ -112,6 +114,7 @@ def table(
             "headerHeight": headerHeight,
             "rowHeight": rowHeight,
             "select": select,
+            "selectAll": selectAll,
         }
     )
 

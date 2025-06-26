@@ -45,6 +45,7 @@ import {
     IMultiFilterModel,
     SetFilterModel,
     ICombinedSimpleModel,
+    RowSelectionOptions,
 } from 'https://cdn.jsdelivr.net/npm/ag-grid-community@33.3.2/+esm';
 
 import * as d3Format from 'https://cdn.jsdelivr.net/npm/d3-format@3.1.0/+esm';
@@ -52,7 +53,6 @@ import * as d3TimeFormat from 'https://cdn.jsdelivr.net/npm/d3-time-format@4.1.0
 import { Input, InputOptions } from './input';
 import { generateId } from '../util/id';
 import { JSType } from '@uwdata/mosaic-core';
-import { exp } from '@uwdata/mosaic-sql';
 
 export interface Column {
     name: string;
@@ -88,6 +88,7 @@ export interface TableOptions extends InputOptions {
     headerHeight?: number | 'auto';
     rowHeight?: number;
     select?: 'hover' | 'single' | 'multiple' | 'none';
+    selectAll?: 'all' | 'filtered' | 'currentPage';
 }
 
 interface ColSortModel {
@@ -259,7 +260,7 @@ export class Table extends Input {
         const headerHeightPixels =
             typeof options.headerHeight === 'string' ? undefined : options.headerHeight;
         const hoverSelect = options.select === 'hover' || options.select === undefined;
-        const explicitSelect = options.select === 'single' || options.select === 'multiple';
+        const explicitSelection = resolveRowSelection(options);
 
         // initialize grid options
         return {
@@ -274,13 +275,7 @@ export class Table extends Input {
             rowHeight: options.rowHeight,
             columnDefs: [],
             rowData: [],
-            rowSelection: !explicitSelect
-                ? undefined
-                : options.select === 'single'
-                  ? {
-                        mode: 'singleRow',
-                    }
-                  : { mode: 'multiRow' },
+            rowSelection: explicitSelection,
             onFilterChanged: () => {
                 // Capture the filter model for server-side use
                 this.filterModel_ = this.grid_?.getFilterModel() || {};
@@ -302,7 +297,7 @@ export class Table extends Input {
                 }
             },
             onSelectionChanged: event => {
-                if (explicitSelect && isSelection(this.options_.as)) {
+                if (explicitSelection !== undefined && isSelection(this.options_.as)) {
                     if (event.selectedNodes) {
                         // Get the selected rows
                         const rowIndices = event.selectedNodes
@@ -435,6 +430,18 @@ const headerClasses = (align?: 'left' | 'right' | 'center' | 'justify'): string[
         return undefined;
     }
     return [`header-${align}`];
+};
+
+const resolveRowSelection = (options: TableOptions): RowSelectionOptions<any, any> | undefined => {
+    const explicitSelect = options.select === 'single' || options.select === 'multiple';
+    const selectAll = options.selectAll || 'all';
+    return !explicitSelect
+        ? undefined
+        : options.select === 'single'
+          ? {
+                mode: 'singleRow',
+            }
+          : { mode: 'multiRow', selectAll };
 };
 
 const filterForColumnType = (type: string): string => {
