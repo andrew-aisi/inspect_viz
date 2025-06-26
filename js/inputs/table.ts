@@ -78,7 +78,7 @@ export class Table extends Input {
     private readonly columns_: string[];
     private readonly align_: Record<string, 'left' | 'right' | 'center' | 'justify'>;
     private readonly format_: Record<string, string> = {};
-    private readonly height_: number;
+    private readonly height_: number | undefined;
     private readonly widths_: Record<string, number>;
 
     private readonly gridContainer_: HTMLDivElement;
@@ -108,7 +108,7 @@ export class Table extends Input {
         this.columns_ = this.options_.columns || ['*'];
         this.align_ = this.options_.align || {};
         this.format_ = this.options_.format || {};
-        this.height_ = this.options_.height || 500;
+        this.height_ = this.options_.height;
         this.widths_ = typeof this.options_.width === 'object' ? this.options_.width : {};
 
         // state
@@ -122,7 +122,11 @@ export class Table extends Input {
         if (this.options_.maxWidth) {
             this.element.style.maxWidth = `${this.options_.maxWidth}px`;
         }
-        this.element.style.height = `${this.height_}px`;
+        if (this.options_.height) {
+            this.element.style.height = `${this.height_}px`;
+        } else {
+            this.element.style.height = '100%';
+        }
 
         // create grid container
         this.gridContainer_ = document.createElement('div');

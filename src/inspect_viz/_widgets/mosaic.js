@@ -1079,7 +1079,7 @@ var Table = class extends Input {
     this.columns_ = this.options_.columns || ["*"];
     this.align_ = this.options_.align || {};
     this.format_ = this.options_.format || {};
-    this.height_ = this.options_.height || 500;
+    this.height_ = this.options_.height;
     this.widths_ = typeof this.options_.width === "object" ? this.options_.width : {};
     this.currentRow_ = -1;
     this.schema_ = [];
@@ -1089,7 +1089,11 @@ var Table = class extends Input {
     if (this.options_.maxWidth) {
       this.element.style.maxWidth = `${this.options_.maxWidth}px`;
     }
-    this.element.style.height = `${this.height_}px`;
+    if (this.options_.height) {
+      this.element.style.height = `${this.height_}px`;
+    } else {
+      this.element.style.height = "100%";
+    }
     this.gridContainer_ = document.createElement("div");
     this.gridContainer_.id = this.id_;
     this.gridContainer_.style.width = "100%";
