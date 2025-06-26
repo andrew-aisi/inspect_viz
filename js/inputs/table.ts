@@ -28,6 +28,8 @@ import {
     suffix,
     Query,
     SelectQuery,
+    sql,
+    column,
 } from 'https://cdn.jsdelivr.net/npm/@uwdata/mosaic-sql@0.16.2/+esm';
 
 import {
@@ -514,7 +516,7 @@ const filterExpression = (
             return operator(...expressions);
         }
     } else if (isTextFilter(filter)) {
-        return simpleExpression(colId, filter.type, filter.filter);
+        return simpleExpression(colId, filter.type, filter.filter, undefined, true);
     } else if (isNumberFilter(filter)) {
         return simpleExpression(colId, filter.type, filter.filter);
     } else if (isMultiFilter(filter)) {
@@ -553,7 +555,8 @@ export const simpleExpression = (
         | null
         | undefined,
     filter: string | number | null | undefined,
-    filterTo: string | number | null | undefined = undefined
+    filterTo: string | number | null | undefined = undefined,
+    textColumn: boolean = false
 ): ExprNode | undefined => {
     switch (type) {
         case 'equals':
@@ -561,7 +564,11 @@ export const simpleExpression = (
         case 'notEqual':
             return neq(colId, literal(filter));
         case 'contains':
-            return contains(colId, String(filter));
+            if (textColumn) {
+                return sql`${column(colId)} ILIKE ${literal('%' + filter + '%')}`;
+            } else {
+                return contains(colId, String(filter));
+            }
         case 'notContains':
             return not(contains(colId, String(filter)));
         case 'blank':

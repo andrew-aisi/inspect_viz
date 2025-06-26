@@ -106,17 +106,17 @@ var ChoiceInput = class extends Input {
     }
   }
   publish(value) {
-    const { as, field, column } = this.options_;
-    if (isSelection(as) && column) {
-      let clause = clausePoint(field || column, void 0, { source: this });
+    const { as, field, column: column2 } = this.options_;
+    if (isSelection(as) && column2) {
+      let clause = clausePoint(field || column2, void 0, { source: this });
       if (Array.isArray(value) && value.length > 0) {
         clause = clausePoints(
-          [field || column],
+          [field || column2],
           value.map((v) => [v]),
           { source: this }
         );
       } else if (value?.length) {
-        clause = clausePoint(field || column, value, { source: this });
+        clause = clausePoint(field || column2, value, { source: this });
       }
       as.update(clause);
     } else if (isParam(as)) {
@@ -124,14 +124,14 @@ var ChoiceInput = class extends Input {
     }
   }
   query(filter = []) {
-    const { from, column } = this.options_;
+    const { from, column: column2 } = this.options_;
     if (!from) {
       return null;
     }
-    if (!column) {
+    if (!column2) {
       throw new Error("You must specify a column along with a data source");
     }
-    return Query.from(from).select({ value: column }).distinct().where(...filter).orderby(column);
+    return Query.from(from).select({ value: column2 }).distinct().where(...filter).orderby(column2);
   }
   queryResult(data) {
     this.setData([{ value: "", label: "All" }, ...this.queryResultOptions(data)]);
@@ -509,11 +509,11 @@ var Slider = class extends Input {
     }
   }
   query(filter = []) {
-    const { from, column } = this.options_;
-    if (!from || !column) {
+    const { from, column: column2 } = this.options_;
+    if (!from || !column2) {
       return null;
     }
-    return Query2.select({ min: min(column), max: max(column) }).from(from).where(...filter);
+    return Query2.select({ min: min(column2), max: max(column2) }).from(from).where(...filter);
   }
   queryResult(data) {
     const { min: dataMin, max: dataMax } = Array.from(data)[0];
@@ -547,8 +547,8 @@ var Slider = class extends Input {
     return this;
   }
   clause(value) {
-    let { field, column, min: min2, select = "point" } = this.options_;
-    field = field || column;
+    let { field, column: column2, min: min2, select = "point" } = this.options_;
+    field = field || column2;
     if (!field) {
       throw new Error(
         "You must specify a 'column' or 'field' for a slider targeting a selection."
@@ -626,7 +626,9 @@ import {
   or,
   prefix,
   suffix,
-  Query as Query3
+  Query as Query3,
+  sql,
+  column
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-sql@0.16.2/+esm";
 import {
   createGrid,
@@ -698,10 +700,10 @@ var Table = class extends Input {
   // and do related setup
   async prepare() {
     const table = this.options_.from;
-    const fields = this.columns_.map((column) => ({ column: column.name, table }));
+    const fields = this.columns_.map((column2) => ({ column: column2.name, table }));
     this.schema_ = await queryFieldInfo(this.coordinator, fields);
     const columnDefs = this.schema_.map(
-      ({ column, type }) => this.createColumnDef(column, type)
+      ({ column: column2, type }) => this.createColumnDef(column2, type)
     );
     this.gridOptions_.columnDefs = columnDefs;
     const myTheme = themeBalham.withParams({
@@ -747,8 +749,8 @@ var Table = class extends Input {
     const rowData = [];
     for (let i = 0; i < this.data_.numRows; i++) {
       const row = {};
-      this.schema_.forEach(({ column }) => {
-        row[column] = this.data_.columns[column][i];
+      this.schema_.forEach(({ column: column2 }) => {
+        row[column2] = this.data_.columns[column2][i];
       });
       rowData.push(row);
     }
@@ -807,8 +809,8 @@ var Table = class extends Input {
       }
     };
   }
-  createColumnDef(column, type) {
-    const columnOptions = this.columnOptions_[column] || {};
+  createColumnDef(column2, type) {
+    const columnOptions = this.columnOptions_[column2] || {};
     const align = columnOptions.align || (type === "number" ? "right" : "left");
     const headerAlignment = columnOptions.headerAlign;
     const formatter = formatterForType(type, columnOptions.format);
@@ -824,8 +826,8 @@ var Table = class extends Input {
     const flex = columnOptions.flex;
     const floatingFilter = this.options_.filterLocation === "secondary";
     const colDef = {
-      field: column,
-      headerName: columnOptions.label || column,
+      field: column2,
+      headerName: columnOptions.label || column2,
       headerClass: headerClasses(headerAlignment),
       cellStyle: { textAlign: align },
       comparator: (_valueA, _valueB) => {
@@ -938,7 +940,7 @@ var filterExpression = (colId, filter, query) => {
       return operator(...expressions);
     }
   } else if (isTextFilter(filter)) {
-    return simpleExpression(colId, filter.type, filter.filter);
+    return simpleExpression(colId, filter.type, filter.filter, void 0, true);
   } else if (isNumberFilter(filter)) {
     return simpleExpression(colId, filter.type, filter.filter);
   } else if (isMultiFilter(filter)) {
@@ -954,14 +956,18 @@ var filterExpression = (colId, filter, query) => {
     console.warn("Set filter not implemented");
   }
 };
-var simpleExpression = (colId, type, filter, filterTo = void 0) => {
+var simpleExpression = (colId, type, filter, filterTo = void 0, textColumn = false) => {
   switch (type) {
     case "equals":
       return eq(colId, literal(filter));
     case "notEqual":
       return neq(colId, literal(filter));
     case "contains":
-      return contains(colId, String(filter));
+      if (textColumn) {
+        return sql`${column(colId)} ILIKE ${literal("%" + filter + "%")}`;
+      } else {
+        return contains(colId, String(filter));
+      }
     case "notContains":
       return not(contains(colId, String(filter)));
     case "blank":
