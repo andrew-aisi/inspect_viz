@@ -54,6 +54,7 @@ import { suffix } from '@uwdata/mosaic-sql';
 
 export interface ColumnOptions {
     align?: 'left' | 'right' | 'center' | 'justify';
+    headerAlign?: 'left' | 'right' | 'center' | 'justify';
     format?: string;
     sortable?: boolean;
     filterable?: boolean;
@@ -219,6 +220,7 @@ export class Table extends Input {
 
             // Align, numbers right aligned by default
             const align = columnOptions.align || (type === 'number' ? 'right' : 'left');
+            const headerAlignment = columnOptions.headerAlign;
 
             // Format string
             const formatter = formatterForType(type, columnOptions.format);
@@ -235,6 +237,7 @@ export class Table extends Input {
                 field: column,
                 headerName: column,
                 cellStyle: { textAlign: align },
+                headerClass: headerClz(headerAlignment),
                 comparator: (_valueA, _valueB) => {
                     return 0;
                 },
@@ -341,6 +344,13 @@ export class Table extends Input {
         }
     }
 }
+
+const headerClz = (align?: 'left' | 'right' | 'center' | 'justify'): string | undefined => {
+    if (!align) {
+        return undefined;
+    }
+    return `header-${align}`;
+};
 
 const filterForColumnType = (type: string): string => {
     // Select the proper filter type based on the column type

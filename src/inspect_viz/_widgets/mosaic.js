@@ -1169,6 +1169,7 @@ var Table = class extends Input {
     const columnDefs = this.schema_.map(({ column: column2, type }) => {
       const columnOptions = this.columnOptions_[column2] || {};
       const align = columnOptions.align || (type === "number" ? "right" : "left");
+      const headerAlignment = columnOptions.headerAlign;
       const formatter = formatterForType(type, columnOptions.format);
       const sortable = this.options_.sorting !== false && columnOptions.sortable !== false;
       const filterable = this.options_.filtering !== false && columnOptions.filterable !== false;
@@ -1177,6 +1178,7 @@ var Table = class extends Input {
         field: column2,
         headerName: column2,
         cellStyle: { textAlign: align },
+        headerClass: headerClz(headerAlignment),
         comparator: (_valueA, _valueB) => {
           return 0;
         },
@@ -1256,6 +1258,12 @@ var Table = class extends Input {
       this.options_.as.activate(this.clause([]));
     }
   }
+};
+var headerClz = (align) => {
+  if (!align) {
+    return void 0;
+  }
+  return `header-${align}`;
 };
 var filterForColumnType = (type) => {
   switch (type) {

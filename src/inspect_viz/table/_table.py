@@ -15,6 +15,8 @@ class ColumnOptions(BaseModel):
     Args:
         align: Text alignment for the column. Valid values are "left", "right",
             "center", and "justify". By default, numbers are right-aligned and other values are left-aligned.
+        headerAlign: Text alignment for the column header. Valid values are "left", "right",
+            "center", and "justify". By default, left aligned.
         format: Format string for column values. Use d3-format for numeric columns or d3-time-format for datetime columns.
         width: Column width in pixels.
         sortable: Whether sorting is enabled for this column.
@@ -23,6 +25,7 @@ class ColumnOptions(BaseModel):
     """
 
     align: Literal["left", "right", "center", "justify"] | None = None
+    headerAlign: Literal["left", "right", "center", "justify"] | None = None
     format: str | None = None
     width: float | None = None
     sortable: bool | None = None

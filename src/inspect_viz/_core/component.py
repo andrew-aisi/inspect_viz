@@ -66,6 +66,7 @@ class Component(AnyWidget):
             else:
                 css_paths.append(self._css_tomselect)
             css_paths.append(self._css_tomselect_viz)
+            css_paths.append(self._css_aggrid)
             for css in css_paths:
                 with open(css, "r") as f:
                     Component._css = f"{self._css}\n\n{f.read()}"
@@ -113,6 +114,7 @@ class Component(AnyWidget):
     _css_tomselect_bs5: Path = WIDGETS_DIR / "tomselect-bs5.css"
     _css_tomselect_viz: Path = WIDGETS_DIR / "tomselect-viz.css"
     _css_quarto: Path = WIDGETS_DIR / "quarto.css"
+    _css_aggrid: Path = WIDGETS_DIR / "ag-grid.css"
 
     tables = TablesData({}).tag(sync=True)
     spec = traitlets.CUnicode("").tag(sync=True)
