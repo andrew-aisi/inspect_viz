@@ -52,6 +52,7 @@ import * as d3TimeFormat from 'https://cdn.jsdelivr.net/npm/d3-time-format@4.1.0
 import { Input, InputOptions } from './input';
 import { generateId } from '../util/id';
 import { JSType } from '@uwdata/mosaic-core';
+import { exp } from '@uwdata/mosaic-sql';
 
 export interface Column {
     name: string;
@@ -86,6 +87,7 @@ export interface TableOptions extends InputOptions {
     filtering?: boolean;
     headerHeight?: number | 'auto';
     rowHeight?: number;
+    select?: 'hover' | 'single' | 'multiple' | 'none';
 }
 
 interface ColSortModel {
@@ -256,6 +258,8 @@ export class Table extends Input {
     private createGridOptions(options: TableOptions): GridOptions {
         const headerHeightPixels =
             typeof options.headerHeight === 'string' ? undefined : options.headerHeight;
+        const hoverSelect = options.select === 'hover' || options.select === undefined;
+        const explicitSelect = options.select === 'single' || options.select === 'multiple';
 
         // initialize grid options
         return {
@@ -270,6 +274,13 @@ export class Table extends Input {
             rowHeight: options.rowHeight,
             columnDefs: [],
             rowData: [],
+            rowSelection: !explicitSelect
+                ? undefined
+                : options.select === 'single'
+                  ? {
+                        mode: 'singleRow',
+                    }
+                  : { mode: 'multiRow' },
             onFilterChanged: () => {
                 // Capture the filter model for server-side use
                 this.filterModel_ = this.grid_?.getFilterModel() || {};
@@ -290,8 +301,21 @@ export class Table extends Input {
                     this.requestQuery();
                 }
             },
+            onSelectionChanged: event => {
+                if (explicitSelect && isSelection(this.options_.as)) {
+                    if (event.selectedNodes) {
+                        // Get the selected rows
+                        const rowIndices = event.selectedNodes
+                            .map(n => n.rowIndex)
+                            .filter(n => n !== null);
+
+                        // Update the selection clause in the target selection
+                        this.options_.as.update(this.clause(rowIndices));
+                    }
+                }
+            },
             onCellMouseOver: event => {
-                if (isSelection(this.options_.as)) {
+                if (hoverSelect && isSelection(this.options_.as)) {
                     const rowIndex = event.rowIndex;
                     if (
                         rowIndex !== undefined &&
@@ -304,7 +328,7 @@ export class Table extends Input {
                 }
             },
             onCellMouseOut: () => {
-                if (isSelection(this.options_.as)) {
+                if (hoverSelect && isSelection(this.options_.as)) {
                     this.currentRow_ = -1;
                     this.options_.as.update(this.clause());
                 }

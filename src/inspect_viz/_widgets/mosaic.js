@@ -756,6 +756,8 @@ var Table = class extends Input {
   });
   createGridOptions(options) {
     const headerHeightPixels = typeof options.headerHeight === "string" ? void 0 : options.headerHeight;
+    const hoverSelect = options.select === "hover" || options.select === void 0;
+    const explicitSelect = options.select === "single" || options.select === "multiple";
     return {
       // always pass filter to allow server-side filtering
       alwaysPassFilter: () => true,
@@ -768,6 +770,9 @@ var Table = class extends Input {
       rowHeight: options.rowHeight,
       columnDefs: [],
       rowData: [],
+      rowSelection: !explicitSelect ? void 0 : options.select === "single" ? {
+        mode: "singleRow"
+      } : { mode: "multiRow" },
       onFilterChanged: () => {
         this.filterModel_ = this.grid_?.getFilterModel() || {};
         this.requestQuery();
@@ -779,8 +784,16 @@ var Table = class extends Input {
           this.requestQuery();
         }
       },
+      onSelectionChanged: (event) => {
+        if (explicitSelect && isSelection4(this.options_.as)) {
+          if (event.selectedNodes) {
+            const rowIndices = event.selectedNodes.map((n) => n.rowIndex).filter((n) => n !== null);
+            this.options_.as.update(this.clause(rowIndices));
+          }
+        }
+      },
       onCellMouseOver: (event) => {
-        if (isSelection4(this.options_.as)) {
+        if (hoverSelect && isSelection4(this.options_.as)) {
           const rowIndex = event.rowIndex;
           if (rowIndex !== void 0 && rowIndex !== null && rowIndex !== this.currentRow_) {
             this.currentRow_ = rowIndex;
@@ -789,7 +802,7 @@ var Table = class extends Input {
         }
       },
       onCellMouseOut: () => {
-        if (isSelection4(this.options_.as)) {
+        if (hoverSelect && isSelection4(this.options_.as)) {
           this.currentRow_ = -1;
           this.options_.as.update(this.clause());
         }

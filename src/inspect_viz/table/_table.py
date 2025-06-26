@@ -69,6 +69,7 @@ def table(
     paginationAutoPageSize: bool | None = None,
     headerHeight: float | None = None,
     rowHeight: float | None = None,
+    select: Literal["hover", "single", "multiple", "none"] = "hover",
 ) -> Component:
     """Tabular display of data.
 
@@ -77,6 +78,7 @@ def table(
        filter_by: Selection to filter by (defaults to data source selection).
        columns: A list of column names to include in the table grid. If unspecified, all table columns are included.
        target: The output selection. A selection clause of the form column IN (rows) will be added to the selection for each currently selected table row.
+       select: The type of selection to use for the table. Valid values are "hover", "single", "multiple", and "none". Defaults to "hover".
        column_options: A dictionary of column configuration options. The keys are column names and the values are dictionaries with column options.
        width: The total width of the table widget, in pixels.
        max_width: The maximum width of the table widget, in pixels.
@@ -89,6 +91,7 @@ def table(
        paginationAutoPageSize: Set to true so that the number of rows to load per page is automatically adjusted by the grid so each page shows enough rows to just fill the area designated for the grid. If false, paginationPageSize is used.
        headerHeight: The height of the table header, in pixels.
        rowHeight: The height of each table row, in pixels.
+
     """
     config: dict[str, JsonValue] = dict_remove_none(
         {
@@ -108,6 +111,7 @@ def table(
             "paginationAutoPageSize": paginationAutoPageSize,
             "headerHeight": headerHeight,
             "rowHeight": rowHeight,
+            "select": select,
         }
     )
 
