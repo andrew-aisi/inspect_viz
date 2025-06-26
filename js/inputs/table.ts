@@ -52,12 +52,20 @@ import { Input, InputOptions } from './input';
 import { generateId } from '../util/id';
 import { suffix } from '@uwdata/mosaic-sql';
 
+export interface ColumnOptions {
+    align?: 'left' | 'right' | 'center' | 'justify';
+    format?: string;
+    sortable?: boolean;
+    filterable?: boolean;
+    width?: number;
+    resizable?: boolean;
+}
+
 export interface TableOptions extends InputOptions {
     from: string;
     columns?: string[];
-    align?: Record<string, 'left' | 'right' | 'center' | 'justify'>;
-    format?: Record<string, string>;
-    width?: number | Record<string, number>;
+    columnOptions?: Record<string, ColumnOptions>;
+    width?: number;
     maxWidth?: number;
     height?: number;
     pagination?: boolean;
@@ -78,10 +86,8 @@ interface ColSortModel {
 export class Table extends Input {
     private readonly id_: string;
     private readonly columns_: string[];
-    private readonly align_: Record<string, 'left' | 'right' | 'center' | 'justify'>;
-    private readonly format_: Record<string, string> = {};
+    private readonly columnOptions_: Record<string, ColumnOptions>;
     private readonly height_: number | undefined;
-    private readonly widths_: Record<string, number>;
 
     private readonly gridContainer_: HTMLDivElement;
     private grid_: GridApi | null = null;
@@ -108,10 +114,8 @@ export class Table extends Input {
 
         // defaults
         this.columns_ = this.options_.columns || ['*'];
-        this.align_ = this.options_.align || {};
-        this.format_ = this.options_.format || {};
+        this.columnOptions_ = this.options_.columnOptions || {};
         this.height_ = this.options_.height;
-        this.widths_ = typeof this.options_.width === 'object' ? this.options_.width : {};
 
         // state
         this.currentRow_ = -1;
@@ -150,10 +154,6 @@ export class Table extends Input {
             rowHeight: options_.rowHeight,
             columnDefs: [],
             rowData: [],
-            defaultColDef: {
-                sortable: options_.sorting !== false,
-                resizable: true,
-            },
             onFilterChanged: () => {
                 // Capture the filter model for server-side use
                 this.filterModel_ = this.grid_?.getFilterModel() || {};
@@ -215,8 +215,21 @@ export class Table extends Input {
 
         // create column definitions for ag-grid
         const columnDefs: ColDef[] = this.schema_.map(({ column, type }) => {
-            const align = this.align_[column] || (type === 'number' ? 'right' : 'left');
-            const formatter = formatterForType(type, this.format_[column]);
+            const columnOptions = this.columnOptions_[column] || {};
+
+            // Align, numbers right aligned by default
+            const align = columnOptions.align || (type === 'number' ? 'right' : 'left');
+
+            // Format string
+            const formatter = formatterForType(type, columnOptions.format);
+
+            // Sorting / filtering
+            const sortable = this.options_.sorting !== false && columnOptions.sortable !== false;
+            const filterable =
+                this.options_.filtering !== false && columnOptions.filterable !== false;
+
+            // Sizing
+            const resizable = columnOptions.resizable !== false;
 
             const colDef: ColDef = {
                 field: column,
@@ -225,7 +238,9 @@ export class Table extends Input {
                 comparator: (_valueA, _valueB) => {
                     return 0;
                 },
-                filter: this.options_.filtering === false ? false : filterForColumnType(type),
+                filter: !filterable ? false : filterForColumnType(type),
+                sortable: sortable,
+                resizable: resizable,
                 valueFormatter: params => {
                     // Format the value if a format is provided
                     const value = params.value;
@@ -237,7 +252,8 @@ export class Table extends Input {
             };
 
             // Set columns widths, if explicitly provided
-            const width = this.widths_[column];
+            // otherwise use flex to make all columns equal
+            const width = columnOptions.width;
             if (width) {
                 colDef.width = width;
             } else {

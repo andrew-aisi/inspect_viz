@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import JsonValue
+from pydantic import BaseModel, JsonValue
 
 from inspect_viz._util.marshall import dict_remove_none
 
@@ -9,14 +9,34 @@ from .._core.selection import Selection
 from ..input._params import column_validated
 
 
+class ColumnOptions(BaseModel):
+    """Column configuration options for table display.
+
+    Args:
+        align: Text alignment for the column. Valid values are "left", "right",
+            "center", and "justify". By default, numbers are right-aligned and other values are left-aligned.
+        format: Format string for column values. Use d3-format for numeric columns or d3-time-format for datetime columns.
+        width: Column width in pixels.
+        sortable: Whether sorting is enabled for this column.
+        filterable: Whether filtering is enabled for this column.
+        resizable: Whether the column width can be adjusted by the user.
+    """
+
+    align: Literal["left", "right", "center", "justify"] | None = None
+    format: str | None = None
+    width: float | None = None
+    sortable: bool | None = None
+    filterable: bool | None = None
+    resizable: bool | None = None
+
+
 def table(
     data: Data,
     filter_by: Selection | None = None,
     columns: list[str] | None = None,
+    column_options: dict[str, ColumnOptions] | None = None,
     target: Selection | None = None,
-    align: dict[str, Literal["left", "right", "center", "justify"]] | None = None,
-    format: dict[str, str] | None = None,
-    width: float | dict[str, float] | None = None,
+    width: float | None = None,
     max_width: float | None = None,
     height: float | None = None,
     sorting: bool | None = None,
@@ -35,9 +55,8 @@ def table(
        filter_by: Selection to filter by (defaults to data source selection).
        columns: A list of column names to include in the table grid. If unspecified, all table columns are included.
        target: The output selection. A selection clause of the form column IN (rows) will be added to the selection for each currently selected table row.
-       align: A dict of per-column alignment values. Column names should be object keys, which map to alignment values. Valid alignment values are: `"left"`, `"right"`, `"center"`, and `"justify"`. By default, numbers are right-aligned and other values are left-aligned.
-       format: A dict of per-column d3-format (for numeric columns) or d3-time-format strings (for datetime columns) used to format column values.
-       width: If a number, sets the total width of the table widget, in pixels. If an object, provides per-column pixel width values. Column names should be object keys, mapped to numeric width values.
+       column_options: A dictionary of column configuration options. The keys are column names and the values are dictionaries with column options.
+       width: The total width of the table widget, in pixels.
        max_width: The maximum width of the table widget, in pixels.
        height: The height of the table widget, in pixels.
        sorting: Set whether sorting is enabled.
@@ -57,14 +76,13 @@ def table(
             "columns": [column_validated(data, c) for c in columns]
             if columns
             else None,
+            "columnOptions": {
+                column_validated(data, k): v for k, v in column_options.items()
+            }
+            if column_options
+            else None,
             "as": target,
-            "align": {column_validated(data, k): v for k, v in align.items()}
-            if isinstance(align, dict)
-            else align,
-            "format": format,
-            "width": {column_validated(data, k): v for k, v in width.items()}
-            if isinstance(width, dict)
-            else width,
+            "width": width,
             "maxWidth": max_width,
             "height": height,
             "sorting": sorting,

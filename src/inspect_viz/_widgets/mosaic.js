@@ -1077,10 +1077,8 @@ var Table = class extends Input {
     ModuleRegistry.registerModules([AllCommunityModule]);
     this.id_ = generateId();
     this.columns_ = this.options_.columns || ["*"];
-    this.align_ = this.options_.align || {};
-    this.format_ = this.options_.format || {};
+    this.columnOptions_ = this.options_.columnOptions || {};
     this.height_ = this.options_.height;
-    this.widths_ = typeof this.options_.width === "object" ? this.options_.width : {};
     this.currentRow_ = -1;
     this.schema_ = [];
     if (typeof this.options_.width === "number") {
@@ -1111,10 +1109,6 @@ var Table = class extends Input {
       rowHeight: options_.rowHeight,
       columnDefs: [],
       rowData: [],
-      defaultColDef: {
-        sortable: options_.sorting !== false,
-        resizable: true
-      },
       onFilterChanged: () => {
         this.filterModel_ = this.grid_?.getFilterModel() || {};
         this.requestQuery();
@@ -1145,10 +1139,8 @@ var Table = class extends Input {
   }
   id_;
   columns_;
-  align_;
-  format_ = {};
+  columnOptions_;
   height_;
-  widths_;
   gridContainer_;
   grid_ = null;
   gridOptions_;
@@ -1175,8 +1167,12 @@ var Table = class extends Input {
     const fields = this.columns_.map((column2) => ({ column: column2, table }));
     this.schema_ = await queryFieldInfo(this.coordinator, fields);
     const columnDefs = this.schema_.map(({ column: column2, type }) => {
-      const align = this.align_[column2] || (type === "number" ? "right" : "left");
-      const formatter = formatterForType(type, this.format_[column2]);
+      const columnOptions = this.columnOptions_[column2] || {};
+      const align = columnOptions.align || (type === "number" ? "right" : "left");
+      const formatter = formatterForType(type, columnOptions.format);
+      const sortable = this.options_.sorting !== false && columnOptions.sortable !== false;
+      const filterable = this.options_.filtering !== false && columnOptions.filterable !== false;
+      const resizable = columnOptions.resizable !== false;
       const colDef = {
         field: column2,
         headerName: column2,
@@ -1184,7 +1180,9 @@ var Table = class extends Input {
         comparator: (_valueA, _valueB) => {
           return 0;
         },
-        filter: this.options_.filtering === false ? false : filterForColumnType(type),
+        filter: !filterable ? false : filterForColumnType(type),
+        sortable,
+        resizable,
         valueFormatter: (params) => {
           const value = params.value;
           if (formatter && value !== null && value !== void 0) {
@@ -1193,7 +1191,7 @@ var Table = class extends Input {
           return value;
         }
       };
-      const width = this.widths_[column2];
+      const width = columnOptions.width;
       if (width) {
         colDef.width = width;
       } else {
