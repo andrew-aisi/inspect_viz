@@ -233,7 +233,7 @@ def table(
             "none". Defaults to "single_row".
         width: The total width of the table widget, in pixels.
         max_width: The maximum width of the table widget, in pixels.
-        height: The height of the table widget, in pixels (defaults to 380).
+        height: The height of the table widget, in pixels (defaults to 300).
         header_height: The height of the table header, in pixels.
         row_height: The height of each table row, in pixels.
         sorting: Set whether sorting columns is enabled.
