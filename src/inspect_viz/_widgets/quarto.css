@@ -80,3 +80,17 @@
 .card-body .mosaic-widget .ag-root-wrapper {
     border: none;
 }
+
+.card-body .mosaic-widget .inspect-viz-table {
+    height: 100%;
+}
+
+.mosaic-widget .inspect-viz-table {
+    --ag-foreground-color: var(--bs-body-color);
+    --ag-background-color: var(--bs-body-bg);
+    --ag-accent-color: var(--bs-primary);
+    --ag-font-family: var(--bs-font-sans-serif);
+    --ag-font-size: var(--bs-font-size-base);
+
+
+}

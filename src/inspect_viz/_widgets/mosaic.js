@@ -647,7 +647,7 @@ var Table = class extends Input {
     this.columns_ = resolveColumns(this.options_.columns || ["*"]);
     this.columnOptions_ = this.columns_.reduce(
       (acc, col) => {
-        acc[col.name] = col;
+        acc[col.column] = col;
         return acc;
       },
       {}
@@ -655,18 +655,15 @@ var Table = class extends Input {
     this.height_ = this.options_.height;
     this.currentRow_ = -1;
     this.schema_ = [];
+    this.element.classList.add("inspect-viz-table");
     if (typeof this.options_.width === "number") {
       this.element.style.width = `${this.options_.width}px`;
-    } else {
-      this.element.style.width = "100%";
     }
     if (this.options_.max_width) {
       this.element.style.maxWidth = `${this.options_.max_width}px`;
     }
     if (this.options_.height) {
       this.element.style.height = `${this.height_}px`;
-    } else {
-      this.element.style.height = "380px";
     }
     this.gridContainer_ = document.createElement("div");
     this.gridContainer_.id = this.id_;
@@ -702,7 +699,7 @@ var Table = class extends Input {
   // and do related setup
   async prepare() {
     const table = this.options_.from;
-    const fields = this.columns_.map((column2) => ({ column: column2.name, table }));
+    const fields = this.columns_.map((column2) => ({ column: column2.column, table }));
     this.schema_ = await queryFieldInfo(this.coordinator, fields);
     const columnDefs = this.schema_.map(
       ({ column: column2, type }) => this.createColumnDef(column2, type)
@@ -759,17 +756,16 @@ var Table = class extends Input {
     this.grid_.setGridOption("rowData", rowData);
   });
   createGridOptions(options) {
-    console.log({ options });
     const headerHeightPixels = typeof options.header_height === "string" ? void 0 : options.header_height;
-    const hoverSelect = options.select === "hover" || options.select === void 0;
+    const hoverSelect = options.select === "hover";
     const explicitSelection = resolveRowSelection(options);
     return {
       // always pass filter to allow server-side filtering
       alwaysPassFilter: () => true,
       pagination: !!options.pagination,
-      paginationAutoPageSize: !!options.pagination?.auto_page_size,
+      paginationAutoPageSize: options.pagination?.page_size === "auto" || options.pagination?.page_size === void 0,
       paginationPageSizeSelector: options.pagination?.page_size_selector,
-      paginationPageSize: options.pagination?.page_size,
+      paginationPageSize: typeof options.pagination?.page_size === "number" ? options.pagination.page_size : void 0,
       animateRows: true,
       headerHeight: headerHeightPixels,
       rowHeight: options.row_height,
@@ -778,6 +774,7 @@ var Table = class extends Input {
       rowSelection: explicitSelection,
       suppressCellFocus: true,
       enableCellTextSelection: true,
+      theme: themeBalham.withParams({}),
       onFilterChanged: () => {
         this.filterModel_ = this.grid_?.getFilterModel() || {};
         this.requestQuery();
@@ -876,7 +873,7 @@ var Table = class extends Input {
 var resolveColumns = (columns) => {
   return columns.map((col) => {
     if (typeof col === "string") {
-      return { name: col };
+      return { column: col };
     } else if (typeof col === "object" && col !== null) {
       return col;
     } else {
@@ -891,22 +888,20 @@ var headerClasses = (align) => {
   return [`header-${align}`];
 };
 var resolveRowSelection = (options) => {
-  const explicitSelect = options.select !== "hover" && options.select !== void 0 && options.select !== "none";
-  if (!explicitSelect) {
+  if (options.select === "hover") {
     return void 0;
   }
-  if (options.select?.startsWith("single_")) {
+  const selectType = options.select || "single_row";
+  if (selectType.startsWith("single_")) {
     return {
       mode: "singleRow",
       checkboxes: options.select === "single_checkbox",
       enableClickSelection: options.select === "single_row"
     };
-  } else if (options.select?.startsWith("multiple_")) {
-    const selectAll = options.select_all_scope || "all";
-    const selectAllVal = selectAll === "page" ? "currentPage" : selectAll;
+  } else if (selectType.startsWith("multiple_")) {
     return {
       mode: "multiRow",
-      selectAll: selectAllVal,
+      selectAll: "filtered",
       checkboxes: options.select === "multiple_checkbox"
     };
   } else {
