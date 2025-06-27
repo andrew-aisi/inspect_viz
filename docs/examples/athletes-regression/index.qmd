@@ -11,7 +11,7 @@ from inspect_viz.interactor import Brush, interval_xy
 from inspect_viz.layout import hconcat
 from inspect_viz.mark import dot, regression_y
 from inspect_viz.plot import plot
-from inspect_viz.table import Column, table
+from inspect_viz.table import column, table
 
 athletes = Data.from_file("athletes.parquet")
 
@@ -62,8 +62,11 @@ table(
     filter_by=query, 
     target=hover, 
     columns=[
-        Column(name="name", width=200), 
-        "sex", "height", "weight", "sport"
+        column("name", width=200), 
+        "sex", 
+        "height", 
+        "weight", 
+        "sport"
     ],
 )
 ```

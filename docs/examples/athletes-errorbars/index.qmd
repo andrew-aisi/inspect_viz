@@ -37,7 +37,7 @@ from inspect_viz.layout import hconcat
 hconcat(
     slider(
         athletes, label="Samples", select="interval", target=query, 
-        column="batch", step=10, value=20
+        column="batch", step=10, value=(10,20)
     ),
     slider(
         label="Conf.", target=ci, 
