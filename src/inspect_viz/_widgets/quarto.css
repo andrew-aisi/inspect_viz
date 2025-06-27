@@ -34,17 +34,28 @@
     margin-right: 0;
 }
 
+.panel-sidebar .mosaic-widget .sidebar-fullwidth,
+.sidebar .mosaic-widget .sidebar-fullwidth,
 .panel-sidebar .mosaic-widget .sidebar-fullwidth>*,
 .sidebar .mosaic-widget .sidebar-fullwidth>*,
 .sidebar .mosaic-widget .sidebar-fullwidth .ts-wrapper,
-.panel-sidebar .mosaic-widget .sidebar-fullwidth .ts-wrapper {
+.panel-sidebar .mosaic-widget .sidebar-fullwidth .ts-wrapper,
+.sidebar .mosaic-widget .sidebar-fullwidth .slider-input,
+.panel-sidebar .mosaic-widget .sidebar-fullwidth .slider-input {
     width: 100%;
+}
+
+.panel-sidebar .mosaic-widget .sidebar-fullwidth .noUi-target,
+.sidebar .mosaic-widget .sidebar-fullwidth .noUi-target {
+    width: 96% !important;
 }
 
 .sidebar .mosaic-widget fieldset,
 .panel-sidebar .mosaic-widget fieldset,
 .sidebar .mosaic-widget .sidebar-fullwidth label,
-.panel-sidebar .mosaic-widget .sidebar-fullwidth label {
+.panel-sidebar .mosaic-widget .sidebar-fullwidth label,
+.sidebar .mosaic-widget .slider-input,
+.panel-sidebar .mosaic-widget .slider-input {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.1rem;
