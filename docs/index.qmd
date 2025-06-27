@@ -235,7 +235,7 @@ In many cases you'll want to have an input or interactor that both consumes and 
 This example demonstrates crossfiltering across [inputs](reference/inspect_viz.input.qmd). We plot shot types taken during the 2023 WNBA season, providing a `select()` input that filters by team, and another `select()` input that filters by player (which in turn is also filtered by the currently selected team). Click on the numbers at right for additional explanation of the code.
 
 ```{python}
-from inspect_viz.layout import hconcat, vspace
+from inspect_viz.layout import hconcat
 
 shots = Data.from_file("wnba-shots-2023.parquet")
 
@@ -262,12 +262,7 @@ vconcat(
       y_domain=["Jump", "Layup", "Hook"],  # <4>
       height=200,
       margin_left=60
-   ),
-   vspace(),
-   table(
-      shots, filter_by=filter, 
-      columns=["team_name", "athlete_name", "category", "description"],
-      height=210)
+   )
 )
 ```
 
