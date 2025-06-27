@@ -154,7 +154,7 @@ from inspect_viz.mark import density_y
 
 flights = Data.from_file("flights.parquet")
 
-bandwidth = Param(20) # <1> 
+bandwidth = Param(0.1) # <1> 
 
 vconcat(
    slider(
@@ -172,7 +172,7 @@ vconcat(
 )
 ```
 
-1.  Create a `bandwidth` parameter with a default value of 20.
+1.  Create a `bandwidth` parameter with a default value of 0.1.
 
 2.  Bind the `slider()` to the `bandwidth` parameter.
 
