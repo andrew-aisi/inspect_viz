@@ -637,7 +637,6 @@ import {
   themeBalham
 } from "https://cdn.jsdelivr.net/npm/ag-grid-community@33.3.2/+esm";
 import * as d3Format from "https://cdn.jsdelivr.net/npm/d3-format@3.1.0/+esm";
-import * as d3TimeFormat from "https://cdn.jsdelivr.net/npm/d3-time-format@4.1.0/+esm";
 var Table = class extends Input {
   constructor(options_) {
     super(options_.filterBy);
@@ -657,6 +656,8 @@ var Table = class extends Input {
     this.schema_ = [];
     if (typeof this.options_.width === "number") {
       this.element.style.width = `${this.options_.width}px`;
+    } else {
+      this.element.style.width = "100%";
     }
     if (this.options_.maxWidth) {
       this.element.style.maxWidth = `${this.options_.maxWidth}px`;
@@ -664,7 +665,7 @@ var Table = class extends Input {
     if (this.options_.height) {
       this.element.style.height = `${this.height_}px`;
     } else {
-      this.element.style.height = "100%";
+      this.element.style.height = "380px";
     }
     this.gridContainer_ = document.createElement("div");
     this.gridContainer_.id = this.id_;
@@ -935,13 +936,11 @@ var formatterForType = (type, formatStr) => {
       return d3Format.format(formatStr || ",.2~f");
     case "decimal":
       return d3Format.format(formatStr || ",.4~f");
-    case "date":
-      return d3TimeFormat.format(formatStr || "%Y-%m-%d");
-    // ISO date format (2024-03-15)
-    case "datetime":
-    case "timestamp":
-      return d3TimeFormat.format(formatStr || "%Y-%m-%d %H:%M:%S");
-    // ISO datetime format
+    // case 'date':
+    //     return d3TimeFormat.format(formatStr || '%Y-%m-%d'); // ISO date format (2024-03-15)
+    // case 'datetime':
+    // case 'timestamp':
+    //     return d3TimeFormat.format(formatStr || '%Y-%m-%d %H:%M:%S'); // ISO datetime format
     case "boolean":
     case "string":
     default:

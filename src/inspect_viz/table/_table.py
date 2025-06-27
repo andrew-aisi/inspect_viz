@@ -101,7 +101,7 @@ def table(
        column_options: A dictionary of column configuration options. The keys are column names and the values are dictionaries with column options.
        width: The total width of the table widget, in pixels.
        max_width: The maximum width of the table widget, in pixels.
-       height: The height of the table widget, in pixels.
+       height: The height of the table widget, in pixels (defaults to 380).
        sorting: Set whether sorting columns is enabled.
        filtering: Enable filtering. If set to 'header' a filter button is shown in the table header. If set to 'row', a filter is shown in a row beneath the header.
        pagination: Enable pagination. If set to True, default pagination settings are used. If set to a Pagination object, custom pagination settings are used.

@@ -10,21 +10,19 @@ Welcome to Inspect Viz, a data visualization library for [Inspect AI](https://in
 
 Inspect Viz is built on top of the [Mosaic](https://idl.uw.edu/mosaic/) web-based visualization framework. You can include these visualization in any [Jupyter Notebook](https://jupyter.org/) or web publishing system that supports Jupyter widgets (e.g. [Quarto](https://quarto.org)).
 
-::: {.callout-note}
-While `inspect_viz` will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives. 
+::: callout-note
+While `inspect_viz` will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives.
 :::
-
 
 #### Getting Started
 
 First, install the `inspect_viz` package from GitHub as follows:
 
-```bash
+``` bash
 pip install git+https://github.com/meridianlabs-ai/inspect_viz
 ```
 
 Then, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the [Concepts](concepts.qmd) article for a more in depth explanation of the library's components and how they fit together.
-
 
 ## Plots
 
@@ -46,14 +44,13 @@ plot(
 )
 ```
 
-1. Read the dataset from a parquest file. You can can also use `Data.from_dataframe()` to read data from any Pandas, Polars, or PyArrow data frame.
+1.  Read the dataset from a parquest file. You can can also use `Data.from_dataframe()` to read data from any Pandas, Polars, or PyArrow data frame.
 
-2. Plot using a `dot()` mark. The `plot()` function takes one or more marks or interactors.
+2.  Plot using a `dot()` mark. The `plot()` function takes one or more marks or interactors.
 
 #### Facets
 
 The penguins data set includes various species of penguin, so lets add some elements to our plot that enable us to see the difference between species. We'll also add grid lines to make the plot a bit easier to read.
-
 
 ```{python}
 plot(
@@ -84,6 +81,17 @@ plot(
 
 The `x` axis for this plot is not mapped to a column, but rather to a `count()` transform ( [transforms](reference/inspect_viz.transform.qmd) enable you to perform computations on columns for ploatting). The `fill` option gives each species it's own color. We also specify that we don't want a `y_label` (as the species names serve that purpose) and a smaller than normal height.
 
+## Tables
+
+You can also display data in a tabular layout using the `table()` function:
+
+```{python}
+from inspect_viz.table import table
+
+table(penguins)
+```
+
+You can sort and filter tables by column, use a scrolling or paginated display, and customize several other aspects of table appearance and behavior.
 
 ## Filters
 
@@ -107,15 +115,15 @@ vconcat(
 
 We've introduced a few new things here:
 
-1. The `vconcat()` function from the [layout](reference/inspect_viz.layout.qmd) module lets us stack inputs on top of our plot.
+1.  The `vconcat()` function from the [layout](reference/inspect_viz.layout.qmd) module lets us stack inputs on top of our plot.
 
-2. The `select()` function from the [input](reference/inspect_viz.input.qmd) module binds a select box to the `species` column.
+2.  The `select()` function from the [input](reference/inspect_viz.input.qmd) module binds a select box to the `species` column.
 
-3. The `color_domain="fixed"` argument to `plot()` indicates that we want to preserve species colors even when the plot is filtered.
+3.  The `color_domain="fixed"` argument to `plot()` indicates that we want to preserve species colors even when the plot is filtered.
 
 ## Marks
 
-So far the plots we've created include only a single [mark](reference/inspect_viz.mark.qmd), however many of the more interesting plots you'll create will include multiple marks. 
+So far the plots we've created include only a single [mark](reference/inspect_viz.mark.qmd), however many of the more interesting plots you'll create will include multiple marks.
 
 For example, here we explore the relationships between the height, weight, and sex of olympic athletes using `dot()` and `regression_y()` marks:
 
@@ -164,18 +172,17 @@ vconcat(
 )
 ```
 
-1. Create a `bandwidth` parameter with a default value of 20.
+1.  Create a `bandwidth` parameter with a default value of 20.
 
-2. Bind the `slider()` to the `bandwidth` parameter.
+2.  Bind the `slider()` to the `bandwidth` parameter.
 
-3. Apply the `bandwidth` to the plot (plot automatically redraws when the bandwidth changes).
-
+3.  Apply the `bandwidth` to the plot (plot automatically redraws when the bandwidth changes).
 
 ## Selections
 
-Above in [Filtering](#filtering) we began exploring dataset selections. Inputs are one way to set selections, but you can also set selections through direct interaction with plots. 
+Above in [Filtering](#filtering) we began exploring dataset selections. Inputs are one way to set selections, but you can also set selections through direct interaction with plots.
 
-For example, below we stack two plots vertically, the `dot()` plot from above along with a `bar_x()` plot that counts the `sex` column. We then add an `interval_x()` [interactor](reference/inspect_viz.interactor.qmd) that enables us to filter the dataset using selections on the dot plot. 
+For example, below we stack two plots vertically, the `dot()` plot from above along with a `bar_x()` plot that counts the `sex` column. We then add an `interval_x()` [interactor](reference/inspect_viz.interactor.qmd) that enables us to filter the dataset using selections on the dot plot.
 
 There are a number of new things introduced here, click on the numbers near the right margin for additional explanation.
 
@@ -207,28 +214,28 @@ vconcat(
 )
 ```
 
-1. A `Selection` is a means of filtering datasets based on interactions. Here we use an "intersect" selection for application of a simple filter from dot plot to bar plot.
+1.  A `Selection` is a means of filtering datasets based on interactions. Here we use an "intersect" selection for application of a simple filter from dot plot to bar plot.
 
-2. The `range` selection is set via the `interval_x()` interactor (which enables using the mouse to select an x-range).
+2.  The `range` selection is set via the `interval_x()` interactor (which enables using the mouse to select an x-range).
 
-3. The `Brush` defines the color of the interactor (in this case `#888`, a medium-gray).
+3.  The `Brush` defines the color of the interactor (in this case `#888`, a medium-gray).
 
-4. The `range` selection is consumed using the `filter_by` parameter.
+4.  The `range` selection is consumed using the `filter_by` parameter.
 
-5. We set the `x_domain` for the bar plot to "fixed" so that the scale doesn't change as the dataset is filtered.
+5.  We set the `x_domain` for the bar plot to "fixed" so that the scale doesn't change as the dataset is filtered.
 
 Try using the mouse to brush over regions on the dot plot---the bar plot will update accordingly.
 
 ## Crossfilter
 
-In many cases you'll want to have an input or interactor that both consumes and produces the same selection (i.e. filtered based on interactions with other inputs or interactors, but also able to provide its own filtering). 
+In many cases you'll want to have an input or interactor that both consumes and produces the same selection (i.e. filtered based on interactions with other inputs or interactors, but also able to provide its own filtering).
 
 ### Inputs
 
 This example demonstrates crossfiltering across [inputs](reference/inspect_viz.input.qmd). We plot shot types taken during the 2023 WNBA season, providing a `select()` input that filters by team, and another `select()` input that filters by player (which in turn is also filtered by the currently selected team). Click on the numbers at right for additional explanation of the code.
 
 ```{python}
-from inspect_viz.layout import hconcat
+from inspect_viz.layout import hconcat, vspace
 
 shots = Data.from_file("wnba-shots-2023.parquet")
 
@@ -255,17 +262,22 @@ vconcat(
       y_domain=["Jump", "Layup", "Hook"],  # <4>
       height=200,
       margin_left=60
-   )
+   ),
+   vspace(),
+   table(
+      shots, filter_by=filter, 
+      columns=["team_name", "athlete_name", "category", "description"],
+      height=210)
 )
 ```
 
-1. Create a crossfilter selection, which enables inputs to both consume and produce the same selection (conditioning their available choices on other inputs).
+1.  Create a crossfilter selection, which enables inputs to both consume and produce the same selection (conditioning their available choices on other inputs).
 
-2. The team select box targets the `filter` selection (filtering both the choices in the athelte select box and what is displayed in the plot).
+2.  The team select box targets the `filter` selection (filtering both the choices in the athelte select box and what is displayed in the plot).
 
-3. The athlete select box is both _filtered by_ and targets the `filter` selection, enabling it to both confine itself to the selected team as well as filter what is displayed in the plot.
+3.  The athlete select box is both *filtered by* and targets the `filter` selection, enabling it to both confine itself to the selected team as well as filter what is displayed in the plot.
 
-4. As different teams and players are selected, the y-axis may take on differnet values and ordering. These options ensure that the y-axis remains stable across selections.
+4.  As different teams and players are selected, the y-axis may take on differnet values and ordering. These options ensure that the y-axis remains stable across selections.
 
 ### Interactors
 
@@ -298,21 +310,20 @@ vconcat(
 )
 ```
 
-1. Create a crossfilter selection, which ensures each plot's selection affects all other plots except itself.
+1.  Create a crossfilter selection, which ensures each plot's selection affects all other plots except itself.
 
-2. Our two plots are identical save for the `x` value and the `x_label` so factor out into a function.
+2.  Our two plots are identical save for the `x` value and the `x_label` so factor out into a function.
 
-3. The `interval_x()` interactor enables horizontal selection (targeting the crossfiltering `brush`).
+3.  The `interval_x()` interactor enables horizontal selection (targeting the crossfiltering `brush`).
 
-4. Use a `"fixed"` domain so that the x-axis remains stable even when being filtered.
-
+4.  Use a `"fixed"` domain so that the x-axis remains stable even when being filtered.
 
 ## Learning More
 
 Use these resources to learn more about using Inspect Viz:
 
-- [Concepts](concepts.qmd) describes the core components of the library and how they fit together.
+-   [Concepts](concepts.qmd) describes the core components of the library and how they fit together.
 
-- [Reference](reference/index.qmd) provides details on the available marks, interactors, transforms, and inputs.
+-   [Reference](reference/index.qmd) provides details on the available marks, interactors, transforms, and inputs.
 
-- [Examples](examples/index.qmd) demonstrates more advanced plotting and interactivity features.
+-   [Examples](examples/index.qmd) demonstrates more advanced plotting and interactivity features.

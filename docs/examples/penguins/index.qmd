@@ -37,6 +37,6 @@ plot(
 ```
 
 ```{python}
-table(penguins, height=315)
+table(penguins)
 ```
 
