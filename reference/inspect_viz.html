@@ -1329,7 +1329,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Data source for visualizations.</p>
 <p>Data sources can be created from any standard Python data frame (e.g.&nbsp;Pandas, Polars, etc.) or from a path pointing to a data file in a standard format (e.g.&nbsp;csv, parquet, etc.)</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/94b82ecd4ee0832952b853e668f2741f85310cbf/src/inspect_viz/_core/data.py#L17">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/3e66df6a9673da770b6d997f85323c445224e22c/src/inspect_viz/_core/data.py#L17">Source</a>
 </div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section class="level4">
@@ -1348,7 +1348,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>Create <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#data">Data</a></span> from a standard Python data frame (e.g.&nbsp;Pandas, Polars, PyArrow, etc.).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/94b82ecd4ee0832952b853e668f2741f85310cbf/src/inspect_viz/_core/data.py#L23">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/3e66df6a9673da770b6d997f85323c445224e22c/src/inspect_viz/_core/data.py#L23">Source</a>
 </div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="at">@classmethod</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> from_dataframe(cls, df: IntoDataFrame) <span class="op">-&gt;</span> <span class="st">"Data"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1363,7 +1363,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>Create <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#data">Data</a></span> from a data file (e.g.&nbsp;csv, parquet, feather, etc.).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/94b82ecd4ee0832952b853e668f2741f85310cbf/src/inspect_viz/_core/data.py#L32">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/3e66df6a9673da770b6d997f85323c445224e22c/src/inspect_viz/_core/data.py#L32">Source</a>
 </div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="at">@classmethod</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> from_file(cls, <span class="bu">file</span>: <span class="bu">str</span> <span class="op">|</span> PathLike[<span class="bu">str</span>]) <span class="op">-&gt;</span> <span class="st">"Data"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1383,7 +1383,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Visualization components are Jupyter widgets that can be used in any notebook or Jupyter based publishing system.</p>
 <p>See the documentation on inputs, plots, marks, and interactors for details on available components.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/94b82ecd4ee0832952b853e668f2741f85310cbf/src/inspect_viz/_core/component.py#L46">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/3e66df6a9673da770b6d997f85323c445224e22c/src/inspect_viz/_core/component.py#L46">Source</a>
 </div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Component(AnyWidget)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
@@ -1398,7 +1398,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>Selection.crossfilter()</code> for a cross-filtered intersection</li>
 </ul>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/94b82ecd4ee0832952b853e668f2741f85310cbf/src/inspect_viz/_core/selection.py#L8">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/3e66df6a9673da770b6d997f85323c445224e22c/src/inspect_viz/_core/selection.py#L8">Source</a>
 </div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Selection(<span class="bu">str</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section class="level4 class-methods">
@@ -1408,7 +1408,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>Create a new Selection instance with an intersect (conjunction) resolution strategy.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/94b82ecd4ee0832952b853e668f2741f85310cbf/src/inspect_viz/_core/selection.py#L25">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/3e66df6a9673da770b6d997f85323c445224e22c/src/inspect_viz/_core/selection.py#L25">Source</a>
 </div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="at">@classmethod</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> intersect(</span>
@@ -1436,7 +1436,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>Create a new Selection instance with a union (disjunction) resolution strategy.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/94b82ecd4ee0832952b853e668f2741f85310cbf/src/inspect_viz/_core/selection.py#L41">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/3e66df6a9673da770b6d997f85323c445224e22c/src/inspect_viz/_core/selection.py#L41">Source</a>
 </div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="at">@classmethod</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> union(</span>
@@ -1464,7 +1464,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>Create a new Selection instance with a singular resolution strategy that keeps only the most recent selection clause.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/94b82ecd4ee0832952b853e668f2741f85310cbf/src/inspect_viz/_core/selection.py#L57">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/3e66df6a9673da770b6d997f85323c445224e22c/src/inspect_viz/_core/selection.py#L57">Source</a>
 </div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="at">@classmethod</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> single(</span>
@@ -1492,7 +1492,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>Create a new Selection instance with a cross-filtered intersect resolution strategy.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/94b82ecd4ee0832952b853e668f2741f85310cbf/src/inspect_viz/_core/selection.py#L73">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/3e66df6a9673da770b6d997f85323c445224e22c/src/inspect_viz/_core/selection.py#L73">Source</a>
 </div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="at">@classmethod</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> crossfilter(</span>
@@ -1518,7 +1518,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="param">Param</h3>
 <p>Parameter that can be bound from inputs.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/94b82ecd4ee0832952b853e668f2741f85310cbf/src/inspect_viz/_core/param.py#L14">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/3e66df6a9673da770b6d997f85323c445224e22c/src/inspect_viz/_core/param.py#L14">Source</a>
 </div>
 <div class="sourceCode" id="cb10"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Param(<span class="bu">str</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section class="level4">
@@ -1539,7 +1539,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="paramvalue">ParamValue</h3>
 <p>Type alias for parameter values (scalar or sequence of scalars).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/94b82ecd4ee0832952b853e668f2741f85310cbf/src/inspect_viz/_core/param.py#L8">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/3e66df6a9673da770b6d997f85323c445224e22c/src/inspect_viz/_core/param.py#L8">Source</a>
 </div>
 <div class="sourceCode" id="cb11"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ParamValue: TypeAlias <span class="op">=</span> (</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">int</span> <span class="op">|</span> <span class="bu">float</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> datetime <span class="op">|</span> Sequence[<span class="bu">int</span> <span class="op">|</span> <span class="bu">float</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">str</span>]</span>
