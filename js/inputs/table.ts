@@ -152,6 +152,8 @@ export class Table extends Input {
         this.element.classList.add('inspect-viz-table');
         if (typeof this.options_.width === 'number') {
             this.element.style.width = `${this.options_.width}px`;
+        } else {
+            this.element.style.width = '100%';
         }
         if (this.options_.max_width) {
             this.element.style.maxWidth = `${this.options_.max_width}px`;
