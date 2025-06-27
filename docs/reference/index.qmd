@@ -1,5 +1,5 @@
 ---
-title: Inspect Viz Reference
+title: "Reference"
 tbl-colwidths: [25,75]
 page-layout: full
 toc-depth: 4
