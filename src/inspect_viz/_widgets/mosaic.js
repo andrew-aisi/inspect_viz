@@ -764,15 +764,17 @@ var Table = class extends Input {
       // always pass filter to allow server-side filtering
       alwaysPassFilter: () => true,
       pagination: !!options.pagination,
-      paginationAutoPageSize: !!options.paginationAutoPageSize,
-      paginationPageSizeSelector: options.paginationPageSizeSelector,
-      paginationPageSize: options.paginationPageSize,
+      paginationAutoPageSize: !!options.pagination?.autoPageSize,
+      paginationPageSizeSelector: options.pagination?.pageSizeSelector,
+      paginationPageSize: options.pagination?.pageSize,
       animateRows: true,
       headerHeight: headerHeightPixels,
       rowHeight: options.rowHeight,
       columnDefs: [],
       rowData: [],
       rowSelection: explicitSelection,
+      suppressCellFocus: true,
+      enableCellTextSelection: true,
       onFilterChanged: () => {
         this.filterModel_ = this.grid_?.getFilterModel() || {};
         this.requestQuery();
@@ -824,7 +826,6 @@ var Table = class extends Input {
     const wrapText = columnOptions.wrapText;
     const wrapHeaderText = columnOptions.headerWrapText;
     const flex = columnOptions.flex;
-    const floatingFilter = this.options_.filterLocation === "secondary";
     const colDef = {
       field: column2,
       headerName: columnOptions.label || column2,
@@ -843,7 +844,9 @@ var Table = class extends Input {
       autoHeaderHeight,
       wrapText,
       wrapHeaderText,
-      floatingFilter,
+      floatingFilter: this.options_.filtering === "row",
+      suppressMovable: true,
+      // Disable column moving
       valueFormatter: (params) => {
         const value = params.value;
         if (formatter && value !== null && value !== void 0) {
@@ -885,11 +888,26 @@ var headerClasses = (align) => {
   return [`header-${align}`];
 };
 var resolveRowSelection = (options) => {
-  const explicitSelect = options.select === "single" || options.select === "multiple";
-  const selectAll = options.selectAll || "all";
-  return !explicitSelect ? void 0 : options.select === "single" ? {
-    mode: "singleRow"
-  } : { mode: "multiRow", selectAll };
+  const explicitSelect = options.select !== "hover" && options.select !== void 0 && options.select !== "none";
+  if (!explicitSelect) {
+    return void 0;
+  }
+  if (options.select?.startsWith("single_")) {
+    return {
+      mode: "singleRow",
+      checkboxes: options.select === "single_checkbox",
+      enableClickSelection: options.select === "single_row"
+    };
+  } else if (options.select?.startsWith("multiple_")) {
+    const selectAll = options.selectAllScope || "all";
+    return {
+      mode: "multiRow",
+      selectAll,
+      checkboxes: options.select === "multiple_checkbox"
+    };
+  } else {
+    throw new Error("Invalid select option: " + options.select);
+  }
 };
 var filterForColumnType = (type) => {
   switch (type) {

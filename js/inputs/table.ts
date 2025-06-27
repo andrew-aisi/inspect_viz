@@ -79,19 +79,26 @@ export interface TableOptions extends InputOptions {
     from: string;
     columns?: Array<string | Column>;
     width?: number;
-    maxWidth?: number;
     height?: number;
-    pagination?: boolean;
-    paginationAutoPageSize?: boolean;
-    paginationPageSize?: number;
-    paginationPageSizeSelector?: number[] | boolean;
+    maxWidth?: number;
+    pagination?: {
+        autoPageSize?: boolean;
+        pageSize?: number;
+        pageSizeSelector?: number[] | boolean;
+    };
     sorting?: boolean;
-    filtering?: boolean;
+    filtering?: boolean | 'header' | 'row';
     filterLocation?: 'header' | 'secondary';
-    headerHeight?: number | 'auto';
     rowHeight?: number;
-    select?: 'hover' | 'single' | 'multiple' | 'none';
-    selectAll?: 'all' | 'filtered' | 'currentPage';
+    headerHeight?: number | 'auto';
+    select?:
+        | 'hover'
+        | 'single_row'
+        | 'multiple_row'
+        | 'single_checkbox'
+        | 'multiple_checkbox'
+        | 'none';
+    selectAllScope?: 'all' | 'filtered' | 'currentPage';
 }
 
 interface ColSortModel {
@@ -270,15 +277,17 @@ export class Table extends Input {
             // always pass filter to allow server-side filtering
             alwaysPassFilter: () => true,
             pagination: !!options.pagination,
-            paginationAutoPageSize: !!options.paginationAutoPageSize,
-            paginationPageSizeSelector: options.paginationPageSizeSelector,
-            paginationPageSize: options.paginationPageSize,
+            paginationAutoPageSize: !!options.pagination?.autoPageSize,
+            paginationPageSizeSelector: options.pagination?.pageSizeSelector,
+            paginationPageSize: options.pagination?.pageSize,
             animateRows: true,
             headerHeight: headerHeightPixels,
             rowHeight: options.rowHeight,
             columnDefs: [],
             rowData: [],
             rowSelection: explicitSelection,
+            suppressCellFocus: true,
+            enableCellTextSelection: true,
             onFilterChanged: () => {
                 // Capture the filter model for server-side use
                 this.filterModel_ = this.grid_?.getFilterModel() || {};
@@ -368,8 +377,6 @@ export class Table extends Input {
         const flex = columnOptions.flex;
 
         // Position the filter below the header
-        const floatingFilter = this.options_.filterLocation === 'secondary';
-
         const colDef: ColDef = {
             field: column,
             headerName: columnOptions.label || column,
@@ -389,7 +396,8 @@ export class Table extends Input {
             autoHeaderHeight,
             wrapText,
             wrapHeaderText,
-            floatingFilter,
+            floatingFilter: this.options_.filtering === 'row',
+            suppressMovable: true, // Disable column moving
             valueFormatter: params => {
                 // Format the value if a format is provided
                 const value = params.value;
@@ -440,15 +448,28 @@ const headerClasses = (align?: 'left' | 'right' | 'center' | 'justify'): string[
 };
 
 const resolveRowSelection = (options: TableOptions): RowSelectionOptions<any, any> | undefined => {
-    const explicitSelect = options.select === 'single' || options.select === 'multiple';
-    const selectAll = options.selectAll || 'all';
-    return !explicitSelect
-        ? undefined
-        : options.select === 'single'
-          ? {
-                mode: 'singleRow',
-            }
-          : { mode: 'multiRow', selectAll };
+    const explicitSelect =
+        options.select !== 'hover' && options.select !== undefined && options.select !== 'none';
+    if (!explicitSelect) {
+        return undefined;
+    }
+
+    if (options.select?.startsWith('single_')) {
+        return {
+            mode: 'singleRow',
+            checkboxes: options.select === 'single_checkbox',
+            enableClickSelection: options.select === 'single_row',
+        };
+    } else if (options.select?.startsWith('multiple_')) {
+        const selectAll = options.selectAllScope || 'all';
+        return {
+            mode: 'multiRow',
+            selectAll,
+            checkboxes: options.select === 'multiple_checkbox',
+        };
+    } else {
+        throw new Error('Invalid select option: ' + options.select);
+    }
 };
 
 const filterForColumnType = (type: string): string => {
