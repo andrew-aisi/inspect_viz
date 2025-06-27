@@ -1,0 +1,19 @@
+.inspect-viz-table {
+    height: 380px;
+}            
+
+.header-center .ag-header-cell-label {
+    justify-content: center;
+}
+
+.header-left .ag-header-cell-label {
+    justify-content: left;
+}
+
+.header-right .ag-header-cell-label {
+    justify-content: right;
+}
+
+.header-justify .ag-header-cell-label {
+    justify-content: space-between;
+}
