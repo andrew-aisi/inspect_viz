@@ -75,6 +75,27 @@ export interface Column {
     header_wrap_text?: boolean;
 }
 
+export interface TableStyle {
+    background_color?: string;
+    foreground_color?: string;
+    accent_color?: string;
+    text_color?: string;
+    header_text_color?: string;
+    cell_text_color?: string;
+
+    font_family?: string;
+    header_font_family?: string;
+    cell_font_family?: string;
+
+    spacing?: number | string;
+
+    border_color?: string;
+    border_width?: number | string;
+    border_radius?: number | string;
+
+    selected_row_background_color?: string;
+}
+
 export interface TableOptions extends InputOptions {
     filter_by: any;
     from: string;
@@ -97,6 +118,7 @@ export interface TableOptions extends InputOptions {
         | 'single_checkbox'
         | 'multiple_checkbox'
         | 'none';
+    style?: TableStyle;
 }
 
 interface ColSortModel {
@@ -152,14 +174,38 @@ export class Table extends Input {
         this.element.classList.add('inspect-viz-table');
         if (typeof this.options_.width === 'number') {
             this.element.style.width = `${this.options_.width}px`;
-        } else {
-            this.element.style.width = '100%';
         }
         if (this.options_.max_width) {
             this.element.style.maxWidth = `${this.options_.max_width}px`;
         }
         if (this.options_.height) {
             this.element.style.height = `${this.height_}px`;
+        }
+
+        if (this.options_.style) {
+            // note that since these are CSS variables that we define
+            // for adapting to Quarto themes, we need to use CSS
+            // vars to override the variables
+            if (this.options_.style?.background_color) {
+                this.element.style.setProperty(
+                    '--ag-background-color',
+                    this.options_.style.background_color
+                );
+            }
+
+            if (this.options_.style?.foreground_color) {
+                this.element.style.setProperty(
+                    '--ag-foreground-color',
+                    this.options_.style.foreground_color
+                );
+            }
+
+            if (this.options_.style?.accent_color) {
+                this.element.style.setProperty(
+                    '--ag-foreground-color',
+                    this.options_.style.accent_color
+                );
+            }
         }
 
         // create grid container
@@ -195,13 +241,6 @@ export class Table extends Input {
             this.createColumnDef(column, type)
         );
         this.gridOptions_.columnDefs = columnDefs;
-
-        // Set the custom grid theme
-        const myTheme = themeBalham.withParams({
-            spacing: 4,
-            accentColor: 'blue',
-        });
-        this.gridOptions_.theme = myTheme;
 
         // create the grid
         this.grid_ = createGrid(this.gridContainer_, this.gridOptions_);
@@ -271,6 +310,29 @@ export class Table extends Input {
         const hoverSelect = options.select === 'hover';
         const explicitSelection = resolveRowSelection(options);
 
+        // Theme
+        const gridTheme = themeBalham.withParams({
+            textColor: this.options_.style?.text_color,
+            headerTextColor:
+                this.options_.style?.header_text_color || this.options_.style?.text_color,
+            cellTextColor: this.options_.style?.cell_text_color,
+
+            fontFamily: this.options_.style?.font_family,
+            headerFontFamily:
+                this.options_.style?.header_font_family || this.options_.style?.font_family,
+            cellFontFamily:
+                this.options_.style?.cell_font_family || this.options_.style?.font_family,
+
+            spacing: this.options_.style?.spacing || 4,
+
+            borderColor: this.options_.style?.border_color,
+            borderRadius: this.options_.style?.border_radius,
+
+            selectedRowBackgroundColor: this.options_.style?.selected_row_background_color,
+
+            //borderWidth: this.options_.style?.border_width,
+        });
+
         // initialize grid options
         return {
             // always pass filter to allow server-side filtering
@@ -292,7 +354,7 @@ export class Table extends Input {
             rowSelection: explicitSelection,
             suppressCellFocus: true,
             enableCellTextSelection: true,
-            theme: themeBalham.withParams({}),
+            theme: gridTheme,
             onFilterChanged: () => {
                 // Capture the filter model for server-side use
                 this.filterModel_ = this.grid_?.getFilterModel() || {};

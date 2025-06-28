@@ -658,14 +658,32 @@ var Table = class extends Input {
     this.element.classList.add("inspect-viz-table");
     if (typeof this.options_.width === "number") {
       this.element.style.width = `${this.options_.width}px`;
-    } else {
-      this.element.style.width = "100%";
     }
     if (this.options_.max_width) {
       this.element.style.maxWidth = `${this.options_.max_width}px`;
     }
     if (this.options_.height) {
       this.element.style.height = `${this.height_}px`;
+    }
+    if (this.options_.style) {
+      if (this.options_.style?.background_color) {
+        this.element.style.setProperty(
+          "--ag-background-color",
+          this.options_.style.background_color
+        );
+      }
+      if (this.options_.style?.foreground_color) {
+        this.element.style.setProperty(
+          "--ag-foreground-color",
+          this.options_.style.foreground_color
+        );
+      }
+      if (this.options_.style?.accent_color) {
+        this.element.style.setProperty(
+          "--ag-foreground-color",
+          this.options_.style.accent_color
+        );
+      }
     }
     this.gridContainer_ = document.createElement("div");
     this.gridContainer_.id = this.id_;
@@ -707,11 +725,6 @@ var Table = class extends Input {
       ({ column: column2, type }) => this.createColumnDef(column2, type)
     );
     this.gridOptions_.columnDefs = columnDefs;
-    const myTheme = themeBalham.withParams({
-      spacing: 4,
-      accentColor: "blue"
-    });
-    this.gridOptions_.theme = myTheme;
     this.grid_ = createGrid(this.gridContainer_, this.gridOptions_);
   }
   // mosaic calls this every time it needs to show data to find
@@ -761,6 +774,19 @@ var Table = class extends Input {
     const headerHeightPixels = typeof options.header_height === "string" ? void 0 : options.header_height;
     const hoverSelect = options.select === "hover";
     const explicitSelection = resolveRowSelection(options);
+    const gridTheme = themeBalham.withParams({
+      textColor: this.options_.style?.text_color,
+      headerTextColor: this.options_.style?.header_text_color || this.options_.style?.text_color,
+      cellTextColor: this.options_.style?.cell_text_color,
+      fontFamily: this.options_.style?.font_family,
+      headerFontFamily: this.options_.style?.header_font_family || this.options_.style?.font_family,
+      cellFontFamily: this.options_.style?.cell_font_family || this.options_.style?.font_family,
+      spacing: this.options_.style?.spacing || 4,
+      borderColor: this.options_.style?.border_color,
+      borderRadius: this.options_.style?.border_radius,
+      selectedRowBackgroundColor: this.options_.style?.selected_row_background_color
+      //borderWidth: this.options_.style?.border_width,
+    });
     return {
       // always pass filter to allow server-side filtering
       alwaysPassFilter: () => true,
@@ -776,7 +802,7 @@ var Table = class extends Input {
       rowSelection: explicitSelection,
       suppressCellFocus: true,
       enableCellTextSelection: true,
-      theme: themeBalham.withParams({}),
+      theme: gridTheme,
       onFilterChanged: () => {
         this.filterModel_ = this.grid_?.getFilterModel() || {};
         this.requestQuery();
