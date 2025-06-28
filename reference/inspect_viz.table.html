@@ -1324,7 +1324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="table">table</h3>
 <p>Tabular display of data.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/3e66df6a9673da770b6d997f85323c445224e22c/src/inspect_viz/table/_table.py#L198">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/89e22a0f2fceb8324ad000cc2260a9acad56610e/src/inspect_viz/table/_table.py#L243">Source</a>
 </div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> table(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1349,7 +1349,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    sorting: <span class="bu">bool</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    filtering: <span class="bu">bool</span> <span class="op">|</span> Literal[<span class="st">"header"</span>, <span class="st">"row"</span>] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    pagination: <span class="bu">bool</span> <span class="op">|</span> Pagination <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    style: TableStyle <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl>
 <dt><code class="ref-definition">data</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
 <dd>
@@ -1402,6 +1403,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dt><code class="ref-definition">pagination</code> <span class="element-type"><span class="element-type-name">bool</span> | <span class="element-type-name">Pagination</span> | <span class="element-type-name">None</span></span></dt>
 <dd>
 <p>Enable pagination. If set to True, default pagination settings are used. If set to a Pagination object, custom pagination settings are used.</p>
+</dd>
+<dt><code class="ref-definition">style</code> <span class="element-type"><span class="element-type-name">TableStyle</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>The style configuration for the table display.</p>
 </dd>
 </dl>
 
