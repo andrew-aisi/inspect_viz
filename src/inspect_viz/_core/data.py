@@ -88,16 +88,19 @@ class Data:
             return bytes()
 
     def __str__(self) -> str:
-        return self._replace_caption(self._ndf.__str__())
+        lines = [
+            f"Viz Data ({len(self._ndf):,} rows x {len(self._ndf.columns):,} columns)",
+            "-" * 50,
+        ]
+        for col_name, dtype in self._ndf.schema.items():
+            lines.append(f"{col_name:<25} {str(dtype):<25}")
+        return "\n".join(lines)
 
     def __repr__(self) -> str:
-        return self._replace_caption(self._ndf.__repr__())
+        return self.__str__()
 
     def __len__(self) -> int:
         return self._ndf.__len__()
-
-    def _replace_caption(self, text: str) -> str:
-        return text.replace("Narwhals DataFrame", "     Viz Data     ")
 
     # Class-level dictionary to store all instances
     _instances: ClassVar[list["Data"]] = []
