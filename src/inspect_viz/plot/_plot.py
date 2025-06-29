@@ -3,7 +3,6 @@ from typing import Any, Literal, Sequence, Unpack
 from shortuuid import uuid
 
 from inspect_viz._util.notgiven import NOT_GIVEN, NotGiven
-from inspect_viz._util.platform import quarto_fig_size
 
 from .._core import Component
 from .._core.param import Param
