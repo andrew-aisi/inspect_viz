@@ -1,0 +1,28 @@
+---
+jupyter: python3
+execute: 
+    enabled: true
+    daemon: false
+---
+
+```{python}
+from inspect_ai.analysis.beta import evals_df
+from inspect_viz import Data
+
+evals = Data.from_dataframe(evals_df("logs"))
+```
+
+```{python}
+from inspect_viz.input import select
+from inspect_viz.layout import vconcat, vspace
+from inspect_viz.sandbox import evals_bar_plot
+
+evals_bar_plot(evals)
+```
+
+```{python}
+from inspect_viz.sandbox import evals_table
+
+evals_table(evals)
+```
+
