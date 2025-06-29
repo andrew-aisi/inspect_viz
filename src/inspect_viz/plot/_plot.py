@@ -52,7 +52,7 @@ def plot(
             grid with the currentColor stroke; if a string, show a grid with the specified
             stroke color; if an approximate number of ticks, an interval, or an array
             of tick values, show corresponding grid lines.
-        width: The outer width of the plot in pixels, including margins. Defaults to 640.
+        width: The outer width of the plot in pixels, including margins. Defaults to 700.
         height: The outer height of the plot in pixels, including margins. The default
             depends on the plot's scales, and the plot's width if an aspectRatio is
             specified. For example, if the *y* scale is linear and there is no *fy*
@@ -94,6 +94,8 @@ def plot(
         config["width"] = width
     elif fig_size:
         config["width"] = fig_size[0]
+    else:
+        config["width"] = 700
     if height is not None:
         config["height"] = height
     elif fig_size:
