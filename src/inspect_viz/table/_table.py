@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Sequence
 
 from pydantic import BaseModel, JsonValue
 
@@ -243,7 +243,7 @@ class TableStyle(BaseModel):
 def table(
     data: Data,
     *,
-    columns: list[str | Column] | None = None,
+    columns: Sequence[str | Column] | None = None,
     filter_by: Selection | None = None,
     target: Selection | None = None,
     select: Literal[
