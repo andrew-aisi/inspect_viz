@@ -370,4 +370,12 @@ website:
           href: reference/inspect_viz.layout.qmd#vspace
       - section: inspect_viz.sandbox
         href: reference/inspect_viz.sandbox.qmd
-        contents: []
+        contents:
+        - text: evals_bar_plot
+          href: reference/inspect_viz.sandbox.qmd#evals_bar_plot
+        - text: evals_table
+          href: reference/inspect_viz.sandbox.qmd#evals_table
+        - text: PlotAxis
+          href: reference/inspect_viz.sandbox.qmd#plotaxis
+        - text: score_axis
+          href: reference/inspect_viz.sandbox.qmd#score_axis
