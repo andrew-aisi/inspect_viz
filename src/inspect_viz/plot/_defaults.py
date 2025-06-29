@@ -58,6 +58,6 @@ def plot_defaults_as_camel() -> dict[str, Any]:
     return plot_attributes_mosaic(_builtin_plot_defaults | _plot_defaults)
 
 
-_builtin_plot_defaults = PlotDefaults()
+_builtin_plot_defaults = PlotDefaults(width=700, height=450)
 
 _plot_defaults = PlotDefaults()
