@@ -53,10 +53,7 @@ def plot(
             stroke color; if an approximate number of ticks, an interval, or an array
             of tick values, show corresponding grid lines.
         width: The outer width of the plot in pixels, including margins. Defaults to 700.
-        height: The outer height of the plot in pixels, including margins. The default
-            depends on the plot's scales, and the plot's width if an aspectRatio is
-            specified. For example, if the *y* scale is linear and there is no *fy*
-            scale, it might be 396.
+        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
         name: A unique name for the plot. The name is used by standalone legend
             components to to lookup the plot and access scale mappings.
         legend: Plot legend.
@@ -89,17 +86,14 @@ def plot(
         config["yGrid"] = y_grid
 
     # plot width and height (use quarto default if not specified)
-    fig_size = quarto_fig_size()
     if width is not None:
         config["width"] = width
-    elif fig_size:
-        config["width"] = fig_size[0]
     else:
         config["width"] = 700
     if height is not None:
         config["height"] = height
-    elif fig_size:
-        config["height"] = fig_size[1]
+    else:
+        config["height"] = config["width"] / 1.618
 
     if name is not None:
         config["name"] = name
