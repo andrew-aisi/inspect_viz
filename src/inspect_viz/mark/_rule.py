@@ -17,6 +17,8 @@ def rule_x(
     data: Data,
     x: ChannelSpec | Param,
     y: ChannelIntervalSpec | Param | None = None,
+    y1: ChannelSpec | Param | None = None,
+    y2: ChannelSpec | Param | None = None,
     filter_by: Selection | None = None,
     interval: Interval | None = None,
     marker: Marker | bool | Param | None = None,
@@ -35,6 +37,8 @@ def rule_x(
         data: The data source for the mark.
         x: The horizontal position channel, typically bound to the *x* scale.
         y: The vertical position channel, typically bound to the *y* scale.
+        y1: The primary (starting, often bottom) vertical position of the tick; a channel bound to the *y* scale.
+        y2: The secondary (ending, often top) vertical position of the tick; a channel bound to the *y* scale.
         filter_by: A selection to filter the data.
         interval: How to convert a continuous value into an interval.
         marker: The marker symbol to use at all positions along the rule.
@@ -52,6 +56,8 @@ def rule_x(
             data=data._plot_from(filter_by),
             x=column_param(data, x),
             y=column_param(data, y),
+            y1=column_param(data, y1),
+            y2=column_param(data, y2),
             interval=interval,
             marker=marker,
             markerStart=marker_start,
@@ -68,6 +74,8 @@ def rule_y(
     data: Data,
     y: ChannelSpec | Param,
     x: ChannelIntervalSpec | Param | None = None,
+    x1: ChannelSpec | Param | None = None,
+    x2: ChannelSpec | Param | None = None,
     filter_by: Selection | None = None,
     interval: Interval | None = None,
     marker: Marker | bool | Param | None = None,
@@ -86,6 +94,8 @@ def rule_y(
         data: The data source for the mark.
         y: The vertical position channel, typically bound to the *y* scale.
         x: The horizontal position channel, typically bound to the *x* scale.
+        x1: The primary (starting, often left) horizontal position of the tick; a channel bound to the *x* scale.
+        x2: The secondary (ending, often right) horizontal position of the tick; a channel bound to the *x* scale.
         filter_by: A selection to filter the data.
         interval: How to convert a continuous value into an interval.
         marker: The marker symbol to use at all positions along the rule.
@@ -101,8 +111,10 @@ def rule_y(
     config: dict[str, Any] = dict_remove_none(
         dict(
             data=data._plot_from(filter_by),
-            y=column(y) if isinstance(y, str) else y,
-            x=column(x) if isinstance(x, str) else x,
+            y=column_param(data, y),
+            x=column_param(data, x),
+            x1=column_param(data, x1),
+            x2=column_param(data, x2),
             interval=interval,
             marker=marker,
             markerStart=marker_start,
