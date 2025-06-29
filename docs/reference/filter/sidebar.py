@@ -19,6 +19,7 @@ reference_docs = ["reference/inspect_viz.qmd"] + [
         "table.qmd",
         "input.qmd",
         "layout.qmd",
+        "sandbox.qmd"
     ]
 ]
 

@@ -368,3 +368,6 @@ website:
           href: reference/inspect_viz.layout.qmd#hspace
         - text: vspace
           href: reference/inspect_viz.layout.qmd#vspace
+      - section: inspect_viz.sandbox
+        href: reference/inspect_viz.sandbox.qmd
+        contents: []
