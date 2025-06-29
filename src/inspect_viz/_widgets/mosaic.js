@@ -1541,7 +1541,6 @@ async function render({ model, el }) {
   }
   const renderSpec = async () => {
     try {
-      console.log("renderSpec");
       const targetSpec = renderOptions.autoFill ? responsiveSpec(spec, el) : spec;
       const ast = parseSpec(targetSpec, { inputs });
       const specEl = await astToDOM(ast, ctx);

@@ -198,6 +198,11 @@ async function astToDOM(ast: SpecNode, ctx: InstantiateContext) {
 }
 
 async function handleWorkerErrors(ctx: VizContext, widgetEl: HTMLElement) {
+    // only show worker errors if the 'worker_errors=1' is in the url
+    if (!window.location.search.includes('worker_errors=1')) {
+        return;
+    }
+
     // empty plot divs indicate a possible error in a worker, look for these
     // and then attempt to collect and display worker errors
     const emptyPlotDivs = widgetEl.querySelectorAll('div.plot:empty');
