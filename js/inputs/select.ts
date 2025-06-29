@@ -4,22 +4,29 @@ import { ChoiceInput, ChoiceInputOptions } from './choice';
 import { kSidebarFullwidth } from './types';
 
 import TomSelect from 'https://cdn.jsdelivr.net/npm/tom-select@2.4.3/+esm';
+import { isSelection, isParam } from 'https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm';
 
 export interface SelectOptions extends ChoiceInputOptions {
+    value?: string;
     multiple?: boolean;
+    allow_empty?: boolean;
     width?: number;
 }
 
 export class Select extends ChoiceInput {
     private readonly select_: HTMLSelectElement;
     private readonly multiple_: boolean;
+    private readonly allowEmpty_: boolean;
+    private readonly initialValue_?: string | string[];
     private tomSelect_?: TomSelect = undefined;
     constructor(options: SelectOptions) {
         // propagate filter
         super(options);
 
-        // note multiple
-        this.multiple_ = options.multiple || false;
+        // note multiple and initial value
+        this.multiple_ = options.multiple ?? false;
+        this.allowEmpty_ = options.allow_empty ?? true;
+        this.initialValue_ = options.value;
 
         // add fullwidth class (for sidebars)
         this.element.classList.add(kSidebarFullwidth);
@@ -50,6 +57,11 @@ export class Select extends ChoiceInput {
             this.setOptions(options.options);
         }
 
+        // set value if specified
+        if (options.value !== undefined && isSelection(this.options_.as)) {
+            this.publish(options.value);
+        }
+
         // publish selected value upon menu change
         this.select_.addEventListener('input', () => {
             this.publish(this.selectedValue ?? null);
@@ -61,7 +73,7 @@ export class Select extends ChoiceInput {
     }
 
     queryResult(data: any): this {
-        if (this.multiple_) {
+        if (this.multiple_ || !this.allowEmpty_) {
             this.setData(this.queryResultOptions(data));
             return this;
         } else {
@@ -88,7 +100,7 @@ export class Select extends ChoiceInput {
                 dropdownParent: 'body',
             };
             if (!this.select_.multiple) {
-                config.allowEmptyOption = !this.select_.multiple;
+                config.allowEmptyOption = this.allowEmpty_;
                 // @ts-ignore
                 config.controlInput = null;
             } else {
@@ -104,9 +116,17 @@ export class Select extends ChoiceInput {
             if (this.multiple_) {
                 this.tomSelect_.on('item_add', () => {
                     this.tomSelect_!.control_input.value = '';
-                    this.tomSelect_?.refreshOptions();
+                    this.tomSelect_?.refreshOptions(false);
                 });
             }
+
+            const defaultValue =
+                (this.initialValue_ ?? this.allowEmpty_) ? '' : this.data_?.[0].value;
+            const value = isParam(this.options_.as)
+                ? this.options_.as.value || defaultValue
+                : defaultValue;
+            this.selectedValue = value;
+            this.publish(value);
         }
 
         // reset options

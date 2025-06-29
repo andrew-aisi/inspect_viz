@@ -12,8 +12,10 @@ def select(
     filter_by: Selection | None = None,
     column: str | None = None,
     options: list[str | bool | float] | dict[str, str | bool | float] | None = None,
-    multiple: bool | None = None,
+    multiple: bool = False,
+    allow_empty: bool = True,
     target: Param | Selection | None = None,
+    value: str | list[str] | None = None,
     field: str | None = None,
     label: str | None = None,
     width: float | None = None,
@@ -36,20 +38,29 @@ def select(
        filter_by: A selection to filter the data source indicated by the `data` parameter.
        column: The name of a column from which to pull options. The unique column values are used as options. Used in conjunction with the `data` parameter.
        options: A `list` or `dict` of options (provide a `dict` if you want values to map to alternate labels). Alternative to populating options from a database column via `data` and `column`.
-       multiple: Enable selection of multiple values.
+       multiple: Enable selection of multiple values (defaults to `False`)
+       allow_empty: Allow and provide UI for an empty 'All' value in single select mode (which results in all values being included in the target selection).
        target: A `Param` or `Selection` that this select input should update. For a `Param`, the selected value is set to be the new param value. For a `Selection`, a predicate of the form column = value will be added to the selection.
+       value: Initial value for selected item (ignored if the `target` is bound to a `Param`, instead using the param's value).
        field: The data column name to use within generated selection clause predicates. Defaults to the `column` parameter.
        label: A text label for the input. If unspecified, the column name (if provided) will be used by default.
        width: Width in pixels (defaults to 150).
     """
-    config: dict[str, Any] = dict_remove_none({"input": "select", "multiple": multiple})
+    config: dict[str, Any] = dict_remove_none(
+        {
+            "input": "select",
+            "multiple": multiple,
+            "allow_empty": allow_empty,
+            "value": value,
+            "width": width,
+        }
+    )
 
     config = (
         config
         | label_param(label)
         | options_params(options, target)
         | data_params(data, column, target, field, filter_by)
-        | {"width": width}
     )
 
     if "as" not in config:

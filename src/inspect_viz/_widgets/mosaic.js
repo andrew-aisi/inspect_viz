@@ -224,13 +224,18 @@ var kInputSearch = "input-search";
 
 // js/inputs/select.ts
 import TomSelect from "https://cdn.jsdelivr.net/npm/tom-select@2.4.3/+esm";
+import { isSelection as isSelection2, isParam as isParam2 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
 var Select = class extends ChoiceInput {
   select_;
   multiple_;
+  allowEmpty_;
+  initialValue_;
   tomSelect_ = void 0;
   constructor(options) {
     super(options);
-    this.multiple_ = options.multiple || false;
+    this.multiple_ = options.multiple ?? false;
+    this.allowEmpty_ = options.allow_empty ?? true;
+    this.initialValue_ = options.value;
     this.element.classList.add(kSidebarFullwidth);
     const label = options.label || options.column;
     let labelEl = null;
@@ -252,6 +257,9 @@ var Select = class extends ChoiceInput {
     if (options.options) {
       this.setOptions(options.options);
     }
+    if (options.value !== void 0 && isSelection2(this.options_.as)) {
+      this.publish(options.value);
+    }
     this.select_.addEventListener("input", () => {
       this.publish(this.selectedValue ?? null);
     });
@@ -259,7 +267,7 @@ var Select = class extends ChoiceInput {
     this.setupActivationListeners(this.select_);
   }
   queryResult(data) {
-    if (this.multiple_) {
+    if (this.multiple_ || !this.allowEmpty_) {
       this.setData(this.queryResultOptions(data));
       return this;
     } else {
@@ -282,7 +290,7 @@ var Select = class extends ChoiceInput {
         dropdownParent: "body"
       };
       if (!this.select_.multiple) {
-        config.allowEmptyOption = !this.select_.multiple;
+        config.allowEmptyOption = this.allowEmpty_;
         config.controlInput = null;
       } else {
         config.plugins = {
@@ -295,9 +303,13 @@ var Select = class extends ChoiceInput {
       if (this.multiple_) {
         this.tomSelect_.on("item_add", () => {
           this.tomSelect_.control_input.value = "";
-          this.tomSelect_?.refreshOptions();
+          this.tomSelect_?.refreshOptions(false);
         });
       }
+      const defaultValue = this.initialValue_ ?? this.allowEmpty_ ? "" : this.data_?.[0].value;
+      const value = isParam2(this.options_.as) ? this.options_.as.value || defaultValue : defaultValue;
+      this.selectedValue = value;
+      this.publish(value);
     }
     this.tomSelect_.clearOptions();
     this.tomSelect_.addOption(
@@ -360,8 +372,8 @@ var CheckboxGroup = class extends ChoiceInput {
 // js/inputs/checkbox.ts
 import {
   clausePoint as clausePoint2,
-  isParam as isParam2,
-  isSelection as isSelection2
+  isParam as isParam3,
+  isSelection as isSelection3
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
 var Checkbox = class extends Input {
   constructor(options_) {
@@ -376,7 +388,7 @@ var Checkbox = class extends Input {
     );
     input2.addEventListener("change", publish);
     publish();
-    if (!isSelection2(this.options_.as)) {
+    if (!isSelection3(this.options_.as)) {
       this.options_.as.addEventListener("value", (value) => {
         input2.checked = value === this.options_.values[0];
       });
@@ -385,7 +397,7 @@ var Checkbox = class extends Input {
     }
   }
   activate() {
-    if (isSelection2(this.options_.as)) {
+    if (isSelection3(this.options_.as)) {
       this.options_.as.activate(this.clause());
     }
   }
@@ -396,9 +408,9 @@ var Checkbox = class extends Input {
     return clausePoint2(this.options_.field, value, { source: this });
   }
   publish(value) {
-    if (isSelection2(this.options_.as)) {
+    if (isSelection3(this.options_.as)) {
       this.options_.as.update(this.clause(value));
-    } else if (isParam2(this.options_.as)) {
+    } else if (isParam3(this.options_.as)) {
       this.options_.as.update(value);
     }
   }
@@ -408,8 +420,8 @@ var Checkbox = class extends Input {
 import {
   clauseInterval,
   clausePoint as clausePoint3,
-  isParam as isParam3,
-  isSelection as isSelection3
+  isParam as isParam4,
+  isSelection as isSelection4
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
 import {
   max,
@@ -462,7 +474,7 @@ var Slider = class extends Input {
       this.updateCurrentValue();
       this.publish(this.sliderValue);
     });
-    if (!isSelection3(this.options_.as)) {
+    if (!isSelection4(this.options_.as)) {
       this.options_.as.addEventListener("value", (value2) => {
         if (!areEqual(value2, this.sliderValue)) {
           this.sliderApi_.set(value2);
@@ -504,7 +516,7 @@ var Slider = class extends Input {
   }
   activate() {
     const target = this.options_.as;
-    if (isSelection3(target)) {
+    if (isSelection4(target)) {
       target.activate(this.clause());
     }
   }
@@ -570,9 +582,9 @@ var Slider = class extends Input {
   }
   publish(value) {
     const target = this.options_.as;
-    if (isSelection3(target)) {
+    if (isSelection4(target)) {
       target.update(this.clause(value));
-    } else if (isParam3(target)) {
+    } else if (isParam4(target)) {
       target.update(value);
     }
   }
@@ -604,7 +616,7 @@ function cleanNumber(num) {
 // js/inputs/table.ts
 import {
   clausePoints as clausePoints2,
-  isSelection as isSelection4,
+  isSelection as isSelection5,
   queryFieldInfo,
   throttle,
   toDataColumns as toDataColumns2
@@ -815,7 +827,7 @@ var Table = class extends Input {
         }
       },
       onSelectionChanged: (event) => {
-        if (explicitSelection !== void 0 && isSelection4(this.options_.as)) {
+        if (explicitSelection !== void 0 && isSelection5(this.options_.as)) {
           if (event.selectedNodes) {
             const rowIndices = event.selectedNodes.map((n) => n.rowIndex).filter((n) => n !== null);
             this.options_.as.update(this.clause(rowIndices));
@@ -823,7 +835,7 @@ var Table = class extends Input {
         }
       },
       onCellMouseOver: (event) => {
-        if (hoverSelect && isSelection4(this.options_.as)) {
+        if (hoverSelect && isSelection5(this.options_.as)) {
           const rowIndex = event.rowIndex;
           if (rowIndex !== void 0 && rowIndex !== null && rowIndex !== this.currentRow_) {
             this.currentRow_ = rowIndex;
@@ -832,7 +844,7 @@ var Table = class extends Input {
         }
       },
       onCellMouseOut: () => {
-        if (hoverSelect && isSelection4(this.options_.as)) {
+        if (hoverSelect && isSelection5(this.options_.as)) {
           this.currentRow_ = -1;
           this.options_.as.update(this.clause());
         }
@@ -893,7 +905,7 @@ var Table = class extends Input {
   }
   // all mosaic inputs implement this, not exactly sure what it does
   activate() {
-    if (isSelection4(this.options_.as)) {
+    if (isSelection5(this.options_.as)) {
       this.options_.as.activate(this.clause([]));
     }
   }
@@ -1061,8 +1073,8 @@ var isSetFilter = (filter) => {
 // js/inputs/search.ts
 import {
   clauseMatch,
-  isParam as isParam4,
-  isSelection as isSelection5
+  isParam as isParam5,
+  isSelection as isSelection6
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
 import { Query as Query4 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-sql@0.16.2/+esm";
 var Search = class extends Input {
@@ -1091,7 +1103,7 @@ var Search = class extends Input {
     this.input_.addEventListener("input", () => {
       this.publish(this.input_.value);
     });
-    if (!isSelection5(this.options_.as)) {
+    if (!isSelection6(this.options_.as)) {
       this.options_.as.addEventListener("value", (value) => {
         if (value !== this.input_.value) {
           this.input_.value = value;
@@ -1113,14 +1125,14 @@ var Search = class extends Input {
     return clauseMatch(field, value, { source: this, method: this.options_.type });
   }
   activate() {
-    if (isSelection5(this.options_.as)) {
+    if (isSelection6(this.options_.as)) {
       this.options_.as.activate(this.clause(""));
     }
   }
   publish(value) {
-    if (isSelection5(this.options_.as)) {
+    if (isSelection6(this.options_.as)) {
       this.options_.as.update(this.clause(value));
-    } else if (isParam4(this.options_.as)) {
+    } else if (isParam5(this.options_.as)) {
       this.options_.as.update(value);
     }
   }
@@ -1529,6 +1541,7 @@ async function render({ model, el }) {
   }
   const renderSpec = async () => {
     try {
+      console.log("renderSpec");
       const targetSpec = renderOptions.autoFill ? responsiveSpec(spec, el) : spec;
       const ast = parseSpec(targetSpec, { inputs });
       const specEl = await astToDOM(ast, ctx);
@@ -1627,6 +1640,9 @@ async function astToDOM(ast, ctx) {
   return ast.root.instantiate(ctx);
 }
 async function handleWorkerErrors(ctx, widgetEl) {
+  if (!window.location.search.includes("worker_errors=1")) {
+    return;
+  }
   const emptyPlotDivs = widgetEl.querySelectorAll("div.plot:empty");
   for (const emptyDiv of emptyPlotDivs) {
     const error = await ctx.collectWorkerError();
