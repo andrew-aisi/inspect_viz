@@ -1,4 +1,8 @@
 from inspect_viz import Component, Data
+from inspect_viz._core.selection import Selection
+from inspect_viz.input._select import select
+from inspect_viz.layout._concat import vconcat
+from inspect_viz.layout._space import vspace
 from inspect_viz.mark import bar_y, rule_x
 from inspect_viz.plot import legend, plot
 from inspect_viz.sandbox.axis import PlotAxis, score_axis
@@ -16,6 +20,9 @@ def evals_bar_plot(
        fx: Name of field for x facet (defaults to "task_name")
        y: Definition for y axis (defaults to score with confidence intervals)
     """
+    # filter on fx
+    filter = Selection.intersect(include=evals.selection)
+
     # default y to score axis
     y = y or score_axis()
 
@@ -23,6 +30,7 @@ def evals_bar_plot(
     components = [
         bar_y(
             evals,
+            filter_by=filter,
             # models (faceted by task) on x-axis
             x=x,
             fx=fx,
@@ -39,6 +47,7 @@ def evals_bar_plot(
         components.append(
             rule_x(
                 evals,
+                filter_by=filter,
                 x=x,
                 fx=fx,
                 y1=sql(f"{y.value_field} - ({z_alpha} * {y.stderr_field})"),
@@ -49,16 +58,20 @@ def evals_bar_plot(
         )
 
     # render plot
-    return plot(
-        components,
-        legend=legend("color", location="bottom"),
-        x_label=None,
-        x_ticks=[],
-        fx_label=None,
-        margin_bottom=10,
-        y_label=y.label,
-        y_domain=y.domain,
-        y_inset_top=10,
+    return vconcat(
+        select(evals, column=fx, target=filter),
+        vspace(),
+        plot(
+            components,
+            legend=legend("color", location="bottom"),
+            x_label=None,
+            x_ticks=[],
+            fx_label=None,
+            margin_bottom=10,
+            y_label=y.label,
+            y_domain=y.domain,
+            y_inset_top=10,
+        ),
     )
 
 
