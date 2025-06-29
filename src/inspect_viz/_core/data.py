@@ -90,10 +90,10 @@ class Data:
     def __str__(self) -> str:
         lines = [
             f"Viz Data ({len(self._ndf):,} rows x {len(self._ndf.columns):,} columns)",
-            "-" * 50,
+            "-" * 80,
         ]
         for col_name, dtype in self._ndf.schema.items():
-            lines.append(f"{col_name:<25} {str(dtype):<25}")
+            lines.append(f"{col_name:<40} {str(dtype):<40}")
         return "\n".join(lines)
 
     def __repr__(self) -> str:
