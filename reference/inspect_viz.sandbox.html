@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>inspect_viz – Inspect Viz</title>
+<title>inspect_viz.sandbox – Inspect Viz</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -65,8 +65,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../reference/inspect_viz.qmd#data" rel="next">
-<link href="../reference/index.html" rel="prev">
+<link href="../reference/inspect_viz.sandbox.qmd#evals_bar_plot" rel="next">
+<link href="../reference/inspect_viz.layout.qmd#vspace" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -159,7 +159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reference/inspect_viz.html">Python API</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reference/inspect_viz.html">Python API</a></li><li class="breadcrumb-item"><a href="../reference/inspect_viz.sandbox.html">inspect_viz.sandbox</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -179,7 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../reference/inspect_viz.html" class="sidebar-item-text sidebar-link active">
+            <a href="../reference/inspect_viz.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Python API</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -188,13 +188,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../reference/inspect_viz.html" class="sidebar-item-text sidebar-link active">
+            <a href="../reference/inspect_viz.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">inspect_viz</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../reference/inspect_viz.html#data" class="sidebar-item-text sidebar-link">
@@ -1284,13 +1284,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../reference/inspect_viz.sandbox.html" class="sidebar-item-text sidebar-link">
+            <a href="../reference/inspect_viz.sandbox.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">inspect_viz.sandbox</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../reference/inspect_viz.sandbox.html#evals_bar_plot" class="sidebar-item-text sidebar-link">
@@ -1335,20 +1335,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data" id="toc-data" class="nav-link active" data-scroll-target="#data">Data</a></li>
-  <li><a href="#component" id="toc-component" class="nav-link" data-scroll-target="#component">Component</a></li>
-  <li><a href="#selection" id="toc-selection" class="nav-link" data-scroll-target="#selection">Selection</a></li>
-  <li><a href="#param" id="toc-param" class="nav-link" data-scroll-target="#param">Param</a></li>
-  <li><a href="#paramvalue" id="toc-paramvalue" class="nav-link" data-scroll-target="#paramvalue">ParamValue</a></li>
+  <li><a href="#plots" id="toc-plots" class="nav-link active" data-scroll-target="#plots">Plots</a>
+  <ul class="collapse">
+  <li><a href="#evals_bar_plot" id="toc-evals_bar_plot" class="nav-link" data-scroll-target="#evals_bar_plot">evals_bar_plot</a></li>
+  <li><a href="#filter" id="toc-filter" class="nav-link" data-scroll-target="#filter">Filter</a></li>
+  <li><a href="#valueaxis" id="toc-valueaxis" class="nav-link" data-scroll-target="#valueaxis">ValueAxis</a></li>
+  <li><a href="#score_axis" id="toc-score_axis" class="nav-link" data-scroll-target="#score_axis">score_axis</a></li>
+  </ul></li>
+  <li><a href="#tables" id="toc-tables" class="nav-link" data-scroll-target="#tables">Tables</a>
+  <ul class="collapse">
+  <li><a href="#evals_table" id="toc-evals_table" class="nav-link" data-scroll-target="#evals_table">evals_table</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/meridianlabs-ai/inspect_viz/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reference/inspect_viz.html">Python API</a></li><li class="breadcrumb-item"><a href="../reference/inspect_viz.sandbox.html">inspect_viz.sandbox</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">inspect_viz</h1>
+<h1 class="title">inspect_viz.sandbox</h1>
 </div>
 
 
@@ -1365,228 +1371,150 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="data" class="level3">
-<h3 class="anchored" data-anchor-id="data">Data</h3>
-<p>Data source for visualizations.</p>
-<p>Data sources can be created from any standard Python data frame (e.g.&nbsp;Pandas, Polars, etc.) or from a path pointing to a data file in a standard format (e.g.&nbsp;csv, parquet, etc.)</p>
+<section id="plots" class="level2">
+<h2 class="anchored" data-anchor-id="plots">Plots</h2>
+<section id="evals_bar_plot" class="level3">
+<h3 class="anchored" data-anchor-id="evals_bar_plot">evals_bar_plot</h3>
+<p>Bar plot for comparing evals.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/0fb8c5c5a24705eb18b08904618823e942f8f4da/src/inspect_viz/_core/data.py#L17">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/1fad752346c53f0c841b2e88d58ef0227cef264d/src/inspect_viz/sandbox/plots.py#L14">Source</a>
 </div>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evals_bar_plot(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    evals: Data,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    x: <span class="bu">str</span> <span class="op">=</span> <span class="st">"model"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    fx: <span class="bu">str</span> <span class="op">=</span> <span class="st">"task_name"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    y: ValueAxis <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    x_filter: <span class="bu">bool</span> <span class="op">|</span> Filter <span class="op">=</span> <span class="va">False</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    fx_filter: <span class="bu">bool</span> <span class="op">|</span> Filter <span class="op">=</span> <span class="va">False</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl>
+<dt><code class="ref-definition">evals</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
+<dd>
+<p>Evals data table (typically read using <code>evals_df()</code>)</p>
+</dd>
+<dt><code class="ref-definition">x</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
+<dd>
+<p>Name of field for x axis (defaults to “model”)</p>
+</dd>
+<dt><code class="ref-definition">fx</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
+<dd>
+<p>Name of field for x facet (defaults to “task_name”)</p>
+</dd>
+<dt><code class="ref-definition">y</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.sandbox.html#valueaxis">ValueAxis</a></span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Definition for y axis (defaults to <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.sandbox.html#score_axis">score_axis()</a></span>)</p>
+</dd>
+<dt><code class="ref-definition">x_filter</code> <span class="element-type"><span class="element-type-name">bool</span> | <span class="element-type-name"><a href="../reference/inspect_viz.sandbox.html#filter">Filter</a></span></span></dt>
+<dd>
+<p>Optional filtering control for x axis.</p>
+</dd>
+<dt><code class="ref-definition">fx_filter</code> <span class="element-type"><span class="element-type-name">bool</span> | <span class="element-type-name"><a href="../reference/inspect_viz.sandbox.html#filter">Filter</a></span></span></dt>
+<dd>
+<p>Optional filtering control for fx axis.</p>
+</dd>
+</dl>
+</section>
+<section id="filter" class="level3">
+<h3 class="anchored" data-anchor-id="filter">Filter</h3>
+<p>Filter definition for plot component.</p>
+<div class="source-link">
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/1fad752346c53f0c841b2e88d58ef0227cef264d/src/inspect_viz/sandbox/filter.py#L6">Source</a>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Filter(BaseModel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section class="level4">
 <h4 class="anchored" data-anchor-id="">Attributes</h4>
 <dl>
-<dt><code class="ref-definition">columns</code> <span class="element-type">list[<span class="element-type-name">str</span>]</span></dt>
+<dt><code class="ref-definition">label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span></span></dt>
 <dd>
-<p>Column names for data source.</p>
+<p>Filter label (defaults to column namne).</p>
 </dd>
-</dl>
-</section>
-<section class="level4 class-methods">
-<h4 class="class-methods anchored" data-anchor-id="">Methods</h4>
-<dl>
-<dt>from_dataframe</dt>
+<dt><code class="ref-definition">value</code> <span class="element-type"><span class="element-type-name">Literal</span>['all'] | <span class="element-type-name">str</span> | list[<span class="element-type-name">str</span>]</span></dt>
 <dd>
-<p>Create <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#data">Data</a></span> from a standard Python data frame (e.g.&nbsp;Pandas, Polars, PyArrow, etc.).</p>
-<div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/0fb8c5c5a24705eb18b08904618823e942f8f4da/src/inspect_viz/_core/data.py#L23">Source</a>
-</div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="at">@classmethod</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> from_dataframe(cls, df: IntoDataFrame) <span class="op">-&gt;</span> <span class="st">"Data"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<dl>
-<dt><code class="ref-definition">df</code> <span class="element-type"><span class="element-type-name">IntoDataFrame</span></span></dt>
-<dd>
-<p>Data frame to read.</p>
+<p>Initial value (defaults to “all” which applies to filter).</p>
 </dd>
-</dl>
-</dd>
-<dt>from_file</dt>
+<dt><code class="ref-definition">multiple</code> <span class="element-type"><span class="element-type-name">bool</span></span></dt>
 <dd>
-<p>Create <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#data">Data</a></span> from a data file (e.g.&nbsp;csv, parquet, feather, etc.).</p>
-<div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/0fb8c5c5a24705eb18b08904618823e942f8f4da/src/inspect_viz/_core/data.py#L32">Source</a>
-</div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="at">@classmethod</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> from_file(cls, <span class="bu">file</span>: <span class="bu">str</span> <span class="op">|</span> PathLike[<span class="bu">str</span>]) <span class="op">-&gt;</span> <span class="st">"Data"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<dl>
-<dt><code class="ref-definition">file</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">PathLike</span>[<span class="element-type-name">str</span>]</span></dt>
-<dd>
-<p>File to read data from. Supported formats include csv, json, xslx, parquet, feather, sas7bdat, dta, and fwf.</p>
+<p>Enable filtering on multiple values.</p>
 </dd>
-</dl>
+<dt><code class="ref-definition">width</code> <span class="element-type"><span class="element-type-name">int</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Width of filter input in pixels.</p>
 </dd>
 </dl>
 </section>
 </section>
-<section id="component" class="level3">
-<h3 class="anchored" data-anchor-id="component">Component</h3>
-<p>Data visualization component (input, plot, mark, table, layout, etc.).</p>
-<p>Visualization components are Jupyter widgets that can be used in any notebook or Jupyter based publishing system.</p>
-<p>See the documentation on inputs, plots, marks, and interactors for details on available components.</p>
+<section id="valueaxis" class="level3">
+<h3 class="anchored" data-anchor-id="valueaxis">ValueAxis</h3>
+<p>Plot value axis options.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/0fb8c5c5a24705eb18b08904618823e942f8f4da/src/inspect_viz/_core/component.py#L46">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/1fad752346c53f0c841b2e88d58ef0227cef264d/src/inspect_viz/sandbox/axis.py#L4">Source</a>
 </div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Component(AnyWidget)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="selection" class="level3">
-<h3 class="anchored" data-anchor-id="selection">Selection</h3>
-<p>Selection that can be filtered by inputs and other selections.</p>
-<p>Selection types include:</p>
-<ul>
-<li><code>Selection.intersect()</code> for intersecting clauses (logical “and”)</li>
-<li><code>Selection.union()</code> for unionone clauses (logical “or”)</li>
-<li><code>Selection.single()</code> for a single clause only</li>
-<li><code>Selection.crossfilter()</code> for a cross-filtered intersection</li>
-</ul>
-<div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/0fb8c5c5a24705eb18b08904618823e942f8f4da/src/inspect_viz/_core/selection.py#L8">Source</a>
-</div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Selection(<span class="bu">str</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<section class="level4 class-methods">
-<h4 class="class-methods anchored" data-anchor-id="">Methods</h4>
-<dl>
-<dt>intersect</dt>
-<dd>
-<p>Create a new Selection instance with an intersect (conjunction) resolution strategy.</p>
-<div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/0fb8c5c5a24705eb18b08904618823e942f8f4da/src/inspect_viz/_core/selection.py#L25">Source</a>
-</div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="at">@classmethod</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> intersect(</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    cls,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    cross: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    empty: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    include: Union[<span class="st">"Selection"</span>, <span class="bu">list</span>[<span class="st">"Selection"</span>]] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="st">"Selection"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<dl>
-<dt><code class="ref-definition">cross</code> <span class="element-type"><span class="element-type-name">bool</span></span></dt>
-<dd>
-<p>Boolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.</p>
-</dd>
-<dt><code class="ref-definition">empty</code> <span class="element-type"><span class="element-type-name">bool</span></span></dt>
-<dd>
-<p>Boolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.</p>
-</dd>
-<dt><code class="ref-definition">include</code> <span class="element-type"><span class="element-type-name">Union</span>[<span class="element-type-name"><a href="../reference/inspect_viz.html#selection">Selection</a></span>, list[<span class="element-type-name"><a href="../reference/inspect_viz.html#selection">Selection</a></span>]] | <span class="element-type-name">None</span></span></dt>
-<dd>
-<p>Upstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.</p>
-</dd>
-</dl>
-</dd>
-<dt>union</dt>
-<dd>
-<p>Create a new Selection instance with a union (disjunction) resolution strategy.</p>
-<div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/0fb8c5c5a24705eb18b08904618823e942f8f4da/src/inspect_viz/_core/selection.py#L41">Source</a>
-</div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="at">@classmethod</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> union(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    cls,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    cross: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    empty: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    include: Union[<span class="st">"Selection"</span>, <span class="bu">list</span>[<span class="st">"Selection"</span>]] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="st">"Selection"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<dl>
-<dt><code class="ref-definition">cross</code> <span class="element-type"><span class="element-type-name">bool</span></span></dt>
-<dd>
-<p>Boolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.</p>
-</dd>
-<dt><code class="ref-definition">empty</code> <span class="element-type"><span class="element-type-name">bool</span></span></dt>
-<dd>
-<p>Boolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.</p>
-</dd>
-<dt><code class="ref-definition">include</code> <span class="element-type"><span class="element-type-name">Union</span>[<span class="element-type-name"><a href="../reference/inspect_viz.html#selection">Selection</a></span>, list[<span class="element-type-name"><a href="../reference/inspect_viz.html#selection">Selection</a></span>]] | <span class="element-type-name">None</span></span></dt>
-<dd>
-<p>Upstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.</p>
-</dd>
-</dl>
-</dd>
-<dt>single</dt>
-<dd>
-<p>Create a new Selection instance with a singular resolution strategy that keeps only the most recent selection clause.</p>
-<div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/0fb8c5c5a24705eb18b08904618823e942f8f4da/src/inspect_viz/_core/selection.py#L57">Source</a>
-</div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="at">@classmethod</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> single(</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    cls,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    cross: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    empty: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    include: Union[<span class="st">"Selection"</span>, <span class="bu">list</span>[<span class="st">"Selection"</span>]] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="st">"Selection"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<dl>
-<dt><code class="ref-definition">cross</code> <span class="element-type"><span class="element-type-name">bool</span></span></dt>
-<dd>
-<p>Boolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.</p>
-</dd>
-<dt><code class="ref-definition">empty</code> <span class="element-type"><span class="element-type-name">bool</span></span></dt>
-<dd>
-<p>Boolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.</p>
-</dd>
-<dt><code class="ref-definition">include</code> <span class="element-type"><span class="element-type-name">Union</span>[<span class="element-type-name"><a href="../reference/inspect_viz.html#selection">Selection</a></span>, list[<span class="element-type-name"><a href="../reference/inspect_viz.html#selection">Selection</a></span>]] | <span class="element-type-name">None</span></span></dt>
-<dd>
-<p>Upstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.</p>
-</dd>
-</dl>
-</dd>
-<dt>crossfilter</dt>
-<dd>
-<p>Create a new Selection instance with a cross-filtered intersect resolution strategy.</p>
-<div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/0fb8c5c5a24705eb18b08904618823e942f8f4da/src/inspect_viz/_core/selection.py#L73">Source</a>
-</div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="at">@classmethod</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> crossfilter(</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    cls,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    empty: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    include: Union[<span class="st">"Selection"</span>, <span class="bu">list</span>[<span class="st">"Selection"</span>]] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="st">"Selection"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<dl>
-<dt><code class="ref-definition">empty</code> <span class="element-type"><span class="element-type-name">bool</span></span></dt>
-<dd>
-<p>Boolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.</p>
-</dd>
-<dt><code class="ref-definition">include</code> <span class="element-type"><span class="element-type-name">Union</span>[<span class="element-type-name"><a href="../reference/inspect_viz.html#selection">Selection</a></span>, list[<span class="element-type-name"><a href="../reference/inspect_viz.html#selection">Selection</a></span>]] | <span class="element-type-name">None</span></span></dt>
-<dd>
-<p>Upstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</section>
-</section>
-<section id="param" class="level3">
-<h3 class="anchored" data-anchor-id="param">Param</h3>
-<p>Parameter that can be bound from inputs.</p>
-<div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/0fb8c5c5a24705eb18b08904618823e942f8f4da/src/inspect_viz/_core/param.py#L14">Source</a>
-</div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Param(<span class="bu">str</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ValueAxis(BaseModel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section class="level4">
 <h4 class="anchored" data-anchor-id="">Attributes</h4>
 <dl>
-<dt><code class="ref-definition">id</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
+<dt><code class="ref-definition">label</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
 <dd>
-<p>Unique id (automatically generated).</p>
+<p>Axis label.</p>
 </dd>
-<dt><code class="ref-definition">default</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#paramvalue">ParamValue</a></span></span></dt>
+<dt><code class="ref-definition">value_field</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
 <dd>
-<p>Default value.</p>
+<p>Field to read value from.</p>
+</dd>
+<dt><code class="ref-definition">stderr_field</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Field to read stderr from (optional, required for plotting confidence intervals).</p>
+</dd>
+<dt><code class="ref-definition">ci</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Confidence interval (e.g.&nbsp;0.80, 0.90, 0.95, etc.).</p>
+</dd>
+<dt><code class="ref-definition">domain</code> <span class="element-type">list[<span class="element-type-name">float</span>] | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Domain of axis (range of values to display).</p>
 </dd>
 </dl>
 </section>
 </section>
-<section id="paramvalue" class="level3">
-<h3 class="anchored" data-anchor-id="paramvalue">ParamValue</h3>
-<p>Type alias for parameter values (scalar or sequence of scalars).</p>
+<section id="score_axis" class="level3">
+<h3 class="anchored" data-anchor-id="score_axis">score_axis</h3>
+<p>Axis definition for scores from <code>evals_df()</code> data frames.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/0fb8c5c5a24705eb18b08904618823e942f8f4da/src/inspect_viz/_core/param.py#L8">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/1fad752346c53f0c841b2e88d58ef0227cef264d/src/inspect_viz/sandbox/axis.py#L23">Source</a>
 </div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ParamValue: TypeAlias <span class="op">=</span> (</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">int</span> <span class="op">|</span> <span class="bu">float</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> datetime <span class="op">|</span> Sequence[<span class="bu">int</span> <span class="op">|</span> <span class="bu">float</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">str</span>]</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> score_axis(ci: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.95</span>) <span class="op">-&gt;</span> ValueAxis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl>
+<dt><code class="ref-definition">ci</code> <span class="element-type"><span class="element-type-name">float</span></span></dt>
+<dd>
+<p>Confidence interval (e.g.&nbsp;0.80, 0.90, 0.95, etc.).</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="tables" class="level2">
+<h2 class="anchored" data-anchor-id="tables">Tables</h2>
+<section id="evals_table" class="level3">
+<h3 class="anchored" data-anchor-id="evals_table">evals_table</h3>
+<p>Table that summarizes eval scores by model and task.</p>
+<div class="source-link">
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/1fad752346c53f0c841b2e88d58ef0227cef264d/src/inspect_viz/sandbox/tables.py#L7">Source</a>
+</div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evals_table(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    evals: Data, columns: Sequence[<span class="bu">str</span> <span class="op">|</span> Column] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl>
+<dt><code class="ref-definition">evals</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
+<dd>
+<p>Evals data table.</p>
+</dd>
+<dt><code class="ref-definition">columns</code> <span class="element-type"><span class="element-type-name">Sequence</span>[<span class="element-type-name">str</span> | <span class="element-type-name">Column</span>] | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Column definitions (defaults to model, task_name, and headline metric).</p>
+</dd>
+</dl>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -2032,13 +1960,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../reference/index.html" class="pagination-link" aria-label="Reference">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Reference</span>
+      <a href="../reference/inspect_viz.layout.html#vspace" class="pagination-link" aria-label="vspace">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">vspace</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../reference/inspect_viz.html#data" class="pagination-link" aria-label="Data">
-        <span class="nav-page-text">Data</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../reference/inspect_viz.sandbox.html#evals_bar_plot" class="pagination-link" aria-label="evals_bar_plot">
+        <span class="nav-page-text">evals_bar_plot</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

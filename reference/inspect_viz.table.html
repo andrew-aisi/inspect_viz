@@ -1282,6 +1282,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../reference/inspect_viz.sandbox.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">inspect_viz.sandbox</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/inspect_viz.sandbox.html#evals_bar_plot" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">evals_bar_plot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/inspect_viz.sandbox.html#filter" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Filter</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/inspect_viz.sandbox.html#valueaxis" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ValueAxis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/inspect_viz.sandbox.html#score_axis" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">score_axis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/inspect_viz.sandbox.html#evals_table" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">evals_table</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
       </ul>
   </li>
     </ul>
@@ -1324,12 +1365,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="table">table</h3>
 <p>Tabular display of data.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/89e22a0f2fceb8324ad000cc2260a9acad56610e/src/inspect_viz/table/_table.py#L243">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/0fb8c5c5a24705eb18b08904618823e942f8f4da/src/inspect_viz/table/_table.py#L243">Source</a>
 </div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> table(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    columns: <span class="bu">list</span>[<span class="bu">str</span> <span class="op">|</span> Column] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    columns: Sequence[<span class="bu">str</span> <span class="op">|</span> Column] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    filter_by: Selection <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    target: Selection <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    select: Literal[</span>
@@ -1356,7 +1397,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>The data source for the table.</p>
 </dd>
-<dt><code class="ref-definition">columns</code> <span class="element-type">list[<span class="element-type-name">str</span> | <span class="element-type-name">Column</span>] | <span class="element-type-name">None</span></span></dt>
+<dt><code class="ref-definition">columns</code> <span class="element-type"><span class="element-type-name">Sequence</span>[<span class="element-type-name">str</span> | <span class="element-type-name">Column</span>] | <span class="element-type-name">None</span></span></dt>
 <dd>
 <p>A list of column names to include in the table grid. If unspecified, all table columns are included.</p>
 </dd>
