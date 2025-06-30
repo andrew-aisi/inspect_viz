@@ -1,7 +1,5 @@
 from typing import Literal
 
-from pydantic import BaseModel, Field
-
 from inspect_viz import Component, Data, Selection
 from inspect_viz.input import select
 from inspect_viz.layout import vconcat, vspace
