@@ -1,8 +1,10 @@
-from pydantic import BaseModel
+from typing import Literal
+
+from pydantic import BaseModel, Field
 
 
-class ValueAxis(BaseModel):
-    """Plot value axis options."""
+class AxisValue(BaseModel):
+    """Axis value options."""
 
     label: str
     """Axis label."""
@@ -20,13 +22,29 @@ class ValueAxis(BaseModel):
     """Domain of axis (range of values to display)."""
 
 
-def score_axis(ci: float = 0.95) -> ValueAxis:
+class AxisFilter(BaseModel):
+    """Filter definition for plot axis."""
+
+    label: str | None = Field(default=None)
+    """Filter label (defaults to column namne)."""
+
+    value: Literal["all"] | str | list[str] = Field(default="all")
+    """Initial value (defaults to "all" which applies to filter)."""
+
+    multiple: bool = Field(default=False)
+    """Enable filtering on multiple values."""
+
+    width: int | None = Field(default=None)
+    """Width of filter input in pixels."""
+
+
+def axis_score(ci: float = 0.95) -> AxisValue:
     """Axis definition for scores from `evals_df()` data frames.
 
     Args:
         ci: Confidence interval (e.g. 0.80, 0.90, 0.95, etc.).
     """
-    return ValueAxis(
+    return AxisValue(
         label="score",
         value_field="score_headline_value",
         stderr_field="score_headline_stderr",

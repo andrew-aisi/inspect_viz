@@ -371,13 +371,13 @@ website:
       - section: inspect_viz.sandbox
         href: reference/inspect_viz.sandbox.qmd
         contents:
-        - text: evals_bar_plot
-          href: reference/inspect_viz.sandbox.qmd#evals_bar_plot
-        - text: Filter
-          href: reference/inspect_viz.sandbox.qmd#filter
-        - text: ValueAxis
-          href: reference/inspect_viz.sandbox.qmd#valueaxis
-        - text: score_axis
-          href: reference/inspect_viz.sandbox.qmd#score_axis
-        - text: evals_table
-          href: reference/inspect_viz.sandbox.qmd#evals_table
+        - text: evals_summary_plot
+          href: reference/inspect_viz.sandbox.qmd#evals_summary_plot
+        - text: evals_summary_table
+          href: reference/inspect_viz.sandbox.qmd#evals_summary_table
+        - text: AxisFilter
+          href: reference/inspect_viz.sandbox.qmd#axisfilter
+        - text: AxisValue
+          href: reference/inspect_viz.sandbox.qmd#axisvalue
+        - text: axis_score
+          href: reference/inspect_viz.sandbox.qmd#axis_score

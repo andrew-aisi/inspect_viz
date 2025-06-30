@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Sequence
 
 from inspect_viz import Component, Data, Selection
 from inspect_viz.input import select
@@ -6,18 +6,18 @@ from inspect_viz.layout import vconcat, vspace
 from inspect_viz.layout._concat import hconcat
 from inspect_viz.mark import bar_y, rule_x
 from inspect_viz.plot import legend, plot
-from inspect_viz.sandbox.axis import ValueAxis, score_axis
-from inspect_viz.sandbox.filter import Filter
+from inspect_viz.sandbox.axis import AxisFilter, AxisValue, axis_score
+from inspect_viz.table import Column, column, table
 from inspect_viz.transform import sql
 
 
-def evals_bar_plot(
+def evals_summary_plot(
     evals: Data,
     x: str = "model",
     fx: str = "task_name",
-    y: ValueAxis | None = None,
-    x_filter: bool | Filter = False,
-    fx_filter: bool | Filter = False,
+    y: AxisValue | None = None,
+    x_filter: bool | AxisFilter = False,
+    fx_filter: bool | AxisFilter = False,
 ) -> Component:
     """Bar plot for comparing evals.
 
@@ -25,7 +25,7 @@ def evals_bar_plot(
        evals: Evals data table (typically read using `evals_df()`)
        x: Name of field for x axis (defaults to "model")
        fx: Name of field for x facet (defaults to "task_name")
-       y: Definition for y axis (defaults to `score_axis()`)
+       y: Definition for y axis (defaults to `axis_score()`)
        x_filter: Optional filtering control for x axis.
        fx_filter: Optional filtering control for fx axis.
     """
@@ -33,7 +33,7 @@ def evals_bar_plot(
     filter = Selection.intersect(include=evals.selection)
 
     # default y to score axis
-    y = y or score_axis()
+    y = y or axis_score()
 
     # start with bar plot
     components = [
@@ -69,8 +69,8 @@ def evals_bar_plot(
     # add filters
     filters: list[Component] = []
 
-    def add_filter(column: str, filter: Literal[True] | Filter) -> None:
-        filter = Filter() if filter is True else filter
+    def add_filter(column: str, filter: Literal[True] | AxisFilter) -> None:
+        filter = AxisFilter() if filter is True else filter
         filters.append(
             select(
                 evals,
@@ -104,6 +104,30 @@ def evals_bar_plot(
             y_inset_top=10,
         ),
     )
+
+
+def evals_summary_table(
+    evals: Data, columns: Sequence[str | Column] | None = None
+) -> Component:
+    """Table that summarizes eval scores by model and task.
+
+    Args:
+       evals: Evals data table.
+       columns: Column definitions (defaults to model, task_name, and headline metric).
+    """
+    columns = (
+        columns
+        if columns is not None
+        else [
+            column("model", label="Model"),
+            column("task_name", label="Task"),
+            column("score_headline_metric", label="Metric"),
+            column("score_headline_value", label="Value", align="center"),
+            column("score_headline_stderr", label="Stderr", align="center"),
+        ]
+    )
+
+    return table(data=evals, columns=columns)
 
 
 def _z_alpha(ci: float = 0.95) -> float:

@@ -2,16 +2,17 @@
 title: "inspect_viz.sandbox"
 ---
 
-## Plots
+## Evals
 
-### evals_bar_plot
-### Filter
-### ValueAxis
-### score_axis
+### evals_summary_plot
+### evals_summary_table
 
-## Tables
+## Axis
 
-### evals_table
+### AxisFilter
+### AxisValue
+### axis_score
+
 
 
 
