@@ -1,7 +1,9 @@
 from datetime import datetime
-from typing import ClassVar, Sequence, TypeAlias
+from typing import Sequence, TypeAlias, cast
 
 from shortuuid import uuid
+
+from .._util.instances import get_instances, track_instance
 
 PARAM_PREFIX = "param_"
 
@@ -29,7 +31,7 @@ class Param(str):
         instance._default = default
 
         # track and return instance
-        Param._instances.append(instance)
+        track_instance("param", instance)
         return instance
 
     @property
@@ -61,10 +63,7 @@ class Param(str):
     def __repr__(self) -> str:
         return f"Param(default={self.default})"
 
-    # Class-level dictionary to store all instances
-    _instances: ClassVar[list["Param"]] = []
-
     @classmethod
     def _get_all(cls) -> list["Param"]:
         """Get all parameters."""
-        return cls._instances.copy()
+        return cast(list["Param"], get_instances("param"))

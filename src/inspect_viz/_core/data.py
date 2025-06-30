@@ -1,6 +1,6 @@
 import os
 from os import PathLike
-from typing import ClassVar
+from typing import cast
 
 import narwhals as nw
 import pandas as pd
@@ -10,6 +10,7 @@ from narwhals.typing import IntoDataFrame
 from pydantic import JsonValue
 from shortuuid import uuid
 
+from .._util.instances import get_instances, track_instance
 from .param import Param
 from .selection import Selection
 
@@ -61,7 +62,7 @@ class Data:
         self._data: bytes | None = buffer.getvalue().to_pybytes()
 
         # track instances
-        Data._instances.append(self)
+        track_instance("data", self)
 
     @property
     def table(self) -> str:
@@ -102,13 +103,10 @@ class Data:
     def __len__(self) -> int:
         return self._ndf.__len__()
 
-    # Class-level dictionary to store all instances
-    _instances: ClassVar[list["Data"]] = []
-
     @classmethod
     def _get_all(cls) -> list["Data"]:
         """Get all data."""
-        return cls._instances.copy()
+        return cast(list["Data"], get_instances("data"))
 
 
 def _read_df_from_file(path: str | PathLike[str]) -> pd.DataFrame:

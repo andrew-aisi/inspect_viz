@@ -1,6 +1,8 @@
-from typing import ClassVar, Literal, Union
+from typing import ClassVar, Literal, Union, cast
 
 from shortuuid import uuid
+
+from .._util.instances import get_instances, track_instance
 
 SELECTION_PREFIX = "selection_"
 
@@ -107,7 +109,7 @@ class Selection(str):
         instance._include = include
 
         # track and return instance
-        Selection._instances.append(instance)
+        track_instance("selection", instance)
         return instance
 
     @property
@@ -159,4 +161,4 @@ class Selection(str):
     @classmethod
     def _get_all(cls) -> list["Selection"]:
         """Get all selections."""
-        return cls._instances.copy()
+        return cast(list["Selection"], get_instances("selection"))
