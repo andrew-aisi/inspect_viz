@@ -41,7 +41,7 @@ table(penguins, columns=[
     "body_mass"])
 ```
 
-Table's have a number of global options for configuring the behavior, but also have many options specific to one or more columns. To specify column level options, using the `column` function in the list of columns rather than simply passing the column name:
+Tables have a number of global options for configuring the behavior, but also have many options specific to one or more columns. To specify column level options, using the `column` function in the list of columns rather than simply passing the column name:
 
 ```{python}
 from inspect_viz import Data
@@ -57,7 +57,7 @@ table(penguins, columns=[
 
 ### Size
 
-By default, tables will have a height of 300px and a width which filles their container. You can explicitly provide a height and width value in pixels for the table if you'd like the table to be a specific size:
+By default, tables will have a height of 300px and a width which files their container. You can explicitly provide a height and width value in pixels for the table if you'd like the table to be a specific size:
 
 ```{python}
 from inspect_viz import Data
@@ -71,7 +71,7 @@ You can use `max_width` to constrain the maximum width of the table in pixels. I
 
 ## Columns
 
-When providing column data for a table, you can provide a list of columns names from your Data to be displayed. You can also using the `column` function to provide additional options for each column. For example, to customize the string that is displayed in the header for the column, using the `label` option like:
+When providing column data for a table, you can provide a list of columns names from your Data to be displayed. You can also use the `column` function to provide additional options for each column. For example, to customize the string that is displayed in the header for the column, using the `label` option like:
 
 ```{python}
 from inspect_viz import Data
@@ -115,7 +115,7 @@ table(penguins, width=550, columns=[
     column("body_mass", flex=1)])
 ```
 
-You can also use `max_width` to set a maximum width for a column. This will be used as the maximum width when columns are being sized automatically using flex sizing.
+You can also use `max_width` to set a maximum width for a column or `min_width` to set a minimum width for a column. This will be used to provide caps on width when columns are being sized automatically using flex sizing.
 
 ### Alignment
 
@@ -241,6 +241,14 @@ table(penguins, columns=[
     column("body_mass")])
 ```
 
+#### Filter Location
+
+You can control where in the table filters appear by passing other `header` or `row` as the value for filter. `header` places in the filter as buttons in the header row next to the header text. `row` creates` a separate row with inline filter UI for filtering columns. For example:
+
+```python
+table(penguins, filtering='row')
+```
+
 ## Resizing
 
 Each column of the table may be resized by the user by clicking and dragging the separator between columns in the header row. To make the table columns not resizable, use the `resizing` option:
@@ -291,8 +299,6 @@ table(penguins,
 
 By default, the table will display the selection provided by the data source. If you'd like, you can provide an alternative selection by using `filter_by`.
 
-\<EXAMPLE\>
-
 #### Targeting Selections
 
 It can be useful to use selected rows within a table to target a selection to be used elsewhere (for example, in highlighting points within a dot plot). To do this, use the `target` option to select the output selection. This will cause a selection clause of the form column IN (rows) to be added to the selection for each currently selected table row.
@@ -310,9 +316,9 @@ You can use the `select` option to control how selection works within the table.
 |----|----|
 | `hover` | The selection will be updated when the user's mouse hovers over a row. |
 | `single_row` | The selection will be updated when a single row is selected. The selected row will be highlighted. |
-| `multi_row` | The selection will be updated when one or more rows are selected. The selected rows will be highlighted. |
+| `multiple_row` | The selection will be updated when one or more rows are selected. The selected rows will be highlighted. |
 | `single_row_checkbox` | The selection will be updated when a single row is selected using a checkbox. |
-| `multi_row_checkbox` | The selection will be updated when one or more rows is selected using a checkbox. |
+| `multiple_row_checkbox` | The selection will be updated when one or more rows is selected using a checkbox. |
 
 ## Appearance
 
