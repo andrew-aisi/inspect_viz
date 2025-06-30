@@ -1,0 +1,26 @@
+---
+title: Viz Sandbox
+---
+
+The `inspect_viz.sandbox` module includes prototypes of various higher level visualization functions. We'd like to see lots of contributions here to help develop and refine a set of standard functions to be migrated out of the sandbox.
+
+## Contributing
+
+To contribute functions to `inspect_viz.sandbox`:
+
+2. Add your code to `src/inspect_viz/sandbox`, being sure to export your functions and other types from the `__init__.py` file within the module.
+
+3. Add a demo notebook to the `docs/sandbox` directory which demonstrates how to use your sandbox funcdtions.
+
+4. Submit a PR with your changes.
+
+There are some additional steps required to integrate your functions with the website/documentation---we'll take care of those when we merge the PR.
+
+## Demos
+
+The following demonstrate using various `inspect_viz.sandbox` functions:
+
+- [evals_summary](evals_summary.ipynb)---Demonstrates `evals_summary_plot()` and `evals_summary_table()`, which produce summaries of scores by model and task name for a set of log files.
+
+
+

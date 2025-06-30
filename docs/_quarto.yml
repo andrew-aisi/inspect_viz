@@ -28,6 +28,8 @@ website:
             href: concepts.qmd
           - text: "Reference"
             href: reference/index.qmd
+          - text: "Sandbox"
+            href: sandbox/index.qmd
           - text: "Examples"
             href: examples/index.qmd
       right: 
@@ -45,6 +47,12 @@ website:
           - href: examples/seattle-weather/index.qmd
           - href: examples/athletes-regression/index.qmd
           - href: examples/athletes-errorbars/index.qmd
+      - title: Sandbox
+        style: docked
+        contents:
+          - href: sandbox/index.qmd
+            text: Sandbox
+          - href: sandbox/evals_summary.ipynb
    page-footer: 
       left: 
          - text: Meridian Labs

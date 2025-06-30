@@ -1,2 +1,3 @@
 demo/logs/** filter=lfs diff=lfs merge=lfs -text
+docs/sandbox/logs/** filter=lfs diff=lfs merge=lfs -text
 
