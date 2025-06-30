@@ -1,16 +1,26 @@
-from inspect_viz import Component, Data
-from inspect_viz._core.selection import Selection
-from inspect_viz.input._select import select
-from inspect_viz.layout._concat import vconcat
-from inspect_viz.layout._space import vspace
+from typing import Literal
+
+from pydantic import BaseModel, Field
+
+from inspect_viz import Component, Data, Selection
+from inspect_viz.input import select
+from inspect_viz.layout import vconcat, vspace
 from inspect_viz.mark import bar_y, rule_x
 from inspect_viz.plot import legend, plot
-from inspect_viz.sandbox.axis import PlotAxis, score_axis
+from inspect_viz.sandbox.axis import ValueAxis, score_axis
 from inspect_viz.transform import sql
 
 
+class Filter(BaseModel):
+    label: str | None = Field(default=None)
+    placeholder: str | None = Field(default=None)
+    value: Literal["all"] | str | list[str] = Field(default="all")
+    multiple: bool = Field(default=False)
+    width: int | None = Field(default=None)
+
+
 def evals_bar_plot(
-    evals: Data, x: str = "model", fx: str = "task_name", y: PlotAxis | None = None
+    evals: Data, x: str = "model", fx: str = "task_name", y: ValueAxis | None = None
 ) -> Component:
     """Bar plot for comparing evals.
 
@@ -18,7 +28,7 @@ def evals_bar_plot(
        evals: Evals data table (typically read using `evals_df()`)
        x: Name of field for x axis (defaults to "model")
        fx: Name of field for x facet (defaults to "task_name")
-       y: Definition for y axis (defaults to score with confidence intervals)
+       y: Definition for y axis (defaults to `score_axis()`)
     """
     # filter on fx
     filter = Selection.intersect(include=evals.selection)

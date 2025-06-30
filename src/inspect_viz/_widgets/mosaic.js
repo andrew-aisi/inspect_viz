@@ -234,8 +234,8 @@ var Select = class extends ChoiceInput {
   constructor(options) {
     super(options);
     this.multiple_ = options.multiple ?? false;
-    this.allowEmpty_ = options.allow_empty ?? true;
-    this.initialValue_ = options.value;
+    this.allowEmpty_ = options.value == "all";
+    this.initialValue_ = options.value == "all" ? void 0 : options.value;
     this.element.classList.add(kSidebarFullwidth);
     const label = options.label || options.column;
     let labelEl = null;
@@ -257,7 +257,7 @@ var Select = class extends ChoiceInput {
     if (options.options) {
       this.setOptions(options.options);
     }
-    if (options.value !== void 0 && isSelection2(this.options_.as)) {
+    if (this.initialValue_ !== void 0 && isSelection2(this.options_.as)) {
       this.publish(options.value);
     }
     this.select_.addEventListener("input", () => {
