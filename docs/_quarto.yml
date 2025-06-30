@@ -28,10 +28,10 @@ website:
             href: concepts.qmd
           - text: "Reference"
             href: reference/index.qmd
-          - text: "Sandbox"
-            href: sandbox/index.qmd
           - text: "Examples"
             href: examples/index.qmd
+          - text: "Sandbox"
+            href: sandbox/index.qmd
       right: 
           - icon: github
             href: https://github.com/meridianlabs-ai/inspect_viz

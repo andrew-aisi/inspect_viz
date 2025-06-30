@@ -11,7 +11,7 @@ Welcome to Inspect Viz, a data visualization library for [Inspect AI](https://in
 Inspect Viz is built on top of the [Mosaic](https://idl.uw.edu/mosaic/) web-based visualization framework. You can include these visualization in any [Jupyter Notebook](https://jupyter.org/) or web publishing system that supports Jupyter widgets (e.g. [Quarto](https://quarto.org)).
 
 ::: callout-note
-While `inspect_viz` will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives.
+While `inspect_viz` will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives. If you are interested in helping to build out these functions, we'd very much welcome your contributions to the [inspect_viz.sandbox](sandbox/index.qmd) module.
 :::
 
 #### Getting Started
@@ -330,3 +330,5 @@ Use these resources to learn more about using Inspect Viz:
 -   [Reference](reference/index.qmd) provides details on the available marks, interactors, transforms, and inputs.
 
 -   [Examples](examples/index.qmd) demonstrates more advanced plotting and interactivity features.
+
+-   [Sandbox](sandbox/index.qmd) includes examples from the `inspect_viz.sandbox` module as well as information on contributing your own functions to the sandbox.
