@@ -52,7 +52,7 @@
     "href": "reference/inspect_viz.sandbox.html",
     "title": "inspect_viz.sandbox",
     "section": "",
-    "text": "Bar plot for comparing evals.\n\nSource\n\ndef evals_bar_plot(\n    evals: Data,\n    x: str = \"model\",\n    fx: str = \"task_name\",\n    y: ValueAxis | None = None,\n    x_filter: bool | Filter = False,\n    fx_filter: bool | Filter = False,\n) -&gt; Component\n\nevals Data\n\nEvals data table (typically read using evals_df())\n\nx str\n\nName of field for x axis (defaults to “model”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny ValueAxis | None\n\nDefinition for y axis (defaults to score_axis())\n\nx_filter bool | Filter\n\nOptional filtering control for x axis.\n\nfx_filter bool | Filter\n\nOptional filtering control for fx axis.\n\n\n\n\n\nFilter definition for plot component.\n\nSource\n\nclass Filter(BaseModel)\n\n\n\nlabel str | None\n\nFilter label (defaults to column namne).\n\nvalue Literal['all'] | str | list[str]\n\nInitial value (defaults to “all” which applies to filter).\n\nmultiple bool\n\nEnable filtering on multiple values.\n\nwidth int | None\n\nWidth of filter input in pixels.\n\n\n\n\n\n\nPlot value axis options.\n\nSource\n\nclass ValueAxis(BaseModel)\n\n\n\nlabel str\n\nAxis label.\n\nvalue_field str\n\nField to read value from.\n\nstderr_field str | None\n\nField to read stderr from (optional, required for plotting confidence intervals).\n\nci float | None\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.).\n\ndomain list[float] | None\n\nDomain of axis (range of values to display).\n\n\n\n\n\n\nAxis definition for scores from evals_df() data frames.\n\nSource\n\ndef score_axis(ci: float = 0.95) -&gt; ValueAxis\n\nci float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.).",
+    "text": "Bar plot for comparing evals.\n\nSource\n\ndef evals_summary_plot(\n    evals: Data,\n    x: str = \"model\",\n    fx: str = \"task_name\",\n    y: AxisValue | None = None,\n    x_filter: bool | AxisFilter = False,\n    fx_filter: bool | AxisFilter = False,\n) -&gt; Component\n\nevals Data\n\nEvals data table (typically read using evals_df())\n\nx str\n\nName of field for x axis (defaults to “model”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny AxisValue | None\n\nDefinition for y axis (defaults to axis_score())\n\nx_filter bool | AxisFilter\n\nOptional filtering control for x axis.\n\nfx_filter bool | AxisFilter\n\nOptional filtering control for fx axis.\n\n\n\n\n\nTable that summarizes eval scores by model and task.\n\nSource\n\ndef evals_summary_table(\n    evals: Data, columns: Sequence[str | Column] | None = None\n) -&gt; Component\n\nevals Data\n\nEvals data table.\n\ncolumns Sequence[str | Column] | None\n\nColumn definitions (defaults to model, task_name, and headline metric).",
     "crumbs": [
       "Reference",
       "Python API",
@@ -60,11 +60,11 @@
     ]
   },
   {
-    "objectID": "reference/inspect_viz.sandbox.html#plots",
-    "href": "reference/inspect_viz.sandbox.html#plots",
+    "objectID": "reference/inspect_viz.sandbox.html#evals",
+    "href": "reference/inspect_viz.sandbox.html#evals",
     "title": "inspect_viz.sandbox",
     "section": "",
-    "text": "Bar plot for comparing evals.\n\nSource\n\ndef evals_bar_plot(\n    evals: Data,\n    x: str = \"model\",\n    fx: str = \"task_name\",\n    y: ValueAxis | None = None,\n    x_filter: bool | Filter = False,\n    fx_filter: bool | Filter = False,\n) -&gt; Component\n\nevals Data\n\nEvals data table (typically read using evals_df())\n\nx str\n\nName of field for x axis (defaults to “model”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny ValueAxis | None\n\nDefinition for y axis (defaults to score_axis())\n\nx_filter bool | Filter\n\nOptional filtering control for x axis.\n\nfx_filter bool | Filter\n\nOptional filtering control for fx axis.\n\n\n\n\n\nFilter definition for plot component.\n\nSource\n\nclass Filter(BaseModel)\n\n\n\nlabel str | None\n\nFilter label (defaults to column namne).\n\nvalue Literal['all'] | str | list[str]\n\nInitial value (defaults to “all” which applies to filter).\n\nmultiple bool\n\nEnable filtering on multiple values.\n\nwidth int | None\n\nWidth of filter input in pixels.\n\n\n\n\n\n\nPlot value axis options.\n\nSource\n\nclass ValueAxis(BaseModel)\n\n\n\nlabel str\n\nAxis label.\n\nvalue_field str\n\nField to read value from.\n\nstderr_field str | None\n\nField to read stderr from (optional, required for plotting confidence intervals).\n\nci float | None\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.).\n\ndomain list[float] | None\n\nDomain of axis (range of values to display).\n\n\n\n\n\n\nAxis definition for scores from evals_df() data frames.\n\nSource\n\ndef score_axis(ci: float = 0.95) -&gt; ValueAxis\n\nci float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.).",
+    "text": "Bar plot for comparing evals.\n\nSource\n\ndef evals_summary_plot(\n    evals: Data,\n    x: str = \"model\",\n    fx: str = \"task_name\",\n    y: AxisValue | None = None,\n    x_filter: bool | AxisFilter = False,\n    fx_filter: bool | AxisFilter = False,\n) -&gt; Component\n\nevals Data\n\nEvals data table (typically read using evals_df())\n\nx str\n\nName of field for x axis (defaults to “model”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny AxisValue | None\n\nDefinition for y axis (defaults to axis_score())\n\nx_filter bool | AxisFilter\n\nOptional filtering control for x axis.\n\nfx_filter bool | AxisFilter\n\nOptional filtering control for fx axis.\n\n\n\n\n\nTable that summarizes eval scores by model and task.\n\nSource\n\ndef evals_summary_table(\n    evals: Data, columns: Sequence[str | Column] | None = None\n) -&gt; Component\n\nevals Data\n\nEvals data table.\n\ncolumns Sequence[str | Column] | None\n\nColumn definitions (defaults to model, task_name, and headline metric).",
     "crumbs": [
       "Reference",
       "Python API",
@@ -72,11 +72,11 @@
     ]
   },
   {
-    "objectID": "reference/inspect_viz.sandbox.html#tables",
-    "href": "reference/inspect_viz.sandbox.html#tables",
+    "objectID": "reference/inspect_viz.sandbox.html#axis",
+    "href": "reference/inspect_viz.sandbox.html#axis",
     "title": "inspect_viz.sandbox",
-    "section": "Tables",
-    "text": "Tables\n\nevals_table\nTable that summarizes eval scores by model and task.\n\nSource\n\ndef evals_table(\n    evals: Data, columns: Sequence[str | Column] | None = None\n) -&gt; Component\n\nevals Data\n\nEvals data table.\n\ncolumns Sequence[str | Column] | None\n\nColumn definitions (defaults to model, task_name, and headline metric).",
+    "section": "Axis",
+    "text": "Axis\n\nAxisFilter\nFilter definition for plot axis.\n\nSource\n\nclass AxisFilter(BaseModel)\n\nAttributes\n\nlabel str | None\n\nFilter label (defaults to column namne).\n\nvalue Literal['all'] | str | list[str]\n\nInitial value (defaults to “all” which applies to filter).\n\nmultiple bool\n\nEnable filtering on multiple values.\n\nwidth int | None\n\nWidth of filter input in pixels.\n\n\n\n\n\nAxisValue\nAxis value options.\n\nSource\n\nclass AxisValue(BaseModel)\n\nAttributes\n\nlabel str\n\nAxis label.\n\nvalue_field str\n\nField to read value from.\n\nstderr_field str | None\n\nField to read stderr from (optional, required for plotting confidence intervals).\n\nci float | None\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.).\n\ndomain list[float] | None\n\nDomain of axis (range of values to display).\n\n\n\n\n\naxis_score\nAxis definition for scores from evals_df() data frames.\n\nSource\n\ndef axis_score(ci: float = 0.95) -&gt; AxisValue\n\nci float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.).",
     "crumbs": [
       "Reference",
       "Python API",
@@ -283,18 +283,29 @@
     ]
   },
   {
+    "objectID": "sandbox/evals_summary.html",
+    "href": "sandbox/evals_summary.html",
+    "title": "Evals Summary",
+    "section": "",
+    "text": "from inspect_ai.analysis.beta import evals_df\nfrom inspect_viz import Data\n\ndf = evals_df(\"logs\")\nevals = Data.from_dataframe(df)\n\nUse the evals_summary_plot() function to get to a quick summary of the scores by task and model in a set of log files:\n\nfrom inspect_viz.sandbox import evals_summary_plot\n\nevals_summary_plot(evals)\n\n\n\n\nOptionally, add filtering by model (x-axis) and/or task name (fx-axis):\n\nevals_summary_plot(\n    evals,\n    x_filter=True,\n    fx_filter=True\n)\n\n\n\n\nUse the evals_summary_table() function to create a table summarizing results:\n\nfrom inspect_viz.sandbox import evals_summary_table\n\nevals_summary_table(evals)",
+    "crumbs": [
+      "Sandbox",
+      "Evals Summary"
+    ]
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Inspect Viz",
     "section": "",
-    "text": "Welcome to Inspect Viz, a data visualization library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualizations from Inspect evaluations.\nInspect Viz is built on top of the Mosaic web-based visualization framework. You can include these visualization in any Jupyter Notebook or web publishing system that supports Jupyter widgets (e.g. Quarto).\n\n\n\n\n\n\nNote\n\n\n\nWhile inspect_viz will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives.\n\n\n\n\nFirst, install the inspect_ai and inspect_viz package from GitHub as follows:\npip install git+https://github.com/UKGovernmentBEIS/inspect_ai\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the Concepts article for a more in depth explanation of the library’s components and how they fit together.\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Moasic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice."
+    "text": "Welcome to Inspect Viz, a data visualization library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualizations from Inspect evaluations.\nInspect Viz is built on top of the Mosaic web-based visualization framework. You can include these visualization in any Jupyter Notebook or web publishing system that supports Jupyter widgets (e.g. Quarto).\n\n\n\n\n\n\nNote\n\n\n\nWhile inspect_viz will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives. If you are interested in helping to build out these functions, we’d very much welcome your contributions to the inspect_viz.sandbox module.\n\n\n\n\nFirst, install the inspect_ai and inspect_viz package from GitHub as follows:\npip install git+https://github.com/UKGovernmentBEIS/inspect_ai\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the Concepts article for a more in depth explanation of the library’s components and how they fit together.\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Moasic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice."
   },
   {
     "objectID": "index.html#welcome",
     "href": "index.html#welcome",
     "title": "Inspect Viz",
     "section": "",
-    "text": "Welcome to Inspect Viz, a data visualization library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualizations from Inspect evaluations.\nInspect Viz is built on top of the Mosaic web-based visualization framework. You can include these visualization in any Jupyter Notebook or web publishing system that supports Jupyter widgets (e.g. Quarto).\n\n\n\n\n\n\nNote\n\n\n\nWhile inspect_viz will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives.\n\n\n\n\nFirst, install the inspect_ai and inspect_viz package from GitHub as follows:\npip install git+https://github.com/UKGovernmentBEIS/inspect_ai\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the Concepts article for a more in depth explanation of the library’s components and how they fit together.\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Moasic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice."
+    "text": "Welcome to Inspect Viz, a data visualization library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualizations from Inspect evaluations.\nInspect Viz is built on top of the Mosaic web-based visualization framework. You can include these visualization in any Jupyter Notebook or web publishing system that supports Jupyter widgets (e.g. Quarto).\n\n\n\n\n\n\nNote\n\n\n\nWhile inspect_viz will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives. If you are interested in helping to build out these functions, we’d very much welcome your contributions to the inspect_viz.sandbox module.\n\n\n\n\nFirst, install the inspect_ai and inspect_viz package from GitHub as follows:\npip install git+https://github.com/UKGovernmentBEIS/inspect_ai\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the Concepts article for a more in depth explanation of the library’s components and how they fit together.\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Moasic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice."
   },
   {
     "objectID": "index.html#plots",
@@ -350,7 +361,7 @@
     "href": "index.html#learning-more",
     "title": "Inspect Viz",
     "section": "Learning More",
-    "text": "Learning More\nUse these resources to learn more about using Inspect Viz:\n\nConcepts describes the core components of the library and how they fit together.\nReference provides details on the available marks, interactors, transforms, and inputs.\nExamples demonstrates more advanced plotting and interactivity features."
+    "text": "Learning More\nUse these resources to learn more about using Inspect Viz:\n\nConcepts describes the core components of the library and how they fit together.\nReference provides details on the available marks, interactors, transforms, and inputs.\nExamples demonstrates more advanced plotting and interactivity features.\nSandbox includes examples from the inspect_viz.sandbox module as well as information on contributing your own functions to the sandbox."
   },
   {
     "objectID": "concepts.html",
@@ -407,6 +418,36 @@
     "title": "Inspect Viz Concepts",
     "section": "Layout",
     "text": "Layout\nLayout helpers combine elements such as plots and inputs into multi-view dashboard displays. The vconcat() (vertical concatenation) and hconcat() (horizontal concatenation) methods accept a list of elements and position them using CSS flexbox layout. Layout helpers can be used with plots, inputs, and arbitrary Web content such as images and videos. To ensure spacing, the vspace() and hspace() functions add padding between elements in a layout."
+  },
+  {
+    "objectID": "sandbox/index.html",
+    "href": "sandbox/index.html",
+    "title": "Sandbox",
+    "section": "",
+    "text": "The inspect_viz.sandbox module includes prototypes of various higher level visualization functions. We’d like to see lots of contributions here to help develop and refine a set of functions that will be promoted into the main package.",
+    "crumbs": [
+      "Sandbox"
+    ]
+  },
+  {
+    "objectID": "sandbox/index.html#demos",
+    "href": "sandbox/index.html#demos",
+    "title": "Sandbox",
+    "section": "Demos",
+    "text": "Demos\nThe following demonstrate using various inspect_viz.sandbox functions:\n\nevals_summary—Demonstrates evals_summary_plot() and evals_summary_table(), which produce summaries of scores by model and task name for a set of log files.",
+    "crumbs": [
+      "Sandbox"
+    ]
+  },
+  {
+    "objectID": "sandbox/index.html#contributing",
+    "href": "sandbox/index.html#contributing",
+    "title": "Sandbox",
+    "section": "Contributing",
+    "text": "Contributing\nTo contribute functions to inspect_viz.sandbox functions:\n\nAdd your code to src/inspect_viz/sandbox, being sure to export your functions and other types from the __init__.py file within the module.\nAdd a demo notebook to the docs/sandbox directory which demonstrates how to use your sandbox funcdtions (your demo notebook should use the logs in docs/sandbox/logs).\nSubmit a PR with your changes.\n\nThere are some additional steps required to integrate your functions with the website/documentation—we’ll take care of those when we merge the PR.\n\n\n\n\n\n\nImportant\n\n\n\nThe logs in docs/sandbox/logs are checked into the repo using Git LFS. Ensure that you have installed Git LFS (git lfs --version) and then do a git lfs pull to ensure you have local copies of the logs.",
+    "crumbs": [
+      "Sandbox"
+    ]
   },
   {
     "objectID": "examples/penguins/index.html",
