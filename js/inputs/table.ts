@@ -202,7 +202,7 @@ export class Table extends Input {
 
             if (this.options_.style?.accent_color) {
                 this.element.style.setProperty(
-                    '--ag-foreground-color',
+                    '--ag-accent-color',
                     this.options_.style.accent_color
                 );
             }

@@ -226,6 +226,7 @@ class TableStyle(BaseModel):
     text_color: str | None = None
     header_text_color: str | None = None
     cell_text_color: str | None = None
+    selected_row_background_color: str | None = None
 
     font_family: str | None = None
     header_font_family: str | None = None
@@ -236,8 +237,6 @@ class TableStyle(BaseModel):
     border_color: str | None = None
     border_width: float | str | None = None
     border_radius: float | str | None = None
-
-    selected_row_background_color: str | None = None
 
 
 def table(
