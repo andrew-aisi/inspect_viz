@@ -5,14 +5,15 @@ title: "inspect_viz.sandbox"
 ## Plots
 
 ### evals_bar_plot
+### Filter
+### ValueAxis
+### score_axis
 
 ## Tables
 
 ### evals_table
 
-## Axis
 
-### PlotAxis
-### score_axis
+
 
 

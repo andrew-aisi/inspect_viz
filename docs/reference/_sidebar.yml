@@ -373,9 +373,11 @@ website:
         contents:
         - text: evals_bar_plot
           href: reference/inspect_viz.sandbox.qmd#evals_bar_plot
-        - text: evals_table
-          href: reference/inspect_viz.sandbox.qmd#evals_table
-        - text: PlotAxis
-          href: reference/inspect_viz.sandbox.qmd#plotaxis
+        - text: Filter
+          href: reference/inspect_viz.sandbox.qmd#filter
+        - text: ValueAxis
+          href: reference/inspect_viz.sandbox.qmd#valueaxis
         - text: score_axis
           href: reference/inspect_viz.sandbox.qmd#score_axis
+        - text: evals_table
+          href: reference/inspect_viz.sandbox.qmd#evals_table

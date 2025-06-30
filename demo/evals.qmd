@@ -15,9 +15,13 @@ evals = Data.from_dataframe(evals_df("logs"))
 ```{python}
 from inspect_viz.input import select
 from inspect_viz.layout import vconcat, vspace
-from inspect_viz.sandbox import evals_bar_plot
+from inspect_viz.sandbox import evals_bar_plot, Filter
 
-evals_bar_plot(evals)
+evals_bar_plot(
+    evals, 
+    x_filter=Filter(label="Model"), 
+    fx_filter=Filter(label="Task")
+)
 ```
 
 ```{python}

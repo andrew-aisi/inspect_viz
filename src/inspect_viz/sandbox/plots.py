@@ -5,22 +5,21 @@ from pydantic import BaseModel, Field
 from inspect_viz import Component, Data, Selection
 from inspect_viz.input import select
 from inspect_viz.layout import vconcat, vspace
+from inspect_viz.layout._concat import hconcat
 from inspect_viz.mark import bar_y, rule_x
 from inspect_viz.plot import legend, plot
 from inspect_viz.sandbox.axis import ValueAxis, score_axis
+from inspect_viz.sandbox.filter import Filter
 from inspect_viz.transform import sql
 
 
-class Filter(BaseModel):
-    label: str | None = Field(default=None)
-    placeholder: str | None = Field(default=None)
-    value: Literal["all"] | str | list[str] = Field(default="all")
-    multiple: bool = Field(default=False)
-    width: int | None = Field(default=None)
-
-
 def evals_bar_plot(
-    evals: Data, x: str = "model", fx: str = "task_name", y: ValueAxis | None = None
+    evals: Data,
+    x: str = "model",
+    fx: str = "task_name",
+    y: ValueAxis | None = None,
+    x_filter: bool | Filter = False,
+    fx_filter: bool | Filter = False,
 ) -> Component:
     """Bar plot for comparing evals.
 
@@ -29,8 +28,10 @@ def evals_bar_plot(
        x: Name of field for x axis (defaults to "model")
        fx: Name of field for x facet (defaults to "task_name")
        y: Definition for y axis (defaults to `score_axis()`)
+       x_filter: Optional filtering control for x axis.
+       fx_filter: Optional filtering control for fx axis.
     """
-    # filter on fx
+    # plot filter
     filter = Selection.intersect(include=evals.selection)
 
     # default y to score axis
@@ -67,10 +68,32 @@ def evals_bar_plot(
             ),
         )
 
+    # add filters
+    filters: list[Component] = []
+
+    def add_filter(column: str, filter: Literal[True] | Filter) -> None:
+        filter = Filter() if filter is True else filter
+        filters.append(
+            select(
+                evals,
+                column=column,
+                label=filter.label,
+                value=filter.value,
+                multiple=filter.multiple,
+                width=filter.width,
+            )
+        )
+
+    if x_filter:
+        add_filter(x, x_filter)
+    if fx_filter:
+        add_filter(fx, fx_filter)
+    if len(filters):
+        filters = [vconcat(hconcat(*filters), vspace())]
+
     # render plot
     return vconcat(
-        select(evals, column=fx, target=filter),
-        vspace(),
+        *filters,
         plot(
             components,
             legend=legend("color", location="bottom"),
