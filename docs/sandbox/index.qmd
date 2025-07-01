@@ -10,8 +10,6 @@ The following demonstrate using various [inspect_viz.sandbox](../reference/inspe
 
 - [evals_summary](evals_summary.ipynb)---Demonstrates `evals_summary_plot()` and `evals_summary_table()`, which produce summaries of scores by model and task name for a set of log files.
 
-- [trajectory analysis](trajectory_analysis.ipynb)---Demonstrates using a [lasagna plot](https://pmc.ncbi.nlm.nih.gov/articles/PMC2937254/) to visualize tool calls, refusals, and message length.
-
 ## Contributing
 
 To contribute functions to [inspect_viz.sandbox](../reference/inspect_viz.sandbox.qmd) functions:
