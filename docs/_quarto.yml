@@ -53,6 +53,7 @@ website:
           - href: sandbox/index.qmd
             text: Sandbox
           - href: sandbox/evals_summary.ipynb
+          - href: sandbox/trajectory_analysis.ipynb
    page-footer: 
       left: 
          - text: Meridian Labs
