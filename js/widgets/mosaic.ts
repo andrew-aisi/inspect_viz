@@ -13,6 +13,7 @@ import { throttle } from 'https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.
 import { VizContext, vizContext } from '../context';
 import { INPUTS } from '../inputs';
 import { errorInfo, errorAsHTML, displayRenderError } from '../util/errors';
+import { isNotebook } from '../util/platform';
 
 interface MosaicProps {
     tables: Record<string, string>;
@@ -186,8 +187,10 @@ function isInputSpec(spec: Spec) {
 async function astToDOM(ast: SpecNode, ctx: InstantiateContext) {
     // process param/selection definitions
     for (const [name, node] of Object.entries(ast.params)) {
-        // skip definitions with names already defined
-        if (!ctx.activeParams.has(name)) {
+
+        // define the parameter if it doesn't exist or if we are in a notebook
+        // (as in a notebook we are losing the prior cell so we want to reset the selection)
+        if (!ctx.activeParams.has(name) || isNotebook()) {
             const param = (node as ASTNode).instantiate(ctx);
             ctx.activeParams.set(name, param);
         }

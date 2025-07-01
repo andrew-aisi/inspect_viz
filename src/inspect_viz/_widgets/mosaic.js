@@ -1222,6 +1222,16 @@ async function waitForTable(conn, table, { interval = 250 } = {}) {
   }
 }
 
+// js/util/platform.ts
+function isNotebook() {
+  const win = window;
+  const hasNotebookGlobal = typeof win.Jupyter !== "undefined" || typeof win._JUPYTERLAB !== "undefined" || typeof win.google !== "undefined" && win.google.colab || typeof win.IPython !== "undefined" || typeof win.mo !== "undefined" || typeof win.acquireVsCodeApi !== "undefined";
+  return hasNotebookGlobal || isVSCodeNotebook();
+}
+function isVSCodeNotebook() {
+  return window.location.protocol === "vscode-webview:" && window.location.search.includes("purpose=notebookRenderer");
+}
+
 // js/util/errors.ts
 function errorInfo(error) {
   if (isError(error)) {
@@ -1381,14 +1391,6 @@ function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
-}
-function isVSCodeNotebook() {
-  return window.location.protocol === "vscode-webview:" && window.location.search.includes("purpose=notebookRenderer");
-}
-function isNotebook() {
-  const win = window;
-  const hasNotebookGlobal = typeof win.Jupyter !== "undefined" || typeof win._JUPYTERLAB !== "undefined" || typeof win.google !== "undefined" && win.google.colab || typeof win.IPython !== "undefined" || typeof win.mo !== "undefined" || typeof win.acquireVsCodeApi !== "undefined";
-  return hasNotebookGlobal || isVSCodeNotebook();
 }
 function isError(value) {
   return value instanceof Error;
@@ -1631,7 +1633,7 @@ function isInputSpec(spec) {
 }
 async function astToDOM(ast, ctx) {
   for (const [name, node] of Object.entries(ast.params)) {
-    if (!ctx.activeParams.has(name)) {
+    if (!ctx.activeParams.has(name) || isNotebook()) {
       const param = node.instantiate(ctx);
       ctx.activeParams.set(name, param);
     }
