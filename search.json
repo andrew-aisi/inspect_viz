@@ -250,47 +250,135 @@
     ]
   },
   {
-    "objectID": "examples/seattle-weather/index.html",
-    "href": "examples/seattle-weather/index.html",
-    "title": "Seattle Weather",
+    "objectID": "table.html",
+    "href": "table.html",
+    "title": "Tables",
     "section": "",
-    "text": "Select a horizontal range on the dot pot to filter the contents of the bar plot. Click the legend or the bar plot to filter by weather conditions.",
+    "text": "Use tables to display an interactive grid of data used in your visualization. Tables support commonly used operations like sorting, filtering, pagination and a variety of other customization options."
+  },
+  {
+    "objectID": "table.html#table-basics",
+    "href": "table.html#table-basics",
+    "title": "Tables",
+    "section": "Table Basics",
+    "text": "Table Basics\nIn its most simple form, the table() function will display the contents of the Data provided. For example, the following:\nfrom inspect_viz import Data\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins)\nresults in a table displaying all the columns and rows in the penguins dataset:\n\n\n\n\n\nIn addition to providing the base Data for the table, you may also select which columns are displayed:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, columns=[\n    \"species\", \n    \"island\", \n    \"sex\", \n    \"body_mass\"])\n\n\n\n\nTables have a number of global options for configuring the behavior, but also have many options specific to one or more columns. To specify column level options, using the column function in the list of columns rather than simply passing the column name:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, columns=[\n    column(\"species\", align=\"center\"), \n    \"island\", \n    \"sex\", \n    \"body_mass\"])\n\n\n\n\n\nSize\nBy default, tables will have a height of 300px and a width which files their container. You can explicitly provide a height and width value in pixels for the table if you’d like the table to be a specific size:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, height=200, width=550)\n\n\n\n\nYou can use max_width to constrain the maximum width of the table in pixels. It will still attempt to fill its container, but it’s width will not exceed the max_width."
+  },
+  {
+    "objectID": "table.html#columns",
+    "href": "table.html#columns",
+    "title": "Tables",
+    "section": "Columns",
+    "text": "Columns\nWhen providing column data for a table, you can provide a list of columns names from your Data to be displayed. You can also use the column function to provide additional options for each column. For example, to customize the string that is displayed in the header for the column, using the label option like:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, columns=[\n    \"species\", \n    \"island\", \n    \"sex\", \n    column(\"body_mass\", label=\"mass\")])\n\n\n\n\n\nWidth\nIf no explicit column size is provided, the width of each column is an equal share of the available space. You can specify the width of columns either using an explicit pixel size:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, width=370, columns=[\n    column(\"species\", width=80), \n    column(\"island\", width=100), \n    column(\"sex\", width=70), \n    column(\"body_mass\", width=100)])\n\n\n\n\nor using flex for some or all of the columns. Flex sizing works by dividing the remaining space in the grid among all flex columns in proportion to their flex value.\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, width=550, columns=[\n    column(\"species\", flex=1), \n    column(\"island\", flex=1.2), \n    column(\"sex\", width=70), \n    column(\"body_mass\", flex=1)])\n\n\n\n\nYou can also use max_width to set a maximum width for a column or min_width to set a minimum width for a column. This will be used to provide caps on width when columns are being sized automatically using flex sizing.\n\n\nAlignment\nYou can control the alignment of the values within each columns header and body using the align and header_align options. For example:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, columns=[\n    column(\"species\", align=\"center\", header_align=\"center\"), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\")])\n\n\n\n\n\n\nFormatting\nYou can control the formatting of each cell’s value using the format option. The format option accepts a d3-format string for numeric values and a d3-time-format string for date values to define how the value will be formatted.\ntable(penguins, columns=[\n    column(\"species\"), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\", format=\",.2f\")])\nDefault formats for values are as follows:\n\n\n\n\n\n\n\ntype\nformat\n\n\n\n\ninteger\n','\n\n\nnumber\nfloat\n',.2~f'\n\n\ndecimal\n',.4~f'\n\n\ndate\n'%Y-%m-%d'\n\n\ndatetime\ntimestamp\n'%Y-%m-%d %H:%M:%S'\n\n\n\n\n\nText Wrapping\nYou can control the text wrapping behavior of the values within each columns header and body using the wrap_text and header_wrap_text options. This is most frequently paired with auto_height to create rows with automatic heights which wrap text. For example:\ntable(penguins, columns=[\n    column(\"species\", auto_height=True, wrap_text=True), \n    column(\"island\", flex=1.2), \n    column(\"sex\", width=70), \n    column(\"body_mass\", flex=1)])"
+  },
+  {
+    "objectID": "table.html#rows",
+    "href": "table.html#rows",
+    "title": "Tables",
+    "section": "Rows",
+    "text": "Rows\n\nHeight\nBy default, each row of the the table, including the header row, is 29px tall. You can set an explicit row size for the body of the table using the row_height argument. Set the header’s row height using the header_height argument:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, header_height=60, row_height=50)\n\n\n\n\n\n\nAuto Height\nIn addition to explicitly providing the heights for rows, you can also allow the content to determine the height of the row. To do this, configure one or more column with auto_height. The height of the row will then be determined using the largest height required to display the content of any columns with the auto_height option.\ntable(penguins, width=550, columns=[\n    column(\"species\", flex=1), \n    column(\"island\", flex=1.2, auto_height=True), \n    column(\"sex\", width=70), \n    column(\"body_mass\", flex=1)])\nYou can also use the header_auto_height option to specify columns that will automatically size the header row height."
+  },
+  {
+    "objectID": "table.html#sorting",
+    "href": "table.html#sorting",
+    "title": "Tables",
+    "section": "Sorting",
+    "text": "Sorting\nEach column in the table is sortable by clicking on the header for the column you’d like to sort. Each click toggles between the sorting ascending, sorting descending, and not sorting. Holding shift while clicking will add the clicked column as a secondary sort, preserving any other sorts that have already been specified.\nYou can disable sorting for the entire table using the sorting argument:\ntable(penguins, sorting=False)\nYou can control whether individual columns can be sorted using the sortable option for column:\ntable(penguins, columns=[\n    column(\"species\", sortable=False), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\")])"
+  },
+  {
+    "objectID": "table.html#filtering",
+    "href": "table.html#filtering",
+    "title": "Tables",
+    "section": "Filtering",
+    "text": "Filtering\nEach column of the table is filterable by clicking the filter icon in the header of the column. Depending upon the type of data in the column, different filtering options will be presented to the user. To disable filtering for a table, use filtering:\ntable(penguins, filtering=False)\nYou can control whether individual columns can be filtered using the filterable option for column:\ntable(penguins, columns=[\n    column(\"species\", filterable=False), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\")])\n\nFilter Location\nYou can control where in the table filters appear by passing other header or row as the value for filter. header places in the filter as buttons in the header row next to the header text. row creates` a separate row with inline filter UI for filtering columns. For example:\ntable(penguins, filtering='row')"
+  },
+  {
+    "objectID": "table.html#resizing",
+    "href": "table.html#resizing",
+    "title": "Tables",
+    "section": "Resizing",
+    "text": "Resizing\nEach column of the table may be resized by the user by clicking and dragging the separator between columns in the header row. To make the table columns not resizable, use the resizing option:\ntable(penguins, resizing=False)\nYou can control whether individual columns can be resized using the resizable option for column:\ntable(penguins, columns=[\n    column(\"species\", resizable=False), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\")])"
+  },
+  {
+    "objectID": "table.html#pagination",
+    "href": "table.html#pagination",
+    "title": "Tables",
+    "section": "Pagination",
+    "text": "Pagination\nWhen configured, tables can display pages of items with pagination controls at the bottom of the table rather than display all the items in a scrollable body. To enable pagination, simply provide the pagination argument to the table:\n\nfrom inspect_viz.table import column, table\ntable(penguins, \n      columns=[\n        column(\"species\"), \n        column(\"island\"), \n        column(\"sex\"), \n        column(\"body_mass\")],\n      pagination=True)\n\n\n\n\nBy default, the table will automatically set the page size to use the available space in the table without scrolling. You can also explicitly choose page size and page size options:\n\nfrom inspect_viz.table import column, table, Pagination\ntable(penguins, \n      columns=[\n        column(\"species\"), \n        column(\"island\"), \n        column(\"sex\"), \n        column(\"body_mass\")],\n      pagination=Pagination(page_size=20, page_size_selector=[20,40,60]))"
+  },
+  {
+    "objectID": "table.html#selection",
+    "href": "table.html#selection",
+    "title": "Tables",
+    "section": "Selection",
+    "text": "Selection\nBy default, the table will display the selection provided by the data source. If you’d like, you can provide an alternative selection by using filter_by.\n\nTargeting Selections\nIt can be useful to use selected rows within a table to target a selection to be used elsewhere (for example, in highlighting points within a dot plot). To do this, use the target option to select the output selection. This will cause a selection clause of the form column IN (rows) to be added to the selection for each currently selected table row.\nFor example:\ntable(penguins, \n      target=selection)\nYou can use the select option to control how selection works within the table. By default, select is set to single_row which will allow selection of one row at a time by clicking the row. Other options are listed below:\n\n\n\n\n\n\n\nOption\nAction\n\n\n\n\nhover\nThe selection will be updated when the user’s mouse hovers over a row.\n\n\nsingle_row\nThe selection will be updated when a single row is selected. The selected row will be highlighted.\n\n\nmultiple_row\nThe selection will be updated when one or more rows are selected. The selected rows will be highlighted.\n\n\nsingle_row_checkbox\nThe selection will be updated when a single row is selected using a checkbox.\n\n\nmultiple_row_checkbox\nThe selection will be updated when one or more rows is selected using a checkbox."
+  },
+  {
+    "objectID": "table.html#appearance",
+    "href": "table.html#appearance",
+    "title": "Tables",
+    "section": "Appearance",
+    "text": "Appearance\nTables have a minimal default appearance using the AG Grid Balham theme. If the table is being displayed in a Quarto page or dashboard, it will automatically inherit the theme of the page on which it is hosted.\nYou can customize most aspects of the table appearance using the style argument like:\n\nfrom inspect_viz.table import column, table, Pagination, TableStyle\ntable(penguins, \n      columns=[\n        column(\"species\"), \n        column(\"island\"), \n        column(\"sex\"), \n        column(\"body_mass\")],\n      style=TableStyle(\n        background_color=\"#FCFAFF\",  \n        foreground_color=\"purple\", \n        accent_color=\"#E8FFB3\"))\n\n\n\n\n\nBasic Color Options\nUsing the three following basic color options will provide new colors for the table (with the overall colors of the table derived from these three themes). Each of these colors accepts a css color value (for example a hex color string or a named value like red).\n\n\n\n\n\n\n\nOption\nTarget\n\n\n\n\nbackground_color\nThe background color use for cells.\n\n\nforeground_color\nThe foreground color used for values within cells.\n\n\naccent_color\nAccent color used for things like selection and highlights.\n\n\n\n\n\nMore Color Options\nIn addition to the previous basic options, you can do further customization of the colors by passing a css color value to the following:\n\n\n\n\n\n\n\nOption\nTarget\n\n\n\n\ntext_color\nThe text color for UI elements presented within the table.\n\n\nheader_text_color\nThe color for text in the header row.\n\n\ncell_text_color\nThe color for text in cell within the body of the table.\n\n\nselected_row_background_color\nThe background color of selected rows.\n\n\n\n\n\nFonts\nYou can control the fonts used by the table by passing a css font-family value in the following options:\n\n\n\n\n\n\n\nOption\nTarget\n\n\n\n\nfont_family\nThe default font for all text within the table.\n\n\nheader_font_family\nThe font used for text within the header row.\n\n\ncell_font_family\nThe font used for text within the body of the table.\n\n\n\n\n\nBorder\nYou can control the border of the table using the following border options:\n\n\n\nOptions\nTarget\n\n\n\n\nborder_color\nThe color of the border (value css color value).\n\n\nborder_width\nThe width in pixels of the border.\n\n\nborder_radius\nThe border radius in pixels.\n\n\n\n\n\nSpacing\nThe spacing options controls how tightly data and UI elements are packed together in the table. All the padding within in the table is defined relative to this value, so changing this value will affect the spacing of everything in the table.\nBy default, tables have 4 pixels of spacing. To change this value, pass the number of pixels like so:\ntable(penguins, \n      columns=[\n        column(\"species\"), \n        column(\"island\"), \n        column(\"sex\"), \n        column(\"body_mass\")],\n      style=TableStyle(spacing=20))"
+  },
+  {
+    "objectID": "examples/index.html",
+    "href": "examples/index.html",
+    "title": "Inspect Viz Examples",
+    "section": "",
+    "text": "These examples demonstrate various plotting and interactivity features. If you are just beginning to use Inspect Viz you review the Getting Started article before exploring these examples.\n\n\n\n\n\n\n\nPenguins Explorer\nDot plots, tables, color and symbol channels, filtering inputs.\n\n\nBias Parameter\nArea plots; slider inputs; channel expressions.\n\n\nSeattle Weather\nDot plots; bar plots; color and radius channels; x-interval selections, interactive legend.\n\n\nAthletes (Regression)\nDot plots; regression lines; tables, filtering inputs, xy selections.\n\n\nAthletes (Error Bars)\nError bars; text annotations; params, slider inputs.",
     "crumbs": [
-      "Examples",
-      "Seattle Weather"
+      "Examples"
     ]
   },
   {
-    "objectID": "examples/athletes-regression/index.html",
-    "href": "examples/athletes-regression/index.html",
-    "title": "Athletes (Regression)",
+    "objectID": "examples/bias-parameter/index.html",
+    "href": "examples/bias-parameter/index.html",
+    "title": "Bias Parameter",
     "section": "",
-    "text": "Use the drop downs to filter by sport or sex. Select a range on the plot to filter the table and see the regression lines for the selected range. Hover over the table to highlight the corresponding point on the plot.",
+    "text": "Use the slider to create bias offsets for the y-axis.",
     "crumbs": [
       "Examples",
-      "Athletes (Regression)"
+      "Bias Parameter"
     ]
   },
   {
-    "objectID": "examples/athletes-errorbars/index.html",
-    "href": "examples/athletes-errorbars/index.html",
-    "title": "Athletes (Error Bars)",
+    "objectID": "examples/penguins/index.html",
+    "href": "examples/penguins/index.html",
+    "title": "Penguins Explorer",
     "section": "",
-    "text": "Confidence intervals of Olympic athlete heights, in meters. Data are batched into groups of 10 samples per sport. Use the samples slider to see how the intervals update as the sample size increases (as in online aggregation). For each sport, the numbers on the right show the maximum number of athletes in the full dataset.",
+    "text": "Use the species drop down to see only points for a particular species. Use the x and y drop downs to explore differnet variables.",
     "crumbs": [
       "Examples",
-      "Athletes (Error Bars)"
+      "Penguins Explorer"
     ]
   },
   {
-    "objectID": "sandbox/evals_summary.html",
-    "href": "sandbox/evals_summary.html",
-    "title": "Evals Summary",
+    "objectID": "sandbox/index.html",
+    "href": "sandbox/index.html",
+    "title": "Sandbox",
     "section": "",
-    "text": "from inspect_ai.analysis.beta import evals_df\nfrom inspect_viz import Data\n\ndf = evals_df(\"logs\")\nevals = Data.from_dataframe(df)\n\nUse the evals_summary_plot() function to get to a quick summary of the scores by task and model in a set of log files:\n\nfrom inspect_viz.sandbox import evals_summary_plot\n\nevals_summary_plot(evals)\n\n\n\n\nOptionally, add filtering by model (x-axis) and/or task name (fx-axis):\n\nevals_summary_plot(\n    evals,\n    x_filter=True,\n    fx_filter=True\n)\n\n\n\n\nUse the evals_summary_table() function to create a table summarizing results:\n\nfrom inspect_viz.sandbox import evals_summary_table\n\nevals_summary_table(evals)",
+    "text": "The inspect_viz.sandbox module includes prototypes of various higher level visualization functions. We’d like to see lots of contributions here to help develop and refine a set of functions that will be promoted into the main package.",
     "crumbs": [
-      "Sandbox",
-      "Evals Summary"
+      "Sandbox"
+    ]
+  },
+  {
+    "objectID": "sandbox/index.html#demos",
+    "href": "sandbox/index.html#demos",
+    "title": "Sandbox",
+    "section": "Demos",
+    "text": "Demos\nThe following demonstrate using various inspect_viz.sandbox functions:\n\nevals_summary—Demonstrates evals_summary_plot() and evals_summary_table(), which produce summaries of scores by model and task name for a set of log files.",
+    "crumbs": [
+      "Sandbox"
+    ]
+  },
+  {
+    "objectID": "sandbox/index.html#contributing",
+    "href": "sandbox/index.html#contributing",
+    "title": "Sandbox",
+    "section": "Contributing",
+    "text": "Contributing\nTo contribute functions to inspect_viz.sandbox functions:\n\nAdd your code to src/inspect_viz/sandbox, being sure to export your functions and other types from the __init__.py file within the module.\nAdd a demo notebook to the docs/sandbox directory which demonstrates how to use your sandbox funcdtions (your demo notebook should use the logs in docs/sandbox/logs).\nSubmit a PR with your changes.\n\nThere are some additional steps required to integrate your functions with the website/documentation—we’ll take care of those when we merge the PR.\n\n\n\n\n\n\nImportant\n\n\n\nThe logs in docs/sandbox/logs are checked into the repo using Git LFS. Ensure that you have installed Git LFS (git lfs --version) and then do a git lfs pull to ensure you have local copies of the logs.",
+    "crumbs": [
+      "Sandbox"
     ]
   },
   {
@@ -420,65 +508,82 @@
     "text": "Layout\nLayout helpers combine elements such as plots and inputs into multi-view dashboard displays. The vconcat() (vertical concatenation) and hconcat() (horizontal concatenation) methods accept a list of elements and position them using CSS flexbox layout. Layout helpers can be used with plots, inputs, and arbitrary Web content such as images and videos. To ensure spacing, the vspace() and hspace() functions add padding between elements in a layout."
   },
   {
-    "objectID": "sandbox/index.html",
-    "href": "sandbox/index.html",
-    "title": "Sandbox",
+    "objectID": "sandbox/trajectory_analysis.html",
+    "href": "sandbox/trajectory_analysis.html",
+    "title": "Trajectory Analysis",
     "section": "",
-    "text": "The inspect_viz.sandbox module includes prototypes of various higher level visualization functions. We’d like to see lots of contributions here to help develop and refine a set of functions that will be promoted into the main package.",
-    "crumbs": [
-      "Sandbox"
-    ]
+    "text": "An example of a lasagna plot using the cell() marker. This allows one to visualise per-message information which is incredibly useful to getting a quick overview of an agent trajectory.\nIn this notebook the lasagna plot is used to visualise"
   },
   {
-    "objectID": "sandbox/index.html#demos",
-    "href": "sandbox/index.html#demos",
-    "title": "Sandbox",
-    "section": "Demos",
-    "text": "Demos\nThe following demonstrate using various inspect_viz.sandbox functions:\n\nevals_summary—Demonstrates evals_summary_plot() and evals_summary_table(), which produce summaries of scores by model and task name for a set of log files.",
-    "crumbs": [
-      "Sandbox"
-    ]
+    "objectID": "sandbox/trajectory_analysis.html#data-preparation",
+    "href": "sandbox/trajectory_analysis.html#data-preparation",
+    "title": "Trajectory Analysis",
+    "section": "Data Preparation",
+    "text": "Data Preparation\n\nimport pandas as pd\nfrom inspect_ai.analysis.beta import messages_df, MessageColumns, EvalColumns, SampleSummary\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.mark import cell, bar_x, text\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.transform import count\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.interactor import toggle_y\n\n\n# load the data (we cache the data in cybench_messages.csv b/c it takes a while to load)\n# logs = \"logs/cybench/2025-06-28T12-26-01+00-00_cybench_cHgZahEpPHqsSx8GfGjKai.eval\"\n# df = messages_df(logs, columns=MessageColumns + EvalColumns + SampleSummary)\n# df.to_csv(\"cybench_messages.csv\")\ndf = pd.read_csv(\"cybench_messages.csv\")\n\n\n# add message level data which would be interesting to visualise\ndf[\"message_len\"] = df[\"content\"].str.len()\ndf[\"refusal\"] = df[\"content\"].str.contains(\"apologize\") # you could obviously do better than this heuristic\n\n# merge tool calls with the message role (where there is not a tool call)\ndf.loc[df[\"tool_call_function\"].isna(), \"tool_call_function\"] = df[\"role\"]\n\n# maximum number of messages\nmax_messages = df[\"order\"].max()\n\n# trim the dataframe columns (optional)\ntools_df = df[[\n    \"id\",\n    \"sample_id\",\n    \"message_id\",\n    \"role\",\n    \"source\",\n    \"tool_calls\",\n    \"tool_call_id\",\n    \"tool_call_function\",\n    \"tool_call_error\",\n    \"order\",\n    \"content\",\n    \"limit\",\n    \"score_includes\",\n    \"message_len\",\n    \"refusal\",\n]]\n\n\n# load Data\ntools_data = Data.from_dataframe(tools_df)\ntools_data\n\nViz Data (7,825 rows x 15 columns)\n--------------------------------------------------------------------------------\nid                                       String                                  \nsample_id                                String                                  \nmessage_id                               String                                  \nrole                                     String                                  \nsource                                   String                                  \ntool_calls                               String                                  \ntool_call_id                             String                                  \ntool_call_function                       String                                  \ntool_call_error                          String                                  \norder                                    Int64                                   \ncontent                                  String                                  \nlimit                                    String                                  \nscore_includes                           String                                  \nmessage_len                              Float64                                 \nrefusal                                  Object"
   },
   {
-    "objectID": "sandbox/index.html#contributing",
-    "href": "sandbox/index.html#contributing",
-    "title": "Sandbox",
-    "section": "Contributing",
-    "text": "Contributing\nTo contribute functions to inspect_viz.sandbox functions:\n\nAdd your code to src/inspect_viz/sandbox, being sure to export your functions and other types from the __init__.py file within the module.\nAdd a demo notebook to the docs/sandbox directory which demonstrates how to use your sandbox funcdtions (your demo notebook should use the logs in docs/sandbox/logs).\nSubmit a PR with your changes.\n\nThere are some additional steps required to integrate your functions with the website/documentation—we’ll take care of those when we merge the PR.\n\n\n\n\n\n\nImportant\n\n\n\nThe logs in docs/sandbox/logs are checked into the repo using Git LFS. Ensure that you have installed Git LFS (git lfs --version) and then do a git lfs pull to ensure you have local copies of the logs.",
-    "crumbs": [
-      "Sandbox"
-    ]
+    "objectID": "sandbox/trajectory_analysis.html#overview-of-trajectory",
+    "href": "sandbox/trajectory_analysis.html#overview-of-trajectory",
+    "title": "Trajectory Analysis",
+    "section": "Overview of Trajectory",
+    "text": "Overview of Trajectory\n\nVisualise the interaction between the assistant and the user.\nSee which tools the assistant tends to use frequently.\nSee what types of behaviour tend to result in a limit being hit.\n\n\nclick = Selection(\"single\")\n\nvconcat(\n    plot(\n        cell(\n            data=tools_data,\n            x=\"order\",\n            y=\"id\",\n            fill=\"tool_call_function\",\n            filter_by=click,\n        ),\n        toggle_y(target=click),\n        text(\n            tools_data, \n            text=\"limit\", \n            y=\"id\",\n            dx=25,\n            frame_anchor=\"right\", \n            font_size=8, \n        ),\n        width=2000,\n        legend=legend(\"color\", location=\"right\", margin_left=100),\n        x_tick_rotate=270,\n        x_ticks=list(range(0, max_messages, 50)),\n        x_tick_size=4,\n        x_tick_padding=20,\n        x_label=None,\n        y_label=None,\n        color_domain=\"fixed\",\n        margin_left=200,\n        x_domain=\"fixed\",\n        y_domain=\"fixed\",\n    ),\n    plot(\n        bar_x(\n            tools_data, \n            x=count(), \n            y=\"tool_call_function\", \n            fill=\"tool_call_function\", \n            filter_by=click,\n        ),\n        y_label=None,\n        height=200,\n        margin_left=200,\n        color_domain=\"fixed\",\n    )\n)"
   },
   {
-    "objectID": "examples/penguins/index.html",
-    "href": "examples/penguins/index.html",
-    "title": "Penguins Explorer",
+    "objectID": "sandbox/trajectory_analysis.html#refusals",
+    "href": "sandbox/trajectory_analysis.html#refusals",
+    "title": "Trajectory Analysis",
+    "section": "Refusals",
+    "text": "Refusals\n(using a very basic heuristic)\n\nclick = Selection(\"single\")\n\nplot(\n    cell(\n        data=tools_data,\n        x=\"order\",\n        y=\"id\",\n        fill=\"refusal\",\n        filter_by=click,\n    ),\n    toggle_y(target=click),\n    width=1000,\n    legend=legend(\"color\", location=\"right\", label=\"Refusal\"),\n    x_tick_rotate=270,\n    # x_tick_size=4,\n    x_tick_padding=20,\n    x_ticks=list(range(0, max_messages, 50)),\n    x_label=None,\n    y_label=None,\n    color_domain=\"fixed\",\n    margin_left=200,\n    x_domain=\"fixed\",\n    y_domain=\"fixed\",\n)"
+  },
+  {
+    "objectID": "sandbox/trajectory_analysis.html#message-length",
+    "href": "sandbox/trajectory_analysis.html#message-length",
+    "title": "Trajectory Analysis",
+    "section": "Message Length",
+    "text": "Message Length\n\nclick = Selection(\"single\")\n\nplot(\n    cell(\n        data=tools_data,\n        x=\"order\",\n        y=\"id\",\n        fill=\"message_len\",\n        filter_by=click,\n    ),\n    toggle_y(target=click),\n    width=1000,\n    legend=legend(\"color\", location=\"right\", label=\"Message Length\"),\n    x_tick_rotate=270,\n    # x_tick_size=4,\n    x_tick_padding=20,\n    x_ticks=list(range(0, max_messages, 50)),\n    x_label=None,\n    y_label=None,\n    color_domain=\"fixed\",\n    margin_left=200,\n    x_domain=\"fixed\",\n    y_domain=\"fixed\",\n)"
+  },
+  {
+    "objectID": "sandbox/evals_summary.html",
+    "href": "sandbox/evals_summary.html",
+    "title": "Evals Summary",
     "section": "",
-    "text": "Use the species drop down to see only points for a particular species. Use the x and y drop downs to explore differnet variables.",
+    "text": "from inspect_ai.analysis.beta import evals_df, samples_df\nfrom inspect_viz import Data\nfrom inspect_viz.table import table\n\ndf = evals_df(\"logs\")\nevals = Data.from_dataframe(df)\n\nUse the evals_summary_plot() function to get to a quick summary of the scores by task and model in a set of log files:\n\nfrom inspect_viz.sandbox import evals_summary_plot\n\nevals_summary_plot(evals)\n\n\n\n\nOptionally, add filtering by model (x-axis) and/or task name (fx-axis):\n\nevals_summary_plot(\n    evals,\n    x_filter=True,\n    fx_filter=True\n)\n\n\n\n\nUse the evals_summary_table() function to create a table summarizing results:\n\nfrom inspect_viz.sandbox import evals_summary_table\n\nevals_summary_table(evals)",
+    "crumbs": [
+      "Sandbox",
+      "Evals Summary"
+    ]
+  },
+  {
+    "objectID": "examples/athletes-errorbars/index.html",
+    "href": "examples/athletes-errorbars/index.html",
+    "title": "Athletes (Error Bars)",
+    "section": "",
+    "text": "Confidence intervals of Olympic athlete heights, in meters. Data are batched into groups of 10 samples per sport. Use the samples slider to see how the intervals update as the sample size increases (as in online aggregation). For each sport, the numbers on the right show the maximum number of athletes in the full dataset.",
     "crumbs": [
       "Examples",
-      "Penguins Explorer"
+      "Athletes (Error Bars)"
     ]
   },
   {
-    "objectID": "examples/bias-parameter/index.html",
-    "href": "examples/bias-parameter/index.html",
-    "title": "Bias Parameter",
+    "objectID": "examples/athletes-regression/index.html",
+    "href": "examples/athletes-regression/index.html",
+    "title": "Athletes (Regression)",
     "section": "",
-    "text": "Use the slider to create bias offsets for the y-axis.",
+    "text": "Use the drop downs to filter by sport or sex. Select a range on the plot to filter the table and see the regression lines for the selected range. Hover over the table to highlight the corresponding point on the plot.",
     "crumbs": [
       "Examples",
-      "Bias Parameter"
+      "Athletes (Regression)"
     ]
   },
   {
-    "objectID": "examples/index.html",
-    "href": "examples/index.html",
-    "title": "Inspect Viz Examples",
+    "objectID": "examples/seattle-weather/index.html",
+    "href": "examples/seattle-weather/index.html",
+    "title": "Seattle Weather",
     "section": "",
-    "text": "These examples demonstrate various plotting and interactivity features. If you are just beginning to use Inspect Viz you review the Getting Started article before exploring these examples.\n\n\n\n\n\n\n\nPenguins Explorer\nDot plots, tables, color and symbol channels, filtering inputs.\n\n\nBias Parameter\nArea plots; slider inputs; channel expressions.\n\n\nSeattle Weather\nDot plots; bar plots; color and radius channels; x-interval selections, interactive legend.\n\n\nAthletes (Regression)\nDot plots; regression lines; tables, filtering inputs, xy selections.\n\n\nAthletes (Error Bars)\nError bars; text annotations; params, slider inputs.",
+    "text": "Select a horizontal range on the dot pot to filter the contents of the bar plot. Click the legend or the bar plot to filter by weather conditions.",
     "crumbs": [
-      "Examples"
+      "Examples",
+      "Seattle Weather"
     ]
   },
   {
