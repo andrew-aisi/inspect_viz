@@ -707,7 +707,6 @@ var Table = class extends Input {
     } else if (this.options_.max_height !== void 0) {
       this.element.style.maxHeight = `${this.options_.max_height}px`;
     }
-    console.log({ mh: this.element.style.maxHeight });
     if (this.options_.style) {
       if (this.options_.style?.background_color) {
         this.element.style.setProperty(

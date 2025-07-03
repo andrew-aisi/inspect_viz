@@ -253,7 +253,6 @@ export class Table extends Input {
         } else if (this.options_.max_height !== undefined) {
             this.element.style.maxHeight = `${this.options_.max_height}px`;
         }
-        console.log({ mh: this.element.style.maxHeight });
 
         if (this.options_.style) {
             // note that since these are CSS variables that we define
