@@ -1,5 +1,4 @@
 .inspect-viz-table {
-    height: 295px;
     width: 100%;
 }
 
@@ -17,4 +16,12 @@
 
 .header-justify .ag-header-cell-label {
     justify-content: space-between;
+}
+
+/* This disables a hard coded min height fo ag-grid.
+This is their recommended approach (!). See 
+https://github.com/ag-grid/ag-grid/issues/4095 */
+.ag-layout-auto-height .ag-center-cols-container,
+.ag-layout-auto-height .ag-center-cols-viewport{
+    min-height:0px !important;
 }

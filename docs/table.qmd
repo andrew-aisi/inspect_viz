@@ -57,7 +57,7 @@ table(penguins, columns=[
 
 ### Size
 
-By default, tables will have a height of 300px and a width which files their container. You can explicitly provide a height and width value in pixels for the table if you'd like the table to be a specific size:
+By default, tables will have a height which matches the size of their content and a width which files their container (with a maximum size of 1000px). You can explicitly provide a height and width value in pixels for the table if you'd like the table to be a specific size:
 
 ```{python}
 from inspect_viz import Data
@@ -67,7 +67,8 @@ penguins = Data.from_file("penguins.parquet")
 table(penguins, height=200, width=550)
 ```
 
-You can use `max_width` to constrain the maximum width of the table in pixels. It will still attempt to fill its container, but it's width will not exceed the `max_width`.
+You can use `max_width` to constrain the maximum width of the table in pixels. It will still attempt to fill its container, but it's width will not exceed the `max_width`. You can use `max_height` to constrain the maximum height of an `auto` height table, it's height will be then match the content, but not exceed the maximum height.
+
 
 ## Columns
 
