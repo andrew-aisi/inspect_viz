@@ -30,6 +30,41 @@ import {
     SelectQuery,
     sql,
     column,
+    avg,
+    count,
+    sum,
+    argmax,
+    mad,
+    max,
+    min,
+    product,
+    geomean,
+    median,
+    mode,
+    variance,
+    stddev,
+    skewness,
+    kurtosis,
+    entropy,
+    varPop,
+    stddevPop,
+    first,
+    last,
+    stringAgg,
+    arrayAgg,
+    argmin,
+    quantile,
+    corr,
+    covarPop,
+    regrIntercept,
+    regrSlope,
+    regrCount,
+    regrR2,
+    regrSXX,
+    regrSYY,
+    regrSXY,
+    regrAvgX,
+    regrAvgY,
 } from 'https://cdn.jsdelivr.net/npm/@uwdata/mosaic-sql@0.16.2/+esm';
 
 import {
@@ -55,9 +90,49 @@ import * as d3TimeFormat from 'https://cdn.jsdelivr.net/npm/d3-time-format@4.1.0
 import { Input, InputOptions } from './input';
 import { generateId } from '../util/id';
 import { JSType } from '@uwdata/mosaic-core';
+import { AggregateNode, ExprValue } from '@uwdata/mosaic-sql';
+
+type Transform = Record<string, any>;
+
+type Channel = string | Transform | boolean | number | undefined | Array<boolean | number>;
+
+// A column which has been resolved with user provided information
+type ResolvedColumn = ResolvedSimpleColumn | ResolvedLiteralColumn | ResolvedAggregateColumn;
+
+// Resolved Column adds additional information to the Column type
+// based upon the raw column specifiction provided by the user, including
+// any aggregatinon behavior.
+export interface BaseResolvedColumn extends Column {
+    // The column name as it will be used in the query (e.g. the alias for the column)
+    // This could be synthesized if this is an aggregation or literal.
+    column_name: string;
+}
+
+// A column which contains one or more literal values
+export interface ResolvedLiteralColumn extends BaseResolvedColumn {
+    type: 'literal';
+}
+
+// A column which contains an aggregate expression
+export interface ResolvedAggregateColumn extends BaseResolvedColumn {
+    // The actual column name in the database
+    column_id: string;
+
+    // The aggregate expression and its arguments, if this column is an aggregation.
+    agg_expr: string;
+    agg_expr_args: ExprValue[];
+
+    type: 'aggregate';
+}
+// A column which is a simple column reference in the database.
+export interface ResolvedSimpleColumn extends BaseResolvedColumn {
+    // The actual column name in the database
+    column_id: string;
+    type: 'column';
+}
 
 export interface Column {
-    column: string;
+    column: Channel;
     label?: string;
     align?: 'left' | 'right' | 'center' | 'justify';
     format?: string;
@@ -128,15 +203,15 @@ interface ColSortModel {
 
 export class Table extends Input {
     private readonly id_: string;
-    private readonly columns_: Column[];
-    private readonly columnOptions_: Record<string, Column>;
+    private columns_: ResolvedColumn[] | null = null;
+    private columnsByName_: Record<string, ResolvedColumn> | null = null;
+    private columnTypes_: Record<string, JSType> = {};
     private readonly height_: number | undefined;
 
     private readonly gridContainer_: HTMLDivElement;
     private grid_: GridApi | null = null;
     private gridOptions_: GridOptions;
 
-    private schema_: FieldInfo[];
     private currentRow_: number;
     private sortModel_: ColSortModel[] = [];
     private filterModel_: FilterModel = {};
@@ -155,23 +230,14 @@ export class Table extends Input {
         // id
         this.id_ = generateId();
 
-        // defaults
-        this.columns_ = resolveColumns(this.options_.columns || ['*']);
-        this.columnOptions_ = this.columns_.reduce(
-            (acc, col) => {
-                acc[col.column] = col;
-                return acc;
-            },
-            {} as Record<string, Column>
-        );
-        this.height_ = this.options_.height;
-
         // state
         this.currentRow_ = -1;
-        this.schema_ = [];
+
+        // class decoration
+        this.element.classList.add('inspect-viz-table');
 
         // height and width
-        this.element.classList.add('inspect-viz-table');
+        this.height_ = this.options_.height;
         if (typeof this.options_.width === 'number') {
             this.element.style.width = `${this.options_.width}px`;
         }
@@ -221,7 +287,8 @@ export class Table extends Input {
 
     // contribute a selection clause back to the target selection
     clause(rows: number[] = []) {
-        const fields = this.schema_.map(s => s.column);
+        const fields = this.getDatabaseColumns().map(column => column.column_id);
+
         const values = rows.map(row => {
             return fields.map(f => this.data_.columns[f][row]);
         });
@@ -231,15 +298,63 @@ export class Table extends Input {
     // mosaic calls this and initialization to let us fetch the schema
     // and do related setup
     async prepare() {
-        // query for column schema information
+        // query available columns from the database
         const table = this.options_.from;
-        const fields = this.columns_.map(column => ({ column: column.column, table }));
-        this.schema_ = await queryFieldInfo(this.coordinator!, fields);
+        const schema = await queryFieldInfo(this.coordinator!, [{ column: '*', table }]);
+
+        // Resolve the columns using either the user provided columns or all
+        // the fields in the schema
+        const userColumns = this.options_.columns
+            ? this.options_.columns
+            : schema.map(f => f.column);
+        this.columns_ = resolveColumns(userColumns);
+        this.columnsByName_ = this.columns_.reduce(
+            (acc, col) => {
+                acc[col.column_name] = col;
+                return acc;
+            },
+            {} as Record<string, ResolvedColumn>
+        );
+
+        // For each non-literal column, we need to resolve the type
+        // Do this by using the schema query to get column types and use the
+        // column type as the type (even for aggregate columns  )
+        this.columns_
+            .filter(c => c.type !== 'literal')
+            .forEach(column => {
+                const item = schema.find(s => s.column === column.column_id);
+                if (item) {
+                    this.columnTypes_[column.column_name] = item.type as JSType;
+                }
+            });
+
+        // For literals, we need to determine their types based on the values provided.
+        this.getLiteralColumns().forEach(c => {
+            const colVal = c.column;
+            if (Array.isArray(colVal)) {
+                // Peek at the first element to determine the type
+                const firstVal = colVal[0];
+                const typeStr =
+                    typeof firstVal === 'boolean'
+                        ? 'boolean'
+                        : typeof firstVal === 'number'
+                          ? 'number'
+                          : undefined;
+                if (typeStr) {
+                    this.columnTypes_[c.column_name] = typeStr as JSType;
+                }
+            } else if (typeof colVal === 'boolean') {
+                this.columnTypes_[c.column_name] = 'boolean';
+            } else if (typeof colVal === 'number') {
+                this.columnTypes_[c.column_name] = 'number';
+            }
+        });
 
         // create column definitions for ag-grid
-        const columnDefs: ColDef[] = this.schema_.map(({ column, type }) =>
-            this.createColumnDef(column, type)
-        );
+        const columnDefs: ColDef[] = this.columns_.map(column => {
+            const t = this.columnTypes_[column.column_name];
+            return this.createColumnDef(column.column_name, t);
+        });
         this.gridOptions_.columnDefs = columnDefs;
 
         // create the grid
@@ -249,27 +364,69 @@ export class Table extends Input {
     // mosaic calls this every time it needs to show data to find
     // out what query we want to run
     query(filter: FilterExpr[] = []) {
+        const selectItems: Record<string, ExprNode | string> = {};
+        const groupBy: string[] = [];
+        let has_aggregate = false;
+
+        // Go through each column and determine the select item
+        // for the column. Some columns may not have items because
+        // they are providing a literal or list of literals.
+        for (const column of this.getDatabaseColumns()) {
+            if (column.type === 'aggregate') {
+                const item = aggregateExpression(column);
+                selectItems[item[0]] = item[1];
+                has_aggregate = true;
+            } else if (column.type === 'column') {
+                selectItems[column.column_id] = column.column_id;
+                groupBy.push(column.column_id);
+            }
+        }
+
         // Select the columns
         let query = Query.from(this.options_.from).select(
-            this.schema_.length ? this.schema_.map(s => s.column) : '*'
+            Object.keys(selectItems).length ? selectItems : '*'
         );
+
+        // Group by non aggregated columns
+        if (has_aggregate && groupBy.length > 0) {
+            query.groupby(groupBy);
+        }
 
         // apply the external filter
         query = query.where(...filter);
 
         // apply the filter model
-        Object.keys(this.filterModel_).forEach(colId => {
-            const filter = this.filterModel_[colId] as SupportedFilter;
-            const expression = filterExpression(colId, filter, query);
-            if (expression) {
-                query = query.where(expression);
+        Object.keys(this.filterModel_).forEach(columnName => {
+            if (!this.columnsByName_) {
+                throw new Error('Columns not resolved yet. Please call prepare() first.');
+            }
+
+            const col = this.columnsByName_[columnName];
+            if (col.type !== 'literal') {
+                const useHaving = col?.type === 'aggregate';
+                const filter = this.filterModel_[columnName] as SupportedFilter;
+                const expression = filterExpression(columnName, filter, query);
+                if (expression) {
+                    if (useHaving) {
+                        query.having(expression);
+                    } else {
+                        query = query.where(expression);
+                    }
+                }
             }
         });
 
         // Apply sorting
         if (this.sortModel_.length > 0) {
             this.sortModel_.forEach(sort => {
-                query = query.orderby(sort.sort === 'asc' ? asc(sort.colId) : desc(sort.colId));
+                if (!this.columnsByName_) {
+                    throw new Error('Columns not resolved yet. Please call prepare() first.');
+                }
+
+                const col = this.columnsByName_[sort.colId];
+                if (col.type !== 'literal') {
+                    query = query.orderby(sort.sort === 'asc' ? asc(sort.colId) : desc(sort.colId));
+                }
             });
         }
 
@@ -289,15 +446,29 @@ export class Table extends Input {
     }
 
     private updateGrid = throttle(async () => {
-        if (!this.grid_) return;
+        if (!this.grid_) {
+            return;
+        }
+
+        if (!this.columns_) {
+            throw new Error('Columns not resolved yet. Please call prepare() first.');
+        }
 
         // convert column-based data to row-based data for ag-grid
         const rowData: any[] = [];
         for (let i = 0; i < this.data_.numRows; i++) {
             const row: any = {};
-            this.schema_.forEach(({ column }) => {
-                row[column] = this.data_.columns[column][i];
+            this.columns_.forEach(({ column_name, column }) => {
+                if (Array.isArray(column)) {
+                    const index = i % column.length;
+                    row[column_name] = column[index];
+                } else if (typeof column === 'boolean' || typeof column === 'number') {
+                    row[column_name] = column;
+                } else {
+                    row[column_name] = this.data_.columns[column_name][i];
+                }
             });
+
             rowData.push(row);
         }
 
@@ -329,14 +500,11 @@ export class Table extends Input {
             borderRadius: this.options_.style?.border_radius,
 
             selectedRowBackgroundColor: this.options_.style?.selected_row_background_color,
-
-            //borderWidth: this.options_.style?.border_width,
         });
 
         // initialize grid options
         return {
             // always pass filter to allow server-side filtering
-            alwaysPassFilter: () => true,
             pagination: !!options.pagination,
             paginationAutoPageSize:
                 options.pagination?.page_size === 'auto' ||
@@ -346,7 +514,7 @@ export class Table extends Input {
                 typeof options.pagination?.page_size === 'number'
                     ? options.pagination.page_size
                     : undefined,
-            animateRows: true,
+            animateRows: false,
             headerHeight: headerHeightPixels,
             rowHeight: options.row_height,
             columnDefs: [],
@@ -407,52 +575,79 @@ export class Table extends Input {
                     this.options_.as.update(this.clause());
                 }
             },
+            onGridReady: () => {
+                // When the grid is ready, we can update it with the initial data
+                this.patchGrid();
+            },
         };
     }
 
-    private createColumnDef(column: string, type: JSType): ColDef {
-        const columnOptions = this.columnOptions_[column] || {};
+    private getLiteralColumns(): ResolvedLiteralColumn[] {
+        if (!this.columns_) {
+            throw new Error('Columns not resolved yet. Please call prepare() first.');
+        }
+
+        return this.columns_.filter(c => c.type === 'literal');
+    }
+
+    private getDatabaseColumns(): Array<ResolvedSimpleColumn | ResolvedAggregateColumn> {
+        if (!this.columns_) {
+            throw new Error('Columns not resolved yet. Please call prepare() first.');
+        }
+
+        return this.columns_.filter(c => c.type === 'column' || c.type === 'aggregate');
+    }
+
+    private createColumnDef(column_name: string, type: JSType): ColDef {
+        if (!this.columnsByName_) {
+            throw new Error('Columns not resolved yet. Please call prepare() first.');
+        }
+
+        const column = this.columnsByName_[column_name] || {};
 
         // Align, numbers right aligned by default
-        const align = columnOptions.align || (type === 'number' ? 'right' : 'left');
-        const headerAlignment = columnOptions.header_align;
+        const align = column.align || (type === 'number' ? 'right' : 'left');
+        const headerAlignment = column.header_align;
 
         // Format string
-        const formatter = formatterForType(type, columnOptions.format);
+        const formatter = formatterForType(type, column.format);
 
         // Sorting / filtering
-        const sortable = this.options_.sorting !== false && columnOptions.sortable !== false;
-        const filterable = this.options_.filtering !== false && columnOptions.filterable !== false;
+        const sortable = this.options_.sorting !== false && column.sortable !== false;
+        const filterable = this.options_.filtering !== false && column.filterable !== false;
 
         // Sizing
-        const resizable = columnOptions.resizable !== false;
+        const resizable = column.resizable !== false;
 
         // Min and max width
-        const minWidth = columnOptions.min_width;
-        const maxWidth = columnOptions.max_width;
+        const minWidth = column.min_width;
+        const maxWidth = column.max_width;
 
         // auto height
-        const autoHeight = columnOptions.auto_height;
+        const autoHeight = column.auto_height;
         const autoHeaderHeight =
-            this.options_.header_height === 'auto' && columnOptions.header_auto_height !== false;
+            this.options_.header_height === 'auto' && column.header_auto_height !== false;
 
         // wrap text
-        const wrapText = columnOptions.wrap_text;
-        const wrapHeaderText = columnOptions.header_wrap_text;
+        const wrapText = column.wrap_text;
+        const wrapHeaderText = column.header_wrap_text;
 
         // flex
-        const flex = columnOptions.flex;
+        const flex = column.flex;
+
+        // Disables client side sorting (used for non-literal columns
+        // where the database can handle the sorting)
+        const disableClientSort = (_valueA: unknown, _valueB: unknown) => {
+            return 0;
+        };
 
         // Position the filter below the header
         const colDef: ColDef = {
-            field: column,
-            headerName: columnOptions.label || column,
+            field: column_name,
+            headerName: column.label || column_name,
             headerClass: headerClasses(headerAlignment),
             cellStyle: { textAlign: align },
-            comparator: (_valueA, _valueB) => {
-                // Sorting is handled by the database, so never client sort
-                return 0;
-            },
+            comparator: column.type !== 'literal' ? disableClientSort : undefined,
             filter: !filterable ? false : filterForColumnType(type),
             flex,
             sortable,
@@ -464,7 +659,8 @@ export class Table extends Input {
             wrapText,
             wrapHeaderText,
             floatingFilter: this.options_.filtering === 'row',
-            suppressMovable: true, // Disable column moving
+            // Disable column moving
+            suppressMovable: true,
             valueFormatter: params => {
                 // Format the value if a format is provided
                 const value = params.value;
@@ -477,7 +673,7 @@ export class Table extends Input {
 
         // Set columns widths, if explicitly provided
         // otherwise use flex to make all columns equal
-        const width = columnOptions.width;
+        const width = column.width;
         if (width) {
             colDef.width = width;
         } else if (flex === undefined || flex === null) {
@@ -485,6 +681,38 @@ export class Table extends Input {
         }
 
         return colDef;
+    }
+
+    private patchGrid() {
+        if (!this.grid_) {
+            return;
+        }
+
+        const columns = this.grid_.getColumns();
+        if (columns) {
+            columns.forEach(async column => {
+                if (!this.columnsByName_) {
+                    throw new Error('Columns not resolved yet. Please call prepare() first.');
+                }
+
+                const colId = column.getColId();
+                const filterInstance = await this.grid_!.getColumnFilterInstance(colId);
+                const col = this.columnsByName_[colId];
+
+                // This is a workaround to disable client side filtering so we can implement
+                // filtering using the query method instead.
+                //
+                // Since literal columns aren't filtered in the database, we instead
+                // use client side filtering for these
+                if (
+                    filterInstance &&
+                    typeof filterInstance.doesFilterPass === 'function' &&
+                    col.type !== 'literal'
+                ) {
+                    filterInstance.doesFilterPass = () => true;
+                }
+            });
+        }
     }
 
     // all mosaic inputs implement this, not exactly sure what it does
@@ -495,12 +723,76 @@ export class Table extends Input {
     }
 }
 
-const resolveColumns = (columns: Array<string | Column>): Column[] => {
+const resolveColumns = (columns: Array<string | Column>): ResolvedColumn[] => {
+    let columnCount = 1;
+    const incrementedColumnName = () => {
+        return `col_${columnCount++}`;
+    };
+
     return columns.map(col => {
         if (typeof col === 'string') {
-            return { column: col };
+            // Column is just a column id
+            return {
+                column_name: col,
+                column_id: col,
+                column: col,
+                type: 'column',
+            };
         } else if (typeof col === 'object' && col !== null) {
-            return col as Column;
+            // Column is an object (a Column), we need to parse the column
+            // property to properly resolve it
+            if (typeof col.column === 'string') {
+                return {
+                    ...col,
+                    column_name: col.column,
+                    column_id: col.column,
+                    type: 'column',
+                };
+            } else if (typeof col.column === 'number') {
+                // If the column is a number, treat it as an index
+                // It has no column_id since it isn't in the database - we generate
+                // a display alias for it
+                return {
+                    ...col,
+                    column_name: incrementedColumnName(),
+                    column: col.column,
+                    type: 'literal',
+                };
+            } else if (typeof col.column === 'boolean') {
+                // If the column is a boolean, treat it as a flag
+                // It has no column_id since it isn't in the database - we generate
+                // a display alias for it
+                return {
+                    ...col,
+                    column_name: incrementedColumnName(),
+                    column: col.column,
+                    type: 'literal',
+                };
+            } else if (Array.isArray(col.column)) {
+                // peek at the first element to determine the type
+                if (col.column.length === 0) {
+                    throw new Error('Empty array column is not supported');
+                }
+                return {
+                    ...col,
+                    column_name: incrementedColumnName(),
+                    column: col.column,
+                    type: 'literal',
+                };
+            } else if (typeof col.column === 'object') {
+                const agg = Object.keys(col.column)[0];
+                const targetColumn = col.column[agg];
+                return {
+                    ...col,
+                    column_name: `${agg}_${targetColumn}`,
+                    column_id: targetColumn,
+                    agg_expr: agg,
+                    agg_expr_args: [targetColumn],
+                    type: 'aggregate',
+                };
+            } else {
+                throw new Error('Unsupported column type: ' + typeof col.column);
+            }
         } else {
             throw new Error(`Invalid column definition: ${col}`);
         }
@@ -684,6 +976,105 @@ export const simpleExpression = (
             console.warn(`Unsupported filter type: ${type}`);
     }
     return undefined;
+};
+
+const aggregateExpression = (
+    c: ResolvedAggregateColumn
+): [alias: string, aggregate: AggregateNode] => {
+    const aggExpr = c.agg_expr;
+
+    const firstArg = () => {
+        if (c.agg_expr_args.length > 0) {
+            return c.agg_expr_args[0];
+        }
+        throw new Error(`Aggregate expression ${aggExpr} requires at least one argument`);
+    };
+
+    const secondArg = () => {
+        if (c.agg_expr_args.length > 1) {
+            return c.agg_expr_args[1];
+        }
+        throw new Error(`Aggregate expression ${aggExpr} requires at least two arguments`);
+    };
+
+    const r = (val: AggregateNode): [alias: string, aggregate: AggregateNode] => {
+        return [c.column_name, val];
+    };
+
+    switch (aggExpr) {
+        case 'count':
+            return r(count(firstArg()));
+        case 'sum':
+            return r(sum(firstArg()));
+        case 'avg':
+            return r(avg(firstArg()));
+        case 'argmax':
+            return r(argmax(firstArg(), secondArg()));
+        case 'mad':
+            return r(mad(firstArg()));
+        case 'max':
+            return r(max(firstArg()));
+        case 'min':
+            return r(min(firstArg()));
+        case 'product':
+            return r(product(firstArg()));
+        case 'geomean':
+            return r(geomean(firstArg()));
+        case 'median':
+            return r(median(firstArg()));
+        case 'mode':
+            return r(mode(firstArg()));
+        case 'variance':
+            return r(variance(firstArg()));
+        case 'stddev':
+            return r(stddev(firstArg()));
+        case 'skewness':
+            return r(skewness(firstArg()));
+        case 'kurtosis':
+            return r(kurtosis(firstArg()));
+        case 'entropy':
+            return r(entropy(firstArg()));
+        case 'varPop':
+            return r(varPop(firstArg()));
+        case 'stddevPop':
+            return r(stddevPop(firstArg()));
+        case 'first':
+            return r(first(firstArg()));
+        case 'last':
+            return r(last(firstArg()));
+        case 'stringAgg':
+            return r(stringAgg(firstArg()));
+        case 'arrayAgg':
+            return r(arrayAgg(firstArg()));
+        case 'argmin':
+            return r(argmin(firstArg(), secondArg()));
+        case 'quantile':
+            return r(quantile(firstArg(), secondArg()));
+        case 'corr':
+            return r(corr(firstArg(), secondArg()));
+        case 'covarPop':
+            return r(covarPop(firstArg(), secondArg()));
+        case 'regrIntercept':
+            return r(regrIntercept(firstArg(), secondArg()));
+        case 'regrSlope':
+            return r(regrSlope(firstArg(), secondArg()));
+        case 'regrCount':
+            return r(regrCount(firstArg(), secondArg()));
+        case 'regrR2':
+            return r(regrR2(firstArg(), secondArg()));
+        case 'regrSXX':
+            return r(regrSXX(firstArg(), secondArg()));
+        case 'regrSYY':
+            return r(regrSYY(firstArg(), secondArg()));
+        case 'regrSXY':
+            return r(regrSXY(firstArg(), secondArg()));
+        case 'regrAvgX':
+            return r(regrAvgX(firstArg(), secondArg()));
+        case 'regrAvgY':
+            return r(regrAvgY(firstArg(), secondArg()));
+        default:
+            throw new Error(`Unsupported aggregate expression: ${aggExpr}`);
+    }
 };
 
 const isCombinedSimpleModel = (

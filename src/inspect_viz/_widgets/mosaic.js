@@ -445,7 +445,7 @@ var Slider = class extends Input {
       container.innerText = label;
       this.element.appendChild(container);
     }
-    let { value, width, min: min2, max: max2 } = options_;
+    let { value, width, min: min3, max: max3 } = options_;
     this.slider_ = document.createElement("div");
     this.slider_.classList.add("noUi-round");
     this.slider_.setAttribute("id", id);
@@ -485,10 +485,10 @@ var Slider = class extends Input {
       setupActivationListeners(this, this.slider_);
     }
     if (!options_.from) {
-      min2 = min2 ?? (Array.isArray(value) ? value[0] : value ?? 0);
-      max2 = max2 ?? (Array.isArray(value) ? value[1] : value ?? 0);
+      min3 = min3 ?? (Array.isArray(value) ? value[0] : value ?? 0);
+      max3 = max3 ?? (Array.isArray(value) ? value[1] : value ?? 0);
       const start = value ?? (options_.select === "interval" ? [0, 0] : 0);
-      this.updateSlider(min2, max2, start);
+      this.updateSlider(min3, max3, start);
     }
   }
   slider_;
@@ -529,27 +529,27 @@ var Slider = class extends Input {
   }
   queryResult(data) {
     const { min: dataMin, max: dataMax } = Array.from(data)[0];
-    const min2 = this.options_.min ?? dataMin;
-    const max2 = this.options_.max ?? dataMax;
+    const min3 = this.options_.min ?? dataMin;
+    const max3 = this.options_.max ?? dataMax;
     let start = this.sliderValue;
     if (!this.firstQuery_) {
       this.firstQuery_ = true;
       if (this.options_.value === void 0) {
-        start = this.options_.select === "interval" ? [min2, max2] : max2;
+        start = this.options_.select === "interval" ? [min3, max3] : max3;
       } else {
         start = this.options_.value;
       }
     }
-    this.updateSlider(min2, max2, start);
+    this.updateSlider(min3, max3, start);
     return this;
   }
-  updateSlider(min2, max2, start) {
-    const step = this.options_.step ?? (min2 >= 5 || max2 >= 5 ? 1 : void 0);
+  updateSlider(min3, max3, start) {
+    const step = this.options_.step ?? (min3 >= 5 || max3 >= 5 ? 1 : void 0);
     this.sliderApi_.updateOptions(
       {
         range: {
-          min: min2,
-          max: max2
+          min: min3,
+          max: max3
         },
         step,
         start
@@ -559,7 +559,7 @@ var Slider = class extends Input {
     return this;
   }
   clause(value) {
-    let { field, column: column2, min: min2, select = "point" } = this.options_;
+    let { field, column: column2, min: min3, select = "point" } = this.options_;
     field = field || column2;
     if (!field) {
       throw new Error(
@@ -567,7 +567,7 @@ var Slider = class extends Input {
       );
     }
     if (select === "interval" && value !== void 0) {
-      const domain = Array.isArray(value) ? value : [min2 ?? 0, value];
+      const domain = Array.isArray(value) ? value : [min3 ?? 0, value];
       return clauseInterval(field, domain, {
         source: this,
         bin: "ceil",
@@ -640,7 +640,42 @@ import {
   suffix,
   Query as Query3,
   sql,
-  column
+  column,
+  avg,
+  count,
+  sum,
+  argmax,
+  mad,
+  max as max2,
+  min as min2,
+  product,
+  geomean,
+  median,
+  mode,
+  variance,
+  stddev,
+  skewness,
+  kurtosis,
+  entropy,
+  varPop,
+  stddevPop,
+  first,
+  last,
+  stringAgg,
+  arrayAgg,
+  argmin,
+  quantile,
+  corr,
+  covarPop,
+  regrIntercept,
+  regrSlope,
+  regrCount,
+  regrR2,
+  regrSXX,
+  regrSYY,
+  regrSXY,
+  regrAvgX,
+  regrAvgY
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-sql@0.16.2/+esm";
 import {
   createGrid,
@@ -656,18 +691,9 @@ var Table = class extends Input {
     this.options_ = options_;
     ModuleRegistry.registerModules([AllCommunityModule]);
     this.id_ = generateId();
-    this.columns_ = resolveColumns(this.options_.columns || ["*"]);
-    this.columnOptions_ = this.columns_.reduce(
-      (acc, col) => {
-        acc[col.column] = col;
-        return acc;
-      },
-      {}
-    );
-    this.height_ = this.options_.height;
     this.currentRow_ = -1;
-    this.schema_ = [];
     this.element.classList.add("inspect-viz-table");
+    this.height_ = this.options_.height;
     if (typeof this.options_.width === "number") {
       this.element.style.width = `${this.options_.width}px`;
     }
@@ -705,13 +731,13 @@ var Table = class extends Input {
     this.gridOptions_ = this.createGridOptions(this.options_);
   }
   id_;
-  columns_;
-  columnOptions_;
+  columns_ = null;
+  columnsByName_ = null;
+  columnTypes_ = {};
   height_;
   gridContainer_;
   grid_ = null;
   gridOptions_;
-  schema_;
   currentRow_;
   sortModel_ = [];
   filterModel_ = {};
@@ -721,7 +747,7 @@ var Table = class extends Input {
   };
   // contribute a selection clause back to the target selection
   clause(rows = []) {
-    const fields = this.schema_.map((s) => s.column);
+    const fields = this.getDatabaseColumns().map((column2) => column2.column_id);
     const values = rows.map((row) => {
       return fields.map((f) => this.data_.columns[f][row]);
     });
@@ -731,31 +757,93 @@ var Table = class extends Input {
   // and do related setup
   async prepare() {
     const table = this.options_.from;
-    const fields = this.columns_.map((column2) => ({ column: column2.column, table }));
-    this.schema_ = await queryFieldInfo(this.coordinator, fields);
-    const columnDefs = this.schema_.map(
-      ({ column: column2, type }) => this.createColumnDef(column2, type)
+    const schema = await queryFieldInfo(this.coordinator, [{ column: "*", table }]);
+    const userColumns = this.options_.columns ? this.options_.columns : schema.map((f) => f.column);
+    this.columns_ = resolveColumns(userColumns);
+    this.columnsByName_ = this.columns_.reduce(
+      (acc, col) => {
+        acc[col.column_name] = col;
+        return acc;
+      },
+      {}
     );
+    this.columns_.filter((c) => c.type !== "literal").forEach((column2) => {
+      const item = schema.find((s) => s.column === column2.column_id);
+      if (item) {
+        this.columnTypes_[column2.column_name] = item.type;
+      }
+    });
+    this.getLiteralColumns().forEach((c) => {
+      const colVal = c.column;
+      if (Array.isArray(colVal)) {
+        const firstVal = colVal[0];
+        const typeStr = typeof firstVal === "boolean" ? "boolean" : typeof firstVal === "number" ? "number" : void 0;
+        if (typeStr) {
+          this.columnTypes_[c.column_name] = typeStr;
+        }
+      } else if (typeof colVal === "boolean") {
+        this.columnTypes_[c.column_name] = "boolean";
+      } else if (typeof colVal === "number") {
+        this.columnTypes_[c.column_name] = "number";
+      }
+    });
+    const columnDefs = this.columns_.map((column2) => {
+      const t = this.columnTypes_[column2.column_name];
+      return this.createColumnDef(column2.column_name, t);
+    });
     this.gridOptions_.columnDefs = columnDefs;
     this.grid_ = createGrid(this.gridContainer_, this.gridOptions_);
   }
   // mosaic calls this every time it needs to show data to find
   // out what query we want to run
   query(filter = []) {
+    const selectItems = {};
+    const groupBy = [];
+    let has_aggregate = false;
+    for (const column2 of this.getDatabaseColumns()) {
+      if (column2.type === "aggregate") {
+        const item = aggregateExpression(column2);
+        selectItems[item[0]] = item[1];
+        has_aggregate = true;
+      } else if (column2.type === "column") {
+        selectItems[column2.column_id] = column2.column_id;
+        groupBy.push(column2.column_id);
+      }
+    }
     let query = Query3.from(this.options_.from).select(
-      this.schema_.length ? this.schema_.map((s) => s.column) : "*"
+      Object.keys(selectItems).length ? selectItems : "*"
     );
+    if (has_aggregate && groupBy.length > 0) {
+      query.groupby(groupBy);
+    }
     query = query.where(...filter);
-    Object.keys(this.filterModel_).forEach((colId) => {
-      const filter2 = this.filterModel_[colId];
-      const expression = filterExpression(colId, filter2, query);
-      if (expression) {
-        query = query.where(expression);
+    Object.keys(this.filterModel_).forEach((columnName) => {
+      if (!this.columnsByName_) {
+        throw new Error("Columns not resolved yet. Please call prepare() first.");
+      }
+      const col = this.columnsByName_[columnName];
+      if (col.type !== "literal") {
+        const useHaving = col?.type === "aggregate";
+        const filter2 = this.filterModel_[columnName];
+        const expression = filterExpression(columnName, filter2, query);
+        if (expression) {
+          if (useHaving) {
+            query.having(expression);
+          } else {
+            query = query.where(expression);
+          }
+        }
       }
     });
     if (this.sortModel_.length > 0) {
       this.sortModel_.forEach((sort) => {
-        query = query.orderby(sort.sort === "asc" ? asc(sort.colId) : desc(sort.colId));
+        if (!this.columnsByName_) {
+          throw new Error("Columns not resolved yet. Please call prepare() first.");
+        }
+        const col = this.columnsByName_[sort.colId];
+        if (col.type !== "literal") {
+          query = query.orderby(sort.sort === "asc" ? asc(sort.colId) : desc(sort.colId));
+        }
       });
     }
     return query;
@@ -771,12 +859,24 @@ var Table = class extends Input {
     return this;
   }
   updateGrid = throttle(async () => {
-    if (!this.grid_) return;
+    if (!this.grid_) {
+      return;
+    }
+    if (!this.columns_) {
+      throw new Error("Columns not resolved yet. Please call prepare() first.");
+    }
     const rowData = [];
     for (let i = 0; i < this.data_.numRows; i++) {
       const row = {};
-      this.schema_.forEach(({ column: column2 }) => {
-        row[column2] = this.data_.columns[column2][i];
+      this.columns_.forEach(({ column_name, column: column2 }) => {
+        if (Array.isArray(column2)) {
+          const index = i % column2.length;
+          row[column_name] = column2[index];
+        } else if (typeof column2 === "boolean" || typeof column2 === "number") {
+          row[column_name] = column2;
+        } else {
+          row[column_name] = this.data_.columns[column_name][i];
+        }
       });
       rowData.push(row);
     }
@@ -797,16 +897,14 @@ var Table = class extends Input {
       borderColor: this.options_.style?.border_color,
       borderRadius: this.options_.style?.border_radius,
       selectedRowBackgroundColor: this.options_.style?.selected_row_background_color
-      //borderWidth: this.options_.style?.border_width,
     });
     return {
       // always pass filter to allow server-side filtering
-      alwaysPassFilter: () => true,
       pagination: !!options.pagination,
       paginationAutoPageSize: options.pagination?.page_size === "auto" || options.pagination?.page_size === void 0,
       paginationPageSizeSelector: options.pagination?.page_size_selector,
       paginationPageSize: typeof options.pagination?.page_size === "number" ? options.pagination.page_size : void 0,
-      animateRows: true,
+      animateRows: false,
       headerHeight: headerHeightPixels,
       rowHeight: options.row_height,
       columnDefs: [],
@@ -848,32 +946,51 @@ var Table = class extends Input {
           this.currentRow_ = -1;
           this.options_.as.update(this.clause());
         }
+      },
+      onGridReady: () => {
+        this.patchGrid();
       }
     };
   }
-  createColumnDef(column2, type) {
-    const columnOptions = this.columnOptions_[column2] || {};
-    const align = columnOptions.align || (type === "number" ? "right" : "left");
-    const headerAlignment = columnOptions.header_align;
-    const formatter = formatterForType(type, columnOptions.format);
-    const sortable = this.options_.sorting !== false && columnOptions.sortable !== false;
-    const filterable = this.options_.filtering !== false && columnOptions.filterable !== false;
-    const resizable = columnOptions.resizable !== false;
-    const minWidth = columnOptions.min_width;
-    const maxWidth = columnOptions.max_width;
-    const autoHeight = columnOptions.auto_height;
-    const autoHeaderHeight = this.options_.header_height === "auto" && columnOptions.header_auto_height !== false;
-    const wrapText = columnOptions.wrap_text;
-    const wrapHeaderText = columnOptions.header_wrap_text;
-    const flex = columnOptions.flex;
+  getLiteralColumns() {
+    if (!this.columns_) {
+      throw new Error("Columns not resolved yet. Please call prepare() first.");
+    }
+    return this.columns_.filter((c) => c.type === "literal");
+  }
+  getDatabaseColumns() {
+    if (!this.columns_) {
+      throw new Error("Columns not resolved yet. Please call prepare() first.");
+    }
+    return this.columns_.filter((c) => c.type === "column" || c.type === "aggregate");
+  }
+  createColumnDef(column_name, type) {
+    if (!this.columnsByName_) {
+      throw new Error("Columns not resolved yet. Please call prepare() first.");
+    }
+    const column2 = this.columnsByName_[column_name] || {};
+    const align = column2.align || (type === "number" ? "right" : "left");
+    const headerAlignment = column2.header_align;
+    const formatter = formatterForType(type, column2.format);
+    const sortable = this.options_.sorting !== false && column2.sortable !== false;
+    const filterable = this.options_.filtering !== false && column2.filterable !== false;
+    const resizable = column2.resizable !== false;
+    const minWidth = column2.min_width;
+    const maxWidth = column2.max_width;
+    const autoHeight = column2.auto_height;
+    const autoHeaderHeight = this.options_.header_height === "auto" && column2.header_auto_height !== false;
+    const wrapText = column2.wrap_text;
+    const wrapHeaderText = column2.header_wrap_text;
+    const flex = column2.flex;
+    const disableClientSort = (_valueA, _valueB) => {
+      return 0;
+    };
     const colDef = {
-      field: column2,
-      headerName: columnOptions.label || column2,
+      field: column_name,
+      headerName: column2.label || column_name,
       headerClass: headerClasses(headerAlignment),
       cellStyle: { textAlign: align },
-      comparator: (_valueA, _valueB) => {
-        return 0;
-      },
+      comparator: column2.type !== "literal" ? disableClientSort : void 0,
       filter: !filterable ? false : filterForColumnType(type),
       flex,
       sortable,
@@ -885,8 +1002,8 @@ var Table = class extends Input {
       wrapText,
       wrapHeaderText,
       floatingFilter: this.options_.filtering === "row",
-      suppressMovable: true,
       // Disable column moving
+      suppressMovable: true,
       valueFormatter: (params) => {
         const value = params.value;
         if (formatter && value !== null && value !== void 0) {
@@ -895,13 +1012,32 @@ var Table = class extends Input {
         return value;
       }
     };
-    const width = columnOptions.width;
+    const width = column2.width;
     if (width) {
       colDef.width = width;
     } else if (flex === void 0 || flex === null) {
       colDef.flex = 1;
     }
     return colDef;
+  }
+  patchGrid() {
+    if (!this.grid_) {
+      return;
+    }
+    const columns = this.grid_.getColumns();
+    if (columns) {
+      columns.forEach(async (column2) => {
+        if (!this.columnsByName_) {
+          throw new Error("Columns not resolved yet. Please call prepare() first.");
+        }
+        const colId = column2.getColId();
+        const filterInstance = await this.grid_.getColumnFilterInstance(colId);
+        const col = this.columnsByName_[colId];
+        if (filterInstance && typeof filterInstance.doesFilterPass === "function" && col.type !== "literal") {
+          filterInstance.doesFilterPass = () => true;
+        }
+      });
+    }
   }
   // all mosaic inputs implement this, not exactly sure what it does
   activate() {
@@ -911,11 +1047,64 @@ var Table = class extends Input {
   }
 };
 var resolveColumns = (columns) => {
+  let columnCount = 1;
+  const incrementedColumnName = () => {
+    return `col_${columnCount++}`;
+  };
   return columns.map((col) => {
     if (typeof col === "string") {
-      return { column: col };
+      return {
+        column_name: col,
+        column_id: col,
+        column: col,
+        type: "column"
+      };
     } else if (typeof col === "object" && col !== null) {
-      return col;
+      if (typeof col.column === "string") {
+        return {
+          ...col,
+          column_name: col.column,
+          column_id: col.column,
+          type: "column"
+        };
+      } else if (typeof col.column === "number") {
+        return {
+          ...col,
+          column_name: incrementedColumnName(),
+          column: col.column,
+          type: "literal"
+        };
+      } else if (typeof col.column === "boolean") {
+        return {
+          ...col,
+          column_name: incrementedColumnName(),
+          column: col.column,
+          type: "literal"
+        };
+      } else if (Array.isArray(col.column)) {
+        if (col.column.length === 0) {
+          throw new Error("Empty array column is not supported");
+        }
+        return {
+          ...col,
+          column_name: incrementedColumnName(),
+          column: col.column,
+          type: "literal"
+        };
+      } else if (typeof col.column === "object") {
+        const agg = Object.keys(col.column)[0];
+        const targetColumn = col.column[agg];
+        return {
+          ...col,
+          column_name: `${agg}_${targetColumn}`,
+          column_id: targetColumn,
+          agg_expr: agg,
+          agg_expr_args: [targetColumn],
+          type: "aggregate"
+        };
+      } else {
+        throw new Error("Unsupported column type: " + typeof col.column);
+      }
     } else {
       throw new Error(`Invalid column definition: ${col}`);
     }
@@ -1050,6 +1239,98 @@ var simpleExpression = (colId, type, filter, filterTo = void 0, textColumn = fal
       console.warn(`Unsupported filter type: ${type}`);
   }
   return void 0;
+};
+var aggregateExpression = (c) => {
+  const aggExpr = c.agg_expr;
+  const firstArg = () => {
+    if (c.agg_expr_args.length > 0) {
+      return c.agg_expr_args[0];
+    }
+    throw new Error(`Aggregate expression ${aggExpr} requires at least one argument`);
+  };
+  const secondArg = () => {
+    if (c.agg_expr_args.length > 1) {
+      return c.agg_expr_args[1];
+    }
+    throw new Error(`Aggregate expression ${aggExpr} requires at least two arguments`);
+  };
+  const r = (val) => {
+    return [c.column_name, val];
+  };
+  switch (aggExpr) {
+    case "count":
+      return r(count(firstArg()));
+    case "sum":
+      return r(sum(firstArg()));
+    case "avg":
+      return r(avg(firstArg()));
+    case "argmax":
+      return r(argmax(firstArg(), secondArg()));
+    case "mad":
+      return r(mad(firstArg()));
+    case "max":
+      return r(max2(firstArg()));
+    case "min":
+      return r(min2(firstArg()));
+    case "product":
+      return r(product(firstArg()));
+    case "geomean":
+      return r(geomean(firstArg()));
+    case "median":
+      return r(median(firstArg()));
+    case "mode":
+      return r(mode(firstArg()));
+    case "variance":
+      return r(variance(firstArg()));
+    case "stddev":
+      return r(stddev(firstArg()));
+    case "skewness":
+      return r(skewness(firstArg()));
+    case "kurtosis":
+      return r(kurtosis(firstArg()));
+    case "entropy":
+      return r(entropy(firstArg()));
+    case "varPop":
+      return r(varPop(firstArg()));
+    case "stddevPop":
+      return r(stddevPop(firstArg()));
+    case "first":
+      return r(first(firstArg()));
+    case "last":
+      return r(last(firstArg()));
+    case "stringAgg":
+      return r(stringAgg(firstArg()));
+    case "arrayAgg":
+      return r(arrayAgg(firstArg()));
+    case "argmin":
+      return r(argmin(firstArg(), secondArg()));
+    case "quantile":
+      return r(quantile(firstArg(), secondArg()));
+    case "corr":
+      return r(corr(firstArg(), secondArg()));
+    case "covarPop":
+      return r(covarPop(firstArg(), secondArg()));
+    case "regrIntercept":
+      return r(regrIntercept(firstArg(), secondArg()));
+    case "regrSlope":
+      return r(regrSlope(firstArg(), secondArg()));
+    case "regrCount":
+      return r(regrCount(firstArg(), secondArg()));
+    case "regrR2":
+      return r(regrR2(firstArg(), secondArg()));
+    case "regrSXX":
+      return r(regrSXX(firstArg(), secondArg()));
+    case "regrSYY":
+      return r(regrSYY(firstArg(), secondArg()));
+    case "regrSXY":
+      return r(regrSXY(firstArg(), secondArg()));
+    case "regrAvgX":
+      return r(regrAvgX(firstArg(), secondArg()));
+    case "regrAvgY":
+      return r(regrAvgY(firstArg(), secondArg()));
+    default:
+      throw new Error(`Unsupported aggregate expression: ${aggExpr}`);
+  }
 };
 var isCombinedSimpleModel = (filter) => {
   return typeof filter === "object" && filter !== null && "operator" in filter && "conditions" in filter && (filter.operator === "AND" || filter.operator === "OR") && typeof filter.conditions === "object";
