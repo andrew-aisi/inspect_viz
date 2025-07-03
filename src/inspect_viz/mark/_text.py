@@ -16,7 +16,7 @@ from ._util import column_param
 
 
 def text(
-    data: Data | None,
+    data: Data | None = None,
     x: ChannelSpec | Param | None = None,
     y: ChannelSpec | Param | None = None,
     z: Channel | Param | None = None,
@@ -31,11 +31,11 @@ def text(
     r"""A text mark that displays textual labels.
 
     Args:
-        data: The data source for the mark.
+        data: The data source for the mark (not required if not binding `text` to a column).
         x: The horizontal position channel specifying the text's anchor point, typically bound to the *x* scale.
         y: The vertical position channel specifying the text's anchor point, typically bound to the *y* scale.
         z: An optional ordinal channel for grouping data into series.
-        text: The text contents channel, possibly with line breaks (\n, \r\n, or \r). If not specified, defaults to the zero-based index [0, 1, 2, …].
+        text: The text contents channel, possibly with line breaks (\n, \r\n, or \r). To place a single piece of text  specify the text as a string[] (e.g. `["My Text"]`).
         filter_by: Selection to filter by (defaults to data source selection).
         frame_anchor: The frame anchor specifies defaults for **x** and **y**, along with **textAnchor** and **lineAnchor**, based on the plot's frame; it may be one of the four sides (*top*, *right*, *bottom*, *left*), one of the four corners (*top-left*, *top-right*, *bottom-right*, *bottom-left*), or the *middle* of the frame.
         line_anchor: The line anchor controls how text is aligned (typically vertically) relative to its anchor point; it is one of *top*, *bottom*, or *middle*. If the frame anchor is *top*, *top-left*, or *top-right*, the default line anchor is *top*; if the frame anchor is *bottom*, *bottom-right*, or *bottom-left*, the default is *bottom*; otherwise it is *middle*.
