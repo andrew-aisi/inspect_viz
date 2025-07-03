@@ -9,7 +9,7 @@ from inspect_viz import Data, Selection
 from inspect_viz.input import search, select
 from inspect_viz.interactor import Brush, interval_xy
 from inspect_viz.layout import hconcat
-from inspect_viz.mark import dot, regression_y
+from inspect_viz.mark import TextStyles, dot, regression_y, text
 from inspect_viz.plot import plot
 from inspect_viz.table import column, table
 
@@ -29,6 +29,12 @@ hconcat(
 
 ```{python}
 plot(
+    text(
+        text=["Olympic Athletes"],
+        frame_anchor="top",
+        styles=TextStyles(font_size=14),
+        dy=-20
+    ),
     dot(
         athletes,
         filter_by=query,
