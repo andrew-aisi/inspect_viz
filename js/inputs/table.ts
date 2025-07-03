@@ -1,6 +1,5 @@
 import {
     clausePoints,
-    FieldInfo,
     isSelection,
     queryFieldInfo,
     throttle,
@@ -176,8 +175,9 @@ export interface TableOptions extends InputOptions {
     from: string;
     columns?: Array<string | Column>;
     width?: number;
-    height?: number;
+    height?: number | 'auto';
     max_width?: number;
+    max_height?: number;
     pagination?: {
         page_size?: number | 'auto';
         page_size_selector?: number[] | boolean;
@@ -206,7 +206,6 @@ export class Table extends Input {
     private columns_: ResolvedColumn[] | null = null;
     private columnsByName_: Record<string, ResolvedColumn> | null = null;
     private columnTypes_: Record<string, JSType> = {};
-    private readonly height_: number | undefined;
 
     private readonly gridContainer_: HTMLDivElement;
     private grid_: GridApi | null = null;
@@ -237,15 +236,22 @@ export class Table extends Input {
         this.element.classList.add('inspect-viz-table');
 
         // height and width
-        this.height_ = this.options_.height;
         if (typeof this.options_.width === 'number') {
             this.element.style.width = `${this.options_.width}px`;
         }
+
         if (this.options_.max_width) {
             this.element.style.maxWidth = `${this.options_.max_width}px`;
         }
-        if (this.options_.height) {
-            this.element.style.height = `${this.height_}px`;
+
+        if (!this.isAutoHeight()) {
+            this.element.style.height = `${this.options_.height}px`;
+        }
+
+        if (this.options_.max_height === undefined && this.isAutoHeight()) {
+            this.element.style.maxHeight = `1000px`;
+        } else if (this.options_.max_height !== undefined) {
+            this.element.style.maxHeight = `${this.options_.max_height}px`;
         }
 
         if (this.options_.style) {
@@ -501,6 +507,7 @@ export class Table extends Input {
 
             selectedRowBackgroundColor: this.options_.style?.selected_row_background_color,
         });
+        const domLayout = this.isAutoHeight() ? 'autoHeight' : undefined;
 
         // initialize grid options
         return {
@@ -517,6 +524,7 @@ export class Table extends Input {
             animateRows: false,
             headerHeight: headerHeightPixels,
             rowHeight: options.row_height,
+            domLayout,
             columnDefs: [],
             rowData: [],
             rowSelection: explicitSelection,
@@ -713,6 +721,10 @@ export class Table extends Input {
                 }
             });
         }
+    }
+
+    isAutoHeight(): boolean {
+        return this.options_.height === 'auto' || this.options_.height === undefined;
     }
 
     // all mosaic inputs implement this, not exactly sure what it does
@@ -1073,7 +1085,7 @@ const aggregateExpression = (
         case 'regrAvgY':
             return r(regrAvgY(firstArg(), secondArg()));
         default:
-            throw new Error(`Unsupported aggregate expression: ${aggExpr}`);
+            throw new Error(`Unsupported aggregate expression: ${aggExpr}.`);
     }
 };
 

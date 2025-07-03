@@ -693,15 +693,19 @@ var Table = class extends Input {
     this.id_ = generateId();
     this.currentRow_ = -1;
     this.element.classList.add("inspect-viz-table");
-    this.height_ = this.options_.height;
     if (typeof this.options_.width === "number") {
       this.element.style.width = `${this.options_.width}px`;
     }
     if (this.options_.max_width) {
       this.element.style.maxWidth = `${this.options_.max_width}px`;
     }
-    if (this.options_.height) {
-      this.element.style.height = `${this.height_}px`;
+    if (!this.isAutoHeight()) {
+      this.element.style.height = `${this.options_.height}px`;
+    }
+    if (this.options_.max_height === void 0 && this.isAutoHeight()) {
+      this.element.style.maxHeight = `1000px`;
+    } else if (this.options_.max_height !== void 0) {
+      this.element.style.maxHeight = `${this.options_.max_height}px`;
     }
     if (this.options_.style) {
       if (this.options_.style?.background_color) {
@@ -734,7 +738,6 @@ var Table = class extends Input {
   columns_ = null;
   columnsByName_ = null;
   columnTypes_ = {};
-  height_;
   gridContainer_;
   grid_ = null;
   gridOptions_;
@@ -898,6 +901,7 @@ var Table = class extends Input {
       borderRadius: this.options_.style?.border_radius,
       selectedRowBackgroundColor: this.options_.style?.selected_row_background_color
     });
+    const domLayout = this.isAutoHeight() ? "autoHeight" : void 0;
     return {
       // always pass filter to allow server-side filtering
       pagination: !!options.pagination,
@@ -907,6 +911,7 @@ var Table = class extends Input {
       animateRows: false,
       headerHeight: headerHeightPixels,
       rowHeight: options.row_height,
+      domLayout,
       columnDefs: [],
       rowData: [],
       rowSelection: explicitSelection,
@@ -1038,6 +1043,9 @@ var Table = class extends Input {
         }
       });
     }
+  }
+  isAutoHeight() {
+    return this.options_.height === "auto" || this.options_.height === void 0;
   }
   // all mosaic inputs implement this, not exactly sure what it does
   activate() {
@@ -1329,7 +1337,7 @@ var aggregateExpression = (c) => {
     case "regrAvgY":
       return r(regrAvgY(firstArg(), secondArg()));
     default:
-      throw new Error(`Unsupported aggregate expression: ${aggExpr}`);
+      throw new Error(`Unsupported aggregate expression: ${aggExpr}.`);
   }
 };
 var isCombinedSimpleModel = (filter) => {
