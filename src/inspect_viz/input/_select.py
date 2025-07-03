@@ -12,7 +12,7 @@ def select(
     filter_by: Selection | None = None,
     column: str | None = None,
     options: list[str | bool | float] | dict[str, str | bool | float] | None = None,
-    value: Literal["all"] | str | list[str] = "all",
+    value: Literal["all", "auto"] | str | list[str] = "all",
     multiple: bool = False,
     target: Param | Selection | None = None,
     field: str | None = None,
@@ -37,7 +37,7 @@ def select(
        filter_by: A selection to filter the data source indicated by the `data` parameter.
        column: The name of a column from which to pull options. The unique column values are used as options. Used in conjunction with the `data` parameter.
        options: A `list` or `dict` of options (provide a `dict` if you want values to map to alternate labels). Alternative to populating options from a database column via `data` and `column`.
-       value: Initial value for selection. Pass "all" (the default) for no filtering, or value(s) for an explicit initial selection. Applies only when `target` is a `Selection` (as `Param` carries its own default value).
+       value: Initial value for selection. Pass "all" (the default) for no filtering, "auto" to select the first element in the list, or value(s) for an explicit initial selection. Applies only when `target` is a `Selection` (as `Param` carries its own default value).
        multiple: Enable selection of multiple values (defaults to `False`)
        target: A `Param` or `Selection` that this select input should update. For a `Param`, the selected value is set to be the new param value. For a `Selection`, a predicate of the form column = value will be added to the selection.
        field: The data column name to use within generated selection clause predicates. Defaults to the `column` parameter.

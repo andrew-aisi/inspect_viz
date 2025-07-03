@@ -7,7 +7,7 @@ import TomSelect from 'https://cdn.jsdelivr.net/npm/tom-select@2.4.3/+esm';
 import { isSelection, isParam } from 'https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm';
 
 export interface SelectOptions extends ChoiceInputOptions {
-    value?: 'all' | string | string[];
+    value?: 'all' | 'auto' | string | string[];
     multiple?: boolean;
     width?: number;
 }
@@ -16,7 +16,7 @@ export class Select extends ChoiceInput {
     private readonly select_: HTMLSelectElement;
     private readonly multiple_: boolean;
     private readonly allowEmpty_: boolean;
-    private readonly initialValue_?: 'all' | string | string[];
+    private readonly initialValue_?: string | string[];
     private tomSelect_?: TomSelect = undefined;
     constructor(options: SelectOptions) {
         // propagate filter
@@ -24,8 +24,9 @@ export class Select extends ChoiceInput {
 
         // note multiple and initial value
         this.multiple_ = options.multiple ?? false;
-        this.allowEmpty_ = options.value == 'all';
-        this.initialValue_ = options.value == 'all' ? undefined : options.value;
+        this.allowEmpty_ = options.value === 'all';
+        this.initialValue_ =
+            options.value === 'all' || options.value === 'auto' ? undefined : options.value;
 
         // add fullwidth class (for sidebars)
         this.element.classList.add(kSidebarFullwidth);
