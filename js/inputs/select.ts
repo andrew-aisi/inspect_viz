@@ -131,7 +131,7 @@ export class Select extends ChoiceInput {
 
         // reset options
         this.tomSelect_.clearOptions();
-        this.tomSelect_.addOption(
+        this.tomSelect_.addOptions(
             this.data_.map(o => ({ value: o.value, text: o.label || o.value }))
         );
         this.tomSelect_.refreshOptions(false);

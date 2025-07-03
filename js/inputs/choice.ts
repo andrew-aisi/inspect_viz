@@ -121,7 +121,7 @@ export abstract class ChoiceInput extends Input {
     }
 
     setData(options: Option[]) {
-        if (isParam(this.options_.as)) {
+        if (!isSelection(this.options_.as)) {
             const paramValue = this.options_.as.value;
             if (paramValue && !options.some(option => option.value === paramValue)) {
                 options = [...options, { value: paramValue }];

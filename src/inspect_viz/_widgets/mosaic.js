@@ -163,7 +163,7 @@ var ChoiceInput = class extends Input {
     this.selectedValue = value === void 0 ? "" : value;
   }
   setData(options) {
-    if (isParam(this.options_.as)) {
+    if (!isSelection(this.options_.as)) {
       const paramValue = this.options_.as.value;
       if (paramValue && !options.some((option) => option.value === paramValue)) {
         options = [...options, { value: paramValue }];
@@ -312,7 +312,7 @@ var Select = class extends ChoiceInput {
       this.publish(value);
     }
     this.tomSelect_.clearOptions();
-    this.tomSelect_.addOption(
+    this.tomSelect_.addOptions(
       this.data_.map((o) => ({ value: o.value, text: o.label || o.value }))
     );
     this.tomSelect_.refreshOptions(false);
