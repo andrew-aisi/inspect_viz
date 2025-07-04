@@ -91,6 +91,11 @@ import { generateId } from '../util/id';
 import { JSType } from '@uwdata/mosaic-core';
 import { AggregateNode, ExprValue } from '@uwdata/mosaic-sql';
 
+// These two values should generally be coordinated so that the max height is
+// the size that will display the row count.
+const kAutoRowCount = 16;
+const kAutoRowMaxHeight = 500;
+
 type Transform = Record<string, any>;
 
 type Channel = string | Transform | boolean | number | undefined | Array<boolean | number>;
@@ -177,7 +182,6 @@ export interface TableOptions extends InputOptions {
     width?: number;
     height?: number | 'auto';
     max_width?: number;
-    max_height?: number;
     pagination?: {
         page_size?: number | 'auto';
         page_size_selector?: number[] | boolean;
@@ -203,8 +207,8 @@ interface ColSortModel {
 
 export class Table extends Input {
     private readonly id_: string;
-    private columns_: ResolvedColumn[] | null = null;
-    private columnsByName_: Record<string, ResolvedColumn> | null = null;
+    private columns_: ResolvedColumn[] = [];
+    private columnsByName_: Record<string, ResolvedColumn> = {};
     private columnTypes_: Record<string, JSType> = {};
 
     private readonly gridContainer_: HTMLDivElement;
@@ -244,14 +248,8 @@ export class Table extends Input {
             this.element.style.maxWidth = `${this.options_.max_width}px`;
         }
 
-        if (!this.isAutoHeight()) {
+        if (this.options_.height && this.options_.height !== 'auto') {
             this.element.style.height = `${this.options_.height}px`;
-        }
-
-        if (this.options_.max_height === undefined && this.isAutoHeight()) {
-            this.element.style.maxHeight = `500px`;
-        } else if (this.options_.max_height !== undefined) {
-            this.element.style.maxHeight = `${this.options_.max_height}px`;
         }
 
         if (this.options_.style) {
@@ -403,13 +401,9 @@ export class Table extends Input {
 
         // apply the filter model
         Object.keys(this.filterModel_).forEach(columnName => {
-            if (!this.columnsByName_) {
-                throw new Error('Columns not resolved yet. Please call prepare() first.');
-            }
-
-            const col = this.columnsByName_[columnName];
+            const col = this.columnsByName_[columnName] || {};
             if (col.type !== 'literal') {
-                const useHaving = col?.type === 'aggregate';
+                const useHaving = col.type === 'aggregate';
                 const filter = this.filterModel_[columnName] as SupportedFilter;
                 const expression = filterExpression(columnName, filter, query);
                 if (expression) {
@@ -425,11 +419,7 @@ export class Table extends Input {
         // Apply sorting
         if (this.sortModel_.length > 0) {
             this.sortModel_.forEach(sort => {
-                if (!this.columnsByName_) {
-                    throw new Error('Columns not resolved yet. Please call prepare() first.');
-                }
-
-                const col = this.columnsByName_[sort.colId];
+                const col = this.columnsByName_[sort.colId] || {};
                 if (col.type !== 'literal') {
                     query = query.orderby(sort.sort === 'asc' ? asc(sort.colId) : desc(sort.colId));
                 }
@@ -456,10 +446,6 @@ export class Table extends Input {
             return;
         }
 
-        if (!this.columns_) {
-            throw new Error('Columns not resolved yet. Please call prepare() first.');
-        }
-
         // convert column-based data to row-based data for ag-grid
         const rowData: any[] = [];
         for (let i = 0; i < this.data_.numRows; i++) {
@@ -479,6 +465,11 @@ export class Table extends Input {
         }
 
         this.grid_.setGridOption('rowData', rowData);
+        if (this.data_.numRows < kAutoRowCount && this.options_.height === undefined) {
+            this.grid_.setGridOption('domLayout', 'autoHeight');
+        } else if (this.options_.height === 'auto' || this.options_.height === undefined) {
+            this.element.style.height = `${kAutoRowMaxHeight}px`;
+        }
     });
 
     private createGridOptions(options: TableOptions): GridOptions {
@@ -507,7 +498,7 @@ export class Table extends Input {
 
             selectedRowBackgroundColor: this.options_.style?.selected_row_background_color,
         });
-        const domLayout = this.isAutoHeight() ? 'autoHeight' : undefined;
+        const domLayout = this.options_.height === 'auto' ? 'autoHeight' : undefined;
 
         // initialize grid options
         return {
@@ -591,26 +582,14 @@ export class Table extends Input {
     }
 
     private getLiteralColumns(): ResolvedLiteralColumn[] {
-        if (!this.columns_) {
-            throw new Error('Columns not resolved yet. Please call prepare() first.');
-        }
-
         return this.columns_.filter(c => c.type === 'literal');
     }
 
     private getDatabaseColumns(): Array<ResolvedSimpleColumn | ResolvedAggregateColumn> {
-        if (!this.columns_) {
-            throw new Error('Columns not resolved yet. Please call prepare() first.');
-        }
-
         return this.columns_.filter(c => c.type === 'column' || c.type === 'aggregate');
     }
 
     private createColumnDef(column_name: string, type: JSType): ColDef {
-        if (!this.columnsByName_) {
-            throw new Error('Columns not resolved yet. Please call prepare() first.');
-        }
-
         const column = this.columnsByName_[column_name] || {};
 
         // Align, numbers right aligned by default
@@ -699,13 +678,9 @@ export class Table extends Input {
         const columns = this.grid_.getColumns();
         if (columns) {
             columns.forEach(async column => {
-                if (!this.columnsByName_) {
-                    throw new Error('Columns not resolved yet. Please call prepare() first.');
-                }
-
                 const colId = column.getColId();
                 const filterInstance = await this.grid_!.getColumnFilterInstance(colId);
-                const col = this.columnsByName_[colId];
+                const col = this.columnsByName_[colId] || {};
 
                 // This is a workaround to disable client side filtering so we can implement
                 // filtering using the query method instead.
@@ -721,10 +696,6 @@ export class Table extends Input {
                 }
             });
         }
-    }
-
-    isAutoHeight(): boolean {
-        return this.options_.height === 'auto' || this.options_.height === undefined;
     }
 
     // all mosaic inputs implement this, not exactly sure what it does

@@ -685,6 +685,8 @@ import {
 } from "https://cdn.jsdelivr.net/npm/ag-grid-community@33.3.2/+esm";
 import * as d3Format from "https://cdn.jsdelivr.net/npm/d3-format@3.1.0/+esm";
 import * as d3TimeFormat from "https://cdn.jsdelivr.net/npm/d3-time-format@4.1.0/+esm";
+var kAutoRowCount = 16;
+var kAutoRowMaxHeight = 500;
 var Table = class extends Input {
   constructor(options_) {
     super(options_.filter_by);
@@ -699,13 +701,8 @@ var Table = class extends Input {
     if (this.options_.max_width) {
       this.element.style.maxWidth = `${this.options_.max_width}px`;
     }
-    if (!this.isAutoHeight()) {
+    if (this.options_.height && this.options_.height !== "auto") {
       this.element.style.height = `${this.options_.height}px`;
-    }
-    if (this.options_.max_height === void 0 && this.isAutoHeight()) {
-      this.element.style.maxHeight = `500px`;
-    } else if (this.options_.max_height !== void 0) {
-      this.element.style.maxHeight = `${this.options_.max_height}px`;
     }
     if (this.options_.style) {
       if (this.options_.style?.background_color) {
@@ -735,8 +732,8 @@ var Table = class extends Input {
     this.gridOptions_ = this.createGridOptions(this.options_);
   }
   id_;
-  columns_ = null;
-  columnsByName_ = null;
+  columns_ = [];
+  columnsByName_ = {};
   columnTypes_ = {};
   gridContainer_;
   grid_ = null;
@@ -821,12 +818,9 @@ var Table = class extends Input {
     }
     query = query.where(...filter);
     Object.keys(this.filterModel_).forEach((columnName) => {
-      if (!this.columnsByName_) {
-        throw new Error("Columns not resolved yet. Please call prepare() first.");
-      }
-      const col = this.columnsByName_[columnName];
+      const col = this.columnsByName_[columnName] || {};
       if (col.type !== "literal") {
-        const useHaving = col?.type === "aggregate";
+        const useHaving = col.type === "aggregate";
         const filter2 = this.filterModel_[columnName];
         const expression = filterExpression(columnName, filter2, query);
         if (expression) {
@@ -840,10 +834,7 @@ var Table = class extends Input {
     });
     if (this.sortModel_.length > 0) {
       this.sortModel_.forEach((sort) => {
-        if (!this.columnsByName_) {
-          throw new Error("Columns not resolved yet. Please call prepare() first.");
-        }
-        const col = this.columnsByName_[sort.colId];
+        const col = this.columnsByName_[sort.colId] || {};
         if (col.type !== "literal") {
           query = query.orderby(sort.sort === "asc" ? asc(sort.colId) : desc(sort.colId));
         }
@@ -865,9 +856,6 @@ var Table = class extends Input {
     if (!this.grid_) {
       return;
     }
-    if (!this.columns_) {
-      throw new Error("Columns not resolved yet. Please call prepare() first.");
-    }
     const rowData = [];
     for (let i = 0; i < this.data_.numRows; i++) {
       const row = {};
@@ -884,6 +872,11 @@ var Table = class extends Input {
       rowData.push(row);
     }
     this.grid_.setGridOption("rowData", rowData);
+    if (this.data_.numRows < kAutoRowCount && this.options_.height === void 0) {
+      this.grid_.setGridOption("domLayout", "autoHeight");
+    } else if (this.options_.height === "auto" || this.options_.height === void 0) {
+      this.element.style.height = `${kAutoRowMaxHeight}px`;
+    }
   });
   createGridOptions(options) {
     const headerHeightPixels = typeof options.header_height === "string" ? void 0 : options.header_height;
@@ -901,7 +894,7 @@ var Table = class extends Input {
       borderRadius: this.options_.style?.border_radius,
       selectedRowBackgroundColor: this.options_.style?.selected_row_background_color
     });
-    const domLayout = this.isAutoHeight() ? "autoHeight" : void 0;
+    const domLayout = this.options_.height === "auto" ? "autoHeight" : void 0;
     return {
       // always pass filter to allow server-side filtering
       pagination: !!options.pagination,
@@ -958,21 +951,12 @@ var Table = class extends Input {
     };
   }
   getLiteralColumns() {
-    if (!this.columns_) {
-      throw new Error("Columns not resolved yet. Please call prepare() first.");
-    }
     return this.columns_.filter((c) => c.type === "literal");
   }
   getDatabaseColumns() {
-    if (!this.columns_) {
-      throw new Error("Columns not resolved yet. Please call prepare() first.");
-    }
     return this.columns_.filter((c) => c.type === "column" || c.type === "aggregate");
   }
   createColumnDef(column_name, type) {
-    if (!this.columnsByName_) {
-      throw new Error("Columns not resolved yet. Please call prepare() first.");
-    }
     const column2 = this.columnsByName_[column_name] || {};
     const align = column2.align || (type === "number" ? "right" : "left");
     const headerAlignment = column2.header_align;
@@ -1032,20 +1016,14 @@ var Table = class extends Input {
     const columns = this.grid_.getColumns();
     if (columns) {
       columns.forEach(async (column2) => {
-        if (!this.columnsByName_) {
-          throw new Error("Columns not resolved yet. Please call prepare() first.");
-        }
         const colId = column2.getColId();
         const filterInstance = await this.grid_.getColumnFilterInstance(colId);
-        const col = this.columnsByName_[colId];
+        const col = this.columnsByName_[colId] || {};
         if (filterInstance && typeof filterInstance.doesFilterPass === "function" && col.type !== "literal") {
           filterInstance.doesFilterPass = () => true;
         }
       });
     }
-  }
-  isAutoHeight() {
-    return this.options_.height === "auto" || this.options_.height === void 0;
   }
   // all mosaic inputs implement this, not exactly sure what it does
   activate() {

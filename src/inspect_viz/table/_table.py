@@ -260,7 +260,6 @@ def table(
     max_width: float | None = None,
     height: float | Literal["auto"] | None = None,
     header_height: float | None = None,
-    max_height: float | None = None,
     row_height: float | None = None,
     sorting: bool | None = None,
     filtering: bool | Literal["header", "row"] | None = None,
@@ -281,8 +280,7 @@ def table(
             "none". Defaults to "single_row".
         width: The total width of the table widget, in pixels.
         max_width: The maximum width of the table widget, in pixels.
-        height: Either the height of the table widget in pixels, or "auto".          If "auto", the height of the table will fit the content within the table up to the max_height. Defaults to "auto".
-        max_height: The maximum height of the table widget, in pixels.
+        height: Either the height of the table widget in pixels, or "auto".          If "auto", the height of the table will fit the content within the table up to the 500px. Defaults to "auto".
         header_height: The height of the table header, in pixels.
         row_height: The height of each table row, in pixels.
         sorting: Set whether sorting columns is enabled.
@@ -304,7 +302,6 @@ def table(
             "width": width,
             "max_width": max_width,
             "height": height,
-            "max_height": max_height,
             "sorting": sorting,
             "filtering": filtering,
             "pagination": resolve_pagination(pagination),
