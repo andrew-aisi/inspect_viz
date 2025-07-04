@@ -409,7 +409,7 @@ class PlotAttributes(TypedDict, total=False):
     x_line: bool | Param | None
     """If true, draw a line along the axis; if false (default), do not."""
 
-    x_label_anchor: Literal["top", "right", "bottom", "left", "center"] | Param | None
+    x_label_anchor: Literal["right", "left", "center"] | Param | None
     """Where to place the axis **label** relative to the plot's frame. For
     vertical position scales (*y* and *fy*), may be *top*, *bottom*, or
     *center*; for horizontal position scales (*x* and *fx*), may be *left*,
@@ -601,7 +601,7 @@ class PlotAttributes(TypedDict, total=False):
     y_line: bool | Param | None
     """If true, draw a line along the axis; if false (default), do not."""
 
-    y_label_anchor: Literal["top", "right", "bottom", "left", "center"] | Param | None
+    y_label_anchor: Literal["top", "bottom", "center"] | Param | None
     """Where to place the axis **label** relative to the plot's frame. For
     vertical position scales (*y* and *fy*), may be *top*, *bottom*, or
     *center*; for horizontal position scales (*x* and *fx*), may be *left*,
@@ -806,7 +806,7 @@ class PlotAttributes(TypedDict, total=False):
 
     For axes and legends only."""
 
-    fx_label_anchor: Literal["top", "right", "bottom", "left", "center"] | Param | None
+    fx_label_anchor: Literal["right", "left", "center"] | Param | None
     """Where to place the axis **label** relative to the plot's frame. For
     vertical position scales (*y* and *fy*), may be *top*, *bottom*, or
     *center*; for horizontal position scales (*x* and *fx*), may be *left*,
@@ -949,7 +949,7 @@ class PlotAttributes(TypedDict, total=False):
 
     For axes and legends only."""
 
-    fy_label_anchor: Literal["top", "right", "bottom", "left", "center"] | Param | None
+    fy_label_anchor: Literal["top", "bottom", "center"] | Param | None
     """Where to place the axis **label** relative to the plot's frame. For
     vertical position scales (*y* and *fy*), may be *top*, *bottom*, or
     *center*; for horizontal position scales (*x* and *fx*), may be *left*,
