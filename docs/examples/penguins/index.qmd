@@ -20,7 +20,7 @@ y_axis = Param("flipper_length")
 
 ```{python}
 hconcat(
-    select(penguins, label="Species", column="species"),
+    select(penguins, label="Species", column="species", multiple=True, value=["Adelie", "Gentoo"]),
     select(label="X", options=axes, target=x_axis),
     select(label="Y", options=axes, target=y_axis)
 )
