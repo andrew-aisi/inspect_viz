@@ -224,7 +224,7 @@ var kInputSearch = "input-search";
 
 // js/inputs/select.ts
 import TomSelect from "https://cdn.jsdelivr.net/npm/tom-select@2.4.3/+esm";
-import { isSelection as isSelection2, isParam as isParam2 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
+import { isSelection as isSelection2 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
 var Select = class extends ChoiceInput {
   select_;
   multiple_;
@@ -306,8 +306,8 @@ var Select = class extends ChoiceInput {
           this.tomSelect_?.refreshOptions(false);
         });
       }
-      const defaultValue = this.initialValue_ ?? this.allowEmpty_ ? "" : this.data_?.[0].value;
-      const value = isParam2(this.options_.as) ? this.options_.as.value || defaultValue : defaultValue;
+      const defaultValue = this.initialValue_ ?? (this.allowEmpty_ ? "" : this.data_?.[0].value);
+      const value = isSelection2(this.options_.as) ? defaultValue : this.options_.as.value || defaultValue;
       this.selectedValue = value;
       this.publish(value);
     }

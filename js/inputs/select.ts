@@ -4,7 +4,7 @@ import { ChoiceInput, ChoiceInputOptions } from './choice';
 import { kSidebarFullwidth } from './types';
 
 import TomSelect from 'https://cdn.jsdelivr.net/npm/tom-select@2.4.3/+esm';
-import { isSelection, isParam } from 'https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm';
+import { isParam, isSelection } from 'https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm';
 
 export interface SelectOptions extends ChoiceInputOptions {
     value?: 'all' | 'auto' | string | string[];
@@ -121,10 +121,11 @@ export class Select extends ChoiceInput {
             }
 
             const defaultValue =
-                (this.initialValue_ ?? this.allowEmpty_) ? '' : this.data_?.[0].value;
-            const value = isParam(this.options_.as)
-                ? this.options_.as.value || defaultValue
-                : defaultValue;
+                this.initialValue_ ?? (this.allowEmpty_ ? '' : this.data_?.[0].value);
+            const value = isSelection(this.options_.as)
+                ? defaultValue
+                : this.options_.as.value || defaultValue;
+
             this.selectedValue = value;
             this.publish(value);
         }
