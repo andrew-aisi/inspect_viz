@@ -57,7 +57,7 @@ table(penguins, columns=[
 
 ### Size
 
-By default, tables will have a height which matches the size of their content and a width which files their container (with a maximum size of 1000px). You can explicitly provide a height and width value in pixels for the table if you'd like the table to be a specific size:
+By default, tables will have a height which matches the size of their content and a width which files their container (with a default maximum size of 500px). You can explicitly provide a height and width value in pixels for the table if you'd like the table to be a specific size:
 
 ```{python}
 from inspect_viz import Data

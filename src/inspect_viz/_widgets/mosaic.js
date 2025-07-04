@@ -703,7 +703,7 @@ var Table = class extends Input {
       this.element.style.height = `${this.options_.height}px`;
     }
     if (this.options_.max_height === void 0 && this.isAutoHeight()) {
-      this.element.style.maxHeight = `1000px`;
+      this.element.style.maxHeight = `500px`;
     } else if (this.options_.max_height !== void 0) {
       this.element.style.maxHeight = `${this.options_.max_height}px`;
     }

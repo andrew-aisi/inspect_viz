@@ -249,7 +249,7 @@ export class Table extends Input {
         }
 
         if (this.options_.max_height === undefined && this.isAutoHeight()) {
-            this.element.style.maxHeight = `1000px`;
+            this.element.style.maxHeight = `500px`;
         } else if (this.options_.max_height !== undefined) {
             this.element.style.maxHeight = `${this.options_.max_height}px`;
         }
