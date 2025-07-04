@@ -1,4 +1,24 @@
-import { isNotebook } from "./platform";
+import { VizContext } from '../context';
+import { isNotebook } from './platform';
+
+export function initializeErrorHandling(ctx: VizContext, worker: Worker): void {
+    // unhandled exceptions
+    window.addEventListener('error', event => {
+        ctx.recordUnhandledError(errorInfo(event.error));
+    });
+
+    // unhandled promise rejections
+    window.addEventListener('unhandledrejection', event => {
+        ctx.recordUnhandledError(event.reason);
+    });
+
+    // web worker errors
+    worker.addEventListener('message', event => {
+        if (event.data.type === 'ERROR') {
+            ctx.recordUnhandledError(event.data.data.message);
+        }
+    });
+}
 
 export interface ErrorInfo {
     name: string;
@@ -62,6 +82,7 @@ export function errorAsHTML(error: ErrorInfo): string {
       color: ${colors.text};
       margin: 10px 0;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      width: 100%;
     ">
       <div style="display: flex; align-items: center; margin-bottom: 15px;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 10px;">
@@ -227,6 +248,7 @@ function showErrorModal(htmlContent: string): void {
     // Create modal container
     const modal = document.createElement('div');
     modal.style.cssText = `
+        min-width: 60vw;
         max-width: 80vw;
         max-height: 80vh;
         overflow-y: auto;

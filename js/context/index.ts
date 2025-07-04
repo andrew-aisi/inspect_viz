@@ -6,28 +6,20 @@ import { InstantiateContext } from 'https://cdn.jsdelivr.net/npm/@uwdata/mosaic-
 
 import { INPUTS } from '../inputs';
 import { initDuckdb, waitForTable } from './duckdb';
-import { ErrorInfo, errorInfo } from '../util/errors.js';
+import { ErrorInfo, initializeErrorHandling } from '../util/errors.js';
 import { sleep } from '../util/async.js';
 
 class VizContext extends InstantiateContext {
     private readonly tables_ = new Set<string>();
-    private workerErrors_: ErrorInfo[] = [];
+    private unhandledErrors_: ErrorInfo[] = [];
 
     constructor(
-        worker: Worker,
         private readonly conn_: AsyncDuckDBConnection,
         plotDefaults: any[]
     ) {
         super({ plotDefaults });
         this.api = { ...this.api, ...INPUTS };
         this.coordinator.databaseConnector(wasmConnector({ connection: this.conn_ }));
-
-        // track worker errors
-        worker.addEventListener('message', event => {
-            if (event.data.type === 'ERROR') {
-                this.workerErrors_.push(errorInfo(event.data.data.message));
-            }
-        });
     }
 
     async insertTable(table: string, data: Uint8Array) {
@@ -45,15 +37,23 @@ class VizContext extends InstantiateContext {
         await waitForTable(this.conn_, table);
     }
 
-    async collectWorkerError(wait: number = 1000): Promise<ErrorInfo | undefined> {
+    recordUnhandledError(error: ErrorInfo) {
+        this.unhandledErrors_.push(error);
+    }
+
+    async collectUnhandledError(wait: number = 1000): Promise<ErrorInfo | undefined> {
         const startTime = Date.now();
         while (Date.now() - startTime < wait) {
-            if (this.workerErrors_.length > 0) {
-                return this.workerErrors_.shift();
+            if (this.unhandledErrors_.length > 0) {
+                return this.unhandledErrors_.shift();
             }
             await sleep(100);
         }
         return undefined;
+    }
+
+    clearUnhandledErrors() {
+        this.unhandledErrors_ = [];
     }
 }
 
@@ -66,7 +66,9 @@ async function vizContext(plotDefaults: any[]): Promise<VizContext> {
         globalScope[VIZ_CONTEXT_KEY] = (async () => {
             const { db, worker } = await initDuckdb();
             const conn = await db.connect();
-            return new VizContext(worker, conn, plotDefaults);
+            const ctx = new VizContext(conn, plotDefaults);
+            initializeErrorHandling(ctx, worker);
+            return ctx;
         })();
     }
     return globalScope[VIZ_CONTEXT_KEY] as Promise<VizContext>;

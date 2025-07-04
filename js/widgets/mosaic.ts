@@ -43,12 +43,13 @@ async function render({ model, el }: RenderProps<MosaicProps>) {
     }
     const renderSpec = async () => {
         try {
+            ctx.clearUnhandledErrors();
             const targetSpec = renderOptions.autoFill ? responsiveSpec(spec, el) : spec;
             const ast = parseSpec(targetSpec, { inputs });
             const specEl = (await astToDOM(ast, ctx)) as HTMLElement;
             el.innerHTML = '';
             el.appendChild(specEl);
-            await handleWorkerErrors(ctx, el);
+            await displayUnhandledErrors(ctx, el);
         } catch (e: unknown) {
             console.error(e);
             const error = errorInfo(e);
@@ -187,7 +188,6 @@ function isInputSpec(spec: Spec) {
 async function astToDOM(ast: SpecNode, ctx: InstantiateContext) {
     // process param/selection definitions
     for (const [name, node] of Object.entries(ast.params)) {
-
         // define the parameter if it doesn't exist or if we are in a notebook
         // (as in a notebook we are losing the prior cell so we want to reset the selection)
         if (!ctx.activeParams.has(name) || isNotebook()) {
@@ -200,17 +200,12 @@ async function astToDOM(ast: SpecNode, ctx: InstantiateContext) {
     return ast.root.instantiate(ctx);
 }
 
-async function handleWorkerErrors(ctx: VizContext, widgetEl: HTMLElement) {
-    // only show worker errors if the 'worker_errors=1' is in the url
-    if (!window.location.search.includes('worker_errors=1')) {
-        return;
-    }
-
-    // empty plot divs indicate a possible error in a worker, look for these
-    // and then attempt to collect and display worker errors
+async function displayUnhandledErrors(ctx: VizContext, widgetEl: HTMLElement) {
+    // empty plot divs indicate a possible unhandled error, look for these
+    // and then attempt to collect and display unhandled errors
     const emptyPlotDivs = widgetEl.querySelectorAll('div.plot:empty');
     for (const emptyDiv of emptyPlotDivs) {
-        const error = await ctx.collectWorkerError();
+        const error = await ctx.collectUnhandledError();
         if (error) {
             displayRenderError(error, emptyDiv as HTMLElement);
         }
@@ -219,7 +214,7 @@ async function handleWorkerErrors(ctx: VizContext, widgetEl: HTMLElement) {
     // empty tables as well
     const emptyTables = widgetEl.querySelectorAll('tbody:empty');
     for (const emptyTable of emptyTables) {
-        const error = await ctx.collectWorkerError();
+        const error = await ctx.collectUnhandledError();
         if (error) {
             const container = emptyTable.closest('div');
             if (container) {

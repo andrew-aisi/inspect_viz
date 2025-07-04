@@ -1522,6 +1522,19 @@ function isVSCodeNotebook() {
 }
 
 // js/util/errors.ts
+function initializeErrorHandling(ctx, worker) {
+  window.addEventListener("error", (event) => {
+    ctx.recordUnhandledError(errorInfo(event.error));
+  });
+  window.addEventListener("unhandledrejection", (event) => {
+    ctx.recordUnhandledError(event.reason);
+  });
+  worker.addEventListener("message", (event) => {
+    if (event.data.type === "ERROR") {
+      ctx.recordUnhandledError(event.data.data.message);
+    }
+  });
+}
 function errorInfo(error) {
   if (isError(error)) {
     return {
@@ -1570,6 +1583,7 @@ function errorAsHTML(error) {
       color: ${colors.text};
       margin: 10px 0;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      width: 100%;
     ">
       <div style="display: flex; align-items: center; margin-bottom: 15px;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 10px;">
@@ -1708,6 +1722,7 @@ function showErrorModal(htmlContent) {
     `;
   const modal = document.createElement("div");
   modal.style.cssText = `
+        min-width: 60vw;
         max-width: 80vw;
         max-height: 80vh;
         overflow-y: auto;
@@ -1768,19 +1783,14 @@ function showErrorModal(htmlContent) {
 
 // js/context/index.ts
 var VizContext = class extends InstantiateContext {
-  constructor(worker, conn_, plotDefaults) {
+  constructor(conn_, plotDefaults) {
     super({ plotDefaults });
     this.conn_ = conn_;
     this.api = { ...this.api, ...INPUTS };
     this.coordinator.databaseConnector(wasmConnector({ connection: this.conn_ }));
-    worker.addEventListener("message", (event) => {
-      if (event.data.type === "ERROR") {
-        this.workerErrors_.push(errorInfo(event.data.data.message));
-      }
-    });
   }
   tables_ = /* @__PURE__ */ new Set();
-  workerErrors_ = [];
+  unhandledErrors_ = [];
   async insertTable(table, data) {
     await this.conn_?.insertArrowFromIPCStream(data, {
       name: table,
@@ -1791,15 +1801,21 @@ var VizContext = class extends InstantiateContext {
   async waitForTable(table) {
     await waitForTable(this.conn_, table);
   }
-  async collectWorkerError(wait = 1e3) {
+  recordUnhandledError(error) {
+    this.unhandledErrors_.push(error);
+  }
+  async collectUnhandledError(wait = 1e3) {
     const startTime = Date.now();
     while (Date.now() - startTime < wait) {
-      if (this.workerErrors_.length > 0) {
-        return this.workerErrors_.shift();
+      if (this.unhandledErrors_.length > 0) {
+        return this.unhandledErrors_.shift();
       }
       await sleep(100);
     }
     return void 0;
+  }
+  clearUnhandledErrors() {
+    this.unhandledErrors_ = [];
   }
 };
 var VIZ_CONTEXT_KEY = Symbol.for("@@inspect-viz-context");
@@ -1809,7 +1825,9 @@ async function vizContext(plotDefaults) {
     globalScope[VIZ_CONTEXT_KEY] = (async () => {
       const { db, worker } = await initDuckdb();
       const conn = await db.connect();
-      return new VizContext(worker, conn, plotDefaults);
+      const ctx = new VizContext(conn, plotDefaults);
+      initializeErrorHandling(ctx, worker);
+      return ctx;
     })();
   }
   return globalScope[VIZ_CONTEXT_KEY];
@@ -1832,12 +1850,13 @@ async function render({ model, el }) {
   }
   const renderSpec = async () => {
     try {
+      ctx.clearUnhandledErrors();
       const targetSpec = renderOptions.autoFill ? responsiveSpec(spec, el) : spec;
       const ast = parseSpec(targetSpec, { inputs });
       const specEl = await astToDOM(ast, ctx);
       el.innerHTML = "";
       el.appendChild(specEl);
-      await handleWorkerErrors(ctx, el);
+      await displayUnhandledErrors(ctx, el);
     } catch (e) {
       console.error(e);
       const error = errorInfo(e);
@@ -1929,20 +1948,17 @@ async function astToDOM(ast, ctx) {
   }
   return ast.root.instantiate(ctx);
 }
-async function handleWorkerErrors(ctx, widgetEl) {
-  if (!window.location.search.includes("worker_errors=1")) {
-    return;
-  }
+async function displayUnhandledErrors(ctx, widgetEl) {
   const emptyPlotDivs = widgetEl.querySelectorAll("div.plot:empty");
   for (const emptyDiv of emptyPlotDivs) {
-    const error = await ctx.collectWorkerError();
+    const error = await ctx.collectUnhandledError();
     if (error) {
       displayRenderError(error, emptyDiv);
     }
   }
   const emptyTables = widgetEl.querySelectorAll("tbody:empty");
   for (const emptyTable of emptyTables) {
-    const error = await ctx.collectWorkerError();
+    const error = await ctx.collectUnhandledError();
     if (error) {
       const container = emptyTable.closest("div");
       if (container) {
