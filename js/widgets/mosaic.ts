@@ -210,18 +210,6 @@ async function displayUnhandledErrors(ctx: VizContext, widgetEl: HTMLElement) {
             displayRenderError(error, emptyDiv as HTMLElement);
         }
     }
-
-    // empty tables as well
-    const emptyTables = widgetEl.querySelectorAll('tbody:empty');
-    for (const emptyTable of emptyTables) {
-        const error = await ctx.collectUnhandledError();
-        if (error) {
-            const container = emptyTable.closest('div');
-            if (container) {
-                displayRenderError(error, container);
-            }
-        }
-    }
 }
 
 export default { render };

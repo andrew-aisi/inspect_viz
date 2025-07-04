@@ -1511,16 +1511,6 @@ async function waitForTable(conn, table, { interval = 250 } = {}) {
   }
 }
 
-// js/util/platform.ts
-function isNotebook() {
-  const win = window;
-  const hasNotebookGlobal = typeof win.Jupyter !== "undefined" || typeof win._JUPYTERLAB !== "undefined" || typeof win.google !== "undefined" && win.google.colab || typeof win.IPython !== "undefined" || typeof win.mo !== "undefined" || typeof win.acquireVsCodeApi !== "undefined";
-  return hasNotebookGlobal || isVSCodeNotebook();
-}
-function isVSCodeNotebook() {
-  return window.location.protocol === "vscode-webview:" && window.location.search.includes("purpose=notebookRenderer");
-}
-
 // js/util/errors.ts
 function initializeErrorHandling(ctx, worker) {
   window.addEventListener("error", (event) => {
@@ -1650,13 +1640,8 @@ function errorAsHTML(error) {
   return html;
 }
 function displayRenderError(error, renderEl) {
-  const errorHTML = errorAsHTML(error);
-  if (isNotebook()) {
-    renderEl.setAttribute("style", "");
-    renderEl.innerHTML = errorAsHTML(error);
-  } else {
-    showErrorModal(errorHTML);
-  }
+  renderEl.setAttribute("style", "");
+  renderEl.innerHTML = errorAsHTML(error);
 }
 function parseStackTrace(stack) {
   if (!stack) return [];
@@ -1697,88 +1682,6 @@ function escapeHtml(text) {
 }
 function isError(value) {
   return value instanceof Error;
-}
-var activeModal = null;
-function showErrorModal(htmlContent) {
-  if (activeModal) {
-    activeModal.remove();
-  }
-  const backdrop = document.createElement("div");
-  backdrop.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 10000;
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        padding-top: 200px;
-        padding-left: 20px;
-        padding-right: 20px;
-        box-sizing: border-box;
-    `;
-  const modal = document.createElement("div");
-  modal.style.cssText = `
-        min-width: 60vw;
-        max-width: 80vw;
-        max-height: 80vh;
-        overflow-y: auto;
-        position: relative;
-    `;
-  const closeButton = document.createElement("button");
-  closeButton.innerHTML = "&times;";
-  closeButton.style.cssText = `
-        position: absolute;
-        top: 15px;
-        right: 10px;
-        background: none;
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-        color: #666;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 4px;
-        transition: background-color 0.2s;
-        z-index: 1;
-    `;
-  closeButton.onmouseover = () => {
-    closeButton.style.backgroundColor = "#f0f0f0";
-  };
-  closeButton.onmouseout = () => {
-    closeButton.style.backgroundColor = "transparent";
-  };
-  const contentWrapper = document.createElement("div");
-  contentWrapper.innerHTML = htmlContent;
-  modal.appendChild(closeButton);
-  modal.appendChild(contentWrapper);
-  backdrop.appendChild(modal);
-  backdrop.onclick = (e) => {
-    if (e.target === backdrop) {
-      backdrop.remove();
-      activeModal = null;
-    }
-  };
-  closeButton.onclick = () => {
-    backdrop.remove();
-    activeModal = null;
-  };
-  const handleEscape = (e) => {
-    if (e.key === "Escape" && activeModal) {
-      backdrop.remove();
-      activeModal = null;
-      document.removeEventListener("keydown", handleEscape);
-    }
-  };
-  document.addEventListener("keydown", handleEscape);
-  document.body.appendChild(backdrop);
-  activeModal = backdrop;
 }
 
 // js/context/index.ts
@@ -1831,6 +1734,16 @@ async function vizContext(plotDefaults) {
     })();
   }
   return globalScope[VIZ_CONTEXT_KEY];
+}
+
+// js/util/platform.ts
+function isNotebook() {
+  const win = window;
+  const hasNotebookGlobal = typeof win.Jupyter !== "undefined" || typeof win._JUPYTERLAB !== "undefined" || typeof win.google !== "undefined" && win.google.colab || typeof win.IPython !== "undefined" || typeof win.mo !== "undefined" || typeof win.acquireVsCodeApi !== "undefined";
+  return hasNotebookGlobal || isVSCodeNotebook();
+}
+function isVSCodeNotebook() {
+  return window.location.protocol === "vscode-webview:" && window.location.search.includes("purpose=notebookRenderer");
 }
 
 // js/widgets/mosaic.ts
@@ -1954,16 +1867,6 @@ async function displayUnhandledErrors(ctx, widgetEl) {
     const error = await ctx.collectUnhandledError();
     if (error) {
       displayRenderError(error, emptyDiv);
-    }
-  }
-  const emptyTables = widgetEl.querySelectorAll("tbody:empty");
-  for (const emptyTable of emptyTables) {
-    const error = await ctx.collectUnhandledError();
-    if (error) {
-      const container = emptyTable.closest("div");
-      if (container) {
-        displayRenderError(error, container);
-      }
     }
   }
 }

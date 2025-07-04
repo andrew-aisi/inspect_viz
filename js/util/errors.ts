@@ -156,13 +156,8 @@ export function errorAsHTML(error: ErrorInfo): string {
 }
 
 export function displayRenderError(error: ErrorInfo, renderEl: HTMLElement) {
-    const errorHTML = errorAsHTML(error);
-    if (isNotebook()) {
-        renderEl.setAttribute('style', '');
-        renderEl.innerHTML = errorAsHTML(error);
-    } else {
-        showErrorModal(errorHTML);
-    }
+    renderEl.setAttribute('style', '');
+    renderEl.innerHTML = errorAsHTML(error);
 }
 
 function parseStackTrace(stack: string): string[] {
