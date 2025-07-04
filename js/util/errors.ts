@@ -9,13 +9,13 @@ export function initializeErrorHandling(ctx: VizContext, worker: Worker): void {
 
     // unhandled promise rejections
     window.addEventListener('unhandledrejection', event => {
-        ctx.recordUnhandledError(event.reason);
+        ctx.recordUnhandledError(errorInfo(event.reason));
     });
 
     // web worker errors
     worker.addEventListener('message', event => {
         if (event.data.type === 'ERROR') {
-            ctx.recordUnhandledError(event.data.data.message);
+            ctx.recordUnhandledError(errorInfo(event.data.data.message));
         }
     });
 }
