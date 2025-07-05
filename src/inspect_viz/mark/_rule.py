@@ -5,7 +5,6 @@ from typing_extensions import Unpack
 from .._core import Data, Param, Selection
 from .._core.types import Interval
 from .._util.marshall import dict_remove_none
-from ..transform._column import column
 from ._channel import ChannelIntervalSpec, ChannelSpec
 from ._mark import Mark
 from ._options import MarkOptions

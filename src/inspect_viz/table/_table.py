@@ -4,7 +4,6 @@ from pydantic import BaseModel, JsonValue
 
 from inspect_viz._util.marshall import dict_remove_none
 from inspect_viz.mark._channel import Channel
-from inspect_viz.transform._transform import Transform
 
 from .._core import Component, Data
 from .._core.selection import Selection
