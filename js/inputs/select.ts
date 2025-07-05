@@ -4,7 +4,7 @@ import { ChoiceInput, ChoiceInputOptions } from './choice';
 import { kSidebarFullwidth } from './types';
 
 import TomSelect from 'https://cdn.jsdelivr.net/npm/tom-select@2.4.3/+esm';
-import { isParam, isSelection } from 'https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm';
+import { isSelection } from 'https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm';
 
 export interface SelectOptions extends ChoiceInputOptions {
     value?: 'all' | 'auto' | string | string[];
