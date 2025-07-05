@@ -69,3 +69,7 @@ label>input[type="range"] {
 .mosaic-widget .slider-input .slider-value {
     margin: 0;
 }
+
+.vscode-dark .mosaic-widget {
+    color: rgb(52, 58, 64);
+}
