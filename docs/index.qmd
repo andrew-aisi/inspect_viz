@@ -23,7 +23,7 @@ pip install git+https://github.com/UKGovernmentBEIS/inspect_ai
 pip install git+https://github.com/meridianlabs-ai/inspect_viz
 ```
 
-Then, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the [Concepts](concepts.qmd) article for a more in depth explanation of the library's components and how they fit together.
+Then, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the [Components](components/plots.qmd) articles for a more in depth explanation of the library's primitives and how they fit together.
 
 ::: {.callout-tip}
 Inspect Viz is built on top of the [Moasic](https://idl.uw.edu/mosaic/) data visualization system which is in turn built on [Observable Plot](https://observablehq.com/plot/). 
@@ -87,7 +87,7 @@ plot(
 )
 ```
 
-The `x` axis for this plot is not mapped to a column, but rather to a `count()` transform ( [transforms](reference/inspect_viz.transform.qmd) enable you to perform computations on columns for ploatting). The `fill` option gives each species it's own color. We also specify that we don't want a `y_label` (as the species names serve that purpose) and a smaller than normal height.
+The `x` axis for this plot is not mapped to a column, but rather to a `count()` transform ( [transforms](reference/inspect_viz.transform.qmd) enable you to perform computations on columns for plotting). The `fill` option gives each species it's own color. We also specify that we don't want a `y_label` (as the species names serve that purpose) and a smaller than normal height.
 
 ## Tables
 
@@ -325,10 +325,8 @@ vconcat(
 
 Use these resources to learn more about using Inspect Viz:
 
--   [Concepts](concepts.qmd) describes the core components of the library and how they fit together.
+-   [Components](components/plots.qmd) goes into further depth on the main concepts and components required to use the library.
 
 -   [Reference](reference/index.qmd) provides details on the available marks, interactors, transforms, and inputs.
 
 -   [Examples](examples/index.qmd) demonstrates more advanced plotting and interactivity features.
-
--   [Sandbox](sandbox/index.qmd) includes examples from the `inspect_viz.sandbox` module as well as information on contributing your own functions to the sandbox.

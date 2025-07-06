@@ -24,35 +24,48 @@ website:
       left:      
           - text: "Getting Started"
             href: index.qmd
-          - text: "Concepts"
-            href: concepts.qmd
+          - text: "Components"
+            href: components/plots.qmd
+          - text: "Publishing"
+            href: publishing/index.qmd
           - text: "Reference"
             href: reference/index.qmd
           - text: "Examples"
             href: examples/index.qmd
-          - text: "Sandbox"
-            href: sandbox/index.qmd
       right: 
           - icon: github
             href: https://github.com/meridianlabs-ai/inspect_viz
       
+
    sidebar:
-      - title: Examples
+      - title: Main
         style: docked
+        contents:
+           - href: index.qmd
+             text: Getting Started
+           - text: Components
+             contents:
+               - href: components/plots.qmd
+               - href: components/marks.qmd
+               - href: components/tables.qmd
+               - href: components/inputs.qmd
+               - href: components/selections.qmd
+           - text: Publishing
+             href: publishing/index.qmd
+             contents:
+               - href: publishing/plots.qmd
+               - href: publishing/websites.qmd
+               - href: publishing/dashboards.qmd
+      - title: Examples
         contents:
           - href: examples/index.qmd
             text: Examples
-          - href: examples/penguins/index.qmd
-          - href: examples/bias-parameter/index.qmd
-          - href: examples/seattle-weather/index.qmd
-          - href: examples/athletes-regression/index.qmd
-          - href: examples/athletes-errorbars/index.qmd
-      - title: Sandbox
-        style: docked
-        contents:
-          - href: sandbox/index.qmd
-            text: Sandbox
-          - href: sandbox/evals_summary.ipynb
+            contents:
+              - href: examples/penguins/index.qmd
+              - href: examples/bias-parameter/index.qmd
+              - href: examples/seattle-weather/index.qmd
+              - href: examples/athletes-regression/index.qmd
+              - href: examples/athletes-errorbars/index.qmd
    page-footer: 
       left: 
          - text: Meridian Labs
