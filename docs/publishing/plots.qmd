@@ -2,3 +2,7 @@
 title: Plots
 ---
 
+
+<!-- https://stackoverflow.com/questions/6887183/how-to-take-screenshot-of-a-div-with-javascript -->
+
+
