@@ -11,8 +11,15 @@
 }
 
 .toolbar .mosaic-widget,
-.panel-input .mosaic-widget {
+.panel-input .mosaic-widget,
+.toolbar .mosaic-widget label,
+.panel-input .mosaic-widget label {
     margin-top: 0;
+    margin-bottom: 0;
+}
+
+
+.mosaic-widget .sidebar-fullwidth {
     margin-bottom: 0;
 }
 
