@@ -25,12 +25,7 @@ pip install git+https://github.com/meridianlabs-ai/inspect_viz
 
 Then, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the [Components](components/plots.qmd) articles for a more in depth explanation of the library's primitives and how they fit together.
 
-::: {.callout-tip}
-Inspect Viz is built on top of the [Moasic](https://idl.uw.edu/mosaic/) data visualization system which is in turn built on [Observable Plot](https://observablehq.com/plot/). 
-
-Below we'll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.
-:::
-
+{{< include _observable-tip.md >}}
 
 ## Plots
 

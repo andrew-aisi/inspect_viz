@@ -25,9 +25,9 @@ website:
           - text: "Getting Started"
             href: index.qmd
           - text: "Components"
-            href: components/plots.qmd
+            href: components-plots.qmd
           - text: "Publishing"
-            href: publishing/index.qmd
+            href: publishing.qmd
           - text: "Reference"
             href: reference/index.qmd
           - text: "Examples"
@@ -45,17 +45,18 @@ website:
              text: Getting Started
            - text: Components
              contents:
-               - href: components/plots.qmd
-               - href: components/marks.qmd
-               - href: components/tables.qmd
-               - href: components/inputs.qmd
-               - href: components/selections.qmd
+               - href: components-plots.qmd
+               - href: components-marks.qmd
+               - href: components-tables.qmd
+               - href: components-inputs.qmd
+               - href: components-selections.qmd
            - text: Publishing
-             href: publishing/index.qmd
+             href: publishing.qmd
              contents:
-               - href: publishing/plots.qmd
-               - href: publishing/websites.qmd
-               - href: publishing/dashboards.qmd
+               - href: publishing-plots.qmd
+               - href: publishing-notebooks.qmd
+               - href: publishing-websites.qmd
+               - href: publishing-dashboards.qmd
       - title: Examples
         contents:
           - href: examples/index.qmd

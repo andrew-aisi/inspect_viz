@@ -1,0 +1,139 @@
+---
+title: "Plots"
+---
+
+A `plot()` produces a single visualization as a Web element. Similar to other grammars, a `plot` consists of _marks_---graphical primitives such as bars, areas, and lines---which serve as chart layers. Plots use the semantics of [Observable Plot](https://observablehq.com/plot/what-is-plot), such that each `plot` has a dedicated set of encoding _channels_ with named _scale_ mappings such as `x`, `y`, `color`, `opacity`, etc.
+
+## Basics
+
+Plots support faceting of the `x` and `y` dimensions, producing associated `fx` and `fy` scales. Plots are rendered to SVG output using Observable Plot.
+
+Here is a simple dot plot that demonstrates some key concepts:
+
+```{python}
+#| include: false
+
+from inspect_viz.plot import plot_defaults
+plot_defaults(
+    width=700, height=400
+)
+
+```
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.plot import plot
+from inspect_viz.mark import dot
+
+penguins = Data.from_file("penguins.parquet")
+
+plot(
+    dot(penguins, x="body_mass", y="flipper_length",  # <1>
+        stroke="species", symbol="species"),   # <1>
+    legend="symbol",  # <2>
+    grid=True,  # <3>
+    width=700,  # <3>
+    height=400  # <3>
+)
+```
+
+
+1. `dot()` mark for a simple dot plot, using a distinct `stroke` and `symbol` to denote the "species" column.
+
+2. Legend in the default location, keyed by `symbol`.
+
+3. Additional attributes that affect plot size and appearance.
+
+{{< include _observable-tip.md >}}
+
+## Facets
+
+Plots support faceting of the `x` and `y` dimensions, producing associated `fx` and `fy` scales. For example, here we comopare model performance on several tasks. The `task_name` is the `fx` scale, resulting in a separate grouping of bars for each task:
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.plot import plot, legend
+from inspect_viz.mark import bar_y
+
+evals = Data.from_file("evals.parquet")
+
+plot(
+    bar_y( 
+        evals, x="model", fx="task_name",  # <1>
+        y="score_headline_value",
+        fill="model",
+    ),
+    legend=legend("color", location="bottom"),  # <2>
+    x_label=None, x_ticks=[], fx_label=None,  # <3>
+    y_label="score", y_domain=[0, 1.0]  # <4>
+)
+
+```
+
+1. Add an x-facet ("task_name") using the `fx` option.
+
+2. Define legend using `legend()` function (to enable setting `location` and other options).
+
+3. Remove default x labeling as it is handled by the legend.
+
+4. Tweak y-axis with shorter label and ensure that it goes all the way up to 1.0.
+
+
+## Marks
+
+The plots above use only a single mark (`dot()` and `bar_y()` respectively). More sophisticated plots are often constructed with multiple marks. For example, here is a plot that adds a regression line mark do a standard dot plot:
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.mark import dot, regression_y
+from inspect_viz.plot import plot
+
+athletes = Data.from_file("athletes.parquet")
+
+plot(
+    dot(athletes, x="weight", y="height", fill="sex", opacity=0.1), # <1>
+    regression_y(athletes, x="weight", y="height", stroke="sex"), # <2>
+    legend="color"
+)
+```
+
+1. Use `fill` to distinghish male and female athletes; use `opacity` to deal with a large density of data points.
+
+2. Use `stroke` to ensure that male and female athletes each get their own regression line.
+
+## Titles
+
+Plot titles can be added using a `text()` mark. For example, here we add a title at the top of the frame:
+
+```{python}
+from inspect_viz.mark import TextStyles, text
+
+plot(
+    text(text=["Olympic Athletes"], frame_anchor="top", 
+         styles=TextStyles(font_size=16), dy=-20),
+    dot(athletes, x="weight", y="height", fill="sex", opacity=0.1),
+    regression_y(athletes, x="weight", y="height", stroke="sex"),
+    legend="color"
+)
+```
+
+## Attributes
+
+The `plot()` function has quite a few options for customizing the size, layout, axes, and other elements of plot display. Some of the more useful attribues include:
+
+- `width`, `height`, and `aspect_ratio` for controlling plot size.
+
+- `margin` and `facet_margin` (and more specific margins like `margin_top`) for controlling layout margins.
+
+- `style` for providing CSS styles.
+
+- `aria_label` and `aria_description`, `x_aria_label`, `x_aria_description`, etc. for accessibilty attributes.
+
+- `x_domain`, `x_range, `y_domain`, and `y_range` for controlling the domain and range of axes.
+
+- Tick settings for `x`, `y`, `fx`, and `fy` axes (e.g. `x_ticks`, `x_tick_rotate`, etc.)
+
+- `r` (radius) scale settings (e.g. `r_domain`, `r_range`, `r_label`, etc.)
+
+See `PlotAttributes` for documentation on all available plot attributes.
+
