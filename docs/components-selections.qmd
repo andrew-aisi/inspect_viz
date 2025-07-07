@@ -2,9 +2,41 @@
 title: Selections
 ---
 
+## Overview
+
+_Selections_ enable filtering and cross-filtering of plot data based based on [Inputs](components-inputs.qmd) and [Interactors](#interactors). Each `Data` table has a built-in selection and you can also create `Selection` instances for more sophisticated cross-plot behaviors.
+
+## Filtering
+
+The most straightforward usage of selections is adding inputs which filter the data displayed in a plot. This filtering uses the _built in_ selection of `Data` instances. For example, here we enable 
+
+
+
+## Interactors
 
 
 Inspect Viz includes a special `fixed` scale domain setting (e.g., `x_domain="fixed"`), which instructs a plot to first calculate a scale domain in a data-driven manner, but then keep that domain fixed across subsequent updates. Fixed domains enable stable configurations without requiring a hard-wired domain to be known in advance, preventing disorienting scale domain "jumps" that hamper comparison across filter interactions.
 
+
+
+
+_Interactors_ imbue plots with interactive behavior. Most interactors listen to input events from rendered plot SVG elements to update bound [_selections_](reference/inspect_viz.qmd#selection). Interactors take facets into account to properly handle input events across subplots.
+
+The `toggle()` interactor selects individual points (e.g., by click or shift-click) and generates a selection clause over specified fields of those points. Directives such as `toggle_color()`, `toggle_x()`, and `toggle_y()` simplify specification of which channel fields are included in the resulting predicates.
+
+The `nearest_x()` and `nearest_y()` interactors select the nearest value along the `x` or `y` encoding channel.
+
+The `interval_x()` and `interval_y()` interactors create 1D interval brushes.
+The `interval_xy()` interactor creates a 2D brush.
+Interval interactors accept a `pixel_size` parameter that sets the brush resolution: values may snap to a grid whose bins are larger than screen pixels and this can be leveraged to optimize query latency.
+
+The `pan_zoom()` interactor produces interval selections over corresponding `x` or `y` scale domains. Setting these selections to a plot's `x_domain` and/or `y_domain` attributes will cause the plot to pan and zoom in response.
+
+The `highlight()` interactor updates the rendered state of a visualization in response to a Selection.
+Non-selected points are set to translucent, neutral gray, or other specified visual properties.
+Selected points maintain normal encodings.
+We perform highlighting by querying the database for a selection bit vector and then modifying the rendered SVG.
+
+## Cross Filtering
 
 
