@@ -198,6 +198,7 @@ export interface TableOptions extends InputOptions {
         | 'multiple_checkbox'
         | 'none';
     style?: TableStyle;
+    auto_filling?: boolean;
 }
 
 interface ColSortModel {
@@ -248,7 +249,9 @@ export class Table extends Input {
             this.element.style.maxWidth = `${this.options_.max_width}px`;
         }
 
-        if (this.options_.height && this.options_.height !== 'auto') {
+        if (this.options_.auto_filling) {
+            this.element.style.height = `100%`;
+        } else if (this.options_.height && this.options_.height !== 'auto') {
             this.element.style.height = `${this.options_.height}px`;
         }
 
@@ -467,7 +470,10 @@ export class Table extends Input {
         this.grid_.setGridOption('rowData', rowData);
         if (this.data_.numRows < kAutoRowCount && this.options_.height === undefined) {
             this.grid_.setGridOption('domLayout', 'autoHeight');
-        } else if (this.options_.height === 'auto' || this.options_.height === undefined) {
+        } else if (
+            !this.options_.auto_filling &&
+            (this.options_.height === 'auto' || this.options_.height === undefined)
+        ) {
             this.element.style.height = `${kAutoRowMaxHeight}px`;
         }
     });

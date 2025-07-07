@@ -14,6 +14,7 @@ import { VizContext, vizContext } from '../context';
 import { INPUTS } from '../inputs';
 import { errorInfo, errorAsHTML, displayRenderError } from '../util/errors';
 import { isNotebook } from '../util/platform';
+import { TableOptions } from '../inputs/table';
 
 interface MosaicProps {
     tables: Record<string, string>;
@@ -40,6 +41,14 @@ async function render({ model, el }: RenderProps<MosaicProps>) {
     if (renderOptions.autoFillScrolling && isPlotSpec(spec)) {
         el.style.width = '100%';
         el.style.height = '400px';
+    }
+    if (renderOptions.autoFill && isTableSpec(spec)) {
+        // if we are auto-filling a table spec, then remove any padding from the card body
+        // as the table will fill the entire space (this is basically in a quarto dashboard card)
+        const card = el.closest('.card-body') as HTMLElement | null;
+        if (card) {
+            card.style.padding = '0';
+        }
     }
     const renderSpec = async () => {
         try {
@@ -121,7 +130,11 @@ function responsiveSpec(spec: Spec, containerEl: HTMLElement): Spec {
     const kLegendHeight = 35; // best guess estimate
 
     spec = structuredClone(spec);
-    if ('hconcat' in spec && spec.hconcat.length == 1) {
+    if ('input' in spec && spec.input === 'table') {
+        const table = spec;
+        // disable max-width for table inputs
+        (table as unknown as TableOptions).auto_filling = true;
+    } else if ('hconcat' in spec && spec.hconcat.length == 1) {
         // standalone plot
         const hconcat = spec.hconcat;
         const plot = 'plot' in hconcat[0] ? hconcat[0] : null;
@@ -183,6 +196,10 @@ function isPlotSpec(spec: Spec) {
 
 function isInputSpec(spec: Spec) {
     return 'input' in spec && spec.input !== 'table';
+}
+
+function isTableSpec(spec: Spec) {
+    return 'input' in spec && spec.input === 'table';
 }
 
 async function astToDOM(ast: SpecNode, ctx: InstantiateContext) {

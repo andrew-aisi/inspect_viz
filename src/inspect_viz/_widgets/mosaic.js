@@ -372,7 +372,7 @@ var CheckboxGroup = class extends ChoiceInput {
 // js/inputs/checkbox.ts
 import {
   clausePoint as clausePoint2,
-  isParam as isParam3,
+  isParam as isParam2,
   isSelection as isSelection3
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
 var Checkbox = class extends Input {
@@ -410,7 +410,7 @@ var Checkbox = class extends Input {
   publish(value) {
     if (isSelection3(this.options_.as)) {
       this.options_.as.update(this.clause(value));
-    } else if (isParam3(this.options_.as)) {
+    } else if (isParam2(this.options_.as)) {
       this.options_.as.update(value);
     }
   }
@@ -420,7 +420,7 @@ var Checkbox = class extends Input {
 import {
   clauseInterval,
   clausePoint as clausePoint3,
-  isParam as isParam4,
+  isParam as isParam3,
   isSelection as isSelection4
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
 import {
@@ -584,7 +584,7 @@ var Slider = class extends Input {
     const target = this.options_.as;
     if (isSelection4(target)) {
       target.update(this.clause(value));
-    } else if (isParam4(target)) {
+    } else if (isParam3(target)) {
       target.update(value);
     }
   }
@@ -701,7 +701,9 @@ var Table = class extends Input {
     if (this.options_.max_width) {
       this.element.style.maxWidth = `${this.options_.max_width}px`;
     }
-    if (this.options_.height && this.options_.height !== "auto") {
+    if (this.options_.auto_filling) {
+      this.element.style.height = `100%`;
+    } else if (this.options_.height && this.options_.height !== "auto") {
       this.element.style.height = `${this.options_.height}px`;
     }
     if (this.options_.style) {
@@ -874,7 +876,7 @@ var Table = class extends Input {
     this.grid_.setGridOption("rowData", rowData);
     if (this.data_.numRows < kAutoRowCount && this.options_.height === void 0) {
       this.grid_.setGridOption("domLayout", "autoHeight");
-    } else if (this.options_.height === "auto" || this.options_.height === void 0) {
+    } else if (!this.options_.auto_filling && (this.options_.height === "auto" || this.options_.height === void 0)) {
       this.element.style.height = `${kAutoRowMaxHeight}px`;
     }
   });
@@ -1340,7 +1342,7 @@ var isSetFilter = (filter) => {
 // js/inputs/search.ts
 import {
   clauseMatch,
-  isParam as isParam5,
+  isParam as isParam4,
   isSelection as isSelection6
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
 import { Query as Query4 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-sql@0.16.2/+esm";
@@ -1399,7 +1401,7 @@ var Search = class extends Input {
   publish(value) {
     if (isSelection6(this.options_.as)) {
       this.options_.as.update(this.clause(value));
-    } else if (isParam5(this.options_.as)) {
+    } else if (isParam4(this.options_.as)) {
       this.options_.as.update(value);
     }
   }
@@ -1739,6 +1741,12 @@ async function render({ model, el }) {
     el.style.width = "100%";
     el.style.height = "400px";
   }
+  if (renderOptions.autoFill && isTableSpec(spec)) {
+    const card = el.closest(".card-body");
+    if (card) {
+      card.style.padding = "0";
+    }
+  }
   const renderSpec = async () => {
     try {
       ctx.clearUnhandledErrors();
@@ -1790,7 +1798,10 @@ function responsiveSpec(spec, containerEl) {
   const kLegendWidth = 80;
   const kLegendHeight = 35;
   spec = structuredClone(spec);
-  if ("hconcat" in spec && spec.hconcat.length == 1) {
+  if ("input" in spec && spec.input === "table") {
+    const table = spec;
+    table.auto_filling = true;
+  } else if ("hconcat" in spec && spec.hconcat.length == 1) {
     const hconcat = spec.hconcat;
     const plot = "plot" in hconcat[0] ? hconcat[0] : null;
     if (plot) {
@@ -1829,6 +1840,9 @@ function isPlotSpec(spec) {
 }
 function isInputSpec(spec) {
   return "input" in spec && spec.input !== "table";
+}
+function isTableSpec(spec) {
+  return "input" in spec && spec.input === "table";
 }
 async function astToDOM(ast, ctx) {
   for (const [name, node] of Object.entries(ast.params)) {
