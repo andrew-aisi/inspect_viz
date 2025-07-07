@@ -93,8 +93,8 @@ import { AggregateNode, ExprValue } from '@uwdata/mosaic-sql';
 
 // These two values should generally be coordinated so that the max height is
 // the size that will display the row count.
-const kAutoRowCount = 16;
-const kAutoRowMaxHeight = 500;
+const kAutoRowCount = 12;
+const kAutoRowMaxHeight = 380;
 
 type Transform = Record<string, any>;
 

@@ -372,7 +372,7 @@ var CheckboxGroup = class extends ChoiceInput {
 // js/inputs/checkbox.ts
 import {
   clausePoint as clausePoint2,
-  isParam as isParam3,
+  isParam as isParam2,
   isSelection as isSelection3
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
 var Checkbox = class extends Input {
@@ -410,7 +410,7 @@ var Checkbox = class extends Input {
   publish(value) {
     if (isSelection3(this.options_.as)) {
       this.options_.as.update(this.clause(value));
-    } else if (isParam3(this.options_.as)) {
+    } else if (isParam2(this.options_.as)) {
       this.options_.as.update(value);
     }
   }
@@ -420,7 +420,7 @@ var Checkbox = class extends Input {
 import {
   clauseInterval,
   clausePoint as clausePoint3,
-  isParam as isParam4,
+  isParam as isParam3,
   isSelection as isSelection4
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
 import {
@@ -584,7 +584,7 @@ var Slider = class extends Input {
     const target = this.options_.as;
     if (isSelection4(target)) {
       target.update(this.clause(value));
-    } else if (isParam4(target)) {
+    } else if (isParam3(target)) {
       target.update(value);
     }
   }
@@ -685,8 +685,8 @@ import {
 } from "https://cdn.jsdelivr.net/npm/ag-grid-community@33.3.2/+esm";
 import * as d3Format from "https://cdn.jsdelivr.net/npm/d3-format@3.1.0/+esm";
 import * as d3TimeFormat from "https://cdn.jsdelivr.net/npm/d3-time-format@4.1.0/+esm";
-var kAutoRowCount = 16;
-var kAutoRowMaxHeight = 500;
+var kAutoRowCount = 12;
+var kAutoRowMaxHeight = 380;
 var Table = class extends Input {
   constructor(options_) {
     super(options_.filter_by);
@@ -1340,7 +1340,7 @@ var isSetFilter = (filter) => {
 // js/inputs/search.ts
 import {
   clauseMatch,
-  isParam as isParam5,
+  isParam as isParam4,
   isSelection as isSelection6
 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-core@0.16.2/+esm";
 import { Query as Query4 } from "https://cdn.jsdelivr.net/npm/@uwdata/mosaic-sql@0.16.2/+esm";
@@ -1399,7 +1399,7 @@ var Search = class extends Input {
   publish(value) {
     if (isSelection6(this.options_.as)) {
       this.options_.as.update(this.clause(value));
-    } else if (isParam5(this.options_.as)) {
+    } else if (isParam4(this.options_.as)) {
       this.options_.as.update(value);
     }
   }
