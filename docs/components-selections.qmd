@@ -2,3 +2,9 @@
 title: Selections
 ---
 
+
+
+Inspect Viz includes a special `fixed` scale domain setting (e.g., `x_domain="fixed"`), which instructs a plot to first calculate a scale domain in a data-driven manner, but then keep that domain fixed across subsequent updates. Fixed domains enable stable configurations without requiring a hard-wired domain to be known in advance, preventing disorienting scale domain "jumps" that hamper comparison across filter interactions.
+
+
+

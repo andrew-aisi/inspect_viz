@@ -119,7 +119,10 @@ plot(
 
 ## Attributes
 
-The `plot()` function has quite a few options for customizing the size, layout, axes, and other elements of plot display. Some of the more useful attribues include:
+_Attributes_ are plot-level settings such as `width`, `height`, margins, and scale options (e.g., `x_domain`, `color_range`, `y_tick_format`). Attributes may be `Param`-valued, in which case a plot updates upon param changes.
+
+
+Some of the more useful plot attribues include:
 
 - `width`, `height`, and `aspect_ratio` for controlling plot size.
 
