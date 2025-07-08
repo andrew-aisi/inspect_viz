@@ -12,6 +12,10 @@ title: "inspect_viz.plot"
 ### legend
 ### Legend
 
+## Export
+
+### write_html
+
 ## Defaults 
 
 ### plot_defaults

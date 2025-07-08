@@ -59,7 +59,10 @@ class Data:
         buffer = pa.BufferOutputStream()
         with pa.RecordBatchStreamWriter(buffer, table.schema) as writer:
             writer.write_table(table)
-        self._data: bytes | None = buffer.getvalue().to_pybytes()
+        self._data: bytes = buffer.getvalue().to_pybytes()
+
+        # track whether we have been collected
+        self._collected = False
 
         # track instances
         track_instance("data", self)
@@ -80,11 +83,13 @@ class Data:
     def _plot_from(self, filter_by: Selection | None = None) -> dict[str, JsonValue]:
         return {"from": self.table, "filterBy": filter_by or f"${self.selection.id}"}
 
+    def _get_data(self) -> bytes:
+        return self._data
+
     def _collect_data(self) -> bytes:
-        if self._data:
-            buffer = self._data
-            self._data = None
-            return buffer
+        if not self._collected:
+            self._collected = True
+            return self._data
         else:
             return bytes()
 

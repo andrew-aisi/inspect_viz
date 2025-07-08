@@ -85,10 +85,15 @@ class Component(AnyWidget):
     def _repr_mimebundle_(
         self, **kwargs: Any
     ) -> tuple[dict[str, Any], dict[str, Any]] | None:
+        return self._mimebundle(collect=True)
+
+    def _mimebundle(
+        self, *, collect: bool, **kwargs: Any
+    ) -> tuple[dict[str, Any], dict[str, Any]] | None:
         from ..plot._defaults import plot_defaults_as_camel
 
         # set current tables
-        self.tables = all_tables()
+        self.tables = all_tables(collect=collect)
 
         # ensure spec
         if not self.spec:
@@ -120,10 +125,10 @@ class Component(AnyWidget):
     spec = traitlets.CUnicode("").tag(sync=True)
 
 
-def all_tables() -> dict[str, str | bytes]:
+def all_tables(*, collect: bool) -> dict[str, str | bytes]:
     all_data: dict[str, str | bytes] = {}
     for data in Data._get_all():
-        all_data[data.table] = data._collect_data()
+        all_data[data.table] = data._collect_data() if collect else data._get_data()
     return all_data
 
 
