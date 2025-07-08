@@ -1768,6 +1768,7 @@ var setupTooltipObserver = (svgEl, specEl) => {
           tipContainerEl.style.display = "none";
           const tipEl = tipContainerEl.firstChild;
           if (!tipEl) {
+            tooltipInstance.hide();
             return;
           }
           const rect = specEl.getBoundingClientRect();

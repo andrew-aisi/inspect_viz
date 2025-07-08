@@ -2,6 +2,7 @@ import tippy from 'https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm';
 
 // TODO: links
 // TODO: test multiple plots
+// TODO: tipoptions / tip positioning (parse drawing of arrow)
 
 export const replaceTooltipImpl = (specEl: HTMLElement) => {
     // Check if SVG already exists
@@ -51,6 +52,7 @@ const setupTooltipObserver = (svgEl: SVGElement, specEl: HTMLElement) => {
 
                     const tipEl = tipContainerEl.firstChild as SVGGElement | null;
                     if (!tipEl) {
+                        tooltipInstance.hide();
                         return;
                     }
                     const rect = specEl.getBoundingClientRect();
