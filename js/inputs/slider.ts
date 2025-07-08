@@ -86,6 +86,8 @@ export class Slider extends Input {
         // handle initial value
         if (this.options_.as?.value === undefined) {
             this.publish(value);
+        } else if (value === undefined) {
+            value = this.options_.as?.value;
         }
 
         // set value display

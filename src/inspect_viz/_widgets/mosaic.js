@@ -467,6 +467,8 @@ var Slider = class extends Input {
     this.element.appendChild(this.curval_);
     if (this.options_.as?.value === void 0) {
       this.publish(value);
+    } else if (value === void 0) {
+      value = this.options_.as?.value;
     }
     this.updateCurrentValue();
     this.curval_.innerText = this.sliderValue.toString();
