@@ -25,7 +25,9 @@ export class Checkbox extends Input {
         this.element.appendChild(inputLabel);
 
         // handle initial checked state
-        input.checked = options_.checked;
+        input.checked = !isSelection(this.options_.as)
+            ? (this.options_.as?.value ?? options_.checked)
+            : options_.checked;
 
         // publish input (and sync to checkbox changes)
         const publish = () =>

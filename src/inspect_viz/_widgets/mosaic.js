@@ -382,7 +382,7 @@ var Checkbox = class extends Input {
     const { inputLabel, input: input2 } = createLabeledInput("checkbox", options_.label);
     input2.id = generateId();
     this.element.appendChild(inputLabel);
-    input2.checked = options_.checked;
+    input2.checked = !isSelection3(this.options_.as) ? this.options_.as?.value ?? options_.checked : options_.checked;
     const publish = () => this.publish(
       input2.checked ? options_.values[0] || void 0 : options_.values[1] || void 0
     );
