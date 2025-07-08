@@ -26,8 +26,8 @@ website:
             href: index.qmd
           - text: "Components"
             href: components-plots.qmd
-          # - text: "Publishing"
-          #   href: publishing.qmd
+          - text: "Publishing"
+            href: publishing.qmd
           - text: "Reference"
             href: reference/index.qmd
           - text: "Examples"
@@ -50,13 +50,13 @@ website:
                - href: components-tables.qmd
                - href: components-inputs.qmd
                - href: components-selections.qmd
-          #  - text: Publishing
-          #    href: publishing.qmd
-          #    contents:
-          #      - href: publishing-plots.qmd
-          #      - href: publishing-notebooks.qmd
-          #      - href: publishing-websites.qmd
-          #      - href: publishing-dashboards.qmd
+           - text: Publishing
+             href: publishing.qmd
+             contents:
+               - href: publishing-plots.qmd
+               - href: publishing-notebooks.qmd
+               - href: publishing-websites.qmd
+               - href: publishing-dashboards.qmd
       - title: Examples
         contents:
           - href: examples/index.qmd
