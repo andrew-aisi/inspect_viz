@@ -1,8 +1,9 @@
 ---
 title: "Plots"
+tbl-colwidths: [30,70]
 ---
 
-A `plot()` produces a single visualization as a Web element. Similar to other grammars, a `plot` consists of _marks_---graphical primitives such as bars, areas, and lines---which serve as chart layers. Plots use the semantics of [Observable Plot](https://observablehq.com/plot/what-is-plot), such that each `plot` has a dedicated set of encoding _channels_ with named _scale_ mappings such as `x`, `y`, `color`, `opacity`, etc.
+A `plot()` produces a single visualization as a Web element. Similar to other grammars, a `plot` consists of *marks*---graphical primitives such as bars, areas, and lines---which serve as chart layers. Plots use the semantics of [Observable Plot](https://observablehq.com/plot/what-is-plot), such that each `plot` has a dedicated set of encoding *channels* with named *scale* mappings such as `x`, `y`, `color`, `opacity`, etc.
 
 ## Basics
 
@@ -37,12 +38,11 @@ plot(
 )
 ```
 
+1.  `dot()` mark for a simple dot plot, using a distinct `stroke` and `symbol` to denote the "species" column.
 
-1. `dot()` mark for a simple dot plot, using a distinct `stroke` and `symbol` to denote the "species" column.
+2.  Legend in the default location, keyed by `symbol`.
 
-2. Legend in the default location, keyed by `symbol`.
-
-3. Additional attributes that affect plot size and appearance.
+3.  Additional attributes that affect plot size and appearance.
 
 {{< include _observable-tip.md >}}
 
@@ -70,14 +70,13 @@ plot(
 
 ```
 
-1. Add an x-facet ("task_name") using the `fx` option.
+1.  Add an x-facet ("task_name") using the `fx` option.
 
-2. Define legend using `legend()` function (to enable setting `location` and other options).
+2.  Define legend using `legend()` function (to enable setting `location` and other options).
 
-3. Remove default x labeling as it is handled by the legend.
+3.  Remove default x labeling as it is handled by the legend.
 
-4. Tweak y-axis with shorter label and ensure that it goes all the way up to 1.0.
-
+4.  Tweak y-axis with shorter label and ensure that it goes all the way up to 1.0.
 
 ## Marks
 
@@ -97,9 +96,9 @@ plot(
 )
 ```
 
-1. Use `fill` to distinghish male and female athletes; use `opacity` to deal with a large density of data points.
+1.  Use `fill` to distinghish male and female athletes; use `opacity` to deal with a large density of data points.
 
-2. Use `stroke` to ensure that male and female athletes each get their own regression line.
+2.  Use `stroke` to ensure that male and female athletes each get their own regression line.
 
 ## Titles
 
@@ -119,24 +118,34 @@ plot(
 
 ## Attributes
 
-_Attributes_ are plot-level settings such as `width`, `height`, margins, and scale options (e.g., `x_domain`, `color_range`, `y_tick_format`). Attributes may be `Param`-valued, in which case a plot updates upon param changes.
-
+*Attributes* are plot-level settings such as `width`, `height`, margins, and scale options (e.g., `x_domain`, `color_range`, `y_tick_format`). Attributes may be `Param`-valued, in which case a plot updates upon param changes.
 
 Some of the more useful plot attribues include:
 
-- `width`, `height`, and `aspect_ratio` for controlling plot size.
+-   `width`, `height`, and `aspect_ratio` for controlling plot size.
 
-- `margin` and `facet_margin` (and more specific margins like `margin_top`) for controlling layout margins.
+-   `margin` and `facet_margin` (and more specific margins like `margin_top`) for controlling layout margins.
 
-- `style` for providing CSS styles.
+-   `style` for providing CSS styles.
 
-- `aria_label` and `aria_description`, `x_aria_label`, `x_aria_description`, etc. for accessibilty attributes.
+-   `aria_label` and `aria_description`, `x_aria_label`, `x_aria_description`, etc. for accessibilty attributes.
 
-- `x_domain`, `x_range, `y_domain`, and `y_range` for controlling the domain and range of axes.
+-   `x_domain`, `x_range,`y_domain`, and`y_range\` for controlling the domain and range of axes.
 
-- Tick settings for `x`, `y`, `fx`, and `fy` axes (e.g. `x_ticks`, `x_tick_rotate`, etc.)
+-   Tick settings for `x`, `y`, `fx`, and `fy` axes (e.g. `x_ticks`, `x_tick_rotate`, etc.)
 
-- `r` (radius) scale settings (e.g. `r_domain`, `r_range`, `r_label`, etc.)
+-   `r` (radius) scale settings (e.g. `r_domain`, `r_range`, `r_label`, etc.)
 
 See `PlotAttributes` for documentation on all available plot attributes.
 
+## Legends
+
+*Legends* can be added to `plot` specifications or included as standalone elements.
+
+See the `legend()` function documentation for details on legend options including location, columns, label text, size, and margins.
+
+The `name` directive gives a `plot` a unique name. A standalone legend can reference a named plot `legend(..., for_plot="penguins")` to avoid respecifying scale domains and ranges.
+
+Legends also act as interactors, taking a bound `Selection` as a `target` parameter. For example, discrete legends use the logic of the `toggle` interactor to enable point selections. Two-way binding is supported for Selections using *single* resolution, enabling legends and other interactors to share state.
+
+See the docs on [Toggle](components-selections.qmd#toggle) interactors for an example of an interactive legend.
