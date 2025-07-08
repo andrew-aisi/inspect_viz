@@ -17,6 +17,7 @@ dependencies = [
     "narwhals>=1.15.1",
     "pandas>=2.2.3",
     "pyarrow>=15.0.0",
+    "pillow",
     "pydantic",
     "typing_extensions>=4.9.0",
 ]
@@ -29,8 +30,10 @@ dev = [
     "mypy",
     "datamodel-code-generator",
     "pandas-stubs",
+    "playwright",
     "pyarrow-stubs",
     "pytest",
+    "types-pillow",
 ]
 doc = [
     "quarto-cli==1.7.31",
