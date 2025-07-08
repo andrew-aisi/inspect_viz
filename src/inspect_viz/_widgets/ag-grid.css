@@ -25,3 +25,8 @@ https://github.com/ag-grid/ag-grid/issues/4095 */
 .ag-layout-auto-height .ag-center-cols-viewport{
     min-height:0px !important;
 }
+
+.card-body .ag-column-last:after {
+    border: none !important;
+}
+

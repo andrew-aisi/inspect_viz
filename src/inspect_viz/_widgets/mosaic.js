@@ -703,7 +703,9 @@ var Table = class extends Input {
     if (this.options_.max_width) {
       this.element.style.maxWidth = `${this.options_.max_width}px`;
     }
-    if (this.options_.height && this.options_.height !== "auto") {
+    if (this.options_.auto_filling) {
+      this.element.style.height = `100%`;
+    } else if (this.options_.height && this.options_.height !== "auto") {
       this.element.style.height = `${this.options_.height}px`;
     }
     if (this.options_.style) {
@@ -876,7 +878,7 @@ var Table = class extends Input {
     this.grid_.setGridOption("rowData", rowData);
     if (this.data_.numRows < kAutoRowCount && this.options_.height === void 0) {
       this.grid_.setGridOption("domLayout", "autoHeight");
-    } else if (this.options_.height === "auto" || this.options_.height === void 0) {
+    } else if (!this.options_.auto_filling && (this.options_.height === "auto" || this.options_.height === void 0)) {
       this.element.style.height = `${kAutoRowMaxHeight}px`;
     }
   });
@@ -1741,6 +1743,12 @@ async function render({ model, el }) {
     el.style.width = "100%";
     el.style.height = "400px";
   }
+  if (renderOptions.autoFill && isTableSpec(spec)) {
+    const card = el.closest(".card-body");
+    if (card) {
+      card.style.padding = "0";
+    }
+  }
   const renderSpec = async () => {
     try {
       ctx.clearUnhandledErrors();
@@ -1792,7 +1800,10 @@ function responsiveSpec(spec, containerEl) {
   const kLegendWidth = 80;
   const kLegendHeight = 35;
   spec = structuredClone(spec);
-  if ("hconcat" in spec && spec.hconcat.length == 1) {
+  if ("input" in spec && spec.input === "table") {
+    const table = spec;
+    table.auto_filling = true;
+  } else if ("hconcat" in spec && spec.hconcat.length == 1) {
     const hconcat = spec.hconcat;
     const plot = "plot" in hconcat[0] ? hconcat[0] : null;
     if (plot) {
@@ -1831,6 +1842,9 @@ function isPlotSpec(spec) {
 }
 function isInputSpec(spec) {
   return "input" in spec && spec.input !== "table";
+}
+function isTableSpec(spec) {
+  return "input" in spec && spec.input === "table";
 }
 async function astToDOM(ast, ctx) {
   for (const [name, node] of Object.entries(ast.params)) {
