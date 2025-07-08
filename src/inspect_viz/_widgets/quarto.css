@@ -99,3 +99,7 @@
     --ag-font-family: var(--bs-font-sans-serif);
     --ag-font-size: var(--bs-font-size-base);
 }
+
+.cell-output-display:not(.no-overflow-x) {
+    overflow-x: visible;
+}

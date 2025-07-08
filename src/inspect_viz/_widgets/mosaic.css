@@ -69,6 +69,7 @@ label>input[type="range"] {
 
 .mosaic-widget .slider-input .slider-value {
     margin: 0;
+    margin-bottom: 10px;
 }
 
 .vscode-dark .mosaic-widget {
