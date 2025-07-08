@@ -165,7 +165,7 @@ var ChoiceInput = class extends Input {
   setData(options) {
     if (!isSelection(this.options_.as)) {
       const paramValue = this.options_.as.value;
-      if (paramValue && !options.some((option) => option.value === paramValue)) {
+      if (paramValue && !Array.isArray(paramValue) && !options.some((option) => option.value === paramValue)) {
         options = [...options, { value: paramValue }];
       }
     }
