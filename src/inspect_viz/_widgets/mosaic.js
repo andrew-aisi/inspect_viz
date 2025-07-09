@@ -1732,18 +1732,23 @@ function isVSCodeNotebook() {
 import svgPathParser from "https://cdn.jsdelivr.net/npm/svg-path-parser@1.1.0/+esm";
 import tippy from "https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm";
 var replaceTooltipImpl = (specEl) => {
-  const existingSvg = specEl.querySelector("svg");
-  if (existingSvg) {
-    setupTooltipObserver(existingSvg, specEl);
-    return;
-  }
+  configureSpecSvgTooltips(specEl);
   const observer = new MutationObserver(() => {
-    const svgEl = specEl.querySelector("svg");
-    if (svgEl) {
-      setupTooltipObserver(svgEl, specEl);
-    }
+    console.log("0: Spec element mutation observed, reconfiguring tooltips");
+    configureSpecSvgTooltips(specEl);
   });
   observer.observe(specEl, { childList: true, subtree: true });
+};
+var configuredSvgs = /* @__PURE__ */ new WeakSet();
+var configureSpecSvgTooltips = (specEl) => {
+  const childSvgEls = specEl.querySelectorAll("svg");
+  childSvgEls.forEach((svgEl) => {
+    if (svgEl && !configuredSvgs.has(svgEl)) {
+      setupTooltipObserver(svgEl, specEl);
+      configuredSvgs.add(svgEl);
+      return;
+    }
+  });
 };
 var tooltipInstance = void 0;
 var setupTooltipObserver = (svgEl, specEl) => {
@@ -1754,6 +1759,7 @@ var setupTooltipObserver = (svgEl, specEl) => {
     });
   }
   const observer = new MutationObserver((mutations) => {
+    console.log("1: SVG mutation observed, processing tooltips");
     mutations.forEach((mutation) => {
       if (mutation.type === "childList") {
         const tipElements = svgEl.querySelectorAll('g[aria-label="tip"]');
@@ -1763,82 +1769,82 @@ var setupTooltipObserver = (svgEl, specEl) => {
           const tipEl = tipContainerEl.firstChild;
           if (!tipEl) {
             tooltipInstance.hide();
-            return;
-          }
-          const parsed = parseSVGTooltip(tipEl);
-          const svgPoint = svgEl.createSVGPoint();
-          svgPoint.x = parsed.transform?.x || 0;
-          svgPoint.y = parsed.transform?.y || 0;
-          const screenPoint = svgPoint.matrixTransform(svgEl.getScreenCTM());
-          const centerX = screenPoint.x;
-          const centerY = screenPoint.y;
-          tooltipInstance.setProps({
-            placement: parsed.placement !== "middle" ? parsed.placement || "top" : "top",
-            getReferenceClientRect: () => {
-              return {
-                width: 0,
-                height: 0,
-                top: centerY,
-                bottom: centerY,
-                left: centerX,
-                right: centerX,
-                x: centerX,
-                y: centerY,
-                toJSON: () => {
-                }
-              };
-            },
-            arrow: parsed.placement !== "middle",
-            offset: parsed.placement === "middle" ? [0, 0] : void 0,
-            popperOptions: parsed.placement === "middle" ? {
-              modifiers: [
-                {
-                  name: "preventOverflow",
-                  enabled: false
-                },
-                {
-                  name: "flip",
-                  enabled: false
-                },
-                {
-                  name: "customMiddle",
-                  enabled: true,
-                  phase: "main",
-                  fn: ({ state }) => {
-                    state.modifiersData.popperOffsets.x = centerX - state.rects.popper.width / 2;
-                    state.modifiersData.popperOffsets.y = centerY - state.rects.popper.height / 2;
-                  }
-                }
-              ]
-            } : void 0
-          });
-          const contentEl = document.createElement("div");
-          contentEl.classList.add("inspect-tip-container");
-          let count2 = 0;
-          for (const row of parsed.values) {
-            const rowEl = document.createElement("div");
-            rowEl.className = "inspect-tip-row";
-            contentEl.appendChild(rowEl);
-            const keyEl = document.createElement("div");
-            keyEl.className = "inspect-tip-key";
-            keyEl.append(document.createTextNode(row.key));
-            const valueEl = document.createElement("div");
-            valueEl.className = "inspect-tip-value";
-            valueEl.append(document.createTextNode(row.value));
-            if (row.color) {
-              const colorEl = document.createElement("span");
-              colorEl.className = "inspect-tip-color";
-              colorEl.style.backgroundColor = row.color;
-              valueEl.append(colorEl);
-            }
-            rowEl.appendChild(keyEl);
-            rowEl.appendChild(valueEl);
-            count2++;
-          }
-          tooltipInstance.setContent(contentEl);
-          if (tipContainerEl.childElementCount === 0) {
-            tooltipInstance.hide();
           } else {
+            const parsed = parseSVGTooltip(tipEl);
+            const svgPoint = svgEl.createSVGPoint();
+            svgPoint.x = parsed.transform?.x || 0;
+            svgPoint.y = parsed.transform?.y || 0;
+            const screenPoint = svgPoint.matrixTransform(svgEl.getScreenCTM());
+            const centerX = screenPoint.x;
+            const centerY = screenPoint.y;
+            tooltipInstance.setProps({
+              placement: parsed.placement !== "middle" ? parsed.placement || "top" : "top",
+              getReferenceClientRect: () => {
+                return {
+                  width: 0,
+                  height: 0,
+                  top: centerY,
+                  bottom: centerY,
+                  left: centerX,
+                  right: centerX,
+                  x: centerX,
+                  y: centerY,
+                  toJSON: () => {
+                  }
+                };
+              },
+              arrow: parsed.placement !== "middle",
+              offset: parsed.placement === "middle" ? [0, 0] : void 0,
+              popperOptions: (
+                // Special handling for middle placement, which isn't a supported
+                // tippy placement
+                parsed.placement === "middle" ? {
+                  modifiers: [
+                    {
+                      name: "preventOverflow",
+                      enabled: false
+                    },
+                    {
+                      name: "flip",
+                      enabled: false
+                    },
+                    {
+                      name: "customMiddle",
+                      enabled: true,
+                      phase: "main",
+                      fn: ({ state }) => {
+                        state.modifiersData.popperOffsets.x = centerX - state.rects.popper.width / 2;
+                        state.modifiersData.popperOffsets.y = centerY - state.rects.popper.height / 2;
+                      }
+                    }
+                  ]
+                } : void 0
+              )
+            });
+            const contentEl = document.createElement("div");
+            contentEl.classList.add("inspect-tip-container");
+            let count2 = 0;
+            for (const row of parsed.values) {
+              const rowEl = document.createElement("div");
+              rowEl.className = "inspect-tip-row";
+              contentEl.appendChild(rowEl);
+              const keyEl = document.createElement("div");
+              keyEl.className = "inspect-tip-key";
+              keyEl.append(document.createTextNode(row.key));
+              const valueEl = document.createElement("div");
+              valueEl.className = "inspect-tip-value";
+              valueEl.append(document.createTextNode(row.value));
+              if (row.color) {
+                const colorEl = document.createElement("span");
+                colorEl.className = "inspect-tip-color";
+                colorEl.style.backgroundColor = row.color;
+                valueEl.append(colorEl);
+              }
+              rowEl.appendChild(keyEl);
+              rowEl.appendChild(valueEl);
+              count2++;
+            }
+            tooltipInstance.setContent(contentEl);
             tooltipInstance.show();
           }
         } else {
