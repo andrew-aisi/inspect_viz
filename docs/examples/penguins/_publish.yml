@@ -1,0 +1,4 @@
+- source: _dashboard.qmd
+  quarto-pub:
+    - id: 850ac038-83a6-4b6d-951c-25072e9c5f72
+      url: https://jja.quarto.pub/penguins-explorer
