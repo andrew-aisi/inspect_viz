@@ -472,7 +472,7 @@
     "href": "components-plots.html",
     "title": "Plots",
     "section": "",
-    "text": "A plot() produces a single visualization as a Web element. Similar to other grammars, a plot consists of marks—graphical primitives such as bars, areas, and lines—which serve as chart layers. Plots use the semantics of Observable Plot, such that each plot has a dedicated set of encoding channels with named scale mappings such as x, y, color, opacity, etc.",
+    "text": "A plot() produces a single visualisation as a Web element. Similar to other grammars, a plot consists of marks—graphical primitives such as bars, areas, and lines—which serve as chart layers. Plots use the semantics of Observable Plot, such that each plot has a dedicated set of encoding channels with named scale mappings such as x, y, color, opacity, etc.",
     "crumbs": [
       "Getting Started",
       "Components",
@@ -549,6 +549,102 @@
       "Getting Started",
       "Components",
       "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing-plots.html",
+    "href": "publishing-plots.html",
+    "title": "Plots",
+    "section": "",
+    "text": "There are several ways to publish plots created with Inspect Viz:\n\nUse the write_png() function to create an image for use in a document or presentation.\nUse the write_html() function to create a standalone HTML file.\nCreate and share a Jupyter notebook with the plot.\nEmbed the plot in a website or dashboard.\n\nThis article will cover the first two options for sharing standalone plots—the Notebooks, Websites, and Dashboards articles will cover the other possibilities.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing-plots.html#overview",
+    "href": "publishing-plots.html#overview",
+    "title": "Plots",
+    "section": "",
+    "text": "There are several ways to publish plots created with Inspect Viz:\n\nUse the write_png() function to create an image for use in a document or presentation.\nUse the write_html() function to create a standalone HTML file.\nCreate and share a Jupyter notebook with the plot.\nEmbed the plot in a website or dashboard.\n\nThis article will cover the first two options for sharing standalone plots—the Notebooks, Websites, and Dashboards articles will cover the other possibilities.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing-plots.html#plot-as-image",
+    "href": "publishing-plots.html#plot-as-image",
+    "title": "Plots",
+    "section": "Plot as Image",
+    "text": "Plot as Image\nUse the write_png() function to save a PNG version of any plot.\n\n\n\n\n\n\nNote\n\n\n\nThe write_png() function requires that you install the playwright Python package, which enables taking screenshots of web graphics using an embedded version of the Chromium web browser. You can do this as follows:\npip install playwright\nplaywright install\n\n\nTo create a plot and export it as a PNG:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_png\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_png(\"penguins.png\", pl)\nHere is the plot that was written (note that since this plot is a static PNG file rather than a JavaScript widget it does not have tooltips):\n\n\nPlot Size\nYou can control the size of the image written by specifying the width and height directly in the call to plot(). For example:\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True,\n    width=900,\n    height=400\n)\n\n\nExport Options\nThere are a couple of other options that can be used when exporting plots to PNG:\n\n\n\n\n\n\n\nOption\nDescription\n\n\n\n\nscale\nDevice scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)\n\n\npadding\nPadding (in pixels) to add around exported plot. Defaults to 8 pixels.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing-plots.html#plot-as-html",
+    "href": "publishing-plots.html#plot-as-html",
+    "title": "Plots",
+    "section": "Plot as HTML",
+    "text": "Plot as HTML\nYou can also create an HTML version of a plot using the write_html() function. For example:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_html\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_html(\"penguins.html\", pl)\nUnlike with write_png(), the exported HTML plot retains all interactive features (tooltips, filters, etc.). In some cases you might therefore also include inputs with your plot. For example:\npl = vconcat(\n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"\n   )\n)\n\nwrite_html(\"penguins.html\", pl)",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing-dashboards.html",
+    "href": "publishing-dashboards.html",
+    "title": "Dashboards",
+    "section": "",
+    "text": "Quarto Dashboards are a special type of Quarto website optimized for publishing easily navigable sets of plots and tables. Quarto Dashboards include support for:\n\nMany flexible ways to layout components (row or column based, tabsets, multiple pages, etc.) including responsive layout for mobile devices.\nA variety of ways to present inputs for interactivity including toolbars, sidebars, and card-level inputs.\nDozens of available themes including the ability to create your own themes.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Dashboards"
+    ]
+  },
+  {
+    "objectID": "publishing-dashboards.html#overview",
+    "href": "publishing-dashboards.html#overview",
+    "title": "Dashboards",
+    "section": "",
+    "text": "Quarto Dashboards are a special type of Quarto website optimized for publishing easily navigable sets of plots and tables. Quarto Dashboards include support for:\n\nMany flexible ways to layout components (row or column based, tabsets, multiple pages, etc.) including responsive layout for mobile devices.\nA variety of ways to present inputs for interactivity including toolbars, sidebars, and card-level inputs.\nDozens of available themes including the ability to create your own themes.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Dashboards"
+    ]
+  },
+  {
+    "objectID": "publishing-dashboards.html#example",
+    "href": "publishing-dashboards.html#example",
+    "title": "Dashboards",
+    "section": "Example",
+    "text": "Example\nHere is the Penguin Explorer example from this repository re-written as a dashboard (this is a live dashboard embedded as an iframe):\n\nBelow is the source code for this dashboard. You’ll notice that this looks quite similar to the code for any other Quarto document, but level-two headings (##) have been added to denote a toolbar and dashboard rows (additional headings could be used to create columns and tabsets).\n---\ntitle: \"Penguins Explorer\"\n1format: dashboard\n---\n\n```{python}\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import select\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\naxes = [\"body_mass\", \"flipper_length\", \"bill_depth\", \"bill_length\"]\nx_axis = Param(\"body_mass\")\ny_axis = Param(\"flipper_length\")\n```\n\n2## Row {.toolbar}\n\n```{python}\nselect(penguins, label=\"Species\", column=\"species\")\nselect(label=\"X\", options=axes, target=x_axis)\nselect(label=\"Y\", options=axes, target=y_axis)\n```\n\n3## Row\n\n```{python}\nplot(\n    dot(penguins, x=x_axis, y=y_axis, stroke=\"species\", symbol=\"species\"),\n    grid=True,\n    x_label=\"Body mass (g) →\",\n    y_label=\"↑ Flipper length (mm)\",\n    legend=\"symbol\",\n)\n```\n\n## Row\n\n```{python}\ntable(penguins)\n```\n\n1\n\nformat: dashboard indicates this is a dashbaord not an ordinary HTML page.\n\n2\n\nToolbar for grouping inputs.\n\n3\n\nRow sections to denote additional rows in the dashboard layout.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Dashboards"
+    ]
+  },
+  {
+    "objectID": "publishing-dashboards.html#learning-more",
+    "href": "publishing-dashboards.html#learning-more",
+    "title": "Dashboards",
+    "section": "Learning More",
+    "text": "Learning More\n\nSee the Quarto Dashboards documentation for additional details on creating dashboards.\nSee the Dashboard Examples to get an idea for the sorts of layouts and themes that are available and to see the source code for a variety of dashboard types.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Dashboards"
     ]
   },
   {
@@ -696,6 +792,54 @@
     ]
   },
   {
+    "objectID": "publishing-websites.html",
+    "href": "publishing-websites.html",
+    "title": "Websites",
+    "section": "",
+    "text": "If you want to publish one or more plots as part of a website there are a couple of high level orientations to the problem:\n\nUse a Jupyter-based website publishing system that supports interactive Jupyter Widgets (e.g. Quarto).\nUse the to_html() function to create embeddable HTML fragments for your plots and embed them in any website.\n\nWe’ll cover both of these approaches below.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Websites"
+    ]
+  },
+  {
+    "objectID": "publishing-websites.html#overview",
+    "href": "publishing-websites.html#overview",
+    "title": "Websites",
+    "section": "",
+    "text": "If you want to publish one or more plots as part of a website there are a couple of high level orientations to the problem:\n\nUse a Jupyter-based website publishing system that supports interactive Jupyter Widgets (e.g. Quarto).\nUse the to_html() function to create embeddable HTML fragments for your plots and embed them in any website.\n\nWe’ll cover both of these approaches below.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Websites"
+    ]
+  },
+  {
+    "objectID": "publishing-websites.html#quarto-websites",
+    "href": "publishing-websites.html#quarto-websites",
+    "title": "Websites",
+    "section": "Quarto Websites",
+    "text": "Quarto Websites\nThe Quarto publishing system can create websites that include dynamic output from Python code, including interactve Jupyter Widgets like the ones created by Inspect Viz. To install the quarto-cli Python package:\npip install quarto-cli\nQuarto is a markdown-based publishing system that enables you to embed executable Python blocks whose output is included in the published website. For instance, Here is the source code for the Bias Parameter example:\n---\ntitle: \"Bias Parameter\"\n1echo: false\n---\n\nUse the slider to create bias offsets for the y-axis.\n\n2```{python}\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import area_y\nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import sql\n\nrandom_walk = Data.from_file(\"random-walk.parquet\")\nbias = Param(0)\n```\n\n```{python} \nslider(label=\"Bias\", target=bias, min=0, max=1000, step=1, value=100)\n```\n\n```{python} \nplot(area_y(random_walk, x=\"t\", y=sql(f\"v + {bias}\"), fill=\"steelblue\"))\n```\n\n1\n\nWe specify echo: false to prevent display of code blocks.\n\n2\n\nMarkdown code blocks decorated with {python} are executed.\n\n\nHere is what the page looks like when rendered on the website (it’s a screenshot so you won’t be able to use the slider!):\n\n\nLearning More\nThe website was created with Quarto and includes many live Inspect Viz plots and tables. The source code for the Examples section is a good place to start to understand the basics.\nThe documentation on Quarto Websites includes a tutorial and many additional details on creating, customizing, and publishing websites.\nQuarto Dashboards are a special type of Quarto website optimized for displaying many plots and tables together, so are also worth considering.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Websites"
+    ]
+  },
+  {
+    "objectID": "publishing-websites.html#html-fragments",
+    "href": "publishing-websites.html#html-fragments",
+    "title": "Websites",
+    "section": "HTML Fragments",
+    "text": "HTML Fragments\nIf you are working with an existing website or with another website publishing system, it is also straightforward to embed HTML snippets which include Inspect Viz plots and tables.\n\nSingle Plot\nTo create a standalone snippet which you can include in any website, use the write_html() function:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_html\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_html(\"penguins.html\", pl)\n\n\nMultiple Plots\nIf you want to include multiple plots on a page, you might find it more convenient to call the to_html() function as part of your website generation process. The returned HTML includes the Jupyter Widget runtime dependencies, so if you have multiple plots you’ll instead want to include these dependencies once in the &lt;head&gt; of your document and the create HTML snippets without the dependencies.\nHere is the dependencies code that you should place in the &lt;head&gt; tag:\n&lt;script src=\"https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js\" crossorigin=\"anonymous\"&gt;&lt;/script&gt;\n&lt;script src=\"https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js\" crossorigin=\"anonymous\"&gt;&lt;/script&gt;\nThen, specify dependencies=False when you call to_html() to get only the plot and not the dependencies scripts which are already in your &lt;head&gt; tag:\nfrom inspect_viz.plot import to_html\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\npl_html = to_html(pl, dependencies=False)\n\n# ...include pl_html in your website",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Websites"
+    ]
+  },
+  {
     "objectID": "examples/penguins/index.html",
     "href": "examples/penguins/index.html",
     "title": "Penguins Explorer",
@@ -728,6 +872,54 @@
     ]
   },
   {
+    "objectID": "publishing-notebooks.html",
+    "href": "publishing-notebooks.html",
+    "title": "Notebooks",
+    "section": "",
+    "text": "A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks (nbconvert and Quarto), and then these documents can in turn be printed to PDF if required.\nYou can also share a live version of a notebook that supports filtering and plot interactions by pubishing it on a platform like Google Colab.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Notebooks"
+    ]
+  },
+  {
+    "objectID": "publishing-notebooks.html#overview",
+    "href": "publishing-notebooks.html#overview",
+    "title": "Notebooks",
+    "section": "",
+    "text": "A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks (nbconvert and Quarto), and then these documents can in turn be printed to PDF if required.\nYou can also share a live version of a notebook that supports filtering and plot interactions by pubishing it on a platform like Google Colab.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Notebooks"
+    ]
+  },
+  {
+    "objectID": "publishing-notebooks.html#nbconvert",
+    "href": "publishing-notebooks.html#nbconvert",
+    "title": "Notebooks",
+    "section": "nbconvert",
+    "text": "nbconvert\nThe nbconvert Python package enables export of any Jupyter notebook to HTML. Install nbconvert with:\npip install nbconvert\nThen, convert any notebook which includes Inspect Viz plots as follows:\njupyter nbconvert --to html --execute notebook.ipynb\nThis will create an HTML file named “notebook.html” alongside the “notebook.ipynb”.\nYou can also specify that you’d like code cells removed using the --no-input option:\njupyter nbconvert --to html --execute --no-input notebook.ipynb\nIf you need a PDF version of the notebook, open the file in a browser and print to PDF.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Notebooks"
+    ]
+  },
+  {
+    "objectID": "publishing-notebooks.html#quarto",
+    "href": "publishing-notebooks.html#quarto",
+    "title": "Notebooks",
+    "section": "Quarto",
+    "text": "Quarto\nThe Quarto publishing system can also convert notebooks to HTML. To install the quarto-cli Python package:\npip install quarto-cli\nThen, convert any notebook which includes Inspect Viz plots as follows:\nquarto render notebook.ipynb --to html --execute\nThis will create an HTML file named “notebook.html” and a directory named “notebook_files” alongside the “notebook.ipynb”.\nYou can also specify that you’d like code cells removed using the -M echo:false option:\nquarto render notebook.ipynb --to html --execute -M echo:false\nIf you need a PDF version of the notebook, open the file in a browser and print to PDF.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Notebooks"
+    ]
+  },
+  {
     "objectID": "reference/inspect_viz.plot.html",
     "href": "reference/inspect_viz.plot.html",
     "title": "inspect_viz.plot",
@@ -757,6 +949,18 @@
     "title": "inspect_viz.plot",
     "section": "Legend",
     "text": "Legend\n\nlegend\nCreate a legend.\n\nSource\n\ndef legend(\n    legend: Literal[\"color\", \"opacity\", \"symbol\"],\n    location: Literal[\"bottom\", \"left\", \"right\", \"top\"] = \"right\",\n    columns: Literal[\"auto\"] | int | None = \"auto\",\n    label: str | None = None,\n    target: Selection | None = None,\n    field: str | None = None,\n    width: float | None = None,\n    height: float | None = None,\n    tick_size: float | None = None,\n    margin_bottom: float | None = None,\n    margin_left: float | None = None,\n    margin_right: float | None = None,\n    margin_top: float | None = None,\n    for_plot: str | None = None,\n) -&gt; Legend\n\nlegend Literal['color', 'opacity', 'symbol']\n\nLegend type (\"color\", \"opacity\", or \"symbol\").\n\nlocation Literal['bottom', 'left', 'right', 'top']\n\nThe legend location (used for display only when passing a legend to theplot() function). Also affects default value for columns.\n\ncolumns Literal['auto'] | int | None\n\nThe number of columns to use to layout a discrete legend (defaults to “auto”, which uses 1 column for location “left” or “right”)\n\nlabel str | None\n\nThe legend label.\n\ntarget Selection | None\n\nThe target selection. If specified, the legend is interactive, using a toggle interaction for discrete legends or an intervalX interaction for continuous legends.\n\nfield str | None\n\nThe data field over which to generate output selection clauses. If unspecified, a matching field is retrieved from existing plot marks.\n\nwidth float | None\n\nWidth of the legend in pixels.\n\nheight float | None\n\nHeight of the legend in pixels.\n\ntick_size float | None\n\nThe size of legend ticks in a continuous legend, in pixels.\n\nmargin_bottom float | None\n\nThe bottom margin of the legend component, in pixels.\n\nmargin_left float | None\n\nThe left margin of the legend component, in pixels.\n\nmargin_right float | None\n\nThe right margin of the legend component, in pixels.\n\nmargin_top float | None\n\nThe top margin of the legend component, in pixels.\n\nfor_plot str | None\n\nThe name of the plot this legend applies to. A plot must include a name attribute to be referenced. Note that this is not use when passing a legend to the plot() function.\n\n\n\n\nLegend\nPlot legend (create legends using the legend() function).\n\nSource\n\nclass Legend(Component)",
+    "crumbs": [
+      "Reference",
+      "Python API",
+      "inspect_viz.plot"
+    ]
+  },
+  {
+    "objectID": "reference/inspect_viz.plot.html#export",
+    "href": "reference/inspect_viz.plot.html#export",
+    "title": "inspect_viz.plot",
+    "section": "Export",
+    "text": "Export\n\nto_html\nGenreate an HTML snippet for a plot or other component.\n\nSource\n\ndef to_html(component: Component, dependencies: bool = True) -&gt; str\n\ncomponent Component\n\nCompontent to export.\n\ndependencies bool\n\nInclude JavaScript dependencies required for Jupyter widget rendering. Dependencies should only be included once per web-page, so if you already have them on a page you might want to disable including them when generating HTML.\n\n\n\n\nwrite_html\nWrite an HTML file for a plot or other component.\n\nSource\n\ndef write_html(\n    file: str | Path, component: Component, dependencies: bool = True\n) -&gt; None\n\nfile str | Path\n\nTarget filename.\n\ncomponent Component\n\nCompontent to export.\n\ndependencies bool\n\nInclude JavaScript dependencies required for Jupyter widget rendering. Dependencies should only be included once per web-page, so if you already have them on a page you might want to disable including them when generating HTML.\n\n\n\n\nwrite_png\nExport a plot or table to a PNG.\n\nSource\n\ndef write_png(\n    file: str | Path, component: Component, scale: int = 2, padding: int = 8\n) -&gt; None\n\nfile str | Path\n\nTarget filename.\n\ncomponent Component\n\nComponent to export.\n\nscale int\n\nDevice scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)\n\npadding int\n\nPadding (in pixels) around plot.",
     "crumbs": [
       "Reference",
       "Python API",
