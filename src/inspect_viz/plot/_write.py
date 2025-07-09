@@ -23,39 +23,50 @@ def write_html(file: str | Path, component: Component, title: str = "Plot") -> N
     embed_minimal_html(file, views=[component], title=title, drop_defaults=False)
 
 
-# TODO: better waiting
 # TODO: notebook compatibility
 
 
-def write_png(file: str | Path, component: Component) -> None:
+def write_png(
+    file: str | Path, component: Component, scale: int = 2, padding: int = 8
+) -> None:
     """Export a plot or table to a PNG.
 
     Args:
        file: Target filename.
        component: Component to export.
+       scale: Device scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)
+       padding: Padding (in pixels) around plot.
     """
-    PAD = 8  # padding in *device* pixels
-    SCALE = 2  # 2 → “Retina”; 3 for iPhone 14 Pro, etc.
-
     with tempfile.NamedTemporaryFile("w", suffix=".html") as temp_file:
         # write the component as HTML
         write_html(temp_file.name, component=component)
 
-        # try to launch the browser
+        # launch the browser
         with _with_browser() as b:
             from playwright.sync_api import Browser
 
-            if isinstance(b, Browser):
-                ctx = b.new_context(device_scale_factor=SCALE)
-                page = ctx.new_page()
-                file_uri = Path(temp_file.name).resolve().as_uri()
-                page.goto(file_uri, wait_until="networkidle")
-                w = page.evaluate("document.documentElement.scrollWidth")
-                h = page.evaluate("document.documentElement.scrollHeight")
-                page.set_viewport_size({"width": w, "height": h})
-                page.screenshot(path=file, scale="device")
-                b.close()
-                _crop_image(file, PAD, SCALE)
+            # browser can be None if playwright wasn't installed yet
+            if not isinstance(b, Browser):
+                return
+
+            # create and load page
+            ctx = b.new_context(device_scale_factor=scale)
+            page = ctx.new_page()
+            file_uri = Path(temp_file.name).resolve().as_uri()
+            page.goto(file_uri, wait_until="networkidle")
+            page.wait_for_function(
+                '() => !!window.document.querySelector("svg") || !!window.document.querySelector(".inspect-viz-table")',
+                polling=100,
+            )
+
+            # eliminate scrolling
+            w = page.evaluate("document.documentElement.scrollWidth")
+            h = page.evaluate("document.documentElement.scrollHeight")
+            page.set_viewport_size({"width": w, "height": h})
+
+            # take screenshot and crop image
+            page.screenshot(path=file, scale="device")
+            _crop_image(file, padding, scale)
 
 
 @contextmanager
@@ -72,7 +83,11 @@ def _with_browser() -> Iterator[Any | None]:
     # try to launch the browser
     with sync_playwright() as p:
         try:
-            yield p.chromium.launch(headless=True)
+            browser = p.chromium.launch(headless=True)
+            try:
+                yield browser
+            finally:
+                browser.close()
         except Error as e:
             if "Executable doesn't exist" in str(e) and sys.stdin.isatty():
                 if _confirm_install():
