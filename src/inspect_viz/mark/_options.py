@@ -250,12 +250,3 @@ class TipOptions(MarkOptions, TextStyles, total=False):
 
     If a format is a string, it is interpreted as a (UTC) time format for temporal channels, and otherwise a number format.
     """
-
-    path_filter: str | Param
-    """The image filter for the tip’s box; defaults to a drop shadow."""
-
-    pointer_size: float | Param
-    """The size of the tip’s pointer in pixels; defaults to 12."""
-
-    text_padding: float | Param
-    """The padding around the text in pixels; defaults to 8."""
