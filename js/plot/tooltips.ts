@@ -1,8 +1,9 @@
-import tippy from 'https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm';
+import svgPathParser from 'https://cdn.jsdelivr.net/npm/svg-path-parser@1.1.0/+esm';
+import tippy, { Placement } from 'https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm';
 
 // TODO: links
 // TODO: test multiple plots
-// TODO: tipoptions / tip positioning (parse drawing of arrow)
+// TODO: tool tip default styling (non-quarto)
 
 export const replaceTooltipImpl = (specEl: HTMLElement) => {
     // Check if SVG already exists
@@ -36,7 +37,6 @@ const setupTooltipObserver = (svgEl: SVGElement, specEl: HTMLElement) => {
     if (!tooltipInstance) {
         tooltipInstance = tippy(specEl, {
             trigger: 'manual',
-            placement: 'top',
             theme: 'inspect',
         });
     }
@@ -58,13 +58,13 @@ const setupTooltipObserver = (svgEl: SVGElement, specEl: HTMLElement) => {
                     const rect = specEl.getBoundingClientRect();
                     const parsed = parseSVGTooltip(tipEl);
 
+                    const centerX = rect.left + (parsed.transform?.x || 0);
+                    const centerY = rect.top + (parsed.transform?.y || 0);
+
                     tooltipInstance.setProps({
+                        placement:
+                            parsed.placement !== 'middle' ? parsed.placement || 'top' : 'top',
                         getReferenceClientRect: () => {
-                            console.log({ rect, parsed });
-
-                            const centerX = rect.left + (parsed.transform?.x || 0);
-                            const centerY = rect.top + (parsed.transform?.y || 0);
-
                             return {
                                 width: 0,
                                 height: 0,
@@ -77,6 +77,35 @@ const setupTooltipObserver = (svgEl: SVGElement, specEl: HTMLElement) => {
                                 toJSON: () => {},
                             } as DOMRect;
                         },
+                        arrow: parsed.placement !== 'middle',
+                        offset: parsed.placement === 'middle' ? [0, 0] : undefined,
+                        popperOptions:
+                            parsed.placement === 'middle'
+                                ? {
+                                      modifiers: [
+                                          {
+                                              name: 'preventOverflow',
+                                              enabled: false,
+                                          },
+                                          {
+                                              name: 'flip',
+                                              enabled: false,
+                                          },
+                                          {
+                                              name: 'customMiddle',
+                                              enabled: true,
+                                              phase: 'main',
+                                              fn: ({ state }: any) => {
+                                                  // Center the popover at the reference point
+                                                  state.modifiersData.popperOffsets.x =
+                                                      centerX - state.rects.popper.width / 2;
+                                                  state.modifiersData.popperOffsets.y =
+                                                      centerY - state.rects.popper.height / 2;
+                                              },
+                                          },
+                                      ],
+                                  }
+                                : undefined,
                     });
 
                     const contentEl = document.createElement('div');
@@ -143,6 +172,7 @@ interface ParsedTooltip {
         y: number;
     };
     values: Array<TooltipRow>;
+    placement?: Placement | 'middle';
 }
 
 const parseSVGTooltip = (tipEl: SVGGElement): ParsedTooltip => {
@@ -184,5 +214,108 @@ const parseSVGTooltip = (tipEl: SVGGElement): ParsedTooltip => {
         }
     });
 
+    // Parse the path to determine the arrow direction
+    const pathEl = tipEl.querySelector('path');
+    if (pathEl) {
+        const pathData = pathEl.getAttribute('d');
+        if (pathData) {
+            result.placement = parseArrowDirection(pathData);
+        }
+    }
+
     return result;
+};
+
+const parseArrowPosition = (a: number, b: number): 'start' | 'center' | 'end' => {
+    if (a < b) {
+        return 'end';
+    } else if (a > b) {
+        return 'start';
+    } else {
+        return 'center';
+    }
+};
+
+const parseArrowDirection = (pathData: string): Placement | 'middle' => {
+    const parsed = svgPathParser.parseSVG(pathData);
+    if (parsed.length < 3) {
+        return 'top';
+    }
+
+    const moveTo = parsed[0];
+    if (moveTo.code !== 'M') {
+        console.warn('Expected moveto command (M) in path data, found:', moveTo);
+        return 'top';
+    }
+
+    if (moveTo.x !== 0 && moveTo.y !== 0) {
+        return 'middle';
+    }
+
+    const lineTo = parsed[1];
+    if (lineTo.code !== 'l') {
+        console.log({ parsed });
+        console.warn('Expected lineto command (l) in path data, found:', lineTo);
+        return 'top';
+    }
+
+    const firstEdgeLineTo = parsed[2];
+    if (firstEdgeLineTo.code !== 'h' && firstEdgeLineTo.code !== 'v') {
+        console.warn(
+            'Expected horizontal (h) or vertical (v) line command after move, found:',
+            firstEdgeLineTo
+        );
+        return 'top';
+    }
+
+    const lastEdgeLineTo = parsed[parsed.length - 2];
+    if (lastEdgeLineTo.code !== 'h' && lastEdgeLineTo.code !== 'v') {
+        console.warn(
+            'Expected horizontal (h) or vertical (v) line command before close, found:',
+            lastEdgeLineTo
+        );
+        return 'top';
+    }
+
+    // first determine the direction of the arrow
+    const x = lineTo.x;
+    const y = lineTo.y;
+
+    let arrowDirection: 'top' | 'bottom' | 'left' | 'right' = 'top';
+    if (x > 0 && y > 0) {
+        arrowDirection = 'bottom';
+    } else if (x < 0 && y < 0) {
+        if (firstEdgeLineTo.code === 'h') {
+            arrowDirection = 'bottom';
+        } else {
+            arrowDirection = 'left';
+        }
+    } else if (x > 0 && y < 0) {
+        if (firstEdgeLineTo.code === 'h') {
+            arrowDirection = 'top';
+        } else {
+            arrowDirection = 'right';
+        }
+    } else if (x < 0 && y > 0) {
+        arrowDirection = 'bottom';
+    } else {
+        console.warn(
+            'Could not determine arrow direction from path data, returning default placement: top'
+        );
+    }
+
+    // Next determine the placement within the svg (start, center, end)
+    let arrowPosition: 'start' | 'center' | 'end' = 'center';
+    if (firstEdgeLineTo.code === 'h') {
+        arrowPosition = parseArrowPosition(firstEdgeLineTo.x, lastEdgeLineTo.x);
+    } else {
+        arrowPosition = parseArrowPosition(firstEdgeLineTo.y, lastEdgeLineTo.y);
+    }
+
+    // Finalize the placement based on direction and position
+    if (arrowPosition === 'center') {
+        return arrowDirection as Placement;
+    } else {
+        return `${arrowDirection}-${arrowPosition}` as Placement;
+    }
 };

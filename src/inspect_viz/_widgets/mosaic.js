@@ -1729,6 +1729,7 @@ function isVSCodeNotebook() {
 }
 
 // js/plot/tooltips.ts
+import svgPathParser from "https://cdn.jsdelivr.net/npm/svg-path-parser@1.1.0/+esm";
 import tippy from "https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm";
 var replaceTooltipImpl = (specEl) => {
   const existingSvg = specEl.querySelector("svg");
@@ -1755,7 +1756,6 @@ var setupTooltipObserver = (svgEl, specEl) => {
   if (!tooltipInstance) {
     tooltipInstance = tippy(specEl, {
       trigger: "manual",
-      placement: "top",
       theme: "inspect"
     });
   }
@@ -1773,11 +1773,11 @@ var setupTooltipObserver = (svgEl, specEl) => {
           }
           const rect = specEl.getBoundingClientRect();
           const parsed = parseSVGTooltip(tipEl);
+          const centerX = rect.left + (parsed.transform?.x || 0);
+          const centerY = rect.top + (parsed.transform?.y || 0);
           tooltipInstance.setProps({
+            placement: parsed.placement !== "middle" ? parsed.placement || "top" : "top",
             getReferenceClientRect: () => {
-              console.log({ rect, parsed });
-              const centerX = rect.left + (parsed.transform?.x || 0);
-              const centerY = rect.top + (parsed.transform?.y || 0);
               return {
                 width: 0,
                 height: 0,
@@ -1790,7 +1790,30 @@ var setupTooltipObserver = (svgEl, specEl) => {
                 toJSON: () => {
                 }
               };
-            }
+            },
+            arrow: parsed.placement !== "middle",
+            offset: parsed.placement === "middle" ? [0, 0] : void 0,
+            popperOptions: parsed.placement === "middle" ? {
+              modifiers: [
+                {
+                  name: "preventOverflow",
+                  enabled: false
+                },
+                {
+                  name: "flip",
+                  enabled: false
+                },
+                {
+                  name: "customMiddle",
+                  enabled: true,
+                  phase: "main",
+                  fn: ({ state }) => {
+                    state.modifiersData.popperOffsets.x = centerX - state.rects.popper.width / 2;
+                    state.modifiersData.popperOffsets.y = centerY - state.rects.popper.height / 2;
+                  }
+                }
+              ]
+            } : void 0
           });
           const contentEl = document.createElement("div");
           contentEl.classList.add("inspect-tip-container");
@@ -1865,7 +1888,94 @@ var parseSVGTooltip = (tipEl) => {
       result.values.push({ key, value, color });
     }
   });
+  const pathEl = tipEl.querySelector("path");
+  if (pathEl) {
+    const pathData = pathEl.getAttribute("d");
+    if (pathData) {
+      result.placement = parseArrowDirection(pathData);
+    }
+  }
   return result;
+};
+var parseArrowPosition = (a, b) => {
+  if (a < b) {
+    return "end";
+  } else if (a > b) {
+    return "start";
+  } else {
+    return "center";
+  }
+};
+var parseArrowDirection = (pathData) => {
+  const parsed = svgPathParser.parseSVG(pathData);
+  if (parsed.length < 3) {
+    return "top";
+  }
+  const moveTo = parsed[0];
+  if (moveTo.code !== "M") {
+    console.warn("Expected moveto command (M) in path data, found:", moveTo);
+    return "top";
+  }
+  if (moveTo.x !== 0 && moveTo.y !== 0) {
+    return "middle";
+  }
+  const lineTo = parsed[1];
+  if (lineTo.code !== "l") {
+    console.log({ parsed });
+    console.warn("Expected lineto command (l) in path data, found:", lineTo);
+    return "top";
+  }
+  const firstEdgeLineTo = parsed[2];
+  if (firstEdgeLineTo.code !== "h" && firstEdgeLineTo.code !== "v") {
+    console.warn(
+      "Expected horizontal (h) or vertical (v) line command after move, found:",
+      firstEdgeLineTo
+    );
+    return "top";
+  }
+  const lastEdgeLineTo = parsed[parsed.length - 2];
+  if (lastEdgeLineTo.code !== "h" && lastEdgeLineTo.code !== "v") {
+    console.warn(
+      "Expected horizontal (h) or vertical (v) line command before close, found:",
+      lastEdgeLineTo
+    );
+    return "top";
+  }
+  const x = lineTo.x;
+  const y = lineTo.y;
+  let arrowDirection = "top";
+  if (x > 0 && y > 0) {
+    arrowDirection = "bottom";
+  } else if (x < 0 && y < 0) {
+    if (firstEdgeLineTo.code === "h") {
+      arrowDirection = "bottom";
+    } else {
+      arrowDirection = "left";
+    }
+  } else if (x > 0 && y < 0) {
+    if (firstEdgeLineTo.code === "h") {
+      arrowDirection = "top";
+    } else {
+      arrowDirection = "right";
+    }
+  } else if (x < 0 && y > 0) {
+    arrowDirection = "bottom";
+  } else {
+    console.warn(
+      "Could not determine arrow direction from path data, returning default placement: top"
+    );
+  }
+  let arrowPosition = "center";
+  if (firstEdgeLineTo.code === "h") {
+    arrowPosition = parseArrowPosition(firstEdgeLineTo.x, lastEdgeLineTo.x);
+  } else {
+    arrowPosition = parseArrowPosition(firstEdgeLineTo.y, lastEdgeLineTo.y);
+  }
+  if (arrowPosition === "center") {
+    return arrowDirection;
+  } else {
+    return `${arrowDirection}-${arrowPosition}`;
+  }
 };
 
 // js/widgets/mosaic.ts
