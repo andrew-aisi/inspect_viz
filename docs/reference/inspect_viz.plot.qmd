@@ -14,8 +14,9 @@ title: "inspect_viz.plot"
 
 ## Export
 
-### write_png
+### to_html
 ### write_html
+### write_png
 
 ## Defaults 
 

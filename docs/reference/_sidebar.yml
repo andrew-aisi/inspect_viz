@@ -32,10 +32,12 @@ website:
           href: reference/inspect_viz.plot.qmd#legend
         - text: Legend
           href: reference/inspect_viz.plot.qmd#legend
-        - text: write_png
-          href: reference/inspect_viz.plot.qmd#write_png
+        - text: to_html
+          href: reference/inspect_viz.plot.qmd#to_html
         - text: write_html
           href: reference/inspect_viz.plot.qmd#write_html
+        - text: write_png
+          href: reference/inspect_viz.plot.qmd#write_png
         - text: plot_defaults
           href: reference/inspect_viz.plot.qmd#plot_defaults
         - text: PlotDefaults

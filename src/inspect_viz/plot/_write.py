@@ -1,11 +1,14 @@
+import json
 import subprocess
 import sys
 import tempfile
 from contextlib import asynccontextmanager
 from pathlib import Path
+from textwrap import dedent
 from typing import Any, AsyncIterator
 
-from ipywidgets.embed import embed_minimal_html  # type: ignore
+import ipywidgets  # type: ignore
+from ipywidgets.embed import embed_data, escape_script  # type: ignore
 from PIL import Image, ImageChops, ImageOps
 
 from inspect_viz._util._async import current_async_backend, run_coroutine
@@ -13,16 +16,77 @@ from inspect_viz._util._async import current_async_backend, run_coroutine
 from .. import Component
 
 
-def write_html(file: str | Path, component: Component, title: str = "Plot") -> None:
-    """Export a plot or table to HTML.
+def to_html(component: Component, dependencies: bool = True) -> str:
+    """Genreate an HTML snippet for a plot or other component.
 
     Args:
        file: Target filename.
        component: Compontent to export.
-       title: Title for HTML page (defaults to "Plot")
+       dependencies: Include JavaScript dependencies required for Jupyter widget rendering.
+          Dependencies should only be included once per web-page, so if you already have
+          them on a page you might want to disable including them when generating HTML.
     """
+    # realize the widget data and state
     component._mimebundle(collect=False)
-    embed_minimal_html(file, views=[component], title=title, drop_defaults=False)
+    widget_data = embed_data(views=[component], drop_defaults=False)
+    widget_state = escape_script(json.dumps(widget_data["manager_state"], indent=2))
+
+    # create views
+    widget_view_template = dedent("""
+    <script type="application/vnd.jupyter.widget-view+json">
+    {view_spec}
+    </script>
+    """)
+    widget_views = "\n".join(
+        widget_view_template.format(view_spec=escape_script(json.dumps(view_spec)))
+        for view_spec in widget_data["view_specs"]
+    )
+
+    # create runtime dependencies
+    html_manager_version = ipywidgets._version.__html_manager_version__
+    jupyter_dependencies = (
+        dedent(f"""
+
+    <!--[jupyter_widget_dependencies]-->
+    <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@{html_manager_version}/dist/embed-amd.js" crossorigin="anonymous"></script>
+    <!--[/jupyter_widget_dependencies]-->
+    """)
+        if dependencies
+        else ""
+    )
+
+    return HTML_SNIPPET_TEMPLATE.format(
+        dependencies=jupyter_dependencies,
+        widget_state=widget_state,
+        widget_views=widget_views,
+    )
+
+
+HTML_SNIPPET_TEMPLATE = """
+<div>{dependencies}
+<script type="application/vnd.jupyter.widget-state+json">
+{widget_state}
+</script>
+{widget_views}
+</div>
+"""
+
+
+def write_html(
+    file: str | Path, component: Component, dependencies: bool = True
+) -> None:
+    """Write an HTML file for a plot or other component.
+
+    Args:
+       file: Target filename.
+       component: Compontent to export.
+       dependencies: Include JavaScript dependencies required for Jupyter widget rendering.
+          Dependencies should only be included once per web-page, so if you already have
+          them on a page you might want to disable including them when generating HTML.
+    """
+    with open(file, "w") as f:
+        f.write(to_html(component, dependencies))
 
 
 def write_png(
