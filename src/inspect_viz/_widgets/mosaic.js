@@ -1728,6 +1728,145 @@ function isVSCodeNotebook() {
   return window.location.protocol === "vscode-webview:" && window.location.search.includes("purpose=notebookRenderer");
 }
 
+// js/plot/tooltips.ts
+import tippy from "https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm";
+var replaceTooltipImpl = (specEl) => {
+  const existingSvg = specEl.querySelector("svg");
+  if (existingSvg) {
+    setupTooltipObserver(existingSvg, specEl);
+    return;
+  }
+  let mutationCount = 0;
+  const maxMutations = 5;
+  const observer = new MutationObserver(() => {
+    const svgEl = specEl.querySelector("svg");
+    if (svgEl) {
+      observer.disconnect();
+      setupTooltipObserver(svgEl, specEl);
+    } else if (mutationCount >= maxMutations) {
+      observer.disconnect();
+    }
+    mutationCount++;
+  });
+  observer.observe(specEl, { childList: true, subtree: true });
+};
+var tooltipInstance = void 0;
+var setupTooltipObserver = (svgEl, specEl) => {
+  if (!tooltipInstance) {
+    tooltipInstance = tippy(specEl, {
+      trigger: "manual",
+      placement: "top",
+      theme: "inspect"
+    });
+  }
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === "childList") {
+        const tipElements = svgEl.querySelectorAll('g[aria-label="tip"]');
+        if (tipElements.length === 1) {
+          const tipContainerEl = tipElements[0];
+          tipContainerEl.style.display = "none";
+          const tipEl = tipContainerEl.firstChild;
+          if (!tipEl) {
+            return;
+          }
+          const rect = specEl.getBoundingClientRect();
+          const parsed = parseSVGTooltip(tipEl);
+          tooltipInstance.setProps({
+            getReferenceClientRect: () => {
+              console.log({ rect, parsed });
+              const centerX = rect.left + (parsed.transform?.x || 0);
+              const centerY = rect.top + (parsed.transform?.y || 0);
+              return {
+                width: 0,
+                height: 0,
+                top: centerY,
+                bottom: centerY,
+                left: centerX,
+                right: centerX,
+                x: centerX,
+                y: centerY,
+                toJSON: () => {
+                }
+              };
+            }
+          });
+          const contentEl = document.createElement("div");
+          contentEl.classList.add("inspect-tip-container");
+          let count2 = 0;
+          for (const row of parsed.values) {
+            const rowEl = document.createElement("div");
+            rowEl.className = "inspect-tip-row";
+            contentEl.appendChild(rowEl);
+            const keyEl = document.createElement("div");
+            keyEl.className = "inspect-tip-key";
+            keyEl.append(document.createTextNode(row.key));
+            const valueEl = document.createElement("div");
+            valueEl.className = "inspect-tip-value";
+            valueEl.append(document.createTextNode(row.value));
+            if (row.color) {
+              const colorEl = document.createElement("span");
+              colorEl.className = "inspect-tip-color";
+              colorEl.style.backgroundColor = row.color;
+              valueEl.append(colorEl);
+            }
+            rowEl.appendChild(keyEl);
+            rowEl.appendChild(valueEl);
+            count2++;
+          }
+          tooltipInstance.setContent(contentEl);
+          if (tipContainerEl.childElementCount === 0) {
+            tooltipInstance.hide();
+          } else {
+            tooltipInstance.show();
+          }
+        } else {
+          throw new Error(
+            `Expected exactly one tip element, found ${tipElements.length}`
+          );
+        }
+      }
+    });
+  });
+  observer.observe(svgEl, {
+    childList: true,
+    subtree: true
+  });
+};
+var parseSVGTooltip = (tipEl) => {
+  const result = { values: [] };
+  const transformVal = tipEl.getAttribute("transform");
+  if (transformVal) {
+    const match = transformVal.match(/translate\(([^)]+)\)/);
+    if (match) {
+      const [x, y] = match[1].split(",").map(Number);
+      result.transform = { x, y };
+    }
+  }
+  const tspanEls = tipEl.querySelectorAll("tspan");
+  tspanEls.forEach((tspan) => {
+    let key = void 0;
+    let value = void 0;
+    let color = void 0;
+    tspan.childNodes.forEach((node) => {
+      if (node.nodeName === "tspan") {
+        const colorAttr = node.getAttribute("fill");
+        if (colorAttr) {
+          color = colorAttr;
+        } else {
+          key = node.textContent?.trim();
+        }
+      } else if (node.nodeName === "#text") {
+        value = node.textContent?.trim();
+      }
+    });
+    if (key !== void 0 && value !== void 0) {
+      result.values.push({ key, value, color });
+    }
+  });
+  return result;
+};
+
 // js/widgets/mosaic.ts
 async function render({ model, el }) {
   const spec = JSON.parse(model.get("spec"));
@@ -1757,6 +1896,7 @@ async function render({ model, el }) {
       const specEl = await astToDOM(ast, ctx);
       el.innerHTML = "";
       el.appendChild(specEl);
+      replaceTooltipImpl(specEl);
       await displayUnhandledErrors(ctx, el);
     } catch (e) {
       console.error(e);

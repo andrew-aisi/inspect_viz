@@ -15,6 +15,7 @@ import { INPUTS } from '../inputs';
 import { errorInfo, errorAsHTML, displayRenderError } from '../util/errors';
 import { isNotebook } from '../util/platform';
 import { TableOptions } from '../inputs/table';
+import { replaceTooltipImpl as installPlotTooltips } from '../plot/tooltips';
 
 interface MosaicProps {
     tables: Record<string, string>;
@@ -58,6 +59,11 @@ async function render({ model, el }: RenderProps<MosaicProps>) {
             const specEl = (await astToDOM(ast, ctx)) as HTMLElement;
             el.innerHTML = '';
             el.appendChild(specEl);
+
+            // For plots, replace the tooltip implementation with
+            // our own implementation
+            installPlotTooltips(specEl);
+
             await displayUnhandledErrors(ctx, el);
         } catch (e: unknown) {
             console.error(e);
