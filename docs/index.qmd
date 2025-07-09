@@ -6,9 +6,7 @@ subtitle: |
 
 ## Welcome
 
-Welcome to Inspect Viz, a data visualization library for [Inspect AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools for high quality interactive visualizations from Inspect evaluations.
-
-Inspect Viz is built on top of the [Mosaic](https://idl.uw.edu/mosaic/) web-based visualization framework. You can include these visualization in any [Jupyter Notebook](https://jupyter.org/) or web publishing system that supports Jupyter widgets (e.g. [Quarto](https://quarto.org)).
+Welcome to Inspect Viz, a data visualization library for [Inspect AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools for high quality interactive visualizations from Inspect evaluations. You can include these visualizations in any [Jupyter Notebook](https://jupyter.org/) or web publishing system that supports Jupyter widgets (e.g. [Quarto](https://quarto.org)).
 
 ::: callout-note
 While `inspect_viz` will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives. 
@@ -47,24 +45,24 @@ plot(
 )
 ```
 
-1.  Read the dataset from a parquest file. You can can also use `Data.from_dataframe()` to read data from any Pandas, Polars, or PyArrow data frame.
+1.  Read the dataset from a parquet file. You can can also use `Data.from_dataframe()` to read data from any Pandas, Polars, or PyArrow data frame.
 
 2.  Plot using a `dot()` mark. The `plot()` function takes one or more marks or interactors.
 
-#### Facets
+#### Scales
 
-The penguins data set includes various species of penguin, so lets add some elements to our plot that enable us to see the difference between species. We'll also add grid lines to make the plot a bit easier to read.
+The penguins data set includes various species of penguin, so lets add some elements to our plot that enable us to see the difference between species. We'll also add grid lines to make the plot a bit easier to read:
 
 ```{python}
 plot(
     dot(penguins, x="body_mass", y="flipper_length",  
-        stroke="species", symbol="species"),
+        stroke="species", symbol="species", channels={ "sex": "sex", "island": "island"}),
     legend="symbol",
     grid=True
 )
 ```
 
-Here we mapped the "species" column to the `stroke` and `symbol` facets of the plot (causing each species to have its own color and symbol). We also add a `legend` to the plot as a key to this mapping.
+Here we mapped the "species" column to the `stroke` and `symbol` scales of the plot (causing each species to have its own color and symbol). We also add a `legend` to the plot as a key to this mapping.
 
 ### Bar Plot
 

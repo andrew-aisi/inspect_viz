@@ -96,9 +96,40 @@ plot(
 )
 ```
 
-1.  Use `fill` to distinghish male and female athletes; use `opacity` to deal with a large density of data points.
+1.  Use `fill` to distinguish male and female athletes; use `opacity` to deal with a large density of data points.
 
 2.  Use `stroke` to ensure that male and female athletes each get their own regression line.
+
+## Tooltips
+
+Tooltips enable you to provide additional details when the user hovers their mouse over various regions of the plot. Tooltips are enabled automatically for dot marks (`dot()`, `dot_x()`, `dot_y()`, `circle()`, and `hexagon()`) and can be enabled with `tip=True` for other marks. For example:
+
+```python
+plot(
+    bar_x(penguins, x=count(), y="species", fill="species",
+          tip=True
+    )
+)
+```
+
+Note that tooltips can interfere with plot interactions---for example, if your bar plot was clickable to drive selections in other plots you would not want to specify `tip=True`.
+
+### Values
+
+Tooltips show the values of all columns from the dataset that provide scales (e.g. `x`, `y`, `fx`, `stroke`, `fill`, `symbol`, etc.):
+
+![](tooltips.png)
+
+You can add additional values to tooltips by specifying more `channels` (data table columns or transforms) in your mark. These channels won't appear on the plot but will appear on the tooltip:
+
+```python
+plot(
+    dot(penguins, x="body_mass", y="flipper_length",  
+        stroke="species", symbol="species", 
+        channels={ "sex": "sex", "island": "island"}
+)
+```
+
 
 ## Titles
 
