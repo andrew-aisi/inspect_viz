@@ -5,6 +5,15 @@ def running_in_quarto() -> bool:
     return "QUARTO_FIG_WIDTH" in os.environ.keys()
 
 
+def running_in_colab() -> bool:
+    try:
+        import google.colab  # type: ignore # noqa: F401
+
+        return True
+    except ImportError:
+        return False
+
+
 def quarto_fig_size() -> tuple[int, int] | None:
     if running_in_quarto():
         fig_width = os.environ.get("QUARTO_FIG_WIDTH", "")

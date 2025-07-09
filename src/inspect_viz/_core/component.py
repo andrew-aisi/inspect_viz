@@ -10,7 +10,7 @@ from pydantic_core import to_json, to_jsonable_python
 
 from .._util.constants import WIDGETS_DIR
 from .._util.marshall import dict_remove_none
-from .._util.platform import running_in_quarto
+from .._util.platform import running_in_colab, running_in_quarto
 from .data import Data
 from .param import Param as VizParam
 from .selection import Selection as VizSelection
@@ -79,6 +79,11 @@ class Component(AnyWidget):
         super().__init__()
         self._config = config
 
+        # if running in colab then assemble all of our context eagerly
+        if running_in_colab():
+            self.tables = all_tables(collect=False)
+            self.spec = self._create_spec()
+
     @property
     def config(self) -> dict[str, JsonValue]:
         return self._config
@@ -91,24 +96,12 @@ class Component(AnyWidget):
     def _mimebundle(
         self, *, collect: bool, **kwargs: Any
     ) -> tuple[dict[str, Any], dict[str, Any]] | None:
-        from ..plot._defaults import plot_defaults_as_camel
-
         # set current tables
         self.tables = all_tables(collect=collect)
 
         # ensure spec
         if not self.spec:
-            # base spec
-            spec = self._config.copy()
-
-            # add plot defaults
-            spec["plotDefaults"] = plot_defaults_as_camel()
-
-            # add current params
-            spec["params"] = all_params()
-
-            # to json
-            self.spec = to_json(spec, exclude_none=True).decode()
+            self.spec = self._create_spec()
 
         return super()._repr_mimebundle_(**kwargs)
 
@@ -125,6 +118,21 @@ class Component(AnyWidget):
 
     tables = TablesData({}).tag(sync=True)
     spec = traitlets.CUnicode("").tag(sync=True)
+
+    def _create_spec(self) -> str:
+        from ..plot._defaults import plot_defaults_as_camel
+
+        # base spec
+        spec = self._config.copy()
+
+        # add plot defaults
+        spec["plotDefaults"] = plot_defaults_as_camel()
+
+        # add current params
+        spec["params"] = all_params()
+
+        # to json
+        return to_json(spec, exclude_none=True).decode()
 
 
 def all_tables(*, collect: bool) -> dict[str, str | bytes]:
