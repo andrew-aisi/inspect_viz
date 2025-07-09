@@ -2,3 +2,8 @@
 title: "Notebooks"
 ---
 
+
+<!-- jupyter nbconvert --to html --execute index.ipynb  -->
+
+<!-- quarto render --to html --> 
+
