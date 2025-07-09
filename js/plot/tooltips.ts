@@ -9,7 +9,6 @@ export const replaceTooltipImpl = (specEl: HTMLElement) => {
     // When they are added, attempt to connect our tooltip
     // handler
     const observer = new MutationObserver(() => {
-        console.log('0: Spec element mutation observed, reconfiguring tooltips');
         configureSpecSvgTooltips(specEl);
     });
     observer.observe(specEl, { childList: true, subtree: true });
@@ -43,7 +42,6 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
     // Watch the SVG for childList mutations and inspect the tip element
     // whenever it changes.
     const observer = new MutationObserver(mutations => {
-        console.log('1: SVG mutation observed, processing tooltips');
         mutations.forEach(mutation => {
             if (mutation.type === 'childList') {
                 const tipElements = svgEl.querySelectorAll('g[aria-label="tip"]');

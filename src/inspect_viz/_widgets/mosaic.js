@@ -1734,7 +1734,6 @@ import tippy from "https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm";
 var replaceTooltipImpl = (specEl) => {
   configureSpecSvgTooltips(specEl);
   const observer = new MutationObserver(() => {
-    console.log("0: Spec element mutation observed, reconfiguring tooltips");
     configureSpecSvgTooltips(specEl);
   });
   observer.observe(specEl, { childList: true, subtree: true });
@@ -1759,7 +1758,6 @@ var setupTooltipObserver = (svgEl, specEl) => {
     });
   }
   const observer = new MutationObserver((mutations) => {
-    console.log("1: SVG mutation observed, processing tooltips");
     mutations.forEach((mutation) => {
       if (mutation.type === "childList") {
         const tipElements = svgEl.querySelectorAll('g[aria-label="tip"]');
