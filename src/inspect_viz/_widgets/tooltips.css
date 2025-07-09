@@ -10,7 +10,7 @@
 
 /* Styling for striping */
 .inspect-tip-container > .inspect-tip-row:nth-child(even) > * {
-  background-color: var(--bs-focus-ring-color)
+  background-color: var(--quarto-scss-export-table-striped-bg);
 }
 
 /* Optional padding & border */
