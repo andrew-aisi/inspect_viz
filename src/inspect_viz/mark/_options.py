@@ -208,7 +208,7 @@ TipPointer: TypeAlias = Literal["x", "y", "xy"]
 """The pointer mode for the tip; corresponds to pointerX, pointerY, and pointer."""
 
 
-class TipOptions(MarkOptions, TextStyles, total=False):
+class TipOptions(TypedDict, total=False):
     """Options for the tip mark."""
 
     pointer: TipPointer
