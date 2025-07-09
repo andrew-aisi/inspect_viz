@@ -65,8 +65,13 @@ def write_png(
             page.set_viewport_size({"width": w, "height": h})
 
             # take screenshot and crop image
-            page.screenshot(path=file, scale="device")
-            _crop_image(file, padding, scale)
+            background_color = "white"
+            page.screenshot(
+                path=file,
+                scale="device",
+                style="body { background-color: " + background_color + "; }",
+            )
+            _crop_image(file, padding, scale, background_color)
 
 
 @contextmanager
@@ -114,13 +119,12 @@ def _install() -> None:
     subprocess.run(["playwright", "install", "chromium"], check=True)
 
 
-def _crop_image(file: str | Path, pad: int, scale: int) -> None:
+def _crop_image(file: str | Path, pad: int, scale: int, background_color: str) -> None:
     # open image
     img = Image.open(file)
 
     # build an image filled with the background colour of the top-left pixel
-    bg_color = img.getpixel((0, 0))
-    bg = Image.new(img.mode, img.size, bg_color)
+    bg = Image.new(img.mode, img.size, background_color)
 
     # compute difference and locate the bounding box of non-bg pixels
     diff = ImageChops.difference(img, bg)
@@ -128,7 +132,8 @@ def _crop_image(file: str | Path, pad: int, scale: int) -> None:
 
     if bbox:
         img_cropped = img.crop(bbox)
-        img_cropped = ImageOps.expand(img_cropped, border=pad * scale, fill=bg_color)
+        img_fill = img.getpixel((0, 0))
+        img_cropped = ImageOps.expand(img_cropped, border=pad * scale, fill=img_fill)
         img.close()
         img_cropped.save(file, dpi=(scale * 72, scale * 72))
     else:
