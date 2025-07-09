@@ -98,7 +98,7 @@ pl = plot(
 write_html("penguins.html", pl)
 ```
 
-Unlike with `write_png()`, the exported HTML plot retains all interactive features (tooltips, filters, etc.). In some cases you might therefore also include [inputs](inputs.qmd) with your plot. For example:
+Unlike with `write_png()`, the exported HTML plot retains all interactive features (tooltips, filters, etc.). In some cases you might therefore also include [inputs](components-inputs.qmd) with your plot. For example:
 
 ``` python
 pl = vconcat(
