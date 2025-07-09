@@ -1,12 +1,14 @@
 import subprocess
 import sys
 import tempfile
-from contextlib import contextmanager
+from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, AsyncIterator
 
 from ipywidgets.embed import embed_minimal_html  # type: ignore
 from PIL import Image, ImageChops, ImageOps
+
+from inspect_viz._util._async import current_async_backend, run_coroutine
 
 from .. import Component
 
@@ -23,10 +25,24 @@ def write_html(file: str | Path, component: Component, title: str = "Plot") -> N
     embed_minimal_html(file, views=[component], title=title, drop_defaults=False)
 
 
-# TODO: notebook compatibility
-
-
 def write_png(
+    file: str | Path, component: Component, scale: int = 2, padding: int = 8
+) -> None:
+    """Export a plot or table to a PNG.
+
+    Args:
+       file: Target filename.
+       component: Component to export.
+       scale: Device scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)
+       padding: Padding (in pixels) around plot.
+    """
+    if current_async_backend() == "trio":
+        raise RuntimeError("Use write_png_async() when running under trio")
+
+    run_coroutine(write_png_async(file, component, scale, padding))
+
+
+async def write_png_async(
     file: str | Path, component: Component, scale: int = 2, padding: int = 8
 ) -> None:
     """Export a plot or table to a PNG.
@@ -42,31 +58,31 @@ def write_png(
         write_html(temp_file.name, component=component)
 
         # launch the browser
-        with _with_browser() as b:
-            from playwright.sync_api import Browser
+        async with _with_browser() as b:
+            from playwright.async_api import Browser
 
             # browser can be None if playwright wasn't installed yet
             if not isinstance(b, Browser):
                 return
 
             # create and load page
-            ctx = b.new_context(device_scale_factor=scale)
-            page = ctx.new_page()
+            ctx = await b.new_context(device_scale_factor=scale)
+            page = await ctx.new_page()
             file_uri = Path(temp_file.name).resolve().as_uri()
-            page.goto(file_uri, wait_until="networkidle")
-            page.wait_for_function(
+            await page.goto(file_uri, wait_until="networkidle")
+            await page.wait_for_function(
                 '() => !!window.document.querySelector("svg") || !!window.document.querySelector(".inspect-viz-table")',
                 polling=100,
             )
 
             # eliminate scrolling
-            w = page.evaluate("document.documentElement.scrollWidth")
-            h = page.evaluate("document.documentElement.scrollHeight")
-            page.set_viewport_size({"width": w, "height": h})
+            w = await page.evaluate("document.documentElement.scrollWidth")
+            h = await page.evaluate("document.documentElement.scrollHeight")
+            await page.set_viewport_size({"width": w, "height": h})
 
             # take screenshot and crop image
             background_color = "white"
-            page.screenshot(
+            await page.screenshot(
                 path=file,
                 scale="device",
                 style="body { background-color: " + background_color + "; }",
@@ -74,11 +90,11 @@ def write_png(
             _crop_image(file, padding, scale, background_color)
 
 
-@contextmanager
-def _with_browser() -> Iterator[Any | None]:
+@asynccontextmanager
+async def _with_browser() -> AsyncIterator[Any | None]:
     # ensure we have playwright
     try:
-        from playwright.sync_api import Error, sync_playwright
+        from playwright.async_api import Error, async_playwright
     except ImportError:
         sys.stderr.write(
             "ERROR: The write_png() function requires the playwright package. Install with:\n\npip install playwright\n\n"
@@ -86,13 +102,13 @@ def _with_browser() -> Iterator[Any | None]:
         yield None
 
     # try to launch the browser
-    with sync_playwright() as p:
+    async with async_playwright() as p:
         try:
-            browser = p.chromium.launch(headless=True)
+            browser = await p.chromium.launch(headless=True)
             try:
                 yield browser
             finally:
-                browser.close()
+                await browser.close()
         except Error as e:
             if "Executable doesn't exist" in str(e) and sys.stdin.isatty():
                 if _confirm_install():

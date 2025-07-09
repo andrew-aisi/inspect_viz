@@ -11,7 +11,7 @@ from ._attributes import (
 from ._defaults import PlotDefaults, plot_defaults
 from ._legend import Legend, legend
 from ._plot import plot
-from ._write import write_html, write_png
+from ._write import write_html, write_png, write_png_async
 
 __all__ = [
     "plot",
@@ -19,6 +19,7 @@ __all__ = [
     "legend",
     "write_html",
     "write_png",
+    "write_png_async",
     "PlotAttributes",
     "PlotDefaults",
     "plot_defaults",
