@@ -2,8 +2,6 @@ import svgPathParser from 'https://cdn.jsdelivr.net/npm/svg-path-parser@1.1.0/+e
 import tippy, { Placement } from 'https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm';
 
 // TODO: links
-// TODO: test multiple plots
-// TODO: tool tip default styling (non-quarto)
 
 export const replaceTooltipImpl = (specEl: HTMLElement) => {
     // Check if SVG already exists
