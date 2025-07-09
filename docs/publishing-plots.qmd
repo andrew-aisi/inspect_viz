@@ -75,7 +75,7 @@ There are a couple of other options that can be used when exporting plots to PNG
 | Option | Description |
 |------------------------------------|------------------------------------|
 | `scale` | Device scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output) |
-| `padding` | Padding (in pixels) to add around exported plot. |
+| `padding` | Padding (in pixels) to add around exported plot. Defaults to 8 pixels. |
 
 ## Plot as HTML
 
