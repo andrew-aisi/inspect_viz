@@ -5,7 +5,7 @@ page-layout: full
 
 ## Overview
 
-[Quarto Dashboards](https://quarto.org/docs/dashboards/) are a special type of Quarto website optimized for publishing easily navigable sets of plots and tables. Quarto Dashboards include support for:
+[Quarto Dashboards](https://quarto.org/docs/dashboards/) are a special type of Quarto website optimized for publishing easily navigable sets of plots and tables. Features of Quarto Dashboards include:
 
 1. Many flexible ways to layout components (row or column based, tabsets, multiple pages, etc.) including responsive layout for mobile devices.
 
