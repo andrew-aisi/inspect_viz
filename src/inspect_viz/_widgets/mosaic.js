@@ -1737,17 +1737,11 @@ var replaceTooltipImpl = (specEl) => {
     setupTooltipObserver(existingSvg, specEl);
     return;
   }
-  let mutationCount = 0;
-  const maxMutations = 5;
   const observer = new MutationObserver(() => {
     const svgEl = specEl.querySelector("svg");
     if (svgEl) {
-      observer.disconnect();
       setupTooltipObserver(svgEl, specEl);
-    } else if (mutationCount >= maxMutations) {
-      observer.disconnect();
     }
-    mutationCount++;
   });
   observer.observe(specEl, { childList: true, subtree: true });
 };
@@ -1771,10 +1765,13 @@ var setupTooltipObserver = (svgEl, specEl) => {
             tooltipInstance.hide();
             return;
           }
-          const rect = specEl.getBoundingClientRect();
           const parsed = parseSVGTooltip(tipEl);
-          const centerX = rect.left + (parsed.transform?.x || 0);
-          const centerY = rect.top + (parsed.transform?.y || 0);
+          const svgPoint = svgEl.createSVGPoint();
+          svgPoint.x = parsed.transform?.x || 0;
+          svgPoint.y = parsed.transform?.y || 0;
+          const screenPoint = svgPoint.matrixTransform(svgEl.getScreenCTM());
+          const centerX = screenPoint.x;
+          const centerY = screenPoint.y;
           tooltipInstance.setProps({
             placement: parsed.placement !== "middle" ? parsed.placement || "top" : "top",
             getReferenceClientRect: () => {
@@ -1921,7 +1918,6 @@ var parseArrowDirection = (pathData) => {
   }
   const lineTo = parsed[1];
   if (lineTo.code !== "l") {
-    console.log({ parsed });
     console.warn("Expected lineto command (l) in path data, found:", lineTo);
     return "top";
   }

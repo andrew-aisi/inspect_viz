@@ -1,7 +1,9 @@
 import svgPathParser from 'https://cdn.jsdelivr.net/npm/svg-path-parser@1.1.0/+esm';
 import tippy, { Placement } from 'https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm';
 
+// TODO: hconcat / more than one plot in a spec
 // TODO: links
+// TODO: two finger scroll not dismissing
 
 export const replaceTooltipImpl = (specEl: HTMLElement) => {
     // Check if SVG already exists
@@ -11,19 +13,14 @@ export const replaceTooltipImpl = (specEl: HTMLElement) => {
         return;
     }
 
-    // Wait for SVG to be added (give up after a few mutations
-    // since this might not be a plot)
-    let mutationCount = 0;
-    const maxMutations = 5;
+    // Watch the spec element for svgs to be added
+    // When they are added, attempt to connect our tooltip
+    // handler
     const observer = new MutationObserver(() => {
         const svgEl = specEl.querySelector('svg');
         if (svgEl) {
-            observer.disconnect();
             setupTooltipObserver(svgEl, specEl);
-        } else if (mutationCount >= maxMutations) {
-            observer.disconnect();
         }
-        mutationCount++;
     });
 
     observer.observe(specEl, { childList: true, subtree: true });
@@ -31,7 +28,7 @@ export const replaceTooltipImpl = (specEl: HTMLElement) => {
 
 let tooltipInstance: any | undefined = undefined;
 
-const setupTooltipObserver = (svgEl: SVGElement, specEl: HTMLElement) => {
+const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
     if (!tooltipInstance) {
         tooltipInstance = tippy(specEl, {
             trigger: 'manual',
@@ -53,11 +50,17 @@ const setupTooltipObserver = (svgEl: SVGElement, specEl: HTMLElement) => {
                         tooltipInstance.hide();
                         return;
                     }
-                    const rect = specEl.getBoundingClientRect();
                     const parsed = parseSVGTooltip(tipEl);
 
-                    const centerX = rect.left + (parsed.transform?.x || 0);
-                    const centerY = rect.top + (parsed.transform?.y || 0);
+                    // Convert the SVG point to screen coordinates
+                    const svgPoint = svgEl.createSVGPoint();
+                    svgPoint.x = parsed.transform?.x || 0;
+                    svgPoint.y = parsed.transform?.y || 0;
+                    const screenPoint = svgPoint.matrixTransform(svgEl.getScreenCTM()!);
+
+                    // Position the tooltip
+                    const centerX = screenPoint.x;
+                    const centerY = screenPoint.y;
 
                     tooltipInstance.setProps({
                         placement:
@@ -252,7 +255,6 @@ const parseArrowDirection = (pathData: string): Placement | 'middle' => {
 
     const lineTo = parsed[1];
     if (lineTo.code !== 'l') {
-        console.log({ parsed });
         console.warn('Expected lineto command (l) in path data, found:', lineTo);
         return 'top';
     }
