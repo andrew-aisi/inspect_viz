@@ -13,7 +13,7 @@ dependencies = [
     "ipython",
     "shortuuid",
     "anywidget>=0.9.0",
-    "traitlets",
+    "traitlets>=5.9.0",
     "narwhals>=1.15.1",
     "nest_asyncio",
     "pandas>=2.2.3",
