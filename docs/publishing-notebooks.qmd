@@ -7,3 +7,5 @@ title: "Notebooks"
 
 <!-- quarto render --to html --> 
 
+<!-- colab -->
+
