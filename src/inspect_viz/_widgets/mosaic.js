@@ -1750,6 +1750,14 @@ var configureSpecSvgTooltips = (specEl) => {
   });
 };
 var tooltipInstance = void 0;
+function hideTooltip() {
+  tooltipInstance.hide();
+  window.removeEventListener("scroll", hideTooltip);
+}
+function showTooltip() {
+  tooltipInstance.show();
+  window.addEventListener("scroll", hideTooltip, { once: true });
+}
 var setupTooltipObserver = (svgEl, specEl) => {
   if (!tooltipInstance) {
     tooltipInstance = tippy(specEl, {
@@ -1766,7 +1774,7 @@ var setupTooltipObserver = (svgEl, specEl) => {
           tipContainerEl.style.display = "none";
           const tipEl = tipContainerEl.firstChild;
           if (!tipEl) {
-            tooltipInstance.hide();
+            hideTooltip();
           } else {
             const parsed = parseSVGTooltip(tipEl);
             const svgPoint = svgEl.createSVGPoint();
@@ -1843,7 +1851,7 @@ var setupTooltipObserver = (svgEl, specEl) => {
               count2++;
             }
             tooltipInstance.setContent(contentEl);
-            tooltipInstance.show();
+            showTooltip();
           }
         } else {
           throw new Error(

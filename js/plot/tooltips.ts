@@ -30,6 +30,17 @@ const configureSpecSvgTooltips = (specEl: HTMLElement) => {
 };
 
 let tooltipInstance: any | undefined = undefined;
+
+function hideTooltip() {
+    tooltipInstance.hide();
+    window.removeEventListener('scroll', hideTooltip);
+}
+
+function showTooltip() {
+    tooltipInstance.show();
+    window.addEventListener('scroll', hideTooltip, { once: true });
+}
+
 const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
     // Initialize tippy for this spec element if not already done.
     if (!tooltipInstance) {
@@ -53,7 +64,7 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
                     // hide the tooltip
                     const tipEl = tipContainerEl.firstChild as SVGGElement | null;
                     if (!tipEl) {
-                        tooltipInstance.hide();
+                        hideTooltip();
                     } else {
                         // Find the tip container and parse it to determine how the tooltips
                         // are configured and what is being displayed.
@@ -153,7 +164,7 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
 
                         // Show the tooltip
                         tooltipInstance.setContent(contentEl);
-                        tooltipInstance.show();
+                        showTooltip();
                     }
                 } else {
                     throw new Error(
