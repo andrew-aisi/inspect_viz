@@ -1,4 +1,4 @@
-from typing import Literal, Sequence
+from typing import Literal
 
 from inspect_viz import Component, Data, Selection
 from inspect_viz.input import select
@@ -6,12 +6,12 @@ from inspect_viz.layout import vconcat, vspace
 from inspect_viz.layout._concat import hconcat
 from inspect_viz.mark import bar_y, rule_x
 from inspect_viz.plot import legend, plot
-from inspect_viz.sandbox.axis import AxisFilter, AxisValue, axis_score
-from inspect_viz.table import Column, column, table
 from inspect_viz.transform import sql
 
+from ..axis import AxisFilter, AxisValue, axis_score
 
-def evals_summary_plot(
+
+def evals_bar_plot(
     evals: Data,
     x: str = "model",
     fx: str = "task_name",
@@ -22,7 +22,7 @@ def evals_summary_plot(
     """Bar plot for comparing evals.
 
     Args:
-       evals: Evals data table (typically read using `evals_df()`)
+       evals: Evals data table. This is typically created using a data frame read with the inspect `evals_df()` function.
        x: Name of field for x axis (defaults to "model")
        fx: Name of field for x facet (defaults to "task_name")
        y: Definition for y axis (defaults to `axis_score()`)
@@ -104,30 +104,6 @@ def evals_summary_plot(
             y_inset_top=10,
         ),
     )
-
-
-def evals_summary_table(
-    evals: Data, columns: Sequence[str | Column] | None = None
-) -> Component:
-    """Table that summarizes eval scores by model and task.
-
-    Args:
-       evals: Evals data table.
-       columns: Column definitions (defaults to model, task_name, and headline metric).
-    """
-    columns = (
-        columns
-        if columns is not None
-        else [
-            column("model", label="Model"),
-            column("task_name", label="Task"),
-            column("score_headline_metric", label="Metric"),
-            column("score_headline_value", label="Value", align="center"),
-            column("score_headline_stderr", label="Stderr", align="center"),
-        ]
-    )
-
-    return table(data=evals, columns=columns)
 
 
 def _z_alpha(ci: float = 0.95) -> float:
