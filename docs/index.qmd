@@ -9,7 +9,7 @@ subtitle: |
 Welcome to Inspect Viz, a data visualization library for [Inspect AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools for high quality interactive visualizations from Inspect evaluations. You can include these visualizations in any [Jupyter Notebook](https://jupyter.org/) or web publishing system that supports Jupyter widgets (e.g. [Quarto](https://quarto.org)).
 
 ::: callout-note
-While `inspect_viz` will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives. 
+While `inspect_viz` will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives.
 :::
 
 #### Getting Started
@@ -227,6 +227,8 @@ vconcat(
 
 Try using the mouse to brush over regions on the dot plot---the bar plot will update accordingly.
 
+{{< include _data.md >}}
+
 ## Crossfilter
 
 In many cases you'll want to have an input or interactor that both consumes and produces the same selection (i.e. filtered based on interactions with other inputs or interactors, but also able to provide its own filtering).
@@ -319,6 +321,8 @@ vconcat(
 Use these resources to learn more about using Inspect Viz:
 
 -   [Components](components-plots.qmd) goes into further depth on the main concepts and components required to use the library.
+
+-   [Publishing](publishing-plots.qmd) describes how to publish Inspect Viz content as standalone plots, notebooks, websites, and dashboards.
 
 -   [Reference](reference/index.qmd) provides details on the available marks, interactors, transforms, and inputs.
 

@@ -147,6 +147,8 @@ plot(
 )
 ```
 
+{{< include _data.md >}}
+
 ## Attributes
 
 *Attributes* are plot-level settings such as `width`, `height`, margins, and scale options (e.g., `x_domain`, `color_range`, `y_tick_format`). Attributes may be `Param`-valued, in which case a plot updates upon param changes.
