@@ -1,0 +1,19 @@
+---
+title: "inspect_viz.view.beta"
+---
+
+::: callout-note
+View functions are currently in beta and are exported from the **inspect_ai.view.beta** module. The beta module will be preserved after final release so that code written against it now will continue to work after the beta.
+:::
+
+
+## Evals
+
+### evals_bar_plot
+### evals_table 
+
+## Axes
+
+### axis_score
+### AxisValue
+### AxisFilter

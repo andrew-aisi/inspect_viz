@@ -21,6 +21,19 @@ website:
           href: reference/inspect_viz.qmd#param
         - text: ParamValue
           href: reference/inspect_viz.qmd#paramvalue
+      - section: inspect_viz.view
+        href: reference/inspect_viz.view.qmd
+        contents:
+        - text: evals_bar_plot
+          href: reference/inspect_viz.view.qmd#evals_bar_plot
+        - text: 'evals_table '
+          href: 'reference/inspect_viz.view.qmd#evals_table '
+        - text: axis_score
+          href: reference/inspect_viz.view.qmd#axis_score
+        - text: AxisValue
+          href: reference/inspect_viz.view.qmd#axisvalue
+        - text: AxisFilter
+          href: reference/inspect_viz.view.qmd#axisfilter
       - section: inspect_viz.plot
         href: reference/inspect_viz.plot.qmd
         contents:

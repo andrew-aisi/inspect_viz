@@ -12,6 +12,7 @@ if "reference/inspect_viz" not in input_files:
 reference_docs = ["reference/inspect_viz.qmd"] + [
     f"reference/inspect_viz.{doc}"
     for doc in [
+        "view.qmd",
         "plot.qmd",
         "mark.qmd",
         "interactor.qmd",
