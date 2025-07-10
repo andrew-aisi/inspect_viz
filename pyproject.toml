@@ -16,7 +16,7 @@ dependencies = [
     "traitlets>=5.9.0",
     "narwhals>=1.15.1",
     "nest_asyncio",
-    "pandas>=2.2.3",
+    "pandas>=2.2.2",
     "pyarrow>=15.0.0",
     "pillow",
     "pydantic",
