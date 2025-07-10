@@ -109,7 +109,7 @@ def plot(
         legend.config["for"] = config["name"]
 
         # handle legend location
-        plot_component = Component(config=config, bind_spec=True, bind_tables=True)
+        plot_component = Component(config=config)
         if legend.location in ["left", "right"]:
             if "width" not in legend.config:
                 legend.config["width"] = 80

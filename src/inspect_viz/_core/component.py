@@ -10,7 +10,7 @@ from pydantic_core import to_json, to_jsonable_python
 
 from .._util.constants import WIDGETS_DIR
 from .._util.marshall import dict_remove_none
-from .._util.platform import running_in_quarto
+from .._util.platform import running_in_colab, running_in_quarto
 from .data import Data
 from .param import Param as VizParam
 from .selection import Selection as VizSelection
@@ -85,8 +85,11 @@ class Component(AnyWidget):
         super().__init__()
         self._config = config
 
-        # eager bind as requested
-        if not running_in_quarto():
+        # eager bind as requested -- basically, in any environment where
+        # _repr_mimebundle_ might is not called (e.g. colab) we need to
+        # eagerly bind anything which might appear at the top level
+        # (as there will be no opportunity for late binding)
+        if running_in_colab():
             if bind_spec:
                 self.spec = self._create_spec()
             if bind_tables:
