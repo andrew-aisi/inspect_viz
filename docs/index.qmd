@@ -6,10 +6,16 @@ subtitle: |
 
 ## Welcome
 
-Welcome to Inspect Viz, a data visualization library for [Inspect AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools for high quality interactive visualizations from Inspect evaluations. You can include these visualizations in any [Jupyter Notebook](https://jupyter.org/) or web publishing system that supports Jupyter widgets (e.g. [Quarto](https://quarto.org)).
+Welcome to Inspect Viz, a data visualisation library for [Inspect AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. You can include these visualisations in any [Jupyter Notebook](https://jupyter.org/) or web publishing system that supports Jupyter widgets (e.g. [Quarto](https://quarto.org)).
+
+You can use Inspect Viz at two different layers of abstraction:
+
+1.  Using [views](views.qmd), which provide pre-built interactive visualisations for Inspect evaluation data.
+
+2.  Using [components](components-plots.qmd) to create your own custom plots using the same lower-level APIs used to build views.
 
 ::: callout-note
-While `inspect_viz` will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives.
+Currently there are a fairly limited number of [views](views.qmd)—many more views are under development and we encourage you to [submit your own](https://github.com/meridianlabs-ai/inspect_viz/pulls) as pull requests.
 :::
 
 #### Getting Started
@@ -21,11 +27,46 @@ pip install git+https://github.com/UKGovernmentBEIS/inspect_ai
 pip install git+https://github.com/meridianlabs-ai/inspect_viz
 ```
 
-Then, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the [Components](components-plots.qmd) articles for a more in depth explanation of the library's primitives and how they fit together.
+Then, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the [Views](views.qmd) and [Components](components-plots.qmd) articles for a more in depth explanation of the library's features and how they fit together.
 
-{{< include _observable-tip.md >}}
+## Views
+
+Views provide a high-level API for visualising data read from Inspect logs. View functions generally assume that you have read data frames from your logs using the [inspect_ai.analysis](https://inspect.aisi.org.uk/dataframe.html) module.
+
+For example, here we read a set of evaluation logs and pass it to the `evals_bar_plot()` function, which by default shows scores by task name and model along with confidence intervals:
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.view.beta import evals_bar_plot
+
+# (this data frame was originally read with `evals_df("logs")`)
+evals = Data.from_file("evals.parquet")
+
+# plot the scores by model and task
+evals_bar_plot(evals)
+```
+
+We can optionally add filtering by model and task name:
+
+```{python}
+evals_bar_plot(evals, x_filter=True, fx_filter=True)
+```
+
+The `evals_table()` function can be used to view evaluation scores in a tabular display:
+
+```{python}
+from inspect_viz.view.beta import evals_table
+
+evals_table(evals)
+```
+
+::: {style="margin-top: 1rem;"}
+See the [Views](views.qmd) article for additional details on using thse and other pre-built views.
+:::
 
 ## Plots
+
+{{< include _observable-tip.md >}}
 
 Plots in `inspect_viz` are composed of one or more [marks](reference/inspect_viz.mark.qmd), which can do either higher level plotting (e.g. `dot()`, `bar_x()`, `bar_y()`, `area()`, `heatmap()`, etc.) or lower level drawing on the plot canvas (e.g. `text()`, `image()`, `arrow()`, etc.)
 
@@ -320,9 +361,11 @@ vconcat(
 
 Use these resources to learn more about using Inspect Viz:
 
--   [Components](components-plots.qmd) goes into further depth on the main concepts and components required to use the library.
+-   [Views](views.qmd) describes the available built in views for Inspect evaluation data.
 
--   [Publishing](publishing.qmd) describes how to publish Inspect Viz content as standalone plots, notebooks, websites, and dashboards.
+-   [Components](components-plots.qmd) goes into further depth on the main concepts and components of the library.
+
+-   [Publishing](publishing.qmd) covers publishing Inspect Viz content as standalone plots, notebooks, websites, and dashboards.
 
 -   [Reference](reference/index.qmd) provides details on the available marks, interactors, transforms, and inputs.
 

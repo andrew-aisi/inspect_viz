@@ -24,6 +24,8 @@ website:
       left:      
           - text: "Getting Started"
             href: index.qmd
+          - text: "Views"
+            href: views.qmd
           - text: "Components"
             href: components-plots.qmd
           - text: "Publishing"
@@ -42,7 +44,9 @@ website:
         style: docked
         contents:
            - href: index.qmd
-             text: Getting Started
+             text: Welcome
+           - href: views.qmd
+             text: Views
            - text: Components
              contents:
                - href: components-plots.qmd

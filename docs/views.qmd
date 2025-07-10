@@ -1,0 +1,52 @@
+---
+title: "Views"
+---
+
+## Overview
+
+::: callout-note
+View functions are currently in beta and are exported from the **inspect_ai.view.beta** module. The beta module will be preserved after final release so that code written against it now will continue to work after the beta.
+:::
+
+Views provide a high-level API for visualising data read from Inspect logs. View functions generally assume that you have read data frames from your logs using the [inspect_ai.analysis](https://inspect.aisi.org.uk/dataframe.html) module.
+
+There are currently very few view functions but we are working actively on expanding them. We also very much welcome you to [submit your own](https://github.com/meridianlabs-ai/inspect_viz/pulls) as a pull request.
+
+## evals_bar_plot
+
+The `evals_bar_plot()` function provides a bar plot summarizing evalution logs--by default scores are summarised but you can override this to visualize any value(s) produced from logs. 
+
+Here we use the function to summarize eval data, providing several customizations of the default plot configuration:
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.view.beta import evals_bar_plot, axis_score, AxisFilter
+
+# (this data frame was originally read with `evals_df("logs")`)
+evals = Data.from_file("evals.parquet")
+
+# plot the scores by model and task and provide filters 
+evals_bar_plot(
+    evals,
+    x="model",
+    fx="task_name",
+    y=axis_score(ci=0.90),
+    x_filter=AxisFilter(label="Model"),
+    fx_filter=AxisFilter(label="Task")
+)
+```
+
+See the `evals_bar_plot()` function reference for additional details on using this view.
+
+## evals_table
+
+The `evals_table()` function provides a summary of a set of evaluations in tabular form. By default the columns include model, task name, and the headline metric for the evaulation. For example:
+
+```{python}
+from inspect_viz.view.beta import evals_table
+
+evals_table(evals)
+```
+
+See the `evals_table()` function reference for additional details on using this view.
+
