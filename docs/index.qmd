@@ -39,7 +39,7 @@ For example, here we read a set of evaluation logs and pass it to the `evals_bar
 from inspect_viz import Data
 from inspect_viz.view.beta import evals_bar_plot
 
-# (this data frame was originally read with `evals_df("logs")`)
+# read evals -- this data was originally read with evals_df("logs")
 evals = Data.from_file("evals.parquet")
 
 # plot the scores by model and task
