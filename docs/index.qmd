@@ -52,13 +52,6 @@ We can optionally add filtering by model and task name:
 evals_bar_plot(evals, x_filter=True, fx_filter=True)
 ```
 
-The `evals_table()` function can be used to view evaluation scores in a tabular display:
-
-```{python}
-from inspect_viz.view.beta import evals_table
-
-evals_table(evals)
-```
 
 ::: {style="margin-top: 1rem;"}
 See the [Views](views.qmd) article for additional details on using thse and other pre-built views.
