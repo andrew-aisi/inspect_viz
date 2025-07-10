@@ -388,6 +388,16 @@
     ]
   },
   {
+    "objectID": "index.html#data",
+    "href": "index.html#data",
+    "title": "Inspect Viz",
+    "section": "Data",
+    "text": "Data\nIn the examples above we made Data available by reading from a parquet file. We can also read data from any Python Data Frame (e.g. Pandas, Polars, PyArrow, etc.). For example:\nimport pandas as pd\nfrom inspect_viz import Data\n\n# read directly from file\npenguins = Data.from_file(\"penguins.parquet\")\n\n# read from Pandas DF (i.e. to preprocess first)\ndf = pd.read_parquet(\"penguins.parquet\")\npenguins = Data.from_dataframe(df)\nYou might wonder why is there a special Data class in Inspect Viz rather than using data frames directly? This is because Inpsect Viz is an interactive system where data can be dynamically filtered and transformed as part of plotting—the Data therefore needs to be sent to the web browser rather than remaining only in the Python session. This has a couple of important implications:\n\nData transformations should be done using standard Python Data Frame operations prior to reading into Data for Inspect Viz.\nSince Data is embedded in the web page, you will want to filter it down to only the columns required for plotting (as you don’t want the additional columns making the web page larger than is necessary).",
+    "crumbs": [
+      "Getting Started"
+    ]
+  },
+  {
     "objectID": "index.html#crossfilter",
     "href": "index.html#crossfilter",
     "title": "Inspect Viz",
@@ -402,7 +412,7 @@
     "href": "index.html#learning-more",
     "title": "Inspect Viz",
     "section": "Learning More",
-    "text": "Learning More\nUse these resources to learn more about using Inspect Viz:\n\nComponents goes into further depth on the main concepts and components required to use the library.\nReference provides details on the available marks, interactors, transforms, and inputs.\nExamples demonstrates more advanced plotting and interactivity features.",
+    "text": "Learning More\nUse these resources to learn more about using Inspect Viz:\n\nComponents goes into further depth on the main concepts and components required to use the library.\nPublishing describes how to publish Inspect Viz content as standalone plots, notebooks, websites, and dashboards.\nReference provides details on the available marks, interactors, transforms, and inputs.\nExamples demonstrates more advanced plotting and interactivity features.",
     "crumbs": [
       "Getting Started"
     ]
@@ -540,6 +550,18 @@
     ]
   },
   {
+    "objectID": "components-plots.html#data",
+    "href": "components-plots.html#data",
+    "title": "Plots",
+    "section": "Data",
+    "text": "Data\nIn the examples above we made Data available by reading from a parquet file. We can also read data from any Python Data Frame (e.g. Pandas, Polars, PyArrow, etc.). For example:\nimport pandas as pd\nfrom inspect_viz import Data\n\n# read directly from file\npenguins = Data.from_file(\"penguins.parquet\")\n\n# read from Pandas DF (i.e. to preprocess first)\ndf = pd.read_parquet(\"penguins.parquet\")\npenguins = Data.from_dataframe(df)\nYou might wonder why is there a special Data class in Inspect Viz rather than using data frames directly? This is because Inpsect Viz is an interactive system where data can be dynamically filtered and transformed as part of plotting—the Data therefore needs to be sent to the web browser rather than remaining only in the Python session. This has a couple of important implications:\n\nData transformations should be done using standard Python Data Frame operations prior to reading into Data for Inspect Viz.\nSince Data is embedded in the web page, you will want to filter it down to only the columns required for plotting (as you don’t want the additional columns making the web page larger than is necessary).",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Plots"
+    ]
+  },
+  {
     "objectID": "components-plots.html#attributes",
     "href": "components-plots.html#attributes",
     "title": "Plots",
@@ -561,6 +583,17 @@
       "Getting Started",
       "Components",
       "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing.html",
+    "href": "publishing.html",
+    "title": "Publishing",
+    "section": "",
+    "text": "There are several ways to publish Inspect Viz content, ranging from PNG images suitable for embedding in documents all the way up to notebooks, websites, and dashboards.\n\n\n\nPlots\nPublish single plots as PNG images or HTML snippets.\n\n\nNotebooks\nPublish collections of plots and tables as a notebook.\n\n\nWebsites\nEmbed plots and tables in a larger website.\n\n\nDashboards\nCreate a dashboard to provide easy navigation of collections of plots.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing"
     ]
   },
   {
@@ -924,7 +957,7 @@
     "href": "publishing-notebooks.html#quarto",
     "title": "Notebooks",
     "section": "Quarto",
-    "text": "Quarto\nThe Quarto publishing system can also convert notebooks to HTML. To install the quarto-cli Python package:\npip install quarto-cli\nThen, convert any notebook which includes Inspect Viz plots as follows:\nquarto render notebook.ipynb --to html --execute\nThis will create an HTML file named “notebook.html” and a directory named “notebook_files” alongside the “notebook.ipynb”.\nYou can also specify that you’d like code cells removed using the -M echo:false option:\nquarto render notebook.ipynb --to html --execute -M echo:false\nIf you need a PDF version of the notebook, open the file in a browser and print to PDF.",
+    "text": "Quarto\nThe Quarto publishing system can also convert notebooks to HTML. To install the quarto-cli Python package:\npip install quarto-cli\nThen, convert any notebook which includes Inspect Viz plots as follows:\nquarto render notebook.ipynb --to html --execute\nThis will create an HTML file named “notebook.html” and a directory named “notebook_files” alongside the “notebook.ipynb”.\nYou can also specify that you’d like code cells removed using the -M echo:false option:\nquarto render notebook.ipynb --to html --execute -M echo:false\nIf you need a PDF version of the notebook, open the file in a browser and print to PDF.\n\nPublishing\nYou can use the Quarto Publish command to publish a notebook to GitHub Pages, Hugging Face Spaces, Netlify, or Quarto’s own publishing service.\nTo publish a notebook, pass it to the quarto publish command:\nquarto publish notebook.ipynb",
     "crumbs": [
       "Getting Started",
       "Publishing",
