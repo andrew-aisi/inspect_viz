@@ -16,7 +16,6 @@ toc-depth: 4
 | [inspect_viz.table](inspect_viz.transform.qmd) | Tabular data display. |
 | [inspect_viz.input](inspect_viz.input.qmd) | Inputs for binding to parameters and selections. |
 | [inspect_viz.layout](inspect_viz.layout.qmd) | Component layout functions. |
-| [inspect_viz.sandbox](inspect_viz.sandbox.qmd) | Features under development. |
 
 : {.table-borderless}
 

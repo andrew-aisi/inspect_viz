@@ -20,3 +20,27 @@ You might wonder why is there a special `Data` class in Inspect Viz rather than 
 
 2. Since `Data` is embedded in the web page, you will want to filter it down to only the columns required for plotting (as you don't want the additional columns making the web page larger than is necessary).
 
+### Data Selections
+
+One other important thing to understand is that `Data` has a built in _selection_ which is used in filtering operations on the client. This means that if you want your inputs and plots to stay synchoronized, you should pass the same `Data` instance to all of them (i.e. import into `Data` once and then share that reference). For example:
+
+```python
+from inspect_viz import Data
+from inspect_viz.plot import plot
+from inspect_viz.mark import dot
+from inspect_viz.input import select
+from inspect_viz.layout import vconcat
+
+# we import penguins once and then pass it to select() and dot()
+penguins = Data.from_file("penguins.parquet")
+
+vconcat( 
+   select(penguins, label="Species", column="species"),
+   plot(
+      dot(penguins, x="body_mass", y="flipper_length",
+          stroke="species", symbol="species"),
+      legend="symbol",
+      color_domain="fixed"  
+   )
+)
+```
