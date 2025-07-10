@@ -1,7 +1,7 @@
 import base64
 from datetime import datetime
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Literal, cast
 
 import traitlets
 from anywidget import AnyWidget
@@ -60,7 +60,7 @@ class Component(AnyWidget):
         config: dict[str, JsonValue],
         *,
         bind_spec: bool = False,
-        bind_tables: bool = False,
+        bind_tables: bool | Literal["empty"] = False,
     ) -> None:
         # one time config of default css
         if not Component._css_initialized:
@@ -93,7 +93,10 @@ class Component(AnyWidget):
             if bind_spec:
                 self.spec = self._create_spec()
             if bind_tables:
-                self.tables = all_tables(collect=False)
+                if bind_tables is True:
+                    self.tables = all_tables(collect=False)
+                else:
+                    self.tables = all_tables_empty()
 
     @property
     def config(self) -> dict[str, JsonValue]:
@@ -150,6 +153,13 @@ def all_tables(*, collect: bool) -> dict[str, str | bytes]:
     all_data: dict[str, str | bytes] = {}
     for data in Data._get_all():
         all_data[data.table] = data._collect_data() if collect else data._get_data()
+    return all_data
+
+
+def all_tables_empty() -> dict[str, str | bytes]:
+    all_data: dict[str, str | bytes] = {}
+    for data in Data._get_all():
+        all_data[data.table] = bytes()
     return all_data
 
 
