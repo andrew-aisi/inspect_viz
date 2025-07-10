@@ -10,7 +10,7 @@ def vconcat(*component: Component) -> Component:
         *component: Components to concatenate.
     """
     components: list[JsonValue] = [w.config for w in component]
-    return Component(config=dict(vconcat=components))
+    return Component(config=dict(vconcat=components), bind_spec=True)
 
 
 def hconcat(*component: Component) -> Component:
@@ -20,4 +20,4 @@ def hconcat(*component: Component) -> Component:
         *component: Components to concatenate.
     """
     components: list[JsonValue] = [w.config for w in component]
-    return Component(config=dict(hconcat=components))
+    return Component(config=dict(hconcat=components), bind_spec=True)
