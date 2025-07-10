@@ -23,14 +23,20 @@ class VizContext extends InstantiateContext {
     }
 
     async insertTable(table: string, data: Uint8Array) {
+        // just wait for it if we already have it
+        if (this.tables_.has(table)) {
+            await this.waitForTable(table);
+            return;
+        }
+
+        // add to list of tables
+        this.tables_.add(table);
+
         // insert table into database
         await this.conn_?.insertArrowFromIPCStream(data, {
             name: table,
             create: true,
         });
-
-        // add to list of tables
-        this.tables_.add(table);
     }
 
     async waitForTable(table: string) {

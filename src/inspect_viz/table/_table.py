@@ -311,7 +311,7 @@ def table(
         }
     )
 
-    return Component(config=config)
+    return Component(config=config, bind_spec=True, bind_tables=True)
 
 
 def validate_column(data: Data | None, column: str | Column) -> str | Column:

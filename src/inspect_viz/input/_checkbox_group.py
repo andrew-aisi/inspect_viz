@@ -2,6 +2,7 @@ from typing import Any
 
 from .._core import Component, Data, Param, Selection
 from ._params import data_params, label_param, options_params
+from ._util import input_component
 
 
 def checkbox_group(
@@ -48,4 +49,4 @@ def checkbox_group(
             "You must pass a 'data' or 'options' value for a checkbox_group input"
         )
 
-    return Component(config=config)
+    return input_component(config=config)

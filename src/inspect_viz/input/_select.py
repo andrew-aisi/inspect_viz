@@ -4,6 +4,7 @@ from inspect_viz._util.marshall import dict_remove_none
 
 from .._core import Component, Data, Param, Selection
 from ._params import data_params, label_param, options_params
+from ._util import input_component
 
 
 def select(
@@ -63,4 +64,4 @@ def select(
     if "as" not in config:
         raise ValueError("You must pass a 'data' or 'options' value for a select input")
 
-    return Component(config=config)
+    return input_component(config=config)

@@ -10,7 +10,7 @@ from pydantic_core import to_json, to_jsonable_python
 
 from .._util.constants import WIDGETS_DIR
 from .._util.marshall import dict_remove_none
-from .._util.platform import running_in_colab, running_in_quarto
+from .._util.platform import running_in_quarto
 from .data import Data
 from .param import Param as VizParam
 from .selection import Selection as VizSelection
@@ -55,7 +55,13 @@ class Component(AnyWidget):
 
     _css_initialized = False
 
-    def __init__(self, config: dict[str, JsonValue]) -> None:
+    def __init__(
+        self,
+        config: dict[str, JsonValue],
+        *,
+        bind_spec: bool = False,
+        bind_tables: bool = False,
+    ) -> None:
         # one time config of default css
         if not Component._css_initialized:
             Component._css_initialized = True
@@ -79,10 +85,12 @@ class Component(AnyWidget):
         super().__init__()
         self._config = config
 
-        # if running in colab then assemble all of our context eagerly
-        if running_in_colab():
-            self.tables = all_tables(collect=False)
-            self.spec = self._create_spec()
+        # eager bind as requested
+        if not running_in_quarto():
+            if bind_spec:
+                self.spec = self._create_spec()
+            if bind_tables:
+                self.tables = all_tables(collect=False)
 
     @property
     def config(self) -> dict[str, JsonValue]:
@@ -91,7 +99,7 @@ class Component(AnyWidget):
     def _repr_mimebundle_(
         self, **kwargs: Any
     ) -> tuple[dict[str, Any], dict[str, Any]] | None:
-        return self._mimebundle(collect=True)
+        return self._mimebundle(collect=running_in_quarto(), **kwargs)
 
     def _mimebundle(
         self, *, collect: bool, **kwargs: Any

@@ -4,6 +4,7 @@ from inspect_viz._util.marshall import dict_remove_none
 
 from .._core import Component, Data, Param, Selection
 from ._params import data_params, label_param
+from ._util import input_component
 
 
 def slider(
@@ -82,4 +83,4 @@ def slider(
             )
 
     # return widget
-    return Component(config=config)
+    return input_component(config=config)

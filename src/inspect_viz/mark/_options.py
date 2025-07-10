@@ -2,7 +2,7 @@ from typing import Literal, TypeAlias, TypedDict, Union
 
 from .._core.param import Param
 from ._channel import Channel, ChannelName, ChannelSpec, SortOrder
-from ._types import FrameAnchor, TextStyles
+from ._types import FrameAnchor
 
 
 class MarkOptions(TypedDict, total=False):

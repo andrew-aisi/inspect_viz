@@ -1677,11 +1677,15 @@ var VizContext = class extends InstantiateContext {
   tables_ = /* @__PURE__ */ new Set();
   unhandledErrors_ = [];
   async insertTable(table, data) {
+    if (this.tables_.has(table)) {
+      await this.waitForTable(table);
+      return;
+    }
+    this.tables_.add(table);
     await this.conn_?.insertArrowFromIPCStream(data, {
       name: table,
       create: true
     });
-    this.tables_.add(table);
   }
   async waitForTable(table) {
     await waitForTable(this.conn_, table);

@@ -2,6 +2,7 @@ from typing import Any
 
 from .._core import Component, Data, Param, Selection
 from ._params import column_validated
+from ._util import input_component
 
 
 def checkbox(
@@ -55,4 +56,4 @@ def checkbox(
             raise ValueError("You must specify a 'field' when `target' is a selection.")
         config["field"] = column_validated(data, field)
 
-    return Component(config=config)
+    return input_component(config=config)

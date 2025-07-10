@@ -4,6 +4,7 @@ from inspect_viz._core.param import Param
 
 from .._core import Component, Data, Selection
 from ._params import column_validated, label_param
+from ._util import input_component
 
 
 def search(
@@ -65,4 +66,4 @@ def search(
         config["width"] = width
 
     # return widget
-    return Component(config=config)
+    return input_component(config=config)
