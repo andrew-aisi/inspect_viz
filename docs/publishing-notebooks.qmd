@@ -4,33 +4,11 @@ title: "Notebooks"
 
 ## Overview
 
-A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks ([nbconvert](#nbconvert) and [Quarto](#quarto)), and then these documents can in turn be printed to PDF if required. 
+A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks ([Quarto](#quarto) and [nbconvert](#nbconvert)), and then these documents can in turn be printed to PDF if required. 
 
 You can also share a live version of a notebook that supports filtering and plot interactions by pubishing it on a platform like [Google Colab](https://colab.research.google.com/).
 
-## nbconvert
 
-The [nbconvert](https://nbconvert.readthedocs.io/en/latest/) Python package enables export of any Jupyter notebook to HTML. Install `nbconvert` with:
-
-```bash
-pip install nbconvert
-```
-
-Then, convert any notebook which includes Inspect Viz plots as follows:
-
-```bash
-jupyter nbconvert --to html --execute notebook.ipynb
-```
-
-This will create an HTML file named "notebook.html" alongside the "notebook.ipynb".
-
-You can also specify that you'd like code cells removed using the `--no-input` option:
-
-```bash
-jupyter nbconvert --to html --execute --no-input notebook.ipynb
-```
-
-If you need a PDF version of the notebook, open the file in a browser and print to PDF.
 
 ## Quarto
 
@@ -66,5 +44,30 @@ To publish a notebook, pass it to the `quarto publish` command:
 quarto publish notebook.ipynb
 ```
 
+
+
+## nbconvert
+
+The [nbconvert](https://nbconvert.readthedocs.io/en/latest/) Python package enables export of any Jupyter notebook to HTML. Install `nbconvert` with:
+
+```bash
+pip install nbconvert
+```
+
+Then, convert any notebook which includes Inspect Viz plots as follows:
+
+```bash
+jupyter nbconvert --to html --execute notebook.ipynb
+```
+
+This will create an HTML file named "notebook.html" alongside the "notebook.ipynb".
+
+You can also specify that you'd like code cells removed using the `--no-input` option:
+
+```bash
+jupyter nbconvert --to html --execute --no-input notebook.ipynb
+```
+
+If you need a PDF version of the notebook, open the file in a browser and print to PDF.
 
 
