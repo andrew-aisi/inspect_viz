@@ -3,7 +3,7 @@ title: Inspect Viz Examples
 format: 
    html: 
       code-tools: false
-      page-layout: full
+      page-layout: article
 ---
 
 These examples demonstrate various plotting and interactivity features. If you are just beginning to use Inspect Viz you review the [Getting Started](../index.qmd) article before exploring these examples.

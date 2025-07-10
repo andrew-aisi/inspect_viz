@@ -56,5 +56,15 @@ quarto render notebook.ipynb --to html --execute -M echo:false
 
 If you need a PDF version of the notebook, open the file in a browser and print to PDF.
 
+#### Publishing
+
+You can use the [Quarto Publish](https://quarto.org/docs/publishing/) command to publish a notebook to GitHub Pages, Hugging Face Spaces, Netlify, or Quarto's own publishing service.
+
+To publish a notebook, pass it to the `quarto publish` command:
+
+```bash
+quarto publish notebook.ipynb
+```
+
 
 
