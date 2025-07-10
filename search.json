@@ -144,26 +144,49 @@
     ]
   },
   {
-    "objectID": "reference/inspect_viz.layout.html",
-    "href": "reference/inspect_viz.layout.html",
-    "title": "inspect_viz.layout",
+    "objectID": "reference/index.html",
+    "href": "reference/index.html",
+    "title": "Reference",
     "section": "",
-    "text": "hconcat\nHorizontally concatenate components in a row layout.\n\nSource\n\ndef hconcat(*component: Component) -&gt; Component\n\n*component Component\n\nComponents to concatenate.\n\n\n\n\nvconcat\nVertically concatenate components in a column layout.\n\nSource\n\ndef vconcat(*component: Component) -&gt; Component\n\n*component Component\n\nComponents to concatenate.\n\n\n\n\nhspace\nHorizontal space to place between widgets.\n\nSource\n\ndef hspace(hspace: float | str = 10) -&gt; Component\n\nhspace float | str\n\nAmount of space. Number values indicate screen pixels. String values may use CSS units (em, pt, px, etc).\n\n\n\n\nvspace\nVeritcal space to place between widgets.\n\nSource\n\ndef vspace(vspace: float | str = 10) -&gt; Component\n\nvspace float | str\n\nAmount of space. Number values indicate screen pixels. String values may use CSS units (em, pt, px, etc).",
+    "text": "inspect_viz\nCore API (data, components, params, selections)\n\n\ninspect_viz.plot\nPlot and legend creation.\n\n\ninspect_viz.view\nPlot and legend creation.\n\n\ninspect_viz.mark\nPlot marks (charts, annotations, etc.)\n\n\ninspect_viz.interactor\nPlot interactors for selection and navigation.\n\n\ninspect_viz.transform\nData transformers (aggregate, window, etc.)\n\n\ninspect_viz.table\nTabular data display.\n\n\ninspect_viz.input\nInputs for binding to parameters and selections.\n\n\ninspect_viz.layout\nComponent layout functions.",
     "crumbs": [
-      "Reference",
-      "Python API",
-      "inspect_viz.layout"
+      "Reference"
     ]
   },
   {
-    "objectID": "reference/inspect_viz.html",
-    "href": "reference/inspect_viz.html",
-    "title": "inspect_viz",
+    "objectID": "reference/inspect_viz.view.html",
+    "href": "reference/inspect_viz.view.html",
+    "title": "inspect_viz.view.beta",
     "section": "",
-    "text": "Data\nData source for visualizations.\nData sources can be created from any standard Python data frame (e.g. Pandas, Polars, etc.) or from a path pointing to a data file in a standard format (e.g. csv, parquet, etc.)\n\nSource\n\nclass Data\n\nAttributes\n\ncolumns list[str]\n\nColumn names for data source.\n\n\n\n\nMethods\n\nfrom_dataframe\n\nCreate Data from a standard Python data frame (e.g. Pandas, Polars, PyArrow, etc.).\n\nSource\n\n@classmethod\ndef from_dataframe(cls, df: IntoDataFrame) -&gt; \"Data\"\n\ndf IntoDataFrame\n\nData frame to read.\n\n\n\nfrom_file\n\nCreate Data from a data file (e.g. csv, parquet, feather, etc.).\n\nSource\n\n@classmethod\ndef from_file(cls, file: str | PathLike[str]) -&gt; \"Data\"\n\nfile str | PathLike[str]\n\nFile to read data from. Supported formats include csv, json, xslx, parquet, feather, sas7bdat, dta, and fwf.\n\n\n\n\n\n\n\nComponent\nData visualization component (input, plot, mark, table, layout, etc.).\nVisualization components are Jupyter widgets that can be used in any notebook or Jupyter based publishing system.\nSee the documentation on inputs, plots, marks, and interactors for details on available components.\n\nSource\n\nclass Component(AnyWidget)\n\n\nSelection\nSelection that can be filtered by inputs and other selections.\nSelection types include:\n\nSelection.intersect() for intersecting clauses (logical “and”)\nSelection.union() for unionone clauses (logical “or”)\nSelection.single() for a single clause only\nSelection.crossfilter() for a cross-filtered intersection\n\n\nSource\n\nclass Selection(str)\n\nMethods\n\nintersect\n\nCreate a new Selection instance with an intersect (conjunction) resolution strategy.\n\nSource\n\n@classmethod\ndef intersect(\n    cls,\n    cross: bool = False,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\ncross bool\n\nBoolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\nunion\n\nCreate a new Selection instance with a union (disjunction) resolution strategy.\n\nSource\n\n@classmethod\ndef union(\n    cls,\n    cross: bool = False,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\ncross bool\n\nBoolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\nsingle\n\nCreate a new Selection instance with a singular resolution strategy that keeps only the most recent selection clause.\n\nSource\n\n@classmethod\ndef single(\n    cls,\n    cross: bool = False,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\ncross bool\n\nBoolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\ncrossfilter\n\nCreate a new Selection instance with a cross-filtered intersect resolution strategy.\n\nSource\n\n@classmethod\ndef crossfilter(\n    cls,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\n\n\n\n\nParam\nParameter that can be bound from inputs.\n\nSource\n\nclass Param(str)\n\nAttributes\n\nid str\n\nUnique id (automatically generated).\n\ndefault ParamValue\n\nDefault value.\n\n\n\n\n\nParamValue\nType alias for parameter values (scalar or sequence of scalars).\n\nSource\n\nParamValue: TypeAlias = (\n    int | float | bool | str | datetime | Sequence[int | float | bool | str]\n)",
+    "text": "Note\n\n\n\nView functions are currently in beta and are exported from the inspect_ai.view.beta module. The beta module will be preserved after final release so that code written against it now will continue to work after the beta.",
     "crumbs": [
       "Reference",
-      "Python API"
+      "Python API",
+      "inspect_viz.view"
+    ]
+  },
+  {
+    "objectID": "reference/inspect_viz.view.html#evals",
+    "href": "reference/inspect_viz.view.html#evals",
+    "title": "inspect_viz.view.beta",
+    "section": "Evals",
+    "text": "Evals\n\nevals_bar_plot\nBar plot for comparing evals.\n\nSource\n\ndef evals_bar_plot(\n    evals: Data,\n    x: str = \"model\",\n    fx: str = \"task_name\",\n    y: AxisValue | None = None,\n    x_filter: bool | AxisFilter = False,\n    fx_filter: bool | AxisFilter = False,\n) -&gt; Component\n\nevals Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “model”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny AxisValue | None\n\nDefinition for y axis (defaults to axis_score())\n\nx_filter bool | AxisFilter\n\nOptional filtering control for x axis.\n\nfx_filter bool | AxisFilter\n\nOptional filtering control for fx axis.\n\n\n\n\nevals_table\nTable that summarizes eval scores by model and task.\n\nSource\n\ndef evals_table(\n    evals: Data, columns: Sequence[str | Column] | None = None\n) -&gt; Component\n\nevals Data\n\nEvals data table.\n\ncolumns Sequence[str | Column] | None\n\nColumn definitions (defaults to model, task_name, and headline metric).",
+    "crumbs": [
+      "Reference",
+      "Python API",
+      "inspect_viz.view"
+    ]
+  },
+  {
+    "objectID": "reference/inspect_viz.view.html#axes",
+    "href": "reference/inspect_viz.view.html#axes",
+    "title": "inspect_viz.view.beta",
+    "section": "Axes",
+    "text": "Axes\n\naxis_score\nAxis definition for scores from evals_df() data frames.\n\nSource\n\ndef axis_score(ci: float = 0.95) -&gt; AxisValue\n\nci float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.).\n\n\n\n\nAxisValue\nAxis value options.\n\nSource\n\nclass AxisValue(BaseModel)\n\nAttributes\n\nlabel str\n\nAxis label.\n\nvalue_field str\n\nField to read value from.\n\nstderr_field str | None\n\nField to read stderr from (optional, required for plotting confidence intervals).\n\nci float | None\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.).\n\ndomain list[float] | None\n\nDomain of axis (range of values to display).\n\n\n\n\n\nAxisFilter\nFilter definition for plot axis.\n\nSource\n\nclass AxisFilter(BaseModel)\n\nAttributes\n\nlabel str | None\n\nFilter label (defaults to column namne).\n\nvalue Literal['all'] | str | list[str]\n\nInitial value (defaults to “all” which applies to filter).\n\nmultiple bool\n\nEnable filtering on multiple values.\n\nwidth int | None\n\nWidth of filter input in pixels.",
+    "crumbs": [
+      "Reference",
+      "Python API",
+      "inspect_viz.view"
     ]
   },
   {
@@ -312,9 +335,10 @@
     "href": "index.html",
     "title": "Inspect Viz",
     "section": "",
-    "text": "Welcome to Inspect Viz, a data visualization library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualizations from Inspect evaluations. You can include these visualizations in any Jupyter Notebook or web publishing system that supports Jupyter widgets (e.g. Quarto).\n\n\n\n\n\n\nNote\n\n\n\nWhile inspect_viz will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives.\n\n\n\n\nFirst, install the inspect_ai and inspect_viz package from GitHub as follows:\npip install git+https://github.com/UKGovernmentBEIS/inspect_ai\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the Components articles for a more in depth explanation of the library’s primitives and how they fit together.\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Moasic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.",
+    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. You can include these visualisations in any Jupyter Notebook or web publishing system that supports Jupyter widgets (e.g. Quarto).\nYou can use Inspect Viz at two different layers of abstraction:\n\nUsing views, which provide pre-built interactive visualisations for Inspect evaluation data.\nUsing components to create your own custom plots using the same lower-level APIs used to build views.\n\n\n\n\n\n\n\nNote\n\n\n\nCurrently there are a fairly limited number of views—many more views are under development and we encourage you to submit your own as pull requests.\n\n\n\n\nFirst, install the inspect_ai and inspect_viz package from GitHub as follows:\npip install git+https://github.com/UKGovernmentBEIS/inspect_ai\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the Views and Components articles for a more in depth explanation of the library’s features and how they fit together.",
     "crumbs": [
-      "Getting Started"
+      "Getting Started",
+      "Welcome"
     ]
   },
   {
@@ -322,9 +346,21 @@
     "href": "index.html#welcome",
     "title": "Inspect Viz",
     "section": "",
-    "text": "Welcome to Inspect Viz, a data visualization library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualizations from Inspect evaluations. You can include these visualizations in any Jupyter Notebook or web publishing system that supports Jupyter widgets (e.g. Quarto).\n\n\n\n\n\n\nNote\n\n\n\nWhile inspect_viz will soon include plots, tables, and inputs pre-built to work with data from Inspect logs, it currently provides only lower-level plotting and interactivity primitives.\n\n\n\n\nFirst, install the inspect_ai and inspect_viz package from GitHub as follows:\npip install git+https://github.com/UKGovernmentBEIS/inspect_ai\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the Components articles for a more in depth explanation of the library’s primitives and how they fit together.\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Moasic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.",
+    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. You can include these visualisations in any Jupyter Notebook or web publishing system that supports Jupyter widgets (e.g. Quarto).\nYou can use Inspect Viz at two different layers of abstraction:\n\nUsing views, which provide pre-built interactive visualisations for Inspect evaluation data.\nUsing components to create your own custom plots using the same lower-level APIs used to build views.\n\n\n\n\n\n\n\nNote\n\n\n\nCurrently there are a fairly limited number of views—many more views are under development and we encourage you to submit your own as pull requests.\n\n\n\n\nFirst, install the inspect_ai and inspect_viz package from GitHub as follows:\npip install git+https://github.com/UKGovernmentBEIS/inspect_ai\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the Views and Components articles for a more in depth explanation of the library’s features and how they fit together.",
     "crumbs": [
-      "Getting Started"
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#views",
+    "href": "index.html#views",
+    "title": "Inspect Viz",
+    "section": "Views",
+    "text": "Views\nViews provide a high-level API for visualising data read from Inspect logs. View functions generally assume that you have read data frames from your logs using the inspect_ai.analysis module.\nFor example, here we read a set of evaluation logs and pass it to the evals_bar_plot() function, which by default shows scores by task name and model along with confidence intervals:\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import evals_bar_plot\n\n# (this data frame was originally read with `evals_df(\"logs\")`)\nevals = Data.from_file(\"evals.parquet\")\n\n# plot the scores by model and task\nevals_bar_plot(evals)\n\n\n\n\nWe can optionally add filtering by model and task name:\n\nevals_bar_plot(evals, x_filter=True, fx_filter=True)\n\n\n\n\nThe evals_table() function can be used to view evaluation scores in a tabular display:\n\nfrom inspect_viz.view.beta import evals_table\n\nevals_table(evals)\n\n\n\n\n\nSee the Views article for additional details on using thse and other pre-built views.",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
     ]
   },
   {
@@ -332,9 +368,10 @@
     "href": "index.html#plots",
     "title": "Inspect Viz",
     "section": "Plots",
-    "text": "Plots\nPlots in inspect_viz are composed of one or more marks, which can do either higher level plotting (e.g. dot(), bar_x(), bar_y(), area(), heatmap(), etc.) or lower level drawing on the plot canvas (e.g. text(), image(), arrow(), etc.)\n\nDot Plot\nHere is an example of a simple dot plot using the Palmer Penquins dataset:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\n1penguins = Data.from_file(\"penguins.parquet\")\n\nplot( \n2   dot(penguins, x=\"body_mass\", y=\"flipper_length\")\n)\n\n\n1\n\nRead the dataset from a parquet file. You can can also use Data.from_dataframe() to read data from any Pandas, Polars, or PyArrow data frame.\n\n2\n\nPlot using a dot() mark. The plot() function takes one or more marks or interactors.\n\n\n\n\n\n\n\n\nScales\nThe penguins data set includes various species of penguin, so lets add some elements to our plot that enable us to see the difference between species. We’ll also add grid lines to make the plot a bit easier to read:\n\nplot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\", channels={ \"sex\": \"sex\", \"island\": \"island\"}),\n    legend=\"symbol\",\n    grid=True\n)\n\n\n\n\nHere we mapped the “species” column to the stroke and symbol scales of the plot (causing each species to have its own color and symbol). We also add a legend to the plot as a key to this mapping.\n\n\n\nBar Plot\nHere is a simple horizontal bar plot that counts the number of each species:\n\nfrom inspect_viz.mark import bar_x\nfrom inspect_viz.transform import count\n\nplot(\n    bar_x(penguins, x=count(), y=\"species\", fill=\"species\"),\n    y_label=None,\n    height=200,\n    margin_left=60\n)\n\n\n\n\nThe x axis for this plot is not mapped to a column, but rather to a count() transform ( transforms enable you to perform computations on columns for plotting). The fill option gives each species it’s own color. We also specify that we don’t want a y_label (as the species names serve that purpose) and a smaller than normal height.",
+    "text": "Plots\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Mosaic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.\n\n\nPlots in inspect_viz are composed of one or more marks, which can do either higher level plotting (e.g. dot(), bar_x(), bar_y(), area(), heatmap(), etc.) or lower level drawing on the plot canvas (e.g. text(), image(), arrow(), etc.)\n\nDot Plot\nHere is an example of a simple dot plot using the Palmer Penquins dataset:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\n1penguins = Data.from_file(\"penguins.parquet\")\n\nplot( \n2   dot(penguins, x=\"body_mass\", y=\"flipper_length\")\n)\n\n\n1\n\nRead the dataset from a parquet file. You can can also use Data.from_dataframe() to read data from any Pandas, Polars, or PyArrow data frame.\n\n2\n\nPlot using a dot() mark. The plot() function takes one or more marks or interactors.\n\n\n\n\n\n\n\n\nScales\nThe penguins data set includes various species of penguin, so lets add some elements to our plot that enable us to see the difference between species. We’ll also add grid lines to make the plot a bit easier to read:\n\nplot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\", channels={ \"sex\": \"sex\", \"island\": \"island\"}),\n    legend=\"symbol\",\n    grid=True\n)\n\n\n\n\nHere we mapped the “species” column to the stroke and symbol scales of the plot (causing each species to have its own color and symbol). We also add a legend to the plot as a key to this mapping.\n\n\n\nBar Plot\nHere is a simple horizontal bar plot that counts the number of each species:\n\nfrom inspect_viz.mark import bar_x\nfrom inspect_viz.transform import count\n\nplot(\n    bar_x(penguins, x=count(), y=\"species\", fill=\"species\"),\n    y_label=None,\n    height=200,\n    margin_left=60\n)\n\n\n\n\nThe x axis for this plot is not mapped to a column, but rather to a count() transform ( transforms enable you to perform computations on columns for plotting). The fill option gives each species it’s own color. We also specify that we don’t want a y_label (as the species names serve that purpose) and a smaller than normal height.",
     "crumbs": [
-      "Getting Started"
+      "Getting Started",
+      "Welcome"
     ]
   },
   {
@@ -344,7 +381,8 @@
     "section": "Tables",
     "text": "Tables\nYou can also display data in a tabular layout using the table() function:\n\nfrom inspect_viz.table import table\n\ntable(penguins)\n\n\n\n\nYou can sort and filter tables by column, use a scrolling or paginated display, and customize several other aspects of table appearance and behavior.",
     "crumbs": [
-      "Getting Started"
+      "Getting Started",
+      "Welcome"
     ]
   },
   {
@@ -354,7 +392,8 @@
     "section": "Filters",
     "text": "Filters\nUse inputs to enable filtering datasets and dynamically updating plots. For example, here we add a select() input that filters on the species column:\n\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\nvconcat(\n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"\n   )\n)\n\n\n\n\nWe’ve introduced a few new things here:\n\nThe vconcat() function from the layout module lets us stack inputs on top of our plot.\nThe select() function from the input module binds a select box to the species column.\nThe color_domain=\"fixed\" argument to plot() indicates that we want to preserve species colors even when the plot is filtered.",
     "crumbs": [
-      "Getting Started"
+      "Getting Started",
+      "Welcome"
     ]
   },
   {
@@ -364,7 +403,8 @@
     "section": "Marks",
     "text": "Marks\nSo far the plots we’ve created include only a single mark, however many of the more interesting plots you’ll create will include multiple marks.\nFor example, here we explore the relationships between the height, weight, and sex of olympic athletes using dot() and regression_y() marks:\n\nfrom inspect_viz.mark import regression_y\n\nathletes = Data.from_file(\"athletes.parquet\")\n\nplot(\n    dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n    regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n    legend=\"color\"\n)\n\n\n\n\nNote that we set the opacity of the dot mark to 0.1 to help mitigate oversaturation that results from large numbers of data points being stacked on top of eachother.\nMarks can also be used to draw lines, arrows, text, or images on a plot.",
     "crumbs": [
-      "Getting Started"
+      "Getting Started",
+      "Welcome"
     ]
   },
   {
@@ -374,7 +414,8 @@
     "section": "Params",
     "text": "Params\nAs illustrated above, inputs can be used to filter dataset selections. Inputs can also be used to set Param values that make various aspects of plots dynamic. For example, here is a density plot of flight delays which uses a slider() input to vary the amount of smooth ing by setting the kernel bandwidth:\n\nfrom inspect_viz import Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import density_y\n\nflights = Data.from_file(\"flights.parquet\")\n\n1bandwidth = Param(0.1)\n\nvconcat(\n   slider(\n2      label=\"Bandwidth (σ)\", target=bandwidth,\n      min=0.1, max=100, step=0.1\n   ),\n   plot(\n      density_y(\n3         flights, x=\"delay\", fill=\"steelblue\", bandwidth=bandwidth\n      ),\n      x_domain=\"fixed\",\n      y_axis=None,\n      height=250,\n   )\n)\n\n\n1\n\nCreate a bandwidth parameter with a default value of 0.1.\n\n2\n\nBind the slider() to the bandwidth parameter.\n\n3\n\nApply the bandwidth to the plot (plot automatically redraws when the bandwidth changes).",
     "crumbs": [
-      "Getting Started"
+      "Getting Started",
+      "Welcome"
     ]
   },
   {
@@ -384,7 +425,8 @@
     "section": "Selections",
     "text": "Selections\nAbove in Filtering we began exploring dataset selections. Inputs are one way to set selections, but you can also set selections through direct interaction with plots.\nFor example, below we stack two plots vertically, the dot() plot from above along with a bar_x() plot that counts the sex column. We then add an interval_x() interactor that enables us to filter the dataset using selections on the dot plot.\nThere are a number of new things introduced here, click on the numbers near the right margin for additional explanation.\n\nfrom inspect_viz import Selection\nfrom inspect_viz.interactor import Brush, interval_x\n\n1range = Selection.intersect()\n\nvconcat(\n   plot(\n      dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n      regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n      interval_x(\n2         target=range,\n3         brush=Brush(fill=\"none\", stroke=\"#888\")\n      ),\n      legend=\"color\"\n   ),\n   plot(\n      bar_x(\n4         athletes, filter_by=range,\n         x=count(), y=\"sex\", fill=\"sex\"\n      ), \n      y_label=None,\n      height=150,\n5      x_domain=\"fixed\"\n   )\n)\n\n\n1\n\nA Selection is a means of filtering datasets based on interactions. Here we use an “intersect” selection for application of a simple filter from dot plot to bar plot.\n\n2\n\nThe range selection is set via the interval_x() interactor (which enables using the mouse to select an x-range).\n\n3\n\nThe Brush defines the color of the interactor (in this case #888, a medium-gray).\n\n4\n\nThe range selection is consumed using the filter_by parameter.\n\n5\n\nWe set the x_domain for the bar plot to “fixed” so that the scale doesn’t change as the dataset is filtered.\n\n\n\n\n\n\n\nTry using the mouse to brush over regions on the dot plot—the bar plot will update accordingly.",
     "crumbs": [
-      "Getting Started"
+      "Getting Started",
+      "Welcome"
     ]
   },
   {
@@ -394,7 +436,8 @@
     "section": "Data",
     "text": "Data\nIn the examples above we made Data available by reading from a parquet file. We can also read data from any Python Data Frame (e.g. Pandas, Polars, PyArrow, etc.). For example:\nimport pandas as pd\nfrom inspect_viz import Data\n\n# read directly from file\npenguins = Data.from_file(\"penguins.parquet\")\n\n# read from Pandas DF (i.e. to preprocess first)\ndf = pd.read_parquet(\"penguins.parquet\")\npenguins = Data.from_dataframe(df)\nYou might wonder why is there a special Data class in Inspect Viz rather than using data frames directly? This is because Inpsect Viz is an interactive system where data can be dynamically filtered and transformed as part of plotting—the Data therefore needs to be sent to the web browser rather than remaining only in the Python session. This has a couple of important implications:\n\nData transformations should be done using standard Python Data Frame operations prior to reading into Data for Inspect Viz.\nSince Data is embedded in the web page, you will want to filter it down to only the columns required for plotting (as you don’t want the additional columns making the web page larger than is necessary).",
     "crumbs": [
-      "Getting Started"
+      "Getting Started",
+      "Welcome"
     ]
   },
   {
@@ -404,7 +447,8 @@
     "section": "Crossfilter",
     "text": "Crossfilter\nIn many cases you’ll want to have an input or interactor that both consumes and produces the same selection (i.e. filtered based on interactions with other inputs or interactors, but also able to provide its own filtering).\n\nInputs\nThis example demonstrates crossfiltering across inputs. We plot shot types taken during the 2023 WNBA season, providing a select() input that filters by team, and another select() input that filters by player (which in turn is also filtered by the currently selected team). Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz.layout import hconcat\n\nshots = Data.from_file(\"wnba-shots-2023.parquet\")\n\n1filter = Selection.crossfilter()\n\nvconcat(\n   hconcat(\n      select(\n         shots, label=\"Team\", column=\"team_name\", \n2         target=filter\n      ),\n      select(\n         shots, label=\"Athlete\", column=\"athlete_name\", \n3         filter_by=filter, target=filter\n      )\n   ),\n   plot(\n      bar_x(\n         shots, filter_by=filter,\n         x=count(), y=\"category\", fill=\"category\"\n      ),\n      y_label=None,\n4      color_domain=\"fixed\",\n      y_domain=[\"Jump\", \"Layup\", \"Hook\"],\n      height=200,\n      margin_left=60\n   )\n)\n\n\n1\n\nCreate a crossfilter selection, which enables inputs to both consume and produce the same selection (conditioning their available choices on other inputs).\n\n2\n\nThe team select box targets the filter selection (filtering both the choices in the athelte select box and what is displayed in the plot).\n\n3\n\nThe athlete select box is both filtered by and targets the filter selection, enabling it to both confine itself to the selected team as well as filter what is displayed in the plot.\n\n4\n\nAs different teams and players are selected, the y-axis may take on differnet values and ordering. These options ensure that the y-axis remains stable across selections.\n\n\n\n\n\n\n\n\n\nInteractors\nThis example demonstrates crossfiltering across plot interactors. We plot histograms showing arrival delay and departure time for flights. When you select a range in one plot, the other plot updates to show only the data within that selection—and vice versa. This bidirectional filtering is achieved using Selection.crossfilter(), which ensures each plot’s selection affects all other plots except itself. Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz.mark import rect_y\nfrom inspect_viz.transform import count, bin\n\nflights = Data.from_file(\"flights.parquet\")\n\n1brush = Selection.crossfilter()\n\n2def flights_plot(x, label):\n   return plot(\n      rect_y(\n         flights, filter_by=brush, \n         x=bin(x), y=count(), fill=\"steelblue\"\n      ),\n3      interval_x(target=brush),\n      height=200,\n      x_label=label,\n4      x_domain=\"fixed\",\n      y_tick_format=\"s\"\n   )\n\nvconcat(\n   flights_plot(\"delay\", \"Arrival Delay (min)\"),\n   flights_plot(\"time\", \"Departure Time (hour)\")\n)\n\n\n1\n\nCreate a crossfilter selection, which ensures each plot’s selection affects all other plots except itself.\n\n2\n\nOur two plots are identical save for the x value and the x_label so factor out into a function.\n\n3\n\nThe interval_x() interactor enables horizontal selection (targeting the crossfiltering brush).\n\n4\n\nUse a \"fixed\" domain so that the x-axis remains stable even when being filtered.",
     "crumbs": [
-      "Getting Started"
+      "Getting Started",
+      "Welcome"
     ]
   },
   {
@@ -412,9 +456,10 @@
     "href": "index.html#learning-more",
     "title": "Inspect Viz",
     "section": "Learning More",
-    "text": "Learning More\nUse these resources to learn more about using Inspect Viz:\n\nComponents goes into further depth on the main concepts and components required to use the library.\nPublishing describes how to publish Inspect Viz content as standalone plots, notebooks, websites, and dashboards.\nReference provides details on the available marks, interactors, transforms, and inputs.\nExamples demonstrates more advanced plotting and interactivity features.",
+    "text": "Learning More\nUse these resources to learn more about using Inspect Viz:\n\nViews describes the available built in views for Inspect evaluation data.\nComponents goes into further depth on the main concepts and components of the library.\nPublishing covers publishing Inspect Viz content as standalone plots, notebooks, websites, and dashboards.\nReference provides details on the available marks, interactors, transforms, and inputs.\nExamples demonstrates more advanced plotting and interactivity features.",
     "crumbs": [
-      "Getting Started"
+      "Getting Started",
+      "Welcome"
     ]
   },
   {
@@ -494,7 +539,7 @@
     "href": "components-plots.html#basics",
     "title": "Plots",
     "section": "Basics",
-    "text": "Basics\nPlots support faceting of the x and y dimensions, producing associated fx and fy scales. Plots are rendered to SVG output using Observable Plot.\nHere is a simple dot plot that demonstrates some key concepts:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nplot(\n1    dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n        stroke=\"species\", symbol=\"species\"),\n2    legend=\"symbol\",\n3    grid=True,\n    width=700,\n    height=400\n)\n\n\n1\n\ndot() mark for a simple dot plot, using a distinct stroke and symbol to denote the “species” column.\n\n2\n\nLegend in the default location, keyed by symbol.\n\n3\n\nAdditional attributes that affect plot size and appearance.\n\n\n\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Moasic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.",
+    "text": "Basics\nPlots support faceting of the x and y dimensions, producing associated fx and fy scales. Plots are rendered to SVG output using Observable Plot.\nHere is a simple dot plot that demonstrates some key concepts:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nplot(\n1    dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n        stroke=\"species\", symbol=\"species\"),\n2    legend=\"symbol\",\n3    grid=True,\n    width=700,\n    height=400\n)\n\n\n1\n\ndot() mark for a simple dot plot, using a distinct stroke and symbol to denote the “species” column.\n\n2\n\nLegend in the default location, keyed by symbol.\n\n3\n\nAdditional attributes that affect plot size and appearance.\n\n\n\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Mosaic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.",
     "crumbs": [
       "Getting Started",
       "Components",
@@ -586,17 +631,6 @@
     ]
   },
   {
-    "objectID": "publishing.html",
-    "href": "publishing.html",
-    "title": "Publishing",
-    "section": "",
-    "text": "There are several ways to publish Inspect Viz content, ranging from PNG images suitable for embedding in documents all the way up to notebooks, websites, and dashboards.\n\n\n\nPlots\nPublish single plots as PNG images or HTML snippets.\n\n\nNotebooks\nPublish collections of plots and tables as a notebook.\n\n\nWebsites\nEmbed plots and tables in a larger website.\n\n\nDashboards\nCreate a dashboard to provide easy navigation of collections of plots.",
-    "crumbs": [
-      "Getting Started",
-      "Publishing"
-    ]
-  },
-  {
     "objectID": "publishing-plots.html",
     "href": "publishing-plots.html",
     "title": "Plots",
@@ -642,6 +676,61 @@
       "Getting Started",
       "Publishing",
       "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing.html",
+    "href": "publishing.html",
+    "title": "Publishing",
+    "section": "",
+    "text": "There are several ways to publish Inspect Viz content, ranging from PNG images suitable for embedding in documents all the way up to notebooks, websites, and dashboards.\n\n\n\nPlots\nPublish single plots as PNG images or HTML snippets.\n\n\nNotebooks\nPublish collections of plots and tables as a notebook.\n\n\nWebsites\nEmbed plots and tables in a larger website.\n\n\nDashboards\nCreate a dashboard to provide easy navigation of collections of plots.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing"
+    ]
+  },
+  {
+    "objectID": "views.html",
+    "href": "views.html",
+    "title": "Views",
+    "section": "",
+    "text": "Note\n\n\n\nView functions are currently in beta and are exported from the inspect_ai.view.beta module. The beta module will be preserved after final release so that code written against it now will continue to work after the beta.\n\n\nViews provide a high-level API for visualising data read from Inspect logs. View functions generally assume that you have read data frames from your logs using the inspect_ai.analysis module.\nThere are currently very few view functions but we are working actively on expanding them. We also very much welcome you to submit your own as a pull request.",
+    "crumbs": [
+      "Getting Started",
+      "Views"
+    ]
+  },
+  {
+    "objectID": "views.html#overview",
+    "href": "views.html#overview",
+    "title": "Views",
+    "section": "",
+    "text": "Note\n\n\n\nView functions are currently in beta and are exported from the inspect_ai.view.beta module. The beta module will be preserved after final release so that code written against it now will continue to work after the beta.\n\n\nViews provide a high-level API for visualising data read from Inspect logs. View functions generally assume that you have read data frames from your logs using the inspect_ai.analysis module.\nThere are currently very few view functions but we are working actively on expanding them. We also very much welcome you to submit your own as a pull request.",
+    "crumbs": [
+      "Getting Started",
+      "Views"
+    ]
+  },
+  {
+    "objectID": "views.html#evals_bar_plot",
+    "href": "views.html#evals_bar_plot",
+    "title": "Views",
+    "section": "evals_bar_plot",
+    "text": "evals_bar_plot\nThe evals_bar_plot() function provides a bar plot summarizing evalution logs–by default scores are summarised but you can override this to visualize any value(s) produced from logs.\nHere we use the function to summarize eval data, providing several customizations of the default plot configuration:\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import evals_bar_plot, axis_score, AxisFilter\n\n# (this data frame was originally read with `evals_df(\"logs\")`)\nevals = Data.from_file(\"evals.parquet\")\n\n# plot the scores by model and task and provide filters \nevals_bar_plot(\n    evals,\n    x=\"model\",\n    fx=\"task_name\",\n    y=axis_score(ci=0.90),\n    x_filter=AxisFilter(label=\"Model\"),\n    fx_filter=AxisFilter(label=\"Task\")\n)\n\n\n\n\nSee the evals_bar_plot() function reference for additional details on using this view.",
+    "crumbs": [
+      "Getting Started",
+      "Views"
+    ]
+  },
+  {
+    "objectID": "views.html#evals_table",
+    "href": "views.html#evals_table",
+    "title": "Views",
+    "section": "evals_table",
+    "text": "evals_table\nThe evals_table() function provides a summary of a set of evaluations in tabular form. By default the columns include model, task name, and the headline metric for the evaulation. For example:\n\nfrom inspect_viz.view.beta import evals_table\n\nevals_table(evals)\n\n\n\n\nSee the evals_table() function reference for additional details on using this view.",
+    "crumbs": [
+      "Getting Started",
+      "Views"
     ]
   },
   {
@@ -921,7 +1010,7 @@
     "href": "publishing-notebooks.html",
     "title": "Notebooks",
     "section": "",
-    "text": "A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks (nbconvert and Quarto), and then these documents can in turn be printed to PDF if required.\nYou can also share a live version of a notebook that supports filtering and plot interactions by pubishing it on a platform like Google Colab.",
+    "text": "A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks (Quarto and nbconvert), and then these documents can in turn be printed to PDF if required.\nYou can also share a live version of a notebook that supports filtering and plot interactions by pubishing it on a platform like Google Colab.",
     "crumbs": [
       "Getting Started",
       "Publishing",
@@ -933,19 +1022,7 @@
     "href": "publishing-notebooks.html#overview",
     "title": "Notebooks",
     "section": "",
-    "text": "A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks (nbconvert and Quarto), and then these documents can in turn be printed to PDF if required.\nYou can also share a live version of a notebook that supports filtering and plot interactions by pubishing it on a platform like Google Colab.",
-    "crumbs": [
-      "Getting Started",
-      "Publishing",
-      "Notebooks"
-    ]
-  },
-  {
-    "objectID": "publishing-notebooks.html#nbconvert",
-    "href": "publishing-notebooks.html#nbconvert",
-    "title": "Notebooks",
-    "section": "nbconvert",
-    "text": "nbconvert\nThe nbconvert Python package enables export of any Jupyter notebook to HTML. Install nbconvert with:\npip install nbconvert\nThen, convert any notebook which includes Inspect Viz plots as follows:\njupyter nbconvert --to html --execute notebook.ipynb\nThis will create an HTML file named “notebook.html” alongside the “notebook.ipynb”.\nYou can also specify that you’d like code cells removed using the --no-input option:\njupyter nbconvert --to html --execute --no-input notebook.ipynb\nIf you need a PDF version of the notebook, open the file in a browser and print to PDF.",
+    "text": "A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks (Quarto and nbconvert), and then these documents can in turn be printed to PDF if required.\nYou can also share a live version of a notebook that supports filtering and plot interactions by pubishing it on a platform like Google Colab.",
     "crumbs": [
       "Getting Started",
       "Publishing",
@@ -958,6 +1035,18 @@
     "title": "Notebooks",
     "section": "Quarto",
     "text": "Quarto\nThe Quarto publishing system can also convert notebooks to HTML. To install the quarto-cli Python package:\npip install quarto-cli\nThen, convert any notebook which includes Inspect Viz plots as follows:\nquarto render notebook.ipynb --to html --execute\nThis will create an HTML file named “notebook.html” and a directory named “notebook_files” alongside the “notebook.ipynb”.\nYou can also specify that you’d like code cells removed using the -M echo:false option:\nquarto render notebook.ipynb --to html --execute -M echo:false\nIf you need a PDF version of the notebook, open the file in a browser and print to PDF.\n\nPublishing\nYou can use the Quarto Publish command to publish a notebook to GitHub Pages, Hugging Face Spaces, Netlify, or Quarto’s own publishing service.\nTo publish a notebook, pass it to the quarto publish command:\nquarto publish notebook.ipynb",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Notebooks"
+    ]
+  },
+  {
+    "objectID": "publishing-notebooks.html#nbconvert",
+    "href": "publishing-notebooks.html#nbconvert",
+    "title": "Notebooks",
+    "section": "nbconvert",
+    "text": "nbconvert\nThe nbconvert Python package enables export of any Jupyter notebook to HTML. Install nbconvert with:\npip install nbconvert\nThen, convert any notebook which includes Inspect Viz plots as follows:\njupyter nbconvert --to html --execute notebook.ipynb\nThis will create an HTML file named “notebook.html” alongside the “notebook.ipynb”.\nYou can also specify that you’d like code cells removed using the --no-input option:\njupyter nbconvert --to html --execute --no-input notebook.ipynb\nIf you need a PDF version of the notebook, open the file in a browser and print to PDF.",
     "crumbs": [
       "Getting Started",
       "Publishing",
@@ -1133,49 +1222,26 @@
     ]
   },
   {
-    "objectID": "reference/index.html",
-    "href": "reference/index.html",
-    "title": "Reference",
+    "objectID": "reference/inspect_viz.html",
+    "href": "reference/inspect_viz.html",
+    "title": "inspect_viz",
     "section": "",
-    "text": "inspect_viz\nCore API (data, components, params, selections)\n\n\ninspect_viz.plot\nPlot and legend creation.\n\n\ninspect_viz.mark\nPlot marks (charts, annotations, etc.)\n\n\ninspect_viz.interactor\nPlot interactors for selection and navigation.\n\n\ninspect_viz.transform\nData transformers (aggregate, window, etc.)\n\n\ninspect_viz.table\nTabular data display.\n\n\ninspect_viz.input\nInputs for binding to parameters and selections.\n\n\ninspect_viz.layout\nComponent layout functions.\n\n\ninspect_viz.sandbox\nFeatures under development.",
+    "text": "Data\nData source for visualizations.\nData sources can be created from any standard Python data frame (e.g. Pandas, Polars, etc.) or from a path pointing to a data file in a standard format (e.g. csv, parquet, etc.)\n\nSource\n\nclass Data\n\nAttributes\n\ncolumns list[str]\n\nColumn names for data source.\n\n\n\n\nMethods\n\nfrom_dataframe\n\nCreate Data from a standard Python data frame (e.g. Pandas, Polars, PyArrow, etc.).\n\nSource\n\n@classmethod\ndef from_dataframe(cls, df: IntoDataFrame) -&gt; \"Data\"\n\ndf IntoDataFrame\n\nData frame to read.\n\n\n\nfrom_file\n\nCreate Data from a data file (e.g. csv, parquet, feather, etc.).\n\nSource\n\n@classmethod\ndef from_file(cls, file: str | PathLike[str]) -&gt; \"Data\"\n\nfile str | PathLike[str]\n\nFile to read data from. Supported formats include csv, json, xslx, parquet, feather, sas7bdat, dta, and fwf.\n\n\n\n\n\n\n\nComponent\nData visualization component (input, plot, mark, table, layout, etc.).\nVisualization components are Jupyter widgets that can be used in any notebook or Jupyter based publishing system.\nSee the documentation on inputs, plots, marks, and interactors for details on available components.\n\nSource\n\nclass Component(AnyWidget)\n\n\nSelection\nSelection that can be filtered by inputs and other selections.\nSelection types include:\n\nSelection.intersect() for intersecting clauses (logical “and”)\nSelection.union() for unionone clauses (logical “or”)\nSelection.single() for a single clause only\nSelection.crossfilter() for a cross-filtered intersection\n\n\nSource\n\nclass Selection(str)\n\nMethods\n\nintersect\n\nCreate a new Selection instance with an intersect (conjunction) resolution strategy.\n\nSource\n\n@classmethod\ndef intersect(\n    cls,\n    cross: bool = False,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\ncross bool\n\nBoolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\nunion\n\nCreate a new Selection instance with a union (disjunction) resolution strategy.\n\nSource\n\n@classmethod\ndef union(\n    cls,\n    cross: bool = False,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\ncross bool\n\nBoolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\nsingle\n\nCreate a new Selection instance with a singular resolution strategy that keeps only the most recent selection clause.\n\nSource\n\n@classmethod\ndef single(\n    cls,\n    cross: bool = False,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\ncross bool\n\nBoolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\ncrossfilter\n\nCreate a new Selection instance with a cross-filtered intersect resolution strategy.\n\nSource\n\n@classmethod\ndef crossfilter(\n    cls,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\n\n\n\n\nParam\nParameter that can be bound from inputs.\n\nSource\n\nclass Param(str)\n\nAttributes\n\nid str\n\nUnique id (automatically generated).\n\ndefault ParamValue\n\nDefault value.\n\n\n\n\n\nParamValue\nType alias for parameter values (scalar or sequence of scalars).\n\nSource\n\nParamValue: TypeAlias = (\n    int | float | bool | str | datetime | Sequence[int | float | bool | str]\n)",
     "crumbs": [
-      "Reference"
+      "Reference",
+      "Python API"
     ]
   },
   {
-    "objectID": "reference/inspect_viz.sandbox.html",
-    "href": "reference/inspect_viz.sandbox.html",
-    "title": "inspect_viz.sandbox",
+    "objectID": "reference/inspect_viz.layout.html",
+    "href": "reference/inspect_viz.layout.html",
+    "title": "inspect_viz.layout",
     "section": "",
-    "text": "Bar plot for comparing evals.\n\nSource\n\ndef evals_summary_plot(\n    evals: Data,\n    x: str = \"model\",\n    fx: str = \"task_name\",\n    y: AxisValue | None = None,\n    x_filter: bool | AxisFilter = False,\n    fx_filter: bool | AxisFilter = False,\n) -&gt; Component\n\nevals Data\n\nEvals data table (typically read using evals_df())\n\nx str\n\nName of field for x axis (defaults to “model”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny AxisValue | None\n\nDefinition for y axis (defaults to axis_score())\n\nx_filter bool | AxisFilter\n\nOptional filtering control for x axis.\n\nfx_filter bool | AxisFilter\n\nOptional filtering control for fx axis.\n\n\n\n\n\nTable that summarizes eval scores by model and task.\n\nSource\n\ndef evals_summary_table(\n    evals: Data, columns: Sequence[str | Column] | None = None\n) -&gt; Component\n\nevals Data\n\nEvals data table.\n\ncolumns Sequence[str | Column] | None\n\nColumn definitions (defaults to model, task_name, and headline metric).",
+    "text": "hconcat\nHorizontally concatenate components in a row layout.\n\nSource\n\ndef hconcat(*component: Component) -&gt; Component\n\n*component Component\n\nComponents to concatenate.\n\n\n\n\nvconcat\nVertically concatenate components in a column layout.\n\nSource\n\ndef vconcat(*component: Component) -&gt; Component\n\n*component Component\n\nComponents to concatenate.\n\n\n\n\nhspace\nHorizontal space to place between widgets.\n\nSource\n\ndef hspace(hspace: float | str = 10) -&gt; Component\n\nhspace float | str\n\nAmount of space. Number values indicate screen pixels. String values may use CSS units (em, pt, px, etc).\n\n\n\n\nvspace\nVeritcal space to place between widgets.\n\nSource\n\ndef vspace(vspace: float | str = 10) -&gt; Component\n\nvspace float | str\n\nAmount of space. Number values indicate screen pixels. String values may use CSS units (em, pt, px, etc).",
     "crumbs": [
       "Reference",
       "Python API",
-      "inspect_viz.sandbox"
-    ]
-  },
-  {
-    "objectID": "reference/inspect_viz.sandbox.html#evals",
-    "href": "reference/inspect_viz.sandbox.html#evals",
-    "title": "inspect_viz.sandbox",
-    "section": "",
-    "text": "Bar plot for comparing evals.\n\nSource\n\ndef evals_summary_plot(\n    evals: Data,\n    x: str = \"model\",\n    fx: str = \"task_name\",\n    y: AxisValue | None = None,\n    x_filter: bool | AxisFilter = False,\n    fx_filter: bool | AxisFilter = False,\n) -&gt; Component\n\nevals Data\n\nEvals data table (typically read using evals_df())\n\nx str\n\nName of field for x axis (defaults to “model”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny AxisValue | None\n\nDefinition for y axis (defaults to axis_score())\n\nx_filter bool | AxisFilter\n\nOptional filtering control for x axis.\n\nfx_filter bool | AxisFilter\n\nOptional filtering control for fx axis.\n\n\n\n\n\nTable that summarizes eval scores by model and task.\n\nSource\n\ndef evals_summary_table(\n    evals: Data, columns: Sequence[str | Column] | None = None\n) -&gt; Component\n\nevals Data\n\nEvals data table.\n\ncolumns Sequence[str | Column] | None\n\nColumn definitions (defaults to model, task_name, and headline metric).",
-    "crumbs": [
-      "Reference",
-      "Python API",
-      "inspect_viz.sandbox"
-    ]
-  },
-  {
-    "objectID": "reference/inspect_viz.sandbox.html#axis",
-    "href": "reference/inspect_viz.sandbox.html#axis",
-    "title": "inspect_viz.sandbox",
-    "section": "Axis",
-    "text": "Axis\n\nAxisFilter\nFilter definition for plot axis.\n\nSource\n\nclass AxisFilter(BaseModel)\n\nAttributes\n\nlabel str | None\n\nFilter label (defaults to column namne).\n\nvalue Literal['all'] | str | list[str]\n\nInitial value (defaults to “all” which applies to filter).\n\nmultiple bool\n\nEnable filtering on multiple values.\n\nwidth int | None\n\nWidth of filter input in pixels.\n\n\n\n\n\nAxisValue\nAxis value options.\n\nSource\n\nclass AxisValue(BaseModel)\n\nAttributes\n\nlabel str\n\nAxis label.\n\nvalue_field str\n\nField to read value from.\n\nstderr_field str | None\n\nField to read stderr from (optional, required for plotting confidence intervals).\n\nci float | None\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.).\n\ndomain list[float] | None\n\nDomain of axis (range of values to display).\n\n\n\n\n\naxis_score\nAxis definition for scores from evals_df() data frames.\n\nSource\n\ndef axis_score(ci: float = 0.95) -&gt; AxisValue\n\nci float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.).",
-    "crumbs": [
-      "Reference",
-      "Python API",
-      "inspect_viz.sandbox"
+      "inspect_viz.layout"
     ]
   },
   {

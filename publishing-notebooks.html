@@ -130,6 +130,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Getting Started</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./views.html"> 
+<span class="menu-text">Views</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="./components-plots.html"> 
 <span class="menu-text">Components</span></a>
   </li>  
@@ -178,7 +182,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Getting Started</span></a>
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./views.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Views</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -268,8 +278,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#nbconvert" id="toc-nbconvert" class="nav-link" data-scroll-target="#nbconvert">nbconvert</a></li>
   <li><a href="#quarto" id="toc-quarto" class="nav-link" data-scroll-target="#quarto">Quarto</a></li>
+  <li><a href="#nbconvert" id="toc-nbconvert" class="nav-link" data-scroll-target="#nbconvert">nbconvert</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/meridianlabs-ai/inspect_viz/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -297,38 +307,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks (<a href="#nbconvert">nbconvert</a> and <a href="#quarto">Quarto</a>), and then these documents can in turn be printed to PDF if required.</p>
+<p>A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks (<a href="#quarto">Quarto</a> and <a href="#nbconvert">nbconvert</a>), and then these documents can in turn be printed to PDF if required.</p>
 <p>You can also share a live version of a notebook that supports filtering and plot interactions by pubishing it on a platform like <a href="https://colab.research.google.com/">Google Colab</a>.</p>
-</section>
-<section id="nbconvert" class="level2">
-<h2 class="anchored" data-anchor-id="nbconvert">nbconvert</h2>
-<p>The <a href="https://nbconvert.readthedocs.io/en/latest/">nbconvert</a> Python package enables export of any Jupyter notebook to HTML. Install <code>nbconvert</code> with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install nbconvert</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Then, convert any notebook which includes Inspect Viz plots as follows:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> nbconvert <span class="at">--to</span> html <span class="at">--execute</span> notebook.ipynb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This will create an HTML file named “notebook.html” alongside the “notebook.ipynb”.</p>
-<p>You can also specify that you’d like code cells removed using the <code>--no-input</code> option:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> nbconvert <span class="at">--to</span> html <span class="at">--execute</span> <span class="at">--no-input</span> notebook.ipynb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>If you need a PDF version of the notebook, open the file in a browser and print to PDF.</p>
 </section>
 <section id="quarto" class="level2">
 <h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
 <p>The <a href="https://quarto.org">Quarto</a> publishing system can also convert notebooks to HTML. To install the <code>quarto-cli</code> Python package:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install quarto-cli</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install quarto-cli</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Then, convert any notebook which includes Inspect Viz plots as follows:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render notebook.ipynb <span class="at">--to</span> html <span class="at">--execute</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render notebook.ipynb <span class="at">--to</span> html <span class="at">--execute</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This will create an HTML file named “notebook.html” and a directory named “notebook_files” alongside the “notebook.ipynb”.</p>
 <p>You can also specify that you’d like code cells removed using the <code>-M echo:false</code> option:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render notebook.ipynb <span class="at">--to</span> html <span class="at">--execute</span> <span class="at">-M</span> echo:false</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render notebook.ipynb <span class="at">--to</span> html <span class="at">--execute</span> <span class="at">-M</span> echo:false</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>If you need a PDF version of the notebook, open the file in a browser and print to PDF.</p>
 <section id="publishing" class="level4">
 <h4 class="anchored" data-anchor-id="publishing">Publishing</h4>
 <p>You can use the <a href="https://quarto.org/docs/publishing/">Quarto Publish</a> command to publish a notebook to GitHub Pages, Hugging Face Spaces, Netlify, or Quarto’s own publishing service.</p>
 <p>To publish a notebook, pass it to the <code>quarto publish</code> command:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> publish notebook.ipynb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> publish notebook.ipynb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
+</section>
+<section id="nbconvert" class="level2">
+<h2 class="anchored" data-anchor-id="nbconvert">nbconvert</h2>
+<p>The <a href="https://nbconvert.readthedocs.io/en/latest/">nbconvert</a> Python package enables export of any Jupyter notebook to HTML. Install <code>nbconvert</code> with:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install nbconvert</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then, convert any notebook which includes Inspect Viz plots as follows:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> nbconvert <span class="at">--to</span> html <span class="at">--execute</span> notebook.ipynb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will create an HTML file named “notebook.html” alongside the “notebook.ipynb”.</p>
+<p>You can also specify that you’d like code cells removed using the <code>--no-input</code> option:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> nbconvert <span class="at">--to</span> html <span class="at">--execute</span> <span class="at">--no-input</span> notebook.ipynb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If you need a PDF version of the notebook, open the file in a browser and print to PDF.</p>
+
+
 </section>
 
 </main> <!-- /main -->
