@@ -24,8 +24,6 @@ website:
       left:      
           - text: "Getting Started"
             href: index.qmd
-          - text: "Views"
-            href: views.qmd
           - text: "Components"
             href: components-plots.qmd
           - text: "Publishing"
@@ -45,8 +43,6 @@ website:
         contents:
            - href: index.qmd
              text: Welcome
-           - href: views.qmd
-             text: Views
            - text: Components
              contents:
                - href: components-plots.qmd
@@ -65,12 +61,16 @@ website:
         contents:
           - href: examples/index.qmd
             text: Examples
+          - section: Inspect
             contents:
-              - href: examples/penguins/index.qmd
-              - href: examples/bias-parameter/index.qmd
-              - href: examples/seattle-weather/index.qmd
-              - href: examples/athletes-regression/index.qmd
-              - href: examples/athletes-errorbars/index.qmd
+              - href: examples/inspect/evals-summary/index.qmd
+          - section: General
+            contents:
+              - href: examples/general/penguins/index.qmd
+              - href: examples/general/bias-parameter/index.qmd
+              - href: examples/general/seattle-weather/index.qmd
+              - href: examples/general/athletes-regression/index.qmd
+              - href: examples/general/athletes-errorbars/index.qmd
    page-footer: 
       left: 
          - text: Meridian Labs

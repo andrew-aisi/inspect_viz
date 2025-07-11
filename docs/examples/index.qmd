@@ -4,17 +4,31 @@ format:
    html: 
       code-tools: false
       page-layout: article
+tbl-colwidths: [30,70]
 ---
 
 These examples demonstrate various plotting and interactivity features. If you are just beginning to use Inspect Viz you review the [Getting Started](../index.qmd) article before exploring these examples.
 
+## Inspect
+
+These examples demonstrates creating visualisations from Inspect log files (leveraging the functions in [inspect_ai.analysis](https://inspect.aisi.org.uk/dataframe.html) module for creation of data frames from logs).
+
 |  |  |
 |------------------------------------|------------------------------------|
-| [Penguins Explorer](penguins/index.qmd) | Dot plots, tables, color and symbol channels, filtering inputs. |
-| [Bias Parameter](bias-parameter/index.qmd) | Area plots; slider inputs; channel expressions. |
-| [Seattle Weather](seattle-weather/index.qmd) | Dot plots; bar plots; color and radius channels; x-interval selections, interactive legend. |
-| [Athletes (Regression)](athletes-regression/index.qmd) | Dot plots; regression lines; tables, filtering inputs, xy selections. |
-| [Athletes (Error Bars)](athletes-errorbars/index.qmd) | Error bars; text annotations; params, slider inputs. |
+| [Evals Summary](inspect/evals-summary/index.qmd) | Bar plot summarizing scores by model and task. |
 
 
-: {tbl-colwidths=\[30,70\]}
+
+
+## General
+
+These examples demonstrate general plotting techniques using a variety of other examples datasets.
+
+|  |  |
+|------------------------------------|------------------------------------|
+| [Penguins Explorer](general/penguins/index.qmd) | Dot plots, tables, color and symbol channels, filtering inputs. |
+| [Bias Parameter](general/bias-parameter/index.qmd) | Area plots; slider inputs; channel expressions. |
+| [Seattle Weather](general/seattle-weather/index.qmd) | Dot plots; bar plots; color and radius channels; x-interval selections, interactive legend. |
+| [Athletes (Regression)](general/athletes-regression/index.qmd) | Dot plots; regression lines; tables, filtering inputs, xy selections. |
+| [Athletes (Error Bars)](general/athletes-errorbars/index.qmd) | Error bars; text annotations; params, slider inputs. |
+

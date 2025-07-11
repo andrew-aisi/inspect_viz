@@ -6,17 +6,7 @@ subtitle: |
 
 ## Welcome
 
-Welcome to Inspect Viz, a data visualisation library for [Inspect AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. You can include these visualisations in any [Jupyter Notebook](https://jupyter.org/) or web publishing system that supports Jupyter widgets (e.g. [Quarto](https://quarto.org)).
-
-You can use Inspect Viz at two different layers of abstraction:
-
-1.  Using [views](views.qmd), which provide pre-built interactive visualisations for Inspect evaluation data.
-
-2.  Using [components](components-plots.qmd) to create your own custom plots using the same lower-level APIs used to build views.
-
-::: callout-note
-Currently there are a fairly limited number of [views](views.qmd)—many more views are under development and we encourage you to [submit your own](https://github.com/meridianlabs-ai/inspect_viz/pulls) as pull requests.
-:::
+Welcome to Inspect Viz, a data visualisation library for [Inspect AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. You can author visualisations in any [Jupyter Notebook](https://jupyter.org/) then include them in documents as static images or or websites as interactive Jupyter Widgets.
 
 #### Getting Started
 
@@ -27,35 +17,8 @@ pip install git+https://github.com/UKGovernmentBEIS/inspect_ai
 pip install git+https://github.com/meridianlabs-ai/inspect_viz
 ```
 
-Then, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, read the [Views](views.qmd) and [Components](components-plots.qmd) articles for a more in depth explanation of the library's features and how they fit together.
+Then, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, check out the [Examples](examples/index.qmd)  and read the [Components](components-plots.qmd) articles for a more in depth explanation of the library's features and how they fit together.
 
-## Views
-
-Views provide a high-level API for visualising data read from Inspect logs. View functions generally assume that you have read data frames from your logs using the [inspect_ai.analysis](https://inspect.aisi.org.uk/dataframe.html) module.
-
-For example, here we read a set of evaluation logs and pass it to the `evals_bar_plot()` function, which by default shows scores by task name and model along with confidence intervals:
-
-```{python}
-from inspect_viz import Data
-from inspect_viz.view.beta import evals_bar_plot
-
-# read evals -- this data was originally read with evals_df("logs")
-evals = Data.from_file("evals.parquet")
-
-# plot the scores by model and task
-evals_bar_plot(evals)
-```
-
-We can optionally add filtering by model and task name:
-
-```{python}
-evals_bar_plot(evals, x_filter=True, fx_filter=True)
-```
-
-
-::: {style="margin-top: 1rem;"}
-See the [Views](views.qmd) article for additional details on using thse and other pre-built views.
-:::
 
 ## Plots
 
@@ -67,6 +30,7 @@ Plots in `inspect_viz` are composed of one or more [marks](reference/inspect_viz
 
 Here is an example of a simple dot plot using the [Palmer Penquins](https://huggingface.co/datasets/SIH/palmer-penguins) dataset:
 
+
 ```{python}
 from inspect_viz import Data
 from inspect_viz.plot import plot
@@ -74,8 +38,14 @@ from inspect_viz.mark import dot
 
 penguins = Data.from_file("penguins.parquet") # <1>
 
-plot( 
-   dot(penguins, x="body_mass", y="flipper_length") # <2> 
+plot(
+    dot(
+        penguins, 
+        x="body_mass", y="flipper_length",  # <2> 
+        stroke="species", symbol="species"  # <3> 
+    ),
+    grid=True,
+    legend="symbol" # <4>
 )
 ```
 
@@ -83,20 +53,10 @@ plot(
 
 2.  Plot using a `dot()` mark. The `plot()` function takes one or more marks or interactors.
 
-#### Scales
+3. Map the "species" column to the `stroke` and `symbol` scales of the plot (causing each species to have its own color and symbol).
 
-The penguins data set includes various species of penguin, so lets add some elements to our plot that enable us to see the difference between species. We'll also add grid lines to make the plot a bit easier to read:
+4. Add a `legend` to the plot as a key to our scale mappings.
 
-```{python}
-plot(
-    dot(penguins, x="body_mass", y="flipper_length",  
-        stroke="species", symbol="species", channels={ "sex": "sex", "island": "island"}),
-    legend="symbol",
-    grid=True
-)
-```
-
-Here we mapped the "species" column to the `stroke` and `symbol` scales of the plot (causing each species to have its own color and symbol). We also add a `legend` to the plot as a key to this mapping.
 
 ### Bar Plot
 
@@ -353,8 +313,6 @@ vconcat(
 ## Learning More
 
 Use these resources to learn more about using Inspect Viz:
-
--   [Views](views.qmd) describes the available built in views for Inspect evaluation data.
 
 -   [Components](components-plots.qmd) goes into further depth on the main concepts and components of the library.
 
