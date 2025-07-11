@@ -75,8 +75,22 @@ async function render({ model, el }: RenderProps<MosaicProps>) {
 
     // if we are doing auto-fill then re-render when size changes
     if (renderOptions.autoFill && !isInputSpec(spec)) {
+        let lastContainerWidth = el.clientWidth;
+        let lastContainerHeight = el.clientHeight;
+
         // re-render on container size changed
-        const resizeObserver = new ResizeObserver(throttle(renderSpec));
+        const resizeObserver = new ResizeObserver(
+            throttle(async () => {
+                if (
+                    lastContainerWidth !== el.clientWidth ||
+                    lastContainerHeight !== el.clientHeight
+                ) {
+                    lastContainerWidth = el.clientWidth;
+                    lastContainerHeight = el.clientHeight;
+                    renderSpec();
+                }
+            })
+        );
         resizeObserver.observe(el);
 
         // cleanup resize observer on disconnect

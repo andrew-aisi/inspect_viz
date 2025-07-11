@@ -2029,7 +2029,17 @@ async function render({ model, el }) {
   };
   await renderSpec();
   if (renderOptions.autoFill && !isInputSpec(spec)) {
-    const resizeObserver = new ResizeObserver(throttle2(renderSpec));
+    let lastContainerWidth = el.clientWidth;
+    let lastContainerHeight = el.clientHeight;
+    const resizeObserver = new ResizeObserver(
+      throttle2(async () => {
+        if (lastContainerWidth !== el.clientWidth || lastContainerHeight !== el.clientHeight) {
+          lastContainerWidth = el.clientWidth;
+          lastContainerHeight = el.clientHeight;
+          renderSpec();
+        }
+      })
+    );
     resizeObserver.observe(el);
     return () => {
       resizeObserver.disconnect();
