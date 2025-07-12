@@ -47,11 +47,9 @@ Here we use a `cell()` mark to visualize tool use over messages in each sample o
 ```{python}
 #| filename: Code
 
-from inspect_viz import Data, Selection
+from inspect_viz import Data
 from inspect_viz.plot import plot, legend
-from inspect_viz.interactor import toggle_y
 from inspect_viz.mark import cell, text
-from inspect_viz.layout import vconcat
 
 tools = Data.from_dataframe(tools_df)
 
@@ -62,6 +60,7 @@ plot(
         y="id",
         fill="tool_call_function",
     ), # <1>
+    
     text( # <2>
         tools, 
         text="limit", 
