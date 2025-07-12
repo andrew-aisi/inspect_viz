@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "inspect_viz"
-version = "0.0.1"
+version = "0.1.0"
 authors = [{ name = "Meridian Labs" }]
 readme = "README.md"
 requires-python = ">=3.10"
