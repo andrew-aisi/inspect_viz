@@ -48,6 +48,7 @@ doc = [
 
 [tool.hatch.build]
 only-packages = true
+exclude = ["docs/", "tests/"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "src/inspect_viz/_widgets" = "inspect_viz/_widgets"
