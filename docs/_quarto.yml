@@ -64,6 +64,7 @@ website:
           - section: Inspect
             contents:
               - href: examples/inspect/evals-summary/index.qmd
+              - href: examples/inspect/tool-usage/index.qmd
           - section: General
             contents:
               - href: examples/general/penguins/index.qmd

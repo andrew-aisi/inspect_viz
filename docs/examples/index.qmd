@@ -16,6 +16,7 @@ These examples demonstrates creating visualisations from Inspect log files (leve
 |  |  |
 |------------------------------------|------------------------------------|
 | [Evals Summary](inspect/evals-summary/index.qmd) | Bar plot summarizing scores by model and task. |
+| [Tool Usage](inspect/tool-usage/index.qmd) | Visualise tool usage over a series of turns in a Cybench evaluation. |
 
 
 
