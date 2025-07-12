@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../examples/penguins/index.html" rel="next">
+<link href="../examples/inspect/evals-summary/index.html" rel="next">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -68,6 +68,15 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<style type="text/css">
+.cell {
+  display: flex;
+  flex-direction: column-reverse;
+}
+.code-with-filename {
+  margin-top: 1em;
+}
+</style>
 
 
 </head>
@@ -92,10 +101,6 @@ ul.task-list li input[type="checkbox"] {
   <li class="nav-item">
     <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Getting Started</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../views.html"> 
-<span class="menu-text">Views</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../components-plots.html"> 
@@ -143,42 +148,65 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../examples/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Examples</span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../examples/index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Examples</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Inspect</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../examples/penguins/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../examples/inspect/evals-summary/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Evals Summary</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">General</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../examples/general/penguins/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Penguins Explorer</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../examples/bias-parameter/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../examples/general/bias-parameter/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bias Parameter</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../examples/seattle-weather/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../examples/general/seattle-weather/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Seattle Weather</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../examples/athletes-regression/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../examples/general/athletes-regression/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Athletes (Regression)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../examples/athletes-errorbars/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../examples/general/athletes-errorbars/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Athletes (Error Bars)</span></a>
   </div>
 </li>
@@ -189,8 +217,15 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#inspect" id="toc-inspect" class="nav-link active" data-scroll-target="#inspect">Inspect</a></li>
+  <li><a href="#general" id="toc-general" class="nav-link" data-scroll-target="#general">General</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/meridianlabs-ai/inspect_viz/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -215,6 +250,9 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>These examples demonstrate various plotting and interactivity features. If you are just beginning to use Inspect Viz you review the <a href="../index.html">Getting Started</a> article before exploring these examples.</p>
+<section id="inspect" class="level2">
+<h2 class="anchored" data-anchor-id="inspect">Inspect</h2>
+<p>These examples demonstrates creating visualisations from Inspect log files (leveraging the functions in <a href="https://inspect.aisi.org.uk/dataframe.html">inspect_ai.analysis</a> module for creation of data frames from logs).</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 30%">
@@ -222,29 +260,46 @@ ul.task-list li input[type="checkbox"] {
 </colgroup>
 <tbody>
 <tr class="odd">
-<td><a href="../examples/penguins/index.html">Penguins Explorer</a></td>
+<td><a href="../examples/inspect/evals-summary/index.html">Evals Summary</a></td>
+<td>Bar plot summarizing scores by model and task.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="general" class="level2">
+<h2 class="anchored" data-anchor-id="general">General</h2>
+<p>These examples demonstrate general plotting techniques using a variety of other examples datasets.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><a href="../examples/general/penguins/index.html">Penguins Explorer</a></td>
 <td>Dot plots, tables, color and symbol channels, filtering inputs.</td>
 </tr>
 <tr class="even">
-<td><a href="../examples/bias-parameter/index.html">Bias Parameter</a></td>
+<td><a href="../examples/general/bias-parameter/index.html">Bias Parameter</a></td>
 <td>Area plots; slider inputs; channel expressions.</td>
 </tr>
 <tr class="odd">
-<td><a href="../examples/seattle-weather/index.html">Seattle Weather</a></td>
+<td><a href="../examples/general/seattle-weather/index.html">Seattle Weather</a></td>
 <td>Dot plots; bar plots; color and radius channels; x-interval selections, interactive legend.</td>
 </tr>
 <tr class="even">
-<td><a href="../examples/athletes-regression/index.html">Athletes (Regression)</a></td>
+<td><a href="../examples/general/athletes-regression/index.html">Athletes (Regression)</a></td>
 <td>Dot plots; regression lines; tables, filtering inputs, xy selections.</td>
 </tr>
 <tr class="odd">
-<td><a href="../examples/athletes-errorbars/index.html">Athletes (Error Bars)</a></td>
+<td><a href="../examples/general/athletes-errorbars/index.html">Athletes (Error Bars)</a></td>
 <td>Error bars; text annotations; params, slider inputs.</td>
 </tr>
 </tbody>
 </table>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -691,8 +746,8 @@ ul.task-list li input[type="checkbox"] {
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../examples/penguins/index.html" class="pagination-link" aria-label="Penguins Explorer">
-        <span class="nav-page-text">Penguins Explorer</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../examples/inspect/evals-summary/index.html" class="pagination-link" aria-label="Evals Summary">
+        <span class="nav-page-text">Evals Summary</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -726,7 +781,7 @@ ul.task-list li input[type="checkbox"] {
 </a>
   </li>  
 </ul>
-    <div class="toc-actions"><ul><li><a href="https://github.com/meridianlabs-ai/inspect_viz/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/meridianlabs-ai/inspect_viz/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
