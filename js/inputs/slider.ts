@@ -92,13 +92,6 @@ export class Slider extends Input {
 
         // set value display
         this.updateCurrentValue();
-        this.curval_.innerText = this.sliderValue.toString();
-
-        // respond to slider input
-        this.sliderApi_.on('update', () => {
-            this.updateCurrentValue();
-            this.publish(this.sliderValue);
-        });
 
         // track param updates
         if (!isSelection(this.options_.as)) {
@@ -121,6 +114,10 @@ export class Slider extends Input {
             max = max ?? (Array.isArray(value) ? value[1] : (value ?? 0));
             const start = value ?? (options_.select === 'interval' ? [0, 0] : 0);
             this.updateSlider(min, max, start);
+            this.sliderApi_.on('update', () => {
+                this.updateCurrentValue();
+                this.publish(this.sliderValue);
+            });
         }
     }
 
@@ -178,8 +175,17 @@ export class Slider extends Input {
             } else {
                 start = this.options_.value;
             }
+
+            this.updateSlider(min, max, start);
+
+            this.sliderApi_.on('update', () => {
+                this.updateCurrentValue();
+                this.publish(this.sliderValue);
+            });
+        } else {
+            this.updateSlider(min, max, start);
         }
-        this.updateSlider(min, max, start);
+
         return this;
     }
 
