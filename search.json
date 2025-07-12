@@ -228,7 +228,7 @@
     "href": "examples/index.html#inspect",
     "title": "Inspect Viz Examples",
     "section": "Inspect",
-    "text": "Inspect\nThese examples demonstrates creating visualisations from Inspect log files (leveraging the functions in inspect_ai.analysis module for creation of data frames from logs).\n\n\n\n\n\n\n\nEvals Summary\nBar plot summarizing scores by model and task.",
+    "text": "Inspect\nThese examples demonstrates creating visualisations from Inspect log files (leveraging the functions in inspect_ai.analysis module for creation of data frames from logs).\n\n\n\n\n\n\n\nEvals Summary\nBar plot summarizing scores by model and task.\n\n\nTool Usage\nVisualise tool usage over a series of turns in a Cybench evaluation.",
     "crumbs": [
       "Examples"
     ]
@@ -268,99 +268,543 @@
     ]
   },
   {
-    "objectID": "examples/inspect/evals-summary/index.html",
-    "href": "examples/inspect/evals-summary/index.html",
-    "title": "Evals Summary",
+    "objectID": "examples/inspect/tool-usage/index.html",
+    "href": "examples/inspect/tool-usage/index.html",
+    "title": "Tool Usage",
     "section": "",
-    "text": "This examples summarizes the results of 4 evaluation tasks (gpqa_diamond, aime2024, mmlu_pro, cybench, and swe_bench) across 4 models (OpenAI o4-mini and o3, and Anthropic Claude Sonnet 3.7 and 4.0).",
+    "text": "In this example we visualize tool usage over a series of turns in a Cybench evaluation.",
     "crumbs": [
       "Examples",
       "Inspect",
-      "Evals Summary"
+      "Tool Usage"
     ]
   },
   {
-    "objectID": "examples/inspect/evals-summary/index.html#bar-chart",
-    "href": "examples/inspect/evals-summary/index.html#bar-chart",
-    "title": "Evals Summary",
-    "section": "Bar Chart",
-    "text": "Bar Chart\nWe start with a simple bar chart faceted by evaluation task:\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import bar_y\n\nevals = Data.from_file(\"evals.parquet\")\n\nplot(\n    bar_y( \n        evals, \n        x=\"model\", \n1        fx=\"task_name\",\n        y=\"score_headline_value\",\n        fill=\"model\",\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n2    x_label=None, fx_label=None, x_ticks=[],\n3    y_label=\"score\", y_domain=[0, 1.0]\n)\n\n\n\n1\n\nFacet the x-axis (i.e. create multiple groups of bars) by task name.\n\n2\n\nWe don’t need an explicit “model” or “task_name” label as they are obvious from context. We also don’t need ticks b/c the fill color and legend provide this.\n\n3\n\nEnsure that y-axis shows the full range of scores (by default it caps at the maximum).",
+    "objectID": "examples/inspect/tool-usage/index.html#data-preparation",
+    "href": "examples/inspect/tool-usage/index.html#data-preparation",
+    "title": "Tool Usage",
+    "section": "Data Preparation",
+    "text": "Data Preparation\nFor analysis we read a raw messages data frame from an eval log1, fill the tool call field with “role” if there are no tool calls, then filter down to just the fields we need for visualization:\n\n\nfrom inspect_ai.analysis.beta import messages_df, MessageColumns, SampleSummary\n\n# read messages from log\nlog = \"&lt;path-to-log&gt;.eval\"\ndf = messages_df(log, columns=SampleSummary + MessageColumns)\n\n# mark messages with no tool calls\ndf.loc[df[\"tool_call_function\"].isna(), \"tool_call_function\"] = \"(none)\"\n\n# trim columns\ntools_df = df[[\n    \"eval_id\",\n    \"id\",\n    \"order\",\n    \"tool_call_function\",\n    \"limit\"\n]]\n\nNote that the trimming of columns is particularly important because Inspect Viz embeds datasets directly in the web pages that host them (so we want to minimize their size for page load performance and bandwidth usage).",
     "crumbs": [
       "Examples",
       "Inspect",
-      "Evals Summary"
+      "Tool Usage"
     ]
   },
   {
-    "objectID": "examples/inspect/evals-summary/index.html#confidence-interval",
-    "href": "examples/inspect/evals-summary/index.html#confidence-interval",
-    "title": "Evals Summary",
-    "section": "Confidence Interval",
-    "text": "Confidence Interval\nHere, we add a confidence interval for each reported score by adding a rule_x() mark. Note that we compute the confidence interval range dynamically using a sql() transform:\n\n\n\nCode\n\nfrom inspect_viz.mark import rule_x\nfrom inspect_viz.transform import sql\n\n1def ci_value(direction):\n    Z_ALPHA = 1.960\n    return sql(\n        \"score_headline_value\" +\n        f\"{direction}\" +\n        f\"({Z_ALPHA} * score_headline_stderr)\"\n    )\n\nplot(\n    bar_y( \n        evals, x=\"model\", fx=\"task_name\", \n        y=\"score_headline_value\",\n        fill=\"model\",\n    ),\n2    rule_x(\n        evals,\n        x=\"model\",\n        fx=\"task_name\",\n        y1=ci_value(\"-\"),\n        y2=ci_value(\"+\"),\n        stroke=\"black\",\n        marker=\"tick-x\",\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n    x_label=None, fx_label=None, x_ticks=[],\n    y_label=\"score\", y_domain=[0, 1.0]\n)\n\n\n\n1\n\nDynanically compute each side of the confidence interval using a sql() transform.\n\n2\n\nDraw the confidence interval using a rule_x() mark.",
+    "objectID": "examples/inspect/tool-usage/index.html#trajectory-analysis",
+    "href": "examples/inspect/tool-usage/index.html#trajectory-analysis",
+    "title": "Tool Usage",
+    "section": "Trajectory Analysis",
+    "text": "Trajectory Analysis\nHere we use a cell() mark to visualize tool use over messages in each sample of an evaluation. We note any limit that ended the sample using a text() mark on the right side of the frame.\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import cell, text\n\ntools = Data.from_dataframe(tools_df)\n\ntools_domain = [\"bash\", \"python\", \"submit\", \"(none)\"]\n\nplot(\n1    cell(\n        tools,\n        x=\"order\",\n        y=\"id\",\n        fill=\"tool_call_function\",\n    ),\n    \n2    text(\n        tools, \n        text=\"limit\", \n        y=\"id\",\n        frame_anchor=\"right\", \n        font_size=8, \n        font_weight=200,\n        dx=50\n    ),\n    legend=legend(\"color\", location=\"right\"),\n3    color_domain=tools_domain,\n4    margin_top=0,\n    margin_left=200,\n    margin_right=100,\n5    x_ticks=list(range(0, 400, 50)),\n    x_tick_size=4,\n6    x_label=None,\n    y_label=None\n)\n\n\n\n1\n\ncell() mark showing tool calls.\n\n2\n\ntext() mark showing whether the sample terminated due to a limit.\n\n3\n\nFix the color domian to our pre-set tool ordering.\n\n4\n\nTweak the margins so the axis labels and text annotations appear correctly.\n\n5\n\nReduce the number of tick marks on the x-axis.\n\n6\n\nNo labels as axes are obvious from tick marks and legand.",
     "crumbs": [
       "Examples",
       "Inspect",
-      "Evals Summary"
+      "Tool Usage"
     ]
   },
   {
-    "objectID": "examples/inspect/evals-summary/index.html#filtering",
-    "href": "examples/inspect/evals-summary/index.html#filtering",
-    "title": "Evals Summary",
+    "objectID": "examples/inspect/tool-usage/index.html#sample-drill-down",
+    "href": "examples/inspect/tool-usage/index.html#sample-drill-down",
+    "title": "Tool Usage",
+    "section": "Sample Drill Down",
+    "text": "Sample Drill Down\nHere we stack two plots on top of each other—the original sample-level tool calling plot as well as a bar plot counting the messages which called various tools. You can click on any sample in the top plot to update the bottom plot to count only the tool calls for that sample.\n\n\n\nCode\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import cell, text, bar_x\nfrom inspect_viz.interactor import toggle_y\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.transform import count\n\ntools = Data.from_dataframe(tools_df)\n\n1click = Selection.single()\n\nvconcat(\n    plot(\n        cell(\n            tools,\n2            filter_by=click,\n            x=\"order\",\n            y=\"id\",\n            fill=\"tool_call_function\",\n        ),\n3        toggle_y(target=click),\n        text(\n            tools, \n            filter_by=click,\n            text=\"limit\", \n            y=\"id\",\n            frame_anchor=\"right\", \n            font_size=8, \n            font_weight=200,\n            dx=50\n        ),\n        legend=legend(\"color\", location=\"right\"),\n        color_domain=tools_domain,\n        margin_top=0,\n        margin_bottom=0,\n        margin_left=200,\n        margin_right=100,\n        x_ticks=list(range(0, 400, 50)),\n        x_tick_size=4,\n4        y_domain=\"fixed\",\n        x_domain=\"fixed\",\n        x_label=None,\n        y_label=None\n    ),\n    plot(\n        bar_x(\n            tools, \n5            filter_by=click,\n            x=count(), \n            y=\"tool_call_function\", \n            fill=\"tool_call_function\",\n        ),\n        y_label=None,\n        y_domain=\"fixed\",\n        x_domain=\"fixed\",\n        color_domain=tools_domain,\n        margin_left=50,\n        height=170\n    )\n)\n\n\n\n1\n\nSelection used to filter the plot display (A “single” selection filters out all points not in the target selection).\n\n2\n\nMarks are filtered by the “click” selection.\n\n3\n\nThe toggle_y() interactor updates the “click” selection with the y-value (“sample”) that has been clicked.\n\n4\n\nFix the x and y domains so that click selections don’t cause the axes to change.\n\n5\n\nBar plot is also filtered by the “click” selection.",
+    "crumbs": [
+      "Examples",
+      "Inspect",
+      "Tool Usage"
+    ]
+  },
+  {
+    "objectID": "examples/inspect/tool-usage/index.html#footnotes",
+    "href": "examples/inspect/tool-usage/index.html#footnotes",
+    "title": "Tool Usage",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nThe eval log read for this example is in the inspect-viz-example-logs repo↩︎",
+    "crumbs": [
+      "Examples",
+      "Inspect",
+      "Tool Usage"
+    ]
+  },
+  {
+    "objectID": "components-inputs.html",
+    "href": "components-inputs.html",
+    "title": "Inputs",
+    "section": "",
+    "text": "Inputs are used to create interactive visualisations by targeting either Param values or Selection ranges. Available inputs include:\nAll inputs can write updates to a provided Param or Selection. Param values are updated to match the input value. Selections are provided a predicate clause. This linking can be bidirectional: an input component will also subscribe to a param and track its value updates.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "components-inputs.html#select",
+    "href": "components-inputs.html#select",
+    "title": "Inputs",
+    "section": "Select",
+    "text": "Select\nThe select() input is used to select one more more values from a list. The list can be sourced from a data column (via the column parameter) or be static (via the options parameter). Here is a select input bound to a column (this input targets the default Selection associated with the passed Data):\n\nfrom inspect_viz import Data\nfrom inspect_viz.input import select\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nselect(penguins, label=\"Species\", column=\"species\")\n\n\n\n\nNote that by default the select has no value so does not filtering (represented by the default “All” selection). If you want a select() to have an initial value then specify it using the value parameter (or pass ‘auto’ to select the first value):\n\nselect(penguins, label=\"Species\", column=\"species\", value=\"auto\")\n\n\n\n\nHere is a select input with explicit options (this input targets a Param):\n\nfrom inspect_viz import Param\n\nfruit = Param(\"Apple\")\n\nselect(label=\"Fruit\", options=[\"Apple\", \"Orange\", \"Banana\"], target=fruit)\n\n\n\n\nPass multiple=True to enable multiple inputs. In this case values are specified via typing/autocomplete rather than a drop down menu.\n\nathletes = Data.from_file(\"athletes.parquet\")\n\nselect(athletes, label=\"Sports\", column=\"sport\", multiple=True)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "components-inputs.html#slider",
+    "href": "components-inputs.html#slider",
+    "title": "Inputs",
+    "section": "Slider",
+    "text": "Slider\nThe slider() input enables specificiation of either a single numeric value or a range of values. Here we enable the selection of a maximum body mass for a column:\n\nfrom inspect_viz.input import slider\n\nslider(penguins, label=\"Max Body Mass\", column=\"body_mass\")\n\n\n\n\nPass select=\"interval\" to specify an interval rather than single value:\n\nslider(penguins, label=\"Body Mass Range\", column=\"body_mass\", select=\"interval\")\n\n\n\n\nSliders can also target a Param and have explicit min, max, and step values:\n\nbias = Param(0.5)\n\nslider(label=\"Bias\", min=0, max=1.0, step=0.1, target=bias)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "components-inputs.html#search",
+    "href": "components-inputs.html#search",
+    "title": "Inputs",
+    "section": "Search",
+    "text": "Search\nThe search() input enables filtering a dataset based on text matching. For example, this input filters by WNBA player name\n\nfrom inspect_viz.input import search\n\nplayers = Data.from_file(\"wnba-shots-2023.parquet\")\n\nsearch(players, label=\"Athlete\", column=\"athlete_name\")",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "components-inputs.html#checkbox",
+    "href": "components-inputs.html#checkbox",
+    "title": "Inputs",
+    "section": "Checkbox",
+    "text": "Checkbox\nThe checkbox() input enables toggling a binary value. You can either target boolean Param values or provide custom values mapped to checked and unchecked.\n\nfrom inspect_viz.input import checkbox\n\nenabled = Param(True)\n\ncheckbox(label=\"Enabled\", target=enabled)\n\n\n\n\nHere we provide custom values that map to checked and unchecked states:\n\nbias = Param(0.1)\n\ncheckbox(label=\"Use Bias\", values=[0.0, 0.1], target=bias)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "components-inputs.html#radio-group",
+    "href": "components-inputs.html#radio-group",
+    "title": "Inputs",
+    "section": "Radio Group",
+    "text": "Radio Group\nThe radio_group() is an alternative to select() which displays all of the available options rather than collapsing them into a menu:\n\nfrom inspect_viz.input import radio_group\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nradio_group(penguins, label=\"Species\", column=\"species\")\n\n\n\n\nOr targeting a Param:\n\nfruit = Param(\"Apple\")\n\nradio_group(label=\"Fruit\", options=[\"Apple\", \"Orange\", \"Banana\"], target=fruit)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "components-inputs.html#checkbox-group",
+    "href": "components-inputs.html#checkbox-group",
+    "title": "Inputs",
+    "section": "Checkbox Group",
+    "text": "Checkbox Group\nThe checkbox_group() provides an interface to select multiple values (similar to select(..., multiple=True)):\n\nfrom inspect_viz.input import checkbox_group\n\npenguins = Data.from_file(\"penguins.parquet\")\n\ncheckbox_group(penguins, label=\"Species\", column=\"species\")\n\n\n\n\nYou can also use checkbox_group() with a Param:\n\nfruit = Param([\"Apple\", \"Orange\"])\n\ncheckbox_group(label=\"Fruit\", options=[\"Apple\", \"Orange\", \"Banana\"], target=fruit)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Inspect Viz",
+    "section": "",
+    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. You can author visualisations in any Jupyter Notebook then include them in documents as static images or or websites as interactive Jupyter Widgets.\n\n\nFirst, install the inspect_ai and inspect_viz package from GitHub as follows:\npip install git+https://github.com/UKGovernmentBEIS/inspect_ai\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, check out the Examples and read the Components articles for a more in depth explanation of the library’s features and how they fit together.",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#welcome",
+    "href": "index.html#welcome",
+    "title": "Inspect Viz",
+    "section": "",
+    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. You can author visualisations in any Jupyter Notebook then include them in documents as static images or or websites as interactive Jupyter Widgets.\n\n\nFirst, install the inspect_ai and inspect_viz package from GitHub as follows:\npip install git+https://github.com/UKGovernmentBEIS/inspect_ai\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, check out the Examples and read the Components articles for a more in depth explanation of the library’s features and how they fit together.",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#plots",
+    "href": "index.html#plots",
+    "title": "Inspect Viz",
+    "section": "Plots",
+    "text": "Plots\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Mosaic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.\n\n\nPlots in inspect_viz are composed of one or more marks, which can do either higher level plotting (e.g. dot(), bar_x(), bar_y(), area(), heatmap(), etc.) or lower level drawing on the plot canvas (e.g. text(), image(), arrow(), etc.)\n\nDot Plot\nHere is an example of a simple dot plot using the Palmer Penquins dataset:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\n1penguins = Data.from_file(\"penguins.parquet\")\n\nplot(\n    dot(\n        penguins, \n2        x=\"body_mass\", y=\"flipper_length\",\n3        stroke=\"species\", symbol=\"species\"\n    ),\n    grid=True,\n4    legend=\"symbol\"\n)\n\n\n1\n\nRead the dataset from a parquet file. You can can also use Data.from_dataframe() to read data from any Pandas, Polars, or PyArrow data frame.\n\n2\n\nPlot using a dot() mark. The plot() function takes one or more marks or interactors.\n\n3\n\nMap the “species” column to the stroke and symbol scales of the plot (causing each species to have its own color and symbol).\n\n4\n\nAdd a legend to the plot as a key to our scale mappings.\n\n\n\n\n\n\n\n\n\nBar Plot\nHere is a simple horizontal bar plot that counts the number of each species:\n\nfrom inspect_viz.mark import bar_x\nfrom inspect_viz.transform import count\n\nplot(\n    bar_x(penguins, x=count(), y=\"species\", fill=\"species\"),\n    y_label=None,\n    height=200,\n    margin_left=60\n)\n\n\n\n\nThe x axis for this plot is not mapped to a column, but rather to a count() transform ( transforms enable you to perform computations on columns for plotting). The fill option gives each species it’s own color. We also specify that we don’t want a y_label (as the species names serve that purpose) and a smaller than normal height.",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#tables",
+    "href": "index.html#tables",
+    "title": "Inspect Viz",
+    "section": "Tables",
+    "text": "Tables\nYou can also display data in a tabular layout using the table() function:\n\nfrom inspect_viz.table import table\n\ntable(penguins)\n\n\n\n\nYou can sort and filter tables by column, use a scrolling or paginated display, and customize several other aspects of table appearance and behavior.",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#filters",
+    "href": "index.html#filters",
+    "title": "Inspect Viz",
+    "section": "Filters",
+    "text": "Filters\nUse inputs to enable filtering datasets and dynamically updating plots. For example, here we add a select() input that filters on the species column:\n\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\nvconcat(\n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"\n   )\n)\n\n\n\n\nWe’ve introduced a few new things here:\n\nThe vconcat() function from the layout module lets us stack inputs on top of our plot.\nThe select() function from the input module binds a select box to the species column.\nThe color_domain=\"fixed\" argument to plot() indicates that we want to preserve species colors even when the plot is filtered.",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#marks",
+    "href": "index.html#marks",
+    "title": "Inspect Viz",
+    "section": "Marks",
+    "text": "Marks\nSo far the plots we’ve created include only a single mark, however many of the more interesting plots you’ll create will include multiple marks.\nFor example, here we explore the relationships between the height, weight, and sex of olympic athletes using dot() and regression_y() marks:\n\nfrom inspect_viz.mark import regression_y\n\nathletes = Data.from_file(\"athletes.parquet\")\n\nplot(\n    dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n    regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n    legend=\"color\"\n)\n\n\n\n\nNote that we set the opacity of the dot mark to 0.1 to help mitigate oversaturation that results from large numbers of data points being stacked on top of eachother.\nMarks can also be used to draw lines, arrows, text, or images on a plot.",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#params",
+    "href": "index.html#params",
+    "title": "Inspect Viz",
+    "section": "Params",
+    "text": "Params\nAs illustrated above, inputs can be used to filter dataset selections. Inputs can also be used to set Param values that make various aspects of plots dynamic. For example, here is a density plot of flight delays which uses a slider() input to vary the amount of smooth ing by setting the kernel bandwidth:\n\nfrom inspect_viz import Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import density_y\n\nflights = Data.from_file(\"flights.parquet\")\n\n1bandwidth = Param(0.1)\n\nvconcat(\n   slider(\n2      label=\"Bandwidth (σ)\", target=bandwidth,\n      min=0.1, max=100, step=0.1\n   ),\n   plot(\n      density_y(\n3         flights, x=\"delay\", fill=\"steelblue\", bandwidth=bandwidth\n      ),\n      x_domain=\"fixed\",\n      y_axis=None,\n      height=250,\n   )\n)\n\n\n1\n\nCreate a bandwidth parameter with a default value of 0.1.\n\n2\n\nBind the slider() to the bandwidth parameter.\n\n3\n\nApply the bandwidth to the plot (plot automatically redraws when the bandwidth changes).",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#selections",
+    "href": "index.html#selections",
+    "title": "Inspect Viz",
+    "section": "Selections",
+    "text": "Selections\nAbove in Filtering we began exploring dataset selections. Inputs are one way to set selections, but you can also set selections through direct interaction with plots.\nFor example, below we stack two plots vertically, the dot() plot from above along with a bar_x() plot that counts the sex column. We then add an interval_x() interactor that enables us to filter the dataset using selections on the dot plot.\nThere are a number of new things introduced here, click on the numbers near the right margin for additional explanation.\n\nfrom inspect_viz import Selection\nfrom inspect_viz.interactor import Brush, interval_x\n\n1range = Selection.intersect()\n\nvconcat(\n   plot(\n      dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n      regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n      interval_x(\n2         target=range,\n3         brush=Brush(fill=\"none\", stroke=\"#888\")\n      ),\n      legend=\"color\"\n   ),\n   plot(\n      bar_x(\n4         athletes, filter_by=range,\n         x=count(), y=\"sex\", fill=\"sex\"\n      ), \n      y_label=None,\n      height=150,\n5      x_domain=\"fixed\"\n   )\n)\n\n\n1\n\nA Selection is a means of filtering datasets based on interactions. Here we use an “intersect” selection for application of a simple filter from dot plot to bar plot.\n\n2\n\nThe range selection is set via the interval_x() interactor (which enables using the mouse to select an x-range).\n\n3\n\nThe Brush defines the color of the interactor (in this case #888, a medium-gray).\n\n4\n\nThe range selection is consumed using the filter_by parameter.\n\n5\n\nWe set the x_domain for the bar plot to “fixed” so that the scale doesn’t change as the dataset is filtered.\n\n\n\n\n\n\n\nTry using the mouse to brush over regions on the dot plot—the bar plot will update accordingly.",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#data",
+    "href": "index.html#data",
+    "title": "Inspect Viz",
+    "section": "Data",
+    "text": "Data\nIn the examples above we made Data available by reading from a parquet file. We can also read data from any Python Data Frame (e.g. Pandas, Polars, PyArrow, etc.). For example:\nimport pandas as pd\nfrom inspect_viz import Data\n\n# read directly from file\npenguins = Data.from_file(\"penguins.parquet\")\n\n# read from Pandas DF (i.e. to preprocess first)\ndf = pd.read_parquet(\"penguins.parquet\")\npenguins = Data.from_dataframe(df)\nYou might wonder why is there a special Data class in Inspect Viz rather than using data frames directly? This is because Inpsect Viz is an interactive system where data can be dynamically filtered and transformed as part of plotting—the Data therefore needs to be sent to the web browser rather than remaining only in the Python session. This has a couple of important implications:\n\nData transformations should be done using standard Python Data Frame operations prior to reading into Data for Inspect Viz.\nSince Data is embedded in the web page, you will want to filter it down to only the columns required for plotting (as you don’t want the additional columns making the web page larger than is necessary).\n\n\nData Selections\nOne other important thing to understand is that Data has a built in selection which is used in filtering operations on the client. This means that if you want your inputs and plots to stay synchoronized, you should pass the same Data instance to all of them (i.e. import into Data once and then share that reference). For example:\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\n# we import penguins once and then pass it to select() and dot()\npenguins = Data.from_file(\"penguins.parquet\")\n\nvconcat( \n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"  \n   )\n)",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#crossfilter",
+    "href": "index.html#crossfilter",
+    "title": "Inspect Viz",
+    "section": "Crossfilter",
+    "text": "Crossfilter\nIn many cases you’ll want to have an input or interactor that both consumes and produces the same selection (i.e. filtered based on interactions with other inputs or interactors, but also able to provide its own filtering).\n\nInputs\nThis example demonstrates crossfiltering across inputs. We plot shot types taken during the 2023 WNBA season, providing a select() input that filters by team, and another select() input that filters by player (which in turn is also filtered by the currently selected team). Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz.layout import hconcat\n\nshots = Data.from_file(\"wnba-shots-2023.parquet\")\n\n1filter = Selection.crossfilter()\n\nvconcat(\n   hconcat(\n      select(\n         shots, label=\"Team\", column=\"team_name\", \n2         target=filter\n      ),\n      select(\n         shots, label=\"Athlete\", column=\"athlete_name\", \n3         filter_by=filter, target=filter\n      )\n   ),\n   plot(\n      bar_x(\n         shots, filter_by=filter,\n         x=count(), y=\"category\", fill=\"category\"\n      ),\n      y_label=None,\n4      color_domain=\"fixed\",\n      y_domain=[\"Jump\", \"Layup\", \"Hook\"],\n      height=200,\n      margin_left=60\n   )\n)\n\n\n1\n\nCreate a crossfilter selection, which enables inputs to both consume and produce the same selection (conditioning their available choices on other inputs).\n\n2\n\nThe team select box targets the filter selection (filtering both the choices in the athelte select box and what is displayed in the plot).\n\n3\n\nThe athlete select box is both filtered by and targets the filter selection, enabling it to both confine itself to the selected team as well as filter what is displayed in the plot.\n\n4\n\nAs different teams and players are selected, the y-axis may take on differnet values and ordering. These options ensure that the y-axis remains stable across selections.\n\n\n\n\n\n\n\n\n\nInteractors\nThis example demonstrates crossfiltering across plot interactors. We plot histograms showing arrival delay and departure time for flights. When you select a range in one plot, the other plot updates to show only the data within that selection—and vice versa. This bidirectional filtering is achieved using Selection.crossfilter(), which ensures each plot’s selection affects all other plots except itself. Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz.mark import rect_y\nfrom inspect_viz.transform import count, bin\n\nflights = Data.from_file(\"flights.parquet\")\n\n1brush = Selection.crossfilter()\n\n2def flights_plot(x, label):\n   return plot(\n      rect_y(\n         flights, filter_by=brush, \n         x=bin(x), y=count(), fill=\"steelblue\"\n      ),\n3      interval_x(target=brush),\n      height=200,\n      x_label=label,\n4      x_domain=\"fixed\",\n      y_tick_format=\"s\"\n   )\n\nvconcat(\n   flights_plot(\"delay\", \"Arrival Delay (min)\"),\n   flights_plot(\"time\", \"Departure Time (hour)\")\n)\n\n\n1\n\nCreate a crossfilter selection, which ensures each plot’s selection affects all other plots except itself.\n\n2\n\nOur two plots are identical save for the x value and the x_label so factor out into a function.\n\n3\n\nThe interval_x() interactor enables horizontal selection (targeting the crossfiltering brush).\n\n4\n\nUse a \"fixed\" domain so that the x-axis remains stable even when being filtered.",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#learning-more",
+    "href": "index.html#learning-more",
+    "title": "Inspect Viz",
+    "section": "Learning More",
+    "text": "Learning More\nUse these resources to learn more about using Inspect Viz:\n\nComponents goes into further depth on the main concepts and components of the library.\nPublishing covers publishing Inspect Viz content as standalone plots, notebooks, websites, and dashboards.\nReference provides details on the available marks, interactors, transforms, and inputs.\nExamples demonstrates more advanced plotting and interactivity features.",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "components-selections.html",
+    "href": "components-selections.html",
+    "title": "Selections",
+    "section": "",
+    "text": "Selections enable filtering and cross-filtering of plot data based based on Inputs and Interactors. Each Data table has a built-in selection and you can also create Selection instances for more sophisticated behaviors.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Selections"
+    ]
+  },
+  {
+    "objectID": "components-selections.html#overview",
+    "href": "components-selections.html#overview",
+    "title": "Selections",
+    "section": "",
+    "text": "Selections enable filtering and cross-filtering of plot data based based on Inputs and Interactors. Each Data table has a built-in selection and you can also create Selection instances for more sophisticated behaviors.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Selections"
+    ]
+  },
+  {
+    "objectID": "components-selections.html#filtering",
+    "href": "components-selections.html#filtering",
+    "title": "Selections",
     "section": "Filtering",
-    "text": "Filtering\nHere we add filtering inputs to enable viewing a single model and/or single task at a time. We use the hconcat() and vconcat() functions to layout the inputs and the plot.\n\n\n\nCode\n\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import hconcat, vconcat\n\n1vconcat(\n    hconcat(\n2        select(evals, label=\"Model\", column=\"model\"),\n        select(evals, label=\"Task\", column=\"task_name\"),\n    ),\n    plot(\n        bar_y( \n            evals, \n            x=\"model\", \n            fx=\"task_name\",\n            y=\"score_headline_value\",\n            fill=\"model\",\n        ),\n        legend=legend(\"color\", location=\"bottom\"),\n        x_label=None, fx_label=None, x_ticks=[], \n        y_label=\"score\", y_domain=[0, 1.0] \n    )\n)\n\n\n\n1\n\nUse layout functions to arrange inputs and plot.\n\n2\n\nselect() inputs and bar_y() are automatically bound to the dataset selection for evals.",
+    "text": "Filtering\nThe most straightforward usage of selections is adding inputs which filter the data displayed in a plot. This filtering uses the built in selection of Data instances. For example, here we add a select() input to enable filtering by species:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\npenguins = Data.from_file(\"penguins.parquet\")\n\n1vconcat(\n2   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n3      dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n4      color_domain=\"fixed\"\n   )\n)\n\n\n1\n\nvconcat() function stacks the select input on top of the plot.\n\n2\n\nSelect input bound to “species” column.\n\n3\n\nUse of penguins in both select() and plot() automatically binds to default selection for the penguins Data object.\n\n4\n\nFixed color domain ensures that species colors remain the same even when filtered.\n\n\n\n\n\n\n\n\nFixed Domain\nThe example agove introduces an important concept when dealing with selections and filtering: \"fixed\" scale domains (in this case color_domain=\"fixed\"). Fixed scale domains instruct a plot to first calculate a scale domain in a data-driven manner, but then keep that domain fixed across subsequent updates.\nFixed domains enable stable configurations without requiring a hard-wired domain to be known in advance, preventing disorienting scale domain “jumps” that hamper comparison across filter interactions. Several of the examples below will use \"fixed\" domains to provide this stability across interactions.",
     "crumbs": [
-      "Examples",
-      "Inspect",
-      "Evals Summary"
+      "Getting Started",
+      "Components",
+      "Selections"
     ]
   },
   {
-    "objectID": "publishing-websites.html",
-    "href": "publishing-websites.html",
-    "title": "Websites",
+    "objectID": "components-selections.html#interactors",
+    "href": "components-selections.html#interactors",
+    "title": "Selections",
+    "section": "Interactors",
+    "text": "Interactors\nInteractors imbue plots with interactive behavior. Most interactors listen to input events from rendered plot SVG elements to update bound selections. Interactors take facets into account to properly handle input events across subplots.\n\nInterval\nThe interval_x() and interval_y() interactors create 1D interval brushes. The interval_xy() interactor creates a 2D brush. Interval interactors accept a pixel_size parameter that sets the brush resolution: values may snap to a grid whose bins are larger than screen pixels and this can be leveraged to optimize query latency.\nFor example, below we stack two plots vertically, a dot() plot along with a bar_x() plot that counts the sex column. We then add an interval_x() interactor that enables us to filter the dataset using selections on the dot plot.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.interactor import Brush, interval_x\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import bar_x, dot, regression_y\nfrom inspect_viz.transform import count\n\nathletes = Data.from_file(\"athletes.parquet\")\n\n1range = Selection.intersect()\n\nvconcat(\n   plot(\n      dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n      regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n      interval_x(\n2         target=range,\n3         brush=Brush(fill=\"none\", stroke=\"#888\")\n      ),\n      legend=\"color\"\n   ),\n   plot(\n      bar_x(\n4         athletes, filter_by=range,\n         x=count(), y=\"sex\", fill=\"sex\"\n      ), \n      y_label=None,\n      height=150,\n5      x_domain=\"fixed\"\n   )\n)\n\n\n1\n\nA Selection is a means of filtering datasets based on interactions. Here we use an “intersect” selection for application of a simple filter from dot plot to bar plot.\n\n2\n\nThe range selection is set via the interval_x() interactor (which enables using the mouse to select an x-range).\n\n3\n\nThe Brush defines the color of the interactor (in this case #888, a medium-gray).\n\n4\n\nThe range selection is consumed using the filter_by parameter.\n\n5\n\nWe set the x_domain for the bar plot to “fixed” so that the scale doesn’t change as the dataset is filtered.\n\n\n\n\n\n\n\nTry using the mouse to brush over regions on the dot plot—the bar plot will update accordingly.\n\n\nToggle\nThe toggle() interactor selects individual points (e.g., by click or shift-click) and generates a selection clause over specified fields of those points. Directives such as toggle_color(), toggle_x(), and toggle_y() simplify specification of which channel fields are included in the resulting predicates.\nThe highlight() interactor updates the rendered state of a visualization in response to a Selection. Non-selected points are set to translucent, neutral gray, or other specified visual properties. Selected points maintain normal encodings.\nThis example demonstrates using the toggle_y() and highlight() interactors to render a bar chart that can be clicked to select a subset of points on the dot plot above it. The dot plot legend also targets the same the selection to make itself interactive.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.interactor import highlight, toggle_y\nfrom inspect_viz.plot import legend, plot\nfrom inspect_viz.mark import bar_x, dot\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.transform import count, date_month_day\n\nseattle = Data.from_file(\"seattle-weather.parquet\")\n\n1weather = Selection.single()\n\nvconcat(\n    plot(\n        dot(\n            data=seattle,\n2            filter_by=weather,\n            x=date_month_day(\"date\"),\n            y=\"temp_max\",\n            fill=\"weather\",\n            fill_opacity=0.7,\n3            r=\"precipitation\",\n        ),\n4        legend=legend(\"color\", target=weather),\n        x_tick_format=\"%b\",\n        color_domain=\"fixed\",\n        r_domain=\"fixed\", \n        r_range=[2, 10]\n    ),\n    plot(\n        bar_x(seattle, x=count(), y=\"weather\", fill=\"weather\"),\n5        toggle_y(target=weather),\n6        highlight(by=weather),\n        x_domain=\"fixed\",\n        y_label=None,\n        height=200\n    )\n)\n\n\n1\n\nSingle selection (filter out all other points).\n\n2\n\nDot plot should filter by the selection.\n\n3\n\nShow precipitation level using dot radius.\n\n4\n\nClicks on the legend target the same selection\n\n5\n\ntoggle_y() interactor to filter by weather.\n\n6\n\nhighlight() interactor to fade out unselected bars.\n\n\n\n\n\n\n\nTry clicking either the legend or the bar plot elements to filter the dot plot.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Selections"
+    ]
+  },
+  {
+    "objectID": "components-selections.html#cross-filtering",
+    "href": "components-selections.html#cross-filtering",
+    "title": "Selections",
+    "section": "Cross Filtering",
+    "text": "Cross Filtering\nIn many cases you’ll want to have an input or interactor that both consumes and produces the same selection (i.e. filtered based on interactions with other inputs or interactors, but also able to provide its own filtering).\n\nInputs\nThis example demonstrates crossfiltering across inputs. We plot shot types taken during the 2023 WNBA season, providing a select() input that filters by team, and another select() input that filters by player (which in turn is also filtered by the currently selected team). Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat, hconcat\nfrom inspect_viz.mark import bar_x \nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import count\n\nshots = Data.from_file(\"wnba-shots-2023.parquet\")\n\n1filter = Selection.crossfilter()\n\nvconcat(\n   hconcat(\n      select(\n         shots, label=\"Team\", column=\"team_name\", \n2         target=filter\n      ),\n      select(\n         shots, label=\"Athlete\", column=\"athlete_name\", \n3         filter_by=filter, target=filter\n      )\n   ),\n   plot(\n      bar_x(\n         shots, filter_by=filter,\n         x=count(), y=\"category\", fill=\"category\"\n      ),\n      y_label=None,\n4      color_domain=\"fixed\",\n      y_domain=[\"Jump\", \"Layup\", \"Hook\"],\n      height=200,\n      margin_left=60\n   )\n)\n\n\n1\n\nCreate a crossfilter selection, which enables inputs to both consume and produce the same selection (conditioning their available choices on other inputs).\n\n2\n\nThe team select box targets the filter selection (filtering both the choices in the athelte select box and what is displayed in the plot).\n\n3\n\nThe athlete select box is both filtered by and targets the filter selection, enabling it to both confine itself to the selected team as well as filter what is displayed in the plot.\n\n4\n\nAs different teams and players are selected, the y-axis may take on differnet values and ordering. These options ensure that the y-axis remains stable across selections.\n\n\n\n\n\n\n\n\n\nInteractors\nThis example demonstrates crossfiltering across plot interactors. We plot histograms showing arrival delay and departure time for flights. When you select a range in one plot, the other plot updates to show only the data within that selection—and vice versa. This bidirectional filtering is achieved using Selection.crossfilter(), which ensures each plot’s selection affects all other plots except itself. Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.mark import rect_y\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import count, bin\nfrom inspect_viz.interactor import interval_x\n\nflights = Data.from_file(\"flights.parquet\")\n\n1brush = Selection.crossfilter()\n\n2def flights_plot(x, label):\n   return plot(\n      rect_y(\n         flights, filter_by=brush, \n         x=bin(x), y=count(), fill=\"steelblue\"\n      ),\n3      interval_x(target=brush),\n      height=200,\n      x_label=label,\n4      x_domain=\"fixed\",\n      y_tick_format=\"s\"\n   )\n\nvconcat(\n   flights_plot(\"delay\", \"Arrival Delay (min)\"),\n   flights_plot(\"time\", \"Departure Time (hour)\")\n)\n\n\n1\n\nCreate a crossfilter selection, which ensures each plot’s selection affects all other plots except itself.\n\n2\n\nOur two plots are identical save for the x value and the x_label so factor out into a function.\n\n3\n\nThe interval_x() interactor enables horizontal selection (targeting the crossfiltering brush).\n\n4\n\nUse a \"fixed\" domain so that the x-axis remains stable even when being filtered.\n\n\n\n\n\n\n\nTry selecting a horizontal range on either or both of the bar plots.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Selections"
+    ]
+  },
+  {
+    "objectID": "components-plots.html",
+    "href": "components-plots.html",
+    "title": "Plots",
     "section": "",
-    "text": "If you want to publish one or more plots as part of a website there are a couple of high level orientations to the problem:\n\nUse a Jupyter-based website publishing system that supports interactive Jupyter Widgets (e.g. Quarto).\nUse the to_html() function to create embeddable HTML fragments for your plots and embed them in any website.\n\nWe’ll cover both of these approaches below.",
+    "text": "A plot() produces a single visualisation as a Web element. Similar to other grammars, a plot consists of marks—graphical primitives such as bars, areas, and lines—which serve as chart layers. Plots use the semantics of Observable Plot, such that each plot has a dedicated set of encoding channels with named scale mappings such as x, y, color, opacity, etc.",
     "crumbs": [
       "Getting Started",
-      "Publishing",
-      "Websites"
+      "Components",
+      "Plots"
     ]
   },
   {
-    "objectID": "publishing-websites.html#overview",
-    "href": "publishing-websites.html#overview",
-    "title": "Websites",
+    "objectID": "components-plots.html#basics",
+    "href": "components-plots.html#basics",
+    "title": "Plots",
+    "section": "Basics",
+    "text": "Basics\nPlots support faceting of the x and y dimensions, producing associated fx and fy scales. Plots are rendered to SVG output using Observable Plot.\nHere is a simple dot plot that demonstrates some key concepts:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nplot(\n1    dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n        stroke=\"species\", symbol=\"species\"),\n2    legend=\"symbol\",\n3    grid=True,\n    width=700,\n    height=400\n)\n\n\n1\n\ndot() mark for a simple dot plot, using a distinct stroke and symbol to denote the “species” column.\n\n2\n\nLegend in the default location, keyed by symbol.\n\n3\n\nAdditional attributes that affect plot size and appearance.\n\n\n\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Mosaic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "components-plots.html#facets",
+    "href": "components-plots.html#facets",
+    "title": "Plots",
+    "section": "Facets",
+    "text": "Facets\nPlots support faceting of the x and y dimensions, producing associated fx and fy scales. For example, here we comopare model performance on several tasks. The task_name is the fx scale, resulting in a separate grouping of bars for each task:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import bar_y\n\nevals = Data.from_file(\"evals.parquet\")\n\nplot(\n    bar_y( \n1        evals, x=\"model\", fx=\"task_name\",\n        y=\"score_headline_value\",\n        fill=\"model\",\n    ),\n2    legend=legend(\"color\", location=\"bottom\"),\n3    x_label=None, x_ticks=[], fx_label=None,\n4    y_label=\"score\", y_domain=[0, 1.0]\n)\n\n\n1\n\nAdd an x-facet (“task_name”) using the fx option.\n\n2\n\nDefine legend using legend() function (to enable setting location and other options).\n\n3\n\nRemove default x labeling as it is handled by the legend.\n\n4\n\nTweak y-axis with shorter label and ensure that it goes all the way up to 1.0.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "components-plots.html#marks",
+    "href": "components-plots.html#marks",
+    "title": "Plots",
+    "section": "Marks",
+    "text": "Marks\nThe plots above use only a single mark (dot() and bar_y() respectively). More sophisticated plots are often constructed with multiple marks. For example, here is a plot that adds a regression line mark do a standard dot plot:\n\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot, regression_y\nfrom inspect_viz.plot import plot\n\nathletes = Data.from_file(\"athletes.parquet\")\n\nplot(\n1    dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n2    regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n    legend=\"color\"\n)\n\n\n1\n\nUse fill to distinguish male and female athletes; use opacity to deal with a large density of data points.\n\n2\n\nUse stroke to ensure that male and female athletes each get their own regression line.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "components-plots.html#tooltips",
+    "href": "components-plots.html#tooltips",
+    "title": "Plots",
+    "section": "Tooltips",
+    "text": "Tooltips\nTooltips enable you to provide additional details when the user hovers their mouse over various regions of the plot. Tooltips are enabled automatically for dot marks (dot(), dot_x(), dot_y(), circle(), and hexagon()) and can be enabled with tip=True for other marks. For example:\nplot(\n    bar_x(penguins, x=count(), y=\"species\", fill=\"species\",\n          tip=True\n    )\n)\nNote that tooltips can interfere with plot interactions—for example, if your bar plot was clickable to drive selections in other plots you would not want to specify tip=True.\n\nValues\nTooltips show the values of all columns from the dataset that provide scales (e.g. x, y, fx, stroke, fill, symbol, etc.):\n\nYou can add additional values to tooltips by specifying more channels (data table columns or transforms) in your mark. These channels won’t appear on the plot but will appear on the tooltip:\nplot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\", \n        channels={ \"sex\": \"sex\", \"island\": \"island\"}\n)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "components-plots.html#titles",
+    "href": "components-plots.html#titles",
+    "title": "Plots",
+    "section": "Titles",
+    "text": "Titles\nPlot titles can be added using a text() mark. For example, here we add a title at the top of the frame:\n\nfrom inspect_viz.mark import TextStyles, text\n\nplot(\n    text(text=[\"Olympic Athletes\"], frame_anchor=\"top\", \n         styles=TextStyles(font_size=16), dy=-20),\n    dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n    regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n    legend=\"color\"\n)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "components-plots.html#data",
+    "href": "components-plots.html#data",
+    "title": "Plots",
+    "section": "Data",
+    "text": "Data\nIn the examples above we made Data available by reading from a parquet file. We can also read data from any Python Data Frame (e.g. Pandas, Polars, PyArrow, etc.). For example:\nimport pandas as pd\nfrom inspect_viz import Data\n\n# read directly from file\npenguins = Data.from_file(\"penguins.parquet\")\n\n# read from Pandas DF (i.e. to preprocess first)\ndf = pd.read_parquet(\"penguins.parquet\")\npenguins = Data.from_dataframe(df)\nYou might wonder why is there a special Data class in Inspect Viz rather than using data frames directly? This is because Inpsect Viz is an interactive system where data can be dynamically filtered and transformed as part of plotting—the Data therefore needs to be sent to the web browser rather than remaining only in the Python session. This has a couple of important implications:\n\nData transformations should be done using standard Python Data Frame operations prior to reading into Data for Inspect Viz.\nSince Data is embedded in the web page, you will want to filter it down to only the columns required for plotting (as you don’t want the additional columns making the web page larger than is necessary).\n\n\nData Selections\nOne other important thing to understand is that Data has a built in selection which is used in filtering operations on the client. This means that if you want your inputs and plots to stay synchoronized, you should pass the same Data instance to all of them (i.e. import into Data once and then share that reference). For example:\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\n# we import penguins once and then pass it to select() and dot()\npenguins = Data.from_file(\"penguins.parquet\")\n\nvconcat( \n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"  \n   )\n)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "components-plots.html#attributes",
+    "href": "components-plots.html#attributes",
+    "title": "Plots",
+    "section": "Attributes",
+    "text": "Attributes\nAttributes are plot-level settings such as width, height, margins, and scale options (e.g., x_domain, color_range, y_tick_format). Attributes may be Param-valued, in which case a plot updates upon param changes.\nSome of the more useful plot attribues include:\n\nwidth, height, and aspect_ratio for controlling plot size.\nmargin and facet_margin (and more specific margins like margin_top) for controlling layout margins.\nstyle for providing CSS styles.\naria_label and aria_description, x_aria_label, x_aria_description, etc. for accessibilty attributes.\nx_domain, x_range,y_domain, andy_range` for controlling the domain and range of axes.\nTick settings for x, y, fx, and fy axes (e.g. x_ticks, x_tick_rotate, etc.)\nr (radius) scale settings (e.g. r_domain, r_range, r_label, etc.)\n\nSee PlotAttributes for documentation on all available plot attributes.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "components-plots.html#legends",
+    "href": "components-plots.html#legends",
+    "title": "Plots",
+    "section": "Legends",
+    "text": "Legends\nLegends can be added to plot specifications or included as standalone elements.\nSee the legend() function documentation for details on legend options including location, columns, label text, size, and margins.\nThe name directive gives a plot a unique name. A standalone legend can reference a named plot legend(..., for_plot=\"penguins\") to avoid respecifying scale domains and ranges.\nLegends also act as interactors, taking a bound Selection as a target parameter. For example, discrete legends use the logic of the toggle interactor to enable point selections. Two-way binding is supported for Selections using single resolution, enabling legends and other interactors to share state.\nSee the docs on Toggle interactors for an example of an interactive legend.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing.html",
+    "href": "publishing.html",
+    "title": "Publishing",
     "section": "",
-    "text": "If you want to publish one or more plots as part of a website there are a couple of high level orientations to the problem:\n\nUse a Jupyter-based website publishing system that supports interactive Jupyter Widgets (e.g. Quarto).\nUse the to_html() function to create embeddable HTML fragments for your plots and embed them in any website.\n\nWe’ll cover both of these approaches below.",
+    "text": "There are several ways to publish Inspect Viz content, ranging from PNG images suitable for embedding in documents all the way up to notebooks, websites, and dashboards.\n\n\n\nPlots\nPublish single plots as PNG images or HTML snippets.\n\n\nNotebooks\nPublish collections of plots and tables as a notebook.\n\n\nWebsites\nEmbed plots and tables in a larger website.\n\n\nDashboards\nCreate a dashboard to provide easy navigation of collections of plots.",
     "crumbs": [
       "Getting Started",
-      "Publishing",
-      "Websites"
+      "Publishing"
     ]
   },
   {
-    "objectID": "publishing-websites.html#quarto-websites",
-    "href": "publishing-websites.html#quarto-websites",
-    "title": "Websites",
-    "section": "Quarto Websites",
-    "text": "Quarto Websites\nThe Quarto publishing system can create websites that include dynamic output from Python code, including interactve Jupyter Widgets like the ones created by Inspect Viz. To install the quarto-cli Python package:\npip install quarto-cli\nQuarto is a markdown-based publishing system that enables you to embed executable Python blocks whose output is included in the published website. For instance, Here is the source code for the Bias Parameter example:\n---\ntitle: \"Bias Parameter\"\n1echo: false\n---\n\nUse the slider to create bias offsets for the y-axis.\n\n2```{python}\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import area_y\nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import sql\n\nrandom_walk = Data.from_file(\"random-walk.parquet\")\nbias = Param(0)\n```\n\n```{python} \nslider(label=\"Bias\", target=bias, min=0, max=1000, step=1, value=100)\n```\n\n```{python} \nplot(area_y(random_walk, x=\"t\", y=sql(f\"v + {bias}\"), fill=\"steelblue\"))\n```\n\n1\n\nWe specify echo: false to prevent display of code blocks.\n\n2\n\nMarkdown code blocks decorated with {python} are executed.\n\n\nHere is what the page looks like when rendered on the website (it’s a screenshot so you won’t be able to use the slider!):\n\n\nLearning More\nThe website was created with Quarto and includes many live Inspect Viz plots and tables. The source code for the Examples section is a good place to start to understand the basics.\nThe documentation on Quarto Websites includes a tutorial and many additional details on creating, customizing, and publishing websites.\nQuarto Dashboards are a special type of Quarto website optimized for displaying many plots and tables together, so are also worth considering.",
+    "objectID": "publishing-plots.html",
+    "href": "publishing-plots.html",
+    "title": "Plots",
+    "section": "",
+    "text": "There are several ways to publish plots created with Inspect Viz:\n\nUse the write_png() function to create an image for use in a document or presentation.\nUse the write_html() function to create a standalone HTML file.\nCreate and share a Jupyter notebook with the plot.\nEmbed the plot in a website or dashboard.\n\nThis article will cover the first two options for sharing standalone plots—the Notebooks, Websites, and Dashboards articles will cover the other possibilities.",
     "crumbs": [
       "Getting Started",
       "Publishing",
-      "Websites"
+      "Plots"
     ]
   },
   {
-    "objectID": "publishing-websites.html#html-fragments",
-    "href": "publishing-websites.html#html-fragments",
-    "title": "Websites",
-    "section": "HTML Fragments",
-    "text": "HTML Fragments\nIf you are working with an existing website or with another website publishing system, it is also straightforward to embed HTML snippets which include Inspect Viz plots and tables.\n\nSingle Plot\nTo create a standalone snippet which you can include in any website, use the write_html() function:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_html\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_html(\"penguins.html\", pl)\n\n\nMultiple Plots\nIf you want to include multiple plots on a page, you might find it more convenient to call the to_html() function as part of your website generation process. The returned HTML includes the Jupyter Widget runtime dependencies, so if you have multiple plots you’ll instead want to include these dependencies once in the &lt;head&gt; of your document and the create HTML snippets without the dependencies.\nHere is the dependencies code that you should place in the &lt;head&gt; tag:\n&lt;script src=\"https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js\" crossorigin=\"anonymous\"&gt;&lt;/script&gt;\n&lt;script src=\"https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js\" crossorigin=\"anonymous\"&gt;&lt;/script&gt;\nThen, specify dependencies=False when you call to_html() to get only the plot and not the dependencies scripts which are already in your &lt;head&gt; tag:\nfrom inspect_viz.plot import to_html\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\npl_html = to_html(pl, dependencies=False)\n\n# ...include pl_html in your website",
+    "objectID": "publishing-plots.html#overview",
+    "href": "publishing-plots.html#overview",
+    "title": "Plots",
+    "section": "",
+    "text": "There are several ways to publish plots created with Inspect Viz:\n\nUse the write_png() function to create an image for use in a document or presentation.\nUse the write_html() function to create a standalone HTML file.\nCreate and share a Jupyter notebook with the plot.\nEmbed the plot in a website or dashboard.\n\nThis article will cover the first two options for sharing standalone plots—the Notebooks, Websites, and Dashboards articles will cover the other possibilities.",
     "crumbs": [
       "Getting Started",
       "Publishing",
-      "Websites"
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing-plots.html#plot-as-image",
+    "href": "publishing-plots.html#plot-as-image",
+    "title": "Plots",
+    "section": "Plot as Image",
+    "text": "Plot as Image\nUse the write_png() function to save a PNG version of any plot.\n\n\n\n\n\n\nNote\n\n\n\nThe write_png() function requires that you install the playwright Python package, which enables taking screenshots of web graphics using an embedded version of the Chromium web browser. You can do this as follows:\npip install playwright\nplaywright install\n\n\nTo create a plot and export it as a PNG:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_png\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_png(\"penguins.png\", pl)\nHere is the plot that was written (note that since this plot is a static PNG file rather than a JavaScript widget it does not have tooltips):\n\n\nPlot Size\nYou can control the size of the image written by specifying the width and height directly in the call to plot(). For example:\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True,\n    width=900,\n    height=400\n)\n\n\nExport Options\nThere are a couple of other options that can be used when exporting plots to PNG:\n\n\n\n\n\n\n\nOption\nDescription\n\n\n\n\nscale\nDevice scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)\n\n\npadding\nPadding (in pixels) to add around exported plot. Defaults to 8 pixels.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing-plots.html#plot-as-html",
+    "href": "publishing-plots.html#plot-as-html",
+    "title": "Plots",
+    "section": "Plot as HTML",
+    "text": "Plot as HTML\nYou can also create an HTML version of a plot using the write_html() function. For example:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_html\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_html(\"penguins.html\", pl)\nUnlike with write_png(), the exported HTML plot retains all interactive features (tooltips, filters, etc.). In some cases you might therefore also include inputs with your plot. For example:\npl = vconcat(\n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"\n   )\n)\n\nwrite_html(\"penguins.html\", pl)",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing-dashboards.html",
+    "href": "publishing-dashboards.html",
+    "title": "Dashboards",
+    "section": "",
+    "text": "Quarto Dashboards are a special type of Quarto website optimized for publishing easily navigable sets of plots and tables. Features of Quarto Dashboards include:\n\nMany flexible ways to layout components (row or column based, tabsets, multiple pages, etc.) including responsive layout for mobile devices.\nA variety of ways to present inputs for interactivity including toolbars, sidebars, and card-level inputs.\nDozens of available themes including the ability to create your own themes.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Dashboards"
+    ]
+  },
+  {
+    "objectID": "publishing-dashboards.html#overview",
+    "href": "publishing-dashboards.html#overview",
+    "title": "Dashboards",
+    "section": "",
+    "text": "Quarto Dashboards are a special type of Quarto website optimized for publishing easily navigable sets of plots and tables. Features of Quarto Dashboards include:\n\nMany flexible ways to layout components (row or column based, tabsets, multiple pages, etc.) including responsive layout for mobile devices.\nA variety of ways to present inputs for interactivity including toolbars, sidebars, and card-level inputs.\nDozens of available themes including the ability to create your own themes.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Dashboards"
+    ]
+  },
+  {
+    "objectID": "publishing-dashboards.html#example",
+    "href": "publishing-dashboards.html#example",
+    "title": "Dashboards",
+    "section": "Example",
+    "text": "Example\nHere is the Penguin Explorer example from this repository re-written as a dashboard (this is a live dashboard embedded as an iframe):\n\nBelow is the source code for this dashboard. You’ll notice that this looks quite similar to the code for any other Quarto document, but level-two headings (##) have been added to denote a toolbar and dashboard rows (additional headings could be used to create columns and tabsets).\n---\ntitle: \"Penguins Explorer\"\n1format: dashboard\n---\n\n```{python}\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import select\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\naxes = [\"body_mass\", \"flipper_length\", \"bill_depth\", \"bill_length\"]\nx_axis = Param(\"body_mass\")\ny_axis = Param(\"flipper_length\")\n```\n\n2## Row {.toolbar}\n\n```{python}\nselect(penguins, label=\"Species\", column=\"species\")\nselect(label=\"X\", options=axes, target=x_axis)\nselect(label=\"Y\", options=axes, target=y_axis)\n```\n\n3## Row\n\n```{python}\nplot(\n    dot(penguins, x=x_axis, y=y_axis, stroke=\"species\", symbol=\"species\"),\n    grid=True,\n    x_label=\"Body mass (g) →\",\n    y_label=\"↑ Flipper length (mm)\",\n    legend=\"symbol\",\n)\n```\n\n## Row\n\n```{python}\ntable(penguins)\n```\n\n1\n\nformat: dashboard indicates this is a dashbaord not an ordinary HTML page.\n\n2\n\nToolbar for grouping inputs.\n\n3\n\nRow sections to denote additional rows in the dashboard layout.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Dashboards"
+    ]
+  },
+  {
+    "objectID": "publishing-dashboards.html#learning-more",
+    "href": "publishing-dashboards.html#learning-more",
+    "title": "Dashboards",
+    "section": "Learning More",
+    "text": "Learning More\n\nSee the Quarto Dashboards documentation for additional details on creating dashboards.\nSee the Dashboard Examples to get an idea for the sorts of layouts and themes that are available and to see the source code for a variety of dashboard types.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Dashboards"
     ]
   },
   {
@@ -508,483 +952,99 @@
     ]
   },
   {
-    "objectID": "publishing-dashboards.html",
-    "href": "publishing-dashboards.html",
-    "title": "Dashboards",
+    "objectID": "publishing-websites.html",
+    "href": "publishing-websites.html",
+    "title": "Websites",
     "section": "",
-    "text": "Quarto Dashboards are a special type of Quarto website optimized for publishing easily navigable sets of plots and tables. Features of Quarto Dashboards include:\n\nMany flexible ways to layout components (row or column based, tabsets, multiple pages, etc.) including responsive layout for mobile devices.\nA variety of ways to present inputs for interactivity including toolbars, sidebars, and card-level inputs.\nDozens of available themes including the ability to create your own themes.",
+    "text": "If you want to publish one or more plots as part of a website there are a couple of high level orientations to the problem:\n\nUse a Jupyter-based website publishing system that supports interactive Jupyter Widgets (e.g. Quarto).\nUse the to_html() function to create embeddable HTML fragments for your plots and embed them in any website.\n\nWe’ll cover both of these approaches below.",
     "crumbs": [
       "Getting Started",
       "Publishing",
-      "Dashboards"
+      "Websites"
     ]
   },
   {
-    "objectID": "publishing-dashboards.html#overview",
-    "href": "publishing-dashboards.html#overview",
-    "title": "Dashboards",
+    "objectID": "publishing-websites.html#overview",
+    "href": "publishing-websites.html#overview",
+    "title": "Websites",
     "section": "",
-    "text": "Quarto Dashboards are a special type of Quarto website optimized for publishing easily navigable sets of plots and tables. Features of Quarto Dashboards include:\n\nMany flexible ways to layout components (row or column based, tabsets, multiple pages, etc.) including responsive layout for mobile devices.\nA variety of ways to present inputs for interactivity including toolbars, sidebars, and card-level inputs.\nDozens of available themes including the ability to create your own themes.",
+    "text": "If you want to publish one or more plots as part of a website there are a couple of high level orientations to the problem:\n\nUse a Jupyter-based website publishing system that supports interactive Jupyter Widgets (e.g. Quarto).\nUse the to_html() function to create embeddable HTML fragments for your plots and embed them in any website.\n\nWe’ll cover both of these approaches below.",
     "crumbs": [
       "Getting Started",
       "Publishing",
-      "Dashboards"
+      "Websites"
     ]
   },
   {
-    "objectID": "publishing-dashboards.html#example",
-    "href": "publishing-dashboards.html#example",
-    "title": "Dashboards",
-    "section": "Example",
-    "text": "Example\nHere is the Penguin Explorer example from this repository re-written as a dashboard (this is a live dashboard embedded as an iframe):\n\nBelow is the source code for this dashboard. You’ll notice that this looks quite similar to the code for any other Quarto document, but level-two headings (##) have been added to denote a toolbar and dashboard rows (additional headings could be used to create columns and tabsets).\n---\ntitle: \"Penguins Explorer\"\n1format: dashboard\n---\n\n```{python}\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import select\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\naxes = [\"body_mass\", \"flipper_length\", \"bill_depth\", \"bill_length\"]\nx_axis = Param(\"body_mass\")\ny_axis = Param(\"flipper_length\")\n```\n\n2## Row {.toolbar}\n\n```{python}\nselect(penguins, label=\"Species\", column=\"species\")\nselect(label=\"X\", options=axes, target=x_axis)\nselect(label=\"Y\", options=axes, target=y_axis)\n```\n\n3## Row\n\n```{python}\nplot(\n    dot(penguins, x=x_axis, y=y_axis, stroke=\"species\", symbol=\"species\"),\n    grid=True,\n    x_label=\"Body mass (g) →\",\n    y_label=\"↑ Flipper length (mm)\",\n    legend=\"symbol\",\n)\n```\n\n## Row\n\n```{python}\ntable(penguins)\n```\n\n1\n\nformat: dashboard indicates this is a dashbaord not an ordinary HTML page.\n\n2\n\nToolbar for grouping inputs.\n\n3\n\nRow sections to denote additional rows in the dashboard layout.",
+    "objectID": "publishing-websites.html#quarto-websites",
+    "href": "publishing-websites.html#quarto-websites",
+    "title": "Websites",
+    "section": "Quarto Websites",
+    "text": "Quarto Websites\nThe Quarto publishing system can create websites that include dynamic output from Python code, including interactve Jupyter Widgets like the ones created by Inspect Viz. To install the quarto-cli Python package:\npip install quarto-cli\nQuarto is a markdown-based publishing system that enables you to embed executable Python blocks whose output is included in the published website. For instance, Here is the source code for the Bias Parameter example:\n---\ntitle: \"Bias Parameter\"\n1echo: false\n---\n\nUse the slider to create bias offsets for the y-axis.\n\n2```{python}\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import area_y\nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import sql\n\nrandom_walk = Data.from_file(\"random-walk.parquet\")\nbias = Param(0)\n```\n\n```{python} \nslider(label=\"Bias\", target=bias, min=0, max=1000, step=1, value=100)\n```\n\n```{python} \nplot(area_y(random_walk, x=\"t\", y=sql(f\"v + {bias}\"), fill=\"steelblue\"))\n```\n\n1\n\nWe specify echo: false to prevent display of code blocks.\n\n2\n\nMarkdown code blocks decorated with {python} are executed.\n\n\nHere is what the page looks like when rendered on the website (it’s a screenshot so you won’t be able to use the slider!):\n\n\nLearning More\nThe website was created with Quarto and includes many live Inspect Viz plots and tables. The source code for the Examples section is a good place to start to understand the basics.\nThe documentation on Quarto Websites includes a tutorial and many additional details on creating, customizing, and publishing websites.\nQuarto Dashboards are a special type of Quarto website optimized for displaying many plots and tables together, so are also worth considering.",
     "crumbs": [
       "Getting Started",
       "Publishing",
-      "Dashboards"
+      "Websites"
     ]
   },
   {
-    "objectID": "publishing-dashboards.html#learning-more",
-    "href": "publishing-dashboards.html#learning-more",
-    "title": "Dashboards",
-    "section": "Learning More",
-    "text": "Learning More\n\nSee the Quarto Dashboards documentation for additional details on creating dashboards.\nSee the Dashboard Examples to get an idea for the sorts of layouts and themes that are available and to see the source code for a variety of dashboard types.",
+    "objectID": "publishing-websites.html#html-fragments",
+    "href": "publishing-websites.html#html-fragments",
+    "title": "Websites",
+    "section": "HTML Fragments",
+    "text": "HTML Fragments\nIf you are working with an existing website or with another website publishing system, it is also straightforward to embed HTML snippets which include Inspect Viz plots and tables.\n\nSingle Plot\nTo create a standalone snippet which you can include in any website, use the write_html() function:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_html\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_html(\"penguins.html\", pl)\n\n\nMultiple Plots\nIf you want to include multiple plots on a page, you might find it more convenient to call the to_html() function as part of your website generation process. The returned HTML includes the Jupyter Widget runtime dependencies, so if you have multiple plots you’ll instead want to include these dependencies once in the &lt;head&gt; of your document and the create HTML snippets without the dependencies.\nHere is the dependencies code that you should place in the &lt;head&gt; tag:\n&lt;script src=\"https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js\" crossorigin=\"anonymous\"&gt;&lt;/script&gt;\n&lt;script src=\"https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js\" crossorigin=\"anonymous\"&gt;&lt;/script&gt;\nThen, specify dependencies=False when you call to_html() to get only the plot and not the dependencies scripts which are already in your &lt;head&gt; tag:\nfrom inspect_viz.plot import to_html\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\npl_html = to_html(pl, dependencies=False)\n\n# ...include pl_html in your website",
     "crumbs": [
       "Getting Started",
       "Publishing",
-      "Dashboards"
+      "Websites"
     ]
   },
   {
-    "objectID": "publishing-plots.html",
-    "href": "publishing-plots.html",
-    "title": "Plots",
+    "objectID": "examples/inspect/evals-summary/index.html",
+    "href": "examples/inspect/evals-summary/index.html",
+    "title": "Evals Summary",
     "section": "",
-    "text": "There are several ways to publish plots created with Inspect Viz:\n\nUse the write_png() function to create an image for use in a document or presentation.\nUse the write_html() function to create a standalone HTML file.\nCreate and share a Jupyter notebook with the plot.\nEmbed the plot in a website or dashboard.\n\nThis article will cover the first two options for sharing standalone plots—the Notebooks, Websites, and Dashboards articles will cover the other possibilities.",
+    "text": "This examples summarizes the results of 4 evaluation tasks (gpqa_diamond, aime2024, mmlu_pro, cybench, and swe_bench) across 4 models (OpenAI o4-mini and o3, and Anthropic Claude Sonnet 3.7 and 4.0).",
     "crumbs": [
-      "Getting Started",
-      "Publishing",
-      "Plots"
+      "Examples",
+      "Inspect",
+      "Evals Summary"
     ]
   },
   {
-    "objectID": "publishing-plots.html#overview",
-    "href": "publishing-plots.html#overview",
-    "title": "Plots",
-    "section": "",
-    "text": "There are several ways to publish plots created with Inspect Viz:\n\nUse the write_png() function to create an image for use in a document or presentation.\nUse the write_html() function to create a standalone HTML file.\nCreate and share a Jupyter notebook with the plot.\nEmbed the plot in a website or dashboard.\n\nThis article will cover the first two options for sharing standalone plots—the Notebooks, Websites, and Dashboards articles will cover the other possibilities.",
+    "objectID": "examples/inspect/evals-summary/index.html#bar-chart",
+    "href": "examples/inspect/evals-summary/index.html#bar-chart",
+    "title": "Evals Summary",
+    "section": "Bar Chart",
+    "text": "Bar Chart\nWe start with a simple bar chart faceted by evaluation task:\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import bar_y\n\nevals = Data.from_file(\"evals.parquet\")\n\nplot(\n    bar_y( \n        evals, \n        x=\"model\", \n1        fx=\"task_name\",\n        y=\"score_headline_value\",\n        fill=\"model\",\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n2    x_label=None, fx_label=None, x_ticks=[],\n3    y_label=\"score\", y_domain=[0, 1.0]\n)\n\n\n\n1\n\nFacet the x-axis (i.e. create multiple groups of bars) by task name.\n\n2\n\nWe don’t need an explicit “model” or “task_name” label as they are obvious from context. We also don’t need ticks b/c the fill color and legend provide this.\n\n3\n\nEnsure that y-axis shows the full range of scores (by default it caps at the maximum).",
     "crumbs": [
-      "Getting Started",
-      "Publishing",
-      "Plots"
+      "Examples",
+      "Inspect",
+      "Evals Summary"
     ]
   },
   {
-    "objectID": "publishing-plots.html#plot-as-image",
-    "href": "publishing-plots.html#plot-as-image",
-    "title": "Plots",
-    "section": "Plot as Image",
-    "text": "Plot as Image\nUse the write_png() function to save a PNG version of any plot.\n\n\n\n\n\n\nNote\n\n\n\nThe write_png() function requires that you install the playwright Python package, which enables taking screenshots of web graphics using an embedded version of the Chromium web browser. You can do this as follows:\npip install playwright\nplaywright install\n\n\nTo create a plot and export it as a PNG:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_png\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_png(\"penguins.png\", pl)\nHere is the plot that was written (note that since this plot is a static PNG file rather than a JavaScript widget it does not have tooltips):\n\n\nPlot Size\nYou can control the size of the image written by specifying the width and height directly in the call to plot(). For example:\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True,\n    width=900,\n    height=400\n)\n\n\nExport Options\nThere are a couple of other options that can be used when exporting plots to PNG:\n\n\n\n\n\n\n\nOption\nDescription\n\n\n\n\nscale\nDevice scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)\n\n\npadding\nPadding (in pixels) to add around exported plot. Defaults to 8 pixels.",
+    "objectID": "examples/inspect/evals-summary/index.html#confidence-interval",
+    "href": "examples/inspect/evals-summary/index.html#confidence-interval",
+    "title": "Evals Summary",
+    "section": "Confidence Interval",
+    "text": "Confidence Interval\nHere, we add a confidence interval for each reported score by adding a rule_x() mark. Note that we compute the confidence interval range dynamically using a sql() transform:\n\n\n\nCode\n\nfrom inspect_viz.mark import rule_x\nfrom inspect_viz.transform import sql\n\n1def ci_value(direction):\n    Z_ALPHA = 1.960\n    return sql(\n        \"score_headline_value\" +\n        f\"{direction}\" +\n        f\"({Z_ALPHA} * score_headline_stderr)\"\n    )\n\nplot(\n    bar_y( \n        evals, x=\"model\", fx=\"task_name\", \n        y=\"score_headline_value\",\n        fill=\"model\",\n    ),\n2    rule_x(\n        evals,\n        x=\"model\",\n        fx=\"task_name\",\n        y1=ci_value(\"-\"),\n        y2=ci_value(\"+\"),\n        stroke=\"black\",\n        marker=\"tick-x\",\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n    x_label=None, fx_label=None, x_ticks=[],\n    y_label=\"score\", y_domain=[0, 1.0]\n)\n\n\n\n1\n\nDynanically compute each side of the confidence interval using a sql() transform.\n\n2\n\nDraw the confidence interval using a rule_x() mark.",
     "crumbs": [
-      "Getting Started",
-      "Publishing",
-      "Plots"
+      "Examples",
+      "Inspect",
+      "Evals Summary"
     ]
   },
   {
-    "objectID": "publishing-plots.html#plot-as-html",
-    "href": "publishing-plots.html#plot-as-html",
-    "title": "Plots",
-    "section": "Plot as HTML",
-    "text": "Plot as HTML\nYou can also create an HTML version of a plot using the write_html() function. For example:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_html\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_html(\"penguins.html\", pl)\nUnlike with write_png(), the exported HTML plot retains all interactive features (tooltips, filters, etc.). In some cases you might therefore also include inputs with your plot. For example:\npl = vconcat(\n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"\n   )\n)\n\nwrite_html(\"penguins.html\", pl)",
-    "crumbs": [
-      "Getting Started",
-      "Publishing",
-      "Plots"
-    ]
-  },
-  {
-    "objectID": "publishing.html",
-    "href": "publishing.html",
-    "title": "Publishing",
-    "section": "",
-    "text": "There are several ways to publish Inspect Viz content, ranging from PNG images suitable for embedding in documents all the way up to notebooks, websites, and dashboards.\n\n\n\nPlots\nPublish single plots as PNG images or HTML snippets.\n\n\nNotebooks\nPublish collections of plots and tables as a notebook.\n\n\nWebsites\nEmbed plots and tables in a larger website.\n\n\nDashboards\nCreate a dashboard to provide easy navigation of collections of plots.",
-    "crumbs": [
-      "Getting Started",
-      "Publishing"
-    ]
-  },
-  {
-    "objectID": "components-plots.html",
-    "href": "components-plots.html",
-    "title": "Plots",
-    "section": "",
-    "text": "A plot() produces a single visualisation as a Web element. Similar to other grammars, a plot consists of marks—graphical primitives such as bars, areas, and lines—which serve as chart layers. Plots use the semantics of Observable Plot, such that each plot has a dedicated set of encoding channels with named scale mappings such as x, y, color, opacity, etc.",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Plots"
-    ]
-  },
-  {
-    "objectID": "components-plots.html#basics",
-    "href": "components-plots.html#basics",
-    "title": "Plots",
-    "section": "Basics",
-    "text": "Basics\nPlots support faceting of the x and y dimensions, producing associated fx and fy scales. Plots are rendered to SVG output using Observable Plot.\nHere is a simple dot plot that demonstrates some key concepts:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nplot(\n1    dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n        stroke=\"species\", symbol=\"species\"),\n2    legend=\"symbol\",\n3    grid=True,\n    width=700,\n    height=400\n)\n\n\n1\n\ndot() mark for a simple dot plot, using a distinct stroke and symbol to denote the “species” column.\n\n2\n\nLegend in the default location, keyed by symbol.\n\n3\n\nAdditional attributes that affect plot size and appearance.\n\n\n\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Mosaic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Plots"
-    ]
-  },
-  {
-    "objectID": "components-plots.html#facets",
-    "href": "components-plots.html#facets",
-    "title": "Plots",
-    "section": "Facets",
-    "text": "Facets\nPlots support faceting of the x and y dimensions, producing associated fx and fy scales. For example, here we comopare model performance on several tasks. The task_name is the fx scale, resulting in a separate grouping of bars for each task:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import bar_y\n\nevals = Data.from_file(\"evals.parquet\")\n\nplot(\n    bar_y( \n1        evals, x=\"model\", fx=\"task_name\",\n        y=\"score_headline_value\",\n        fill=\"model\",\n    ),\n2    legend=legend(\"color\", location=\"bottom\"),\n3    x_label=None, x_ticks=[], fx_label=None,\n4    y_label=\"score\", y_domain=[0, 1.0]\n)\n\n\n1\n\nAdd an x-facet (“task_name”) using the fx option.\n\n2\n\nDefine legend using legend() function (to enable setting location and other options).\n\n3\n\nRemove default x labeling as it is handled by the legend.\n\n4\n\nTweak y-axis with shorter label and ensure that it goes all the way up to 1.0.",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Plots"
-    ]
-  },
-  {
-    "objectID": "components-plots.html#marks",
-    "href": "components-plots.html#marks",
-    "title": "Plots",
-    "section": "Marks",
-    "text": "Marks\nThe plots above use only a single mark (dot() and bar_y() respectively). More sophisticated plots are often constructed with multiple marks. For example, here is a plot that adds a regression line mark do a standard dot plot:\n\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot, regression_y\nfrom inspect_viz.plot import plot\n\nathletes = Data.from_file(\"athletes.parquet\")\n\nplot(\n1    dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n2    regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n    legend=\"color\"\n)\n\n\n1\n\nUse fill to distinguish male and female athletes; use opacity to deal with a large density of data points.\n\n2\n\nUse stroke to ensure that male and female athletes each get their own regression line.",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Plots"
-    ]
-  },
-  {
-    "objectID": "components-plots.html#tooltips",
-    "href": "components-plots.html#tooltips",
-    "title": "Plots",
-    "section": "Tooltips",
-    "text": "Tooltips\nTooltips enable you to provide additional details when the user hovers their mouse over various regions of the plot. Tooltips are enabled automatically for dot marks (dot(), dot_x(), dot_y(), circle(), and hexagon()) and can be enabled with tip=True for other marks. For example:\nplot(\n    bar_x(penguins, x=count(), y=\"species\", fill=\"species\",\n          tip=True\n    )\n)\nNote that tooltips can interfere with plot interactions—for example, if your bar plot was clickable to drive selections in other plots you would not want to specify tip=True.\n\nValues\nTooltips show the values of all columns from the dataset that provide scales (e.g. x, y, fx, stroke, fill, symbol, etc.):\n\nYou can add additional values to tooltips by specifying more channels (data table columns or transforms) in your mark. These channels won’t appear on the plot but will appear on the tooltip:\nplot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\", \n        channels={ \"sex\": \"sex\", \"island\": \"island\"}\n)",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Plots"
-    ]
-  },
-  {
-    "objectID": "components-plots.html#titles",
-    "href": "components-plots.html#titles",
-    "title": "Plots",
-    "section": "Titles",
-    "text": "Titles\nPlot titles can be added using a text() mark. For example, here we add a title at the top of the frame:\n\nfrom inspect_viz.mark import TextStyles, text\n\nplot(\n    text(text=[\"Olympic Athletes\"], frame_anchor=\"top\", \n         styles=TextStyles(font_size=16), dy=-20),\n    dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n    regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n    legend=\"color\"\n)",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Plots"
-    ]
-  },
-  {
-    "objectID": "components-plots.html#data",
-    "href": "components-plots.html#data",
-    "title": "Plots",
-    "section": "Data",
-    "text": "Data\nIn the examples above we made Data available by reading from a parquet file. We can also read data from any Python Data Frame (e.g. Pandas, Polars, PyArrow, etc.). For example:\nimport pandas as pd\nfrom inspect_viz import Data\n\n# read directly from file\npenguins = Data.from_file(\"penguins.parquet\")\n\n# read from Pandas DF (i.e. to preprocess first)\ndf = pd.read_parquet(\"penguins.parquet\")\npenguins = Data.from_dataframe(df)\nYou might wonder why is there a special Data class in Inspect Viz rather than using data frames directly? This is because Inpsect Viz is an interactive system where data can be dynamically filtered and transformed as part of plotting—the Data therefore needs to be sent to the web browser rather than remaining only in the Python session. This has a couple of important implications:\n\nData transformations should be done using standard Python Data Frame operations prior to reading into Data for Inspect Viz.\nSince Data is embedded in the web page, you will want to filter it down to only the columns required for plotting (as you don’t want the additional columns making the web page larger than is necessary).\n\n\nData Selections\nOne other important thing to understand is that Data has a built in selection which is used in filtering operations on the client. This means that if you want your inputs and plots to stay synchoronized, you should pass the same Data instance to all of them (i.e. import into Data once and then share that reference). For example:\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\n# we import penguins once and then pass it to select() and dot()\npenguins = Data.from_file(\"penguins.parquet\")\n\nvconcat( \n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"  \n   )\n)",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Plots"
-    ]
-  },
-  {
-    "objectID": "components-plots.html#attributes",
-    "href": "components-plots.html#attributes",
-    "title": "Plots",
-    "section": "Attributes",
-    "text": "Attributes\nAttributes are plot-level settings such as width, height, margins, and scale options (e.g., x_domain, color_range, y_tick_format). Attributes may be Param-valued, in which case a plot updates upon param changes.\nSome of the more useful plot attribues include:\n\nwidth, height, and aspect_ratio for controlling plot size.\nmargin and facet_margin (and more specific margins like margin_top) for controlling layout margins.\nstyle for providing CSS styles.\naria_label and aria_description, x_aria_label, x_aria_description, etc. for accessibilty attributes.\nx_domain, x_range,y_domain, andy_range` for controlling the domain and range of axes.\nTick settings for x, y, fx, and fy axes (e.g. x_ticks, x_tick_rotate, etc.)\nr (radius) scale settings (e.g. r_domain, r_range, r_label, etc.)\n\nSee PlotAttributes for documentation on all available plot attributes.",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Plots"
-    ]
-  },
-  {
-    "objectID": "components-plots.html#legends",
-    "href": "components-plots.html#legends",
-    "title": "Plots",
-    "section": "Legends",
-    "text": "Legends\nLegends can be added to plot specifications or included as standalone elements.\nSee the legend() function documentation for details on legend options including location, columns, label text, size, and margins.\nThe name directive gives a plot a unique name. A standalone legend can reference a named plot legend(..., for_plot=\"penguins\") to avoid respecifying scale domains and ranges.\nLegends also act as interactors, taking a bound Selection as a target parameter. For example, discrete legends use the logic of the toggle interactor to enable point selections. Two-way binding is supported for Selections using single resolution, enabling legends and other interactors to share state.\nSee the docs on Toggle interactors for an example of an interactive legend.",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Plots"
-    ]
-  },
-  {
-    "objectID": "components-selections.html",
-    "href": "components-selections.html",
-    "title": "Selections",
-    "section": "",
-    "text": "Selections enable filtering and cross-filtering of plot data based based on Inputs and Interactors. Each Data table has a built-in selection and you can also create Selection instances for more sophisticated behaviors.",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Selections"
-    ]
-  },
-  {
-    "objectID": "components-selections.html#overview",
-    "href": "components-selections.html#overview",
-    "title": "Selections",
-    "section": "",
-    "text": "Selections enable filtering and cross-filtering of plot data based based on Inputs and Interactors. Each Data table has a built-in selection and you can also create Selection instances for more sophisticated behaviors.",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Selections"
-    ]
-  },
-  {
-    "objectID": "components-selections.html#filtering",
-    "href": "components-selections.html#filtering",
-    "title": "Selections",
+    "objectID": "examples/inspect/evals-summary/index.html#filtering",
+    "href": "examples/inspect/evals-summary/index.html#filtering",
+    "title": "Evals Summary",
     "section": "Filtering",
-    "text": "Filtering\nThe most straightforward usage of selections is adding inputs which filter the data displayed in a plot. This filtering uses the built in selection of Data instances. For example, here we add a select() input to enable filtering by species:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\npenguins = Data.from_file(\"penguins.parquet\")\n\n1vconcat(\n2   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n3      dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n4      color_domain=\"fixed\"\n   )\n)\n\n\n1\n\nvconcat() function stacks the select input on top of the plot.\n\n2\n\nSelect input bound to “species” column.\n\n3\n\nUse of penguins in both select() and plot() automatically binds to default selection for the penguins Data object.\n\n4\n\nFixed color domain ensures that species colors remain the same even when filtered.\n\n\n\n\n\n\n\n\nFixed Domain\nThe example agove introduces an important concept when dealing with selections and filtering: \"fixed\" scale domains (in this case color_domain=\"fixed\"). Fixed scale domains instruct a plot to first calculate a scale domain in a data-driven manner, but then keep that domain fixed across subsequent updates.\nFixed domains enable stable configurations without requiring a hard-wired domain to be known in advance, preventing disorienting scale domain “jumps” that hamper comparison across filter interactions. Several of the examples below will use \"fixed\" domains to provide this stability across interactions.",
+    "text": "Filtering\nHere we add filtering inputs to enable viewing a single model and/or single task at a time. We use the hconcat() and vconcat() functions to layout the inputs and the plot.\n\n\n\nCode\n\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import hconcat, vconcat\n\n1vconcat(\n    hconcat(\n2        select(evals, label=\"Model\", column=\"model\"),\n        select(evals, label=\"Task\", column=\"task_name\"),\n    ),\n    plot(\n        bar_y( \n            evals, \n            x=\"model\", \n            fx=\"task_name\",\n            y=\"score_headline_value\",\n            fill=\"model\",\n        ),\n        legend=legend(\"color\", location=\"bottom\"),\n        x_label=None, fx_label=None, x_ticks=[], \n        y_label=\"score\", y_domain=[0, 1.0] \n    )\n)\n\n\n\n1\n\nUse layout functions to arrange inputs and plot.\n\n2\n\nselect() inputs and bar_y() are automatically bound to the dataset selection for evals.",
     "crumbs": [
-      "Getting Started",
-      "Components",
-      "Selections"
-    ]
-  },
-  {
-    "objectID": "components-selections.html#interactors",
-    "href": "components-selections.html#interactors",
-    "title": "Selections",
-    "section": "Interactors",
-    "text": "Interactors\nInteractors imbue plots with interactive behavior. Most interactors listen to input events from rendered plot SVG elements to update bound selections. Interactors take facets into account to properly handle input events across subplots.\n\nInterval\nThe interval_x() and interval_y() interactors create 1D interval brushes. The interval_xy() interactor creates a 2D brush. Interval interactors accept a pixel_size parameter that sets the brush resolution: values may snap to a grid whose bins are larger than screen pixels and this can be leveraged to optimize query latency.\nFor example, below we stack two plots vertically, a dot() plot along with a bar_x() plot that counts the sex column. We then add an interval_x() interactor that enables us to filter the dataset using selections on the dot plot.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.interactor import Brush, interval_x\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import bar_x, dot, regression_y\nfrom inspect_viz.transform import count\n\nathletes = Data.from_file(\"athletes.parquet\")\n\n1range = Selection.intersect()\n\nvconcat(\n   plot(\n      dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n      regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n      interval_x(\n2         target=range,\n3         brush=Brush(fill=\"none\", stroke=\"#888\")\n      ),\n      legend=\"color\"\n   ),\n   plot(\n      bar_x(\n4         athletes, filter_by=range,\n         x=count(), y=\"sex\", fill=\"sex\"\n      ), \n      y_label=None,\n      height=150,\n5      x_domain=\"fixed\"\n   )\n)\n\n\n1\n\nA Selection is a means of filtering datasets based on interactions. Here we use an “intersect” selection for application of a simple filter from dot plot to bar plot.\n\n2\n\nThe range selection is set via the interval_x() interactor (which enables using the mouse to select an x-range).\n\n3\n\nThe Brush defines the color of the interactor (in this case #888, a medium-gray).\n\n4\n\nThe range selection is consumed using the filter_by parameter.\n\n5\n\nWe set the x_domain for the bar plot to “fixed” so that the scale doesn’t change as the dataset is filtered.\n\n\n\n\n\n\n\nTry using the mouse to brush over regions on the dot plot—the bar plot will update accordingly.\n\n\nToggle\nThe toggle() interactor selects individual points (e.g., by click or shift-click) and generates a selection clause over specified fields of those points. Directives such as toggle_color(), toggle_x(), and toggle_y() simplify specification of which channel fields are included in the resulting predicates.\nThe highlight() interactor updates the rendered state of a visualization in response to a Selection. Non-selected points are set to translucent, neutral gray, or other specified visual properties. Selected points maintain normal encodings.\nThis example demonstrates using the toggle_y() and highlight() interactors to render a bar chart that can be clicked to select a subset of points on the dot plot above it. The dot plot legend also targets the same the selection to make itself interactive.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.interactor import highlight, toggle_y\nfrom inspect_viz.plot import legend, plot\nfrom inspect_viz.mark import bar_x, dot\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.transform import count, date_month_day\n\nseattle = Data.from_file(\"seattle-weather.parquet\")\n\n1weather = Selection.single()\n\nvconcat(\n    plot(\n        dot(\n            data=seattle,\n2            filter_by=weather,\n            x=date_month_day(\"date\"),\n            y=\"temp_max\",\n            fill=\"weather\",\n            fill_opacity=0.7,\n3            r=\"precipitation\",\n        ),\n4        legend=legend(\"color\", target=weather),\n        x_tick_format=\"%b\",\n        color_domain=\"fixed\",\n        r_domain=\"fixed\", \n        r_range=[2, 10]\n    ),\n    plot(\n        bar_x(seattle, x=count(), y=\"weather\", fill=\"weather\"),\n5        toggle_y(target=weather),\n6        highlight(by=weather),\n        x_domain=\"fixed\",\n        y_label=None,\n        height=200\n    )\n)\n\n\n1\n\nSingle selection (filter out all other points).\n\n2\n\nDot plot should filter by the selection.\n\n3\n\nShow precipitation level using dot radius.\n\n4\n\nClicks on the legend target the same selection\n\n5\n\ntoggle_y() interactor to filter by weather.\n\n6\n\nhighlight() interactor to fade out unselected bars.\n\n\n\n\n\n\n\nTry clicking either the legend or the bar plot elements to filter the dot plot.",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Selections"
-    ]
-  },
-  {
-    "objectID": "components-selections.html#cross-filtering",
-    "href": "components-selections.html#cross-filtering",
-    "title": "Selections",
-    "section": "Cross Filtering",
-    "text": "Cross Filtering\nIn many cases you’ll want to have an input or interactor that both consumes and produces the same selection (i.e. filtered based on interactions with other inputs or interactors, but also able to provide its own filtering).\n\nInputs\nThis example demonstrates crossfiltering across inputs. We plot shot types taken during the 2023 WNBA season, providing a select() input that filters by team, and another select() input that filters by player (which in turn is also filtered by the currently selected team). Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat, hconcat\nfrom inspect_viz.mark import bar_x \nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import count\n\nshots = Data.from_file(\"wnba-shots-2023.parquet\")\n\n1filter = Selection.crossfilter()\n\nvconcat(\n   hconcat(\n      select(\n         shots, label=\"Team\", column=\"team_name\", \n2         target=filter\n      ),\n      select(\n         shots, label=\"Athlete\", column=\"athlete_name\", \n3         filter_by=filter, target=filter\n      )\n   ),\n   plot(\n      bar_x(\n         shots, filter_by=filter,\n         x=count(), y=\"category\", fill=\"category\"\n      ),\n      y_label=None,\n4      color_domain=\"fixed\",\n      y_domain=[\"Jump\", \"Layup\", \"Hook\"],\n      height=200,\n      margin_left=60\n   )\n)\n\n\n1\n\nCreate a crossfilter selection, which enables inputs to both consume and produce the same selection (conditioning their available choices on other inputs).\n\n2\n\nThe team select box targets the filter selection (filtering both the choices in the athelte select box and what is displayed in the plot).\n\n3\n\nThe athlete select box is both filtered by and targets the filter selection, enabling it to both confine itself to the selected team as well as filter what is displayed in the plot.\n\n4\n\nAs different teams and players are selected, the y-axis may take on differnet values and ordering. These options ensure that the y-axis remains stable across selections.\n\n\n\n\n\n\n\n\n\nInteractors\nThis example demonstrates crossfiltering across plot interactors. We plot histograms showing arrival delay and departure time for flights. When you select a range in one plot, the other plot updates to show only the data within that selection—and vice versa. This bidirectional filtering is achieved using Selection.crossfilter(), which ensures each plot’s selection affects all other plots except itself. Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.mark import rect_y\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import count, bin\nfrom inspect_viz.interactor import interval_x\n\nflights = Data.from_file(\"flights.parquet\")\n\n1brush = Selection.crossfilter()\n\n2def flights_plot(x, label):\n   return plot(\n      rect_y(\n         flights, filter_by=brush, \n         x=bin(x), y=count(), fill=\"steelblue\"\n      ),\n3      interval_x(target=brush),\n      height=200,\n      x_label=label,\n4      x_domain=\"fixed\",\n      y_tick_format=\"s\"\n   )\n\nvconcat(\n   flights_plot(\"delay\", \"Arrival Delay (min)\"),\n   flights_plot(\"time\", \"Departure Time (hour)\")\n)\n\n\n1\n\nCreate a crossfilter selection, which ensures each plot’s selection affects all other plots except itself.\n\n2\n\nOur two plots are identical save for the x value and the x_label so factor out into a function.\n\n3\n\nThe interval_x() interactor enables horizontal selection (targeting the crossfiltering brush).\n\n4\n\nUse a \"fixed\" domain so that the x-axis remains stable even when being filtered.\n\n\n\n\n\n\n\nTry selecting a horizontal range on either or both of the bar plots.",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Selections"
-    ]
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Inspect Viz",
-    "section": "",
-    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. You can author visualisations in any Jupyter Notebook then include them in documents as static images or or websites as interactive Jupyter Widgets.\n\n\nFirst, install the inspect_ai and inspect_viz package from GitHub as follows:\npip install git+https://github.com/UKGovernmentBEIS/inspect_ai\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, check out the Examples and read the Components articles for a more in depth explanation of the library’s features and how they fit together.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#welcome",
-    "href": "index.html#welcome",
-    "title": "Inspect Viz",
-    "section": "",
-    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. You can author visualisations in any Jupyter Notebook then include them in documents as static images or or websites as interactive Jupyter Widgets.\n\n\nFirst, install the inspect_ai and inspect_viz package from GitHub as follows:\npip install git+https://github.com/UKGovernmentBEIS/inspect_ai\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, check out the Examples and read the Components articles for a more in depth explanation of the library’s features and how they fit together.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#plots",
-    "href": "index.html#plots",
-    "title": "Inspect Viz",
-    "section": "Plots",
-    "text": "Plots\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Mosaic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.\n\n\nPlots in inspect_viz are composed of one or more marks, which can do either higher level plotting (e.g. dot(), bar_x(), bar_y(), area(), heatmap(), etc.) or lower level drawing on the plot canvas (e.g. text(), image(), arrow(), etc.)\n\nDot Plot\nHere is an example of a simple dot plot using the Palmer Penquins dataset:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\n1penguins = Data.from_file(\"penguins.parquet\")\n\nplot(\n    dot(\n        penguins, \n2        x=\"body_mass\", y=\"flipper_length\",\n3        stroke=\"species\", symbol=\"species\"\n    ),\n    grid=True,\n4    legend=\"symbol\"\n)\n\n\n1\n\nRead the dataset from a parquet file. You can can also use Data.from_dataframe() to read data from any Pandas, Polars, or PyArrow data frame.\n\n2\n\nPlot using a dot() mark. The plot() function takes one or more marks or interactors.\n\n3\n\nMap the “species” column to the stroke and symbol scales of the plot (causing each species to have its own color and symbol).\n\n4\n\nAdd a legend to the plot as a key to our scale mappings.\n\n\n\n\n\n\n\n\n\nBar Plot\nHere is a simple horizontal bar plot that counts the number of each species:\n\nfrom inspect_viz.mark import bar_x\nfrom inspect_viz.transform import count\n\nplot(\n    bar_x(penguins, x=count(), y=\"species\", fill=\"species\"),\n    y_label=None,\n    height=200,\n    margin_left=60\n)\n\n\n\n\nThe x axis for this plot is not mapped to a column, but rather to a count() transform ( transforms enable you to perform computations on columns for plotting). The fill option gives each species it’s own color. We also specify that we don’t want a y_label (as the species names serve that purpose) and a smaller than normal height.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#tables",
-    "href": "index.html#tables",
-    "title": "Inspect Viz",
-    "section": "Tables",
-    "text": "Tables\nYou can also display data in a tabular layout using the table() function:\n\nfrom inspect_viz.table import table\n\ntable(penguins)\n\n\n\n\nYou can sort and filter tables by column, use a scrolling or paginated display, and customize several other aspects of table appearance and behavior.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#filters",
-    "href": "index.html#filters",
-    "title": "Inspect Viz",
-    "section": "Filters",
-    "text": "Filters\nUse inputs to enable filtering datasets and dynamically updating plots. For example, here we add a select() input that filters on the species column:\n\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\nvconcat(\n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"\n   )\n)\n\n\n\n\nWe’ve introduced a few new things here:\n\nThe vconcat() function from the layout module lets us stack inputs on top of our plot.\nThe select() function from the input module binds a select box to the species column.\nThe color_domain=\"fixed\" argument to plot() indicates that we want to preserve species colors even when the plot is filtered.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#marks",
-    "href": "index.html#marks",
-    "title": "Inspect Viz",
-    "section": "Marks",
-    "text": "Marks\nSo far the plots we’ve created include only a single mark, however many of the more interesting plots you’ll create will include multiple marks.\nFor example, here we explore the relationships between the height, weight, and sex of olympic athletes using dot() and regression_y() marks:\n\nfrom inspect_viz.mark import regression_y\n\nathletes = Data.from_file(\"athletes.parquet\")\n\nplot(\n    dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n    regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n    legend=\"color\"\n)\n\n\n\n\nNote that we set the opacity of the dot mark to 0.1 to help mitigate oversaturation that results from large numbers of data points being stacked on top of eachother.\nMarks can also be used to draw lines, arrows, text, or images on a plot.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#params",
-    "href": "index.html#params",
-    "title": "Inspect Viz",
-    "section": "Params",
-    "text": "Params\nAs illustrated above, inputs can be used to filter dataset selections. Inputs can also be used to set Param values that make various aspects of plots dynamic. For example, here is a density plot of flight delays which uses a slider() input to vary the amount of smooth ing by setting the kernel bandwidth:\n\nfrom inspect_viz import Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import density_y\n\nflights = Data.from_file(\"flights.parquet\")\n\n1bandwidth = Param(0.1)\n\nvconcat(\n   slider(\n2      label=\"Bandwidth (σ)\", target=bandwidth,\n      min=0.1, max=100, step=0.1\n   ),\n   plot(\n      density_y(\n3         flights, x=\"delay\", fill=\"steelblue\", bandwidth=bandwidth\n      ),\n      x_domain=\"fixed\",\n      y_axis=None,\n      height=250,\n   )\n)\n\n\n1\n\nCreate a bandwidth parameter with a default value of 0.1.\n\n2\n\nBind the slider() to the bandwidth parameter.\n\n3\n\nApply the bandwidth to the plot (plot automatically redraws when the bandwidth changes).",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#selections",
-    "href": "index.html#selections",
-    "title": "Inspect Viz",
-    "section": "Selections",
-    "text": "Selections\nAbove in Filtering we began exploring dataset selections. Inputs are one way to set selections, but you can also set selections through direct interaction with plots.\nFor example, below we stack two plots vertically, the dot() plot from above along with a bar_x() plot that counts the sex column. We then add an interval_x() interactor that enables us to filter the dataset using selections on the dot plot.\nThere are a number of new things introduced here, click on the numbers near the right margin for additional explanation.\n\nfrom inspect_viz import Selection\nfrom inspect_viz.interactor import Brush, interval_x\n\n1range = Selection.intersect()\n\nvconcat(\n   plot(\n      dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n      regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n      interval_x(\n2         target=range,\n3         brush=Brush(fill=\"none\", stroke=\"#888\")\n      ),\n      legend=\"color\"\n   ),\n   plot(\n      bar_x(\n4         athletes, filter_by=range,\n         x=count(), y=\"sex\", fill=\"sex\"\n      ), \n      y_label=None,\n      height=150,\n5      x_domain=\"fixed\"\n   )\n)\n\n\n1\n\nA Selection is a means of filtering datasets based on interactions. Here we use an “intersect” selection for application of a simple filter from dot plot to bar plot.\n\n2\n\nThe range selection is set via the interval_x() interactor (which enables using the mouse to select an x-range).\n\n3\n\nThe Brush defines the color of the interactor (in this case #888, a medium-gray).\n\n4\n\nThe range selection is consumed using the filter_by parameter.\n\n5\n\nWe set the x_domain for the bar plot to “fixed” so that the scale doesn’t change as the dataset is filtered.\n\n\n\n\n\n\n\nTry using the mouse to brush over regions on the dot plot—the bar plot will update accordingly.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#data",
-    "href": "index.html#data",
-    "title": "Inspect Viz",
-    "section": "Data",
-    "text": "Data\nIn the examples above we made Data available by reading from a parquet file. We can also read data from any Python Data Frame (e.g. Pandas, Polars, PyArrow, etc.). For example:\nimport pandas as pd\nfrom inspect_viz import Data\n\n# read directly from file\npenguins = Data.from_file(\"penguins.parquet\")\n\n# read from Pandas DF (i.e. to preprocess first)\ndf = pd.read_parquet(\"penguins.parquet\")\npenguins = Data.from_dataframe(df)\nYou might wonder why is there a special Data class in Inspect Viz rather than using data frames directly? This is because Inpsect Viz is an interactive system where data can be dynamically filtered and transformed as part of plotting—the Data therefore needs to be sent to the web browser rather than remaining only in the Python session. This has a couple of important implications:\n\nData transformations should be done using standard Python Data Frame operations prior to reading into Data for Inspect Viz.\nSince Data is embedded in the web page, you will want to filter it down to only the columns required for plotting (as you don’t want the additional columns making the web page larger than is necessary).\n\n\nData Selections\nOne other important thing to understand is that Data has a built in selection which is used in filtering operations on the client. This means that if you want your inputs and plots to stay synchoronized, you should pass the same Data instance to all of them (i.e. import into Data once and then share that reference). For example:\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\n# we import penguins once and then pass it to select() and dot()\npenguins = Data.from_file(\"penguins.parquet\")\n\nvconcat( \n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"  \n   )\n)",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#crossfilter",
-    "href": "index.html#crossfilter",
-    "title": "Inspect Viz",
-    "section": "Crossfilter",
-    "text": "Crossfilter\nIn many cases you’ll want to have an input or interactor that both consumes and produces the same selection (i.e. filtered based on interactions with other inputs or interactors, but also able to provide its own filtering).\n\nInputs\nThis example demonstrates crossfiltering across inputs. We plot shot types taken during the 2023 WNBA season, providing a select() input that filters by team, and another select() input that filters by player (which in turn is also filtered by the currently selected team). Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz.layout import hconcat\n\nshots = Data.from_file(\"wnba-shots-2023.parquet\")\n\n1filter = Selection.crossfilter()\n\nvconcat(\n   hconcat(\n      select(\n         shots, label=\"Team\", column=\"team_name\", \n2         target=filter\n      ),\n      select(\n         shots, label=\"Athlete\", column=\"athlete_name\", \n3         filter_by=filter, target=filter\n      )\n   ),\n   plot(\n      bar_x(\n         shots, filter_by=filter,\n         x=count(), y=\"category\", fill=\"category\"\n      ),\n      y_label=None,\n4      color_domain=\"fixed\",\n      y_domain=[\"Jump\", \"Layup\", \"Hook\"],\n      height=200,\n      margin_left=60\n   )\n)\n\n\n1\n\nCreate a crossfilter selection, which enables inputs to both consume and produce the same selection (conditioning their available choices on other inputs).\n\n2\n\nThe team select box targets the filter selection (filtering both the choices in the athelte select box and what is displayed in the plot).\n\n3\n\nThe athlete select box is both filtered by and targets the filter selection, enabling it to both confine itself to the selected team as well as filter what is displayed in the plot.\n\n4\n\nAs different teams and players are selected, the y-axis may take on differnet values and ordering. These options ensure that the y-axis remains stable across selections.\n\n\n\n\n\n\n\n\n\nInteractors\nThis example demonstrates crossfiltering across plot interactors. We plot histograms showing arrival delay and departure time for flights. When you select a range in one plot, the other plot updates to show only the data within that selection—and vice versa. This bidirectional filtering is achieved using Selection.crossfilter(), which ensures each plot’s selection affects all other plots except itself. Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz.mark import rect_y\nfrom inspect_viz.transform import count, bin\n\nflights = Data.from_file(\"flights.parquet\")\n\n1brush = Selection.crossfilter()\n\n2def flights_plot(x, label):\n   return plot(\n      rect_y(\n         flights, filter_by=brush, \n         x=bin(x), y=count(), fill=\"steelblue\"\n      ),\n3      interval_x(target=brush),\n      height=200,\n      x_label=label,\n4      x_domain=\"fixed\",\n      y_tick_format=\"s\"\n   )\n\nvconcat(\n   flights_plot(\"delay\", \"Arrival Delay (min)\"),\n   flights_plot(\"time\", \"Departure Time (hour)\")\n)\n\n\n1\n\nCreate a crossfilter selection, which ensures each plot’s selection affects all other plots except itself.\n\n2\n\nOur two plots are identical save for the x value and the x_label so factor out into a function.\n\n3\n\nThe interval_x() interactor enables horizontal selection (targeting the crossfiltering brush).\n\n4\n\nUse a \"fixed\" domain so that the x-axis remains stable even when being filtered.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#learning-more",
-    "href": "index.html#learning-more",
-    "title": "Inspect Viz",
-    "section": "Learning More",
-    "text": "Learning More\nUse these resources to learn more about using Inspect Viz:\n\nComponents goes into further depth on the main concepts and components of the library.\nPublishing covers publishing Inspect Viz content as standalone plots, notebooks, websites, and dashboards.\nReference provides details on the available marks, interactors, transforms, and inputs.\nExamples demonstrates more advanced plotting and interactivity features.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html",
-    "href": "components-inputs.html",
-    "title": "Inputs",
-    "section": "",
-    "text": "Inputs are used to create interactive visualisations by targeting either Param values or Selection ranges. Available inputs include:\nAll inputs can write updates to a provided Param or Selection. Param values are updated to match the input value. Selections are provided a predicate clause. This linking can be bidirectional: an input component will also subscribe to a param and track its value updates.",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Inputs"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html#select",
-    "href": "components-inputs.html#select",
-    "title": "Inputs",
-    "section": "Select",
-    "text": "Select\nThe select() input is used to select one more more values from a list. The list can be sourced from a data column (via the column parameter) or be static (via the options parameter). Here is a select input bound to a column (this input targets the default Selection associated with the passed Data):\n\nfrom inspect_viz import Data\nfrom inspect_viz.input import select\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nselect(penguins, label=\"Species\", column=\"species\")\n\n\n\n\nNote that by default the select has no value so does not filtering (represented by the default “All” selection). If you want a select() to have an initial value then specify it using the value parameter (or pass ‘auto’ to select the first value):\n\nselect(penguins, label=\"Species\", column=\"species\", value=\"auto\")\n\n\n\n\nHere is a select input with explicit options (this input targets a Param):\n\nfrom inspect_viz import Param\n\nfruit = Param(\"Apple\")\n\nselect(label=\"Fruit\", options=[\"Apple\", \"Orange\", \"Banana\"], target=fruit)\n\n\n\n\nPass multiple=True to enable multiple inputs. In this case values are specified via typing/autocomplete rather than a drop down menu.\n\nathletes = Data.from_file(\"athletes.parquet\")\n\nselect(athletes, label=\"Sports\", column=\"sport\", multiple=True)",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Inputs"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html#slider",
-    "href": "components-inputs.html#slider",
-    "title": "Inputs",
-    "section": "Slider",
-    "text": "Slider\nThe slider() input enables specificiation of either a single numeric value or a range of values. Here we enable the selection of a maximum body mass for a column:\n\nfrom inspect_viz.input import slider\n\nslider(penguins, label=\"Max Body Mass\", column=\"body_mass\")\n\n\n\n\nPass select=\"interval\" to specify an interval rather than single value:\n\nslider(penguins, label=\"Body Mass Range\", column=\"body_mass\", select=\"interval\")\n\n\n\n\nSliders can also target a Param and have explicit min, max, and step values:\n\nbias = Param(0.5)\n\nslider(label=\"Bias\", min=0, max=1.0, step=0.1, target=bias)",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Inputs"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html#search",
-    "href": "components-inputs.html#search",
-    "title": "Inputs",
-    "section": "Search",
-    "text": "Search\nThe search() input enables filtering a dataset based on text matching. For example, this input filters by WNBA player name\n\nfrom inspect_viz.input import search\n\nplayers = Data.from_file(\"wnba-shots-2023.parquet\")\n\nsearch(players, label=\"Athlete\", column=\"athlete_name\")",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Inputs"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html#checkbox",
-    "href": "components-inputs.html#checkbox",
-    "title": "Inputs",
-    "section": "Checkbox",
-    "text": "Checkbox\nThe checkbox() input enables toggling a binary value. You can either target boolean Param values or provide custom values mapped to checked and unchecked.\n\nfrom inspect_viz.input import checkbox\n\nenabled = Param(True)\n\ncheckbox(label=\"Enabled\", target=enabled)\n\n\n\n\nHere we provide custom values that map to checked and unchecked states:\n\nbias = Param(0.1)\n\ncheckbox(label=\"Use Bias\", values=[0.0, 0.1], target=bias)",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Inputs"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html#radio-group",
-    "href": "components-inputs.html#radio-group",
-    "title": "Inputs",
-    "section": "Radio Group",
-    "text": "Radio Group\nThe radio_group() is an alternative to select() which displays all of the available options rather than collapsing them into a menu:\n\nfrom inspect_viz.input import radio_group\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nradio_group(penguins, label=\"Species\", column=\"species\")\n\n\n\n\nOr targeting a Param:\n\nfruit = Param(\"Apple\")\n\nradio_group(label=\"Fruit\", options=[\"Apple\", \"Orange\", \"Banana\"], target=fruit)",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Inputs"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html#checkbox-group",
-    "href": "components-inputs.html#checkbox-group",
-    "title": "Inputs",
-    "section": "Checkbox Group",
-    "text": "Checkbox Group\nThe checkbox_group() provides an interface to select multiple values (similar to select(..., multiple=True)):\n\nfrom inspect_viz.input import checkbox_group\n\npenguins = Data.from_file(\"penguins.parquet\")\n\ncheckbox_group(penguins, label=\"Species\", column=\"species\")\n\n\n\n\nYou can also use checkbox_group() with a Param:\n\nfruit = Param([\"Apple\", \"Orange\"])\n\ncheckbox_group(label=\"Fruit\", options=[\"Apple\", \"Orange\", \"Banana\"], target=fruit)",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Inputs"
+      "Examples",
+      "Inspect",
+      "Evals Summary"
     ]
   },
   {
