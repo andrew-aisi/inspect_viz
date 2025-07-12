@@ -31,36 +31,36 @@ df = df.reset_index(drop=True)
 athletes = Data.from_dataframe(df)
 
 ci = Param(0.95)
-query = Selection.single()
+query = Selection.intersect()
 
-hconcat(
-    slider(
-        athletes, label="Samples", select="interval", target=query, 
-        column="batch", step=10, value=(10,20)
+vconcat(
+    hconcat(
+        slider(
+            athletes, label="Samples", select="interval", target=query, 
+            column="batch", step=10, value=(10,20)
+        ),
+        slider(
+            label="Conf.", target=ci, 
+            min=0.5, max=0.999, value=0.95, step=0.001
+        )
     ),
-    slider(
-        label="Conf.", target=ci, 
-        min=0.5, max=0.999, value=0.95, step=0.001
-    )    
+    plot(
+        error_bar_x(
+            athletes, filter_by=query, ci=ci, 
+            x="height", y="sport", stroke="sex", stroke_width=1,
+            marker="tick", sort={ "y": "-x"}
+        ),
+        text(
+            athletes, text=count(), y="sport", dx=25,
+            frame_anchor="right", font_size=8, fill="#999"
+        ),
+        legend=legend("color", location="bottom"),
+        x_domain=[1.5,2.1],
+        # y_domain="fixed",
+        y_grid=True,
+        y_label=None,
+        margin_top=0,
+        margin_left=105
+    )
 )
-
-plot(
-    error_bar_x(
-        athletes, filter_by=query, ci=ci, 
-        x="height", y="sport", stroke="sex", stroke_width=1,
-        marker="tick", sort={ "y": "-x"}
-    ),
-    text(
-        athletes, text=count(), y="sport", dx=25,
-        frame_anchor="right", font_size=8, fill="#999"
-    ),
-    legend=legend("color", location="bottom"),
-    x_domain=[1.5,2.1],
-    y_domain="fixed",
-    y_grid=True,
-    y_label=None,
-    margin_top=0,
-    margin_left=105
-)
-
 ```
