@@ -158,8 +158,7 @@ vconcat(
         ),
         y_label=None,
         y_domain="fixed",
-        x_domain="fixed",
-        color_domain=tools_domain,
+        color_domain=tools_domain[:-1],
         margin_left=50,
         height=170
     )
