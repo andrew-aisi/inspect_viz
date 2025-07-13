@@ -1,6 +1,6 @@
 .mosaic-widget fieldset {
     display: inline-flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.5rem;
     border: none;
     margin: 0;
@@ -10,6 +10,7 @@
 .mosaic-widget fieldset>label {
     display: inline-flex;
     align-items: center;
+    margin-bottom: 0;
 }
 
 .mosaic-widget fieldset>label>input[type="radio"] {
@@ -47,6 +48,11 @@ label>input[type="range"] {
 
 .mosaic-widget label>input[type="range"] {
     margin-right: 0.25rem;
+}
+
+.mosaic-widget div[style*="display: flex"][style*="flex-flow: row"] {
+    align-items: center !important;
+    /* or whatever you need */
 }
 
 

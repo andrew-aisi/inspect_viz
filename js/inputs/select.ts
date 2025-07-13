@@ -32,11 +32,10 @@ export class Select extends ChoiceInput {
         this.element.classList.add(kSidebarFullwidth);
 
         // create label if specified
-        const label = options.label || options.column;
         let labelEl: HTMLLabelElement | null = null;
-        if (label !== undefined) {
+        if (options.label !== undefined) {
             labelEl = window.document.createElement('label');
-            labelEl.innerText = label;
+            labelEl.innerText = options.label;
             this.element.appendChild(labelEl);
         }
 
@@ -73,11 +72,15 @@ export class Select extends ChoiceInput {
     }
 
     queryResult(data: any): this {
-        if (this.multiple_ || !this.allowEmpty_) {
-            this.setData(this.queryResultOptions(data));
-            return this;
+        if (this.options_.options === undefined) {
+            if (this.multiple_ || !this.allowEmpty_) {
+                this.setData(this.queryResultOptions(data));
+                return this;
+            } else {
+                return super.queryResult(data);
+            }
         } else {
-            return super.queryResult(data);
+            return this;
         }
     }
 

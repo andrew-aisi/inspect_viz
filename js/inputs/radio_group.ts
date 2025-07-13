@@ -10,7 +10,7 @@ export class RadioGroup extends ChoiceInput {
         super(options);
 
         // outer fieldset
-        this.fieldset_ = createFieldset(options.label || options.column);
+        this.fieldset_ = createFieldset(options.label);
         this.element.append(this.fieldset_);
 
         // bind explicit options to data if specified

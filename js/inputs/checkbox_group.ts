@@ -10,7 +10,7 @@ export class CheckboxGroup extends ChoiceInput {
         super(options);
 
         // outer fieldset
-        this.fieldset_ = createFieldset(options.label || options.column);
+        this.fieldset_ = createFieldset(options.label);
         this.element.append(this.fieldset_);
 
         // bind explicit options to data if specified
@@ -53,7 +53,9 @@ export class CheckboxGroup extends ChoiceInput {
     }
 
     queryResult(data: any): this {
-        this.setData(this.queryResultOptions(data));
+        if (this.options_.options === undefined) {
+            this.setData(this.queryResultOptions(data));
+        }
         return this;
     }
 

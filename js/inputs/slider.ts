@@ -49,7 +49,7 @@ export class Slider extends Input {
 
         // add label if specified
         const id = generateId();
-        const label = options_.label || options_.column;
+        const label = options_.label;
         let container: HTMLElement = this.element;
         if (label) {
             container = window.document.createElement('label');

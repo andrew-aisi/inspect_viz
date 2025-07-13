@@ -83,7 +83,10 @@ export abstract class ChoiceInput extends Input {
     }
 
     queryResult(data: any): this {
-        this.setData([{ value: '', label: 'All' }, ...this.queryResultOptions(data)]);
+        if (this.options_.options === undefined) {
+            this.setData([{ value: '', label: 'All' }, ...this.queryResultOptions(data)]);
+        }
+
         return this;
     }
 
