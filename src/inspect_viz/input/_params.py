@@ -22,9 +22,8 @@ def options_params(
             config["options"] = options
         else:
             config["options"] = [dict(label=k, value=v) for k, v in options.items()]
-        if target is None:
-            raise ValueError("You must pass a target `Param` along with `options`")
-        config["as"] = target
+        if target is not None:
+            config["as"] = target
     return config
 
 
