@@ -7,7 +7,7 @@ from .._core.selection import Selection
 
 def label_param(label: str | None) -> dict[str, Any]:
     if label is not None:
-        return {"label": f"{label}: "}
+        return {"label": f"{label}"}
     else:
         return {}
 
