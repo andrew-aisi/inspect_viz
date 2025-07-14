@@ -1,6 +1,5 @@
 from typing import Any
 
-from pydantic import JsonValue
 from typing_extensions import Unpack
 
 from .._core import Data, Param, Selection
@@ -10,7 +9,7 @@ from ._channel import Channel, ChannelIntervalSpec, ChannelSpec
 from ._mark import Mark
 from ._options import MarkOptions
 from ._types import FrameAnchor, Symbol
-from ._util import column_param
+from ._util import column_param, tip_mark
 
 
 def dot(
@@ -57,7 +56,7 @@ def dot(
         )
     )
 
-    return dot_mark("dot", config, options)
+    return tip_mark("dot", config, options)
 
 
 def dot_x(
@@ -112,7 +111,7 @@ def dot_x(
         )
     )
 
-    return dot_mark("dotX", config, options)
+    return tip_mark("dotX", config, options)
 
 
 def dot_y(
@@ -167,7 +166,7 @@ def dot_y(
         )
     )
 
-    return dot_mark("dotY", config, options)
+    return tip_mark("dotY", config, options)
 
 
 def circle(
@@ -213,7 +212,7 @@ def circle(
         )
     )
 
-    return dot_mark("circle", config, options)
+    return tip_mark("circle", config, options)
 
 
 def hexagon(
@@ -259,8 +258,4 @@ def hexagon(
         )
     )
 
-    return dot_mark("hexagon", config, options)
-
-
-def dot_mark(type: str, config: dict[str, JsonValue], options: MarkOptions) -> Mark:
-    return Mark(type, config, options, {"tip": True})
+    return tip_mark("hexagon", config, options)

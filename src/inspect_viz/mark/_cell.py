@@ -7,7 +7,7 @@ from .._util.marshall import dict_remove_none
 from ._channel import ChannelSpec
 from ._mark import Mark
 from ._options import MarkOptions
-from ._util import column_param
+from ._util import column_param, tip_mark
 
 
 def cell(
@@ -61,7 +61,7 @@ def cell(
         )
     )
 
-    return Mark("cell", config, options)
+    return tip_mark("cell", config, options)
 
 
 def cell_x(
@@ -114,7 +114,7 @@ def cell_x(
         )
     )
 
-    return Mark("cellX", config, options)
+    return tip_mark("cellX", config, options)
 
 
 def cell_y(
@@ -167,4 +167,4 @@ def cell_y(
         )
     )
 
-    return Mark("cellY", config, options)
+    return tip_mark("cellY", config, options)
