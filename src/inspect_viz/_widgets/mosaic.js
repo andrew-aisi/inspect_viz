@@ -1814,6 +1814,11 @@ var setupTooltipObserver = (svgEl, specEl) => {
             const svgPoint = svgEl.createSVGPoint();
             svgPoint.x = parsed.transform?.x || 0;
             svgPoint.y = parsed.transform?.y || 0;
+            const containerTransform = parseTransform(tipContainerEl);
+            if (containerTransform) {
+              svgPoint.x += containerTransform.x;
+              svgPoint.y += containerTransform.y;
+            }
             const screenPoint = svgPoint.matrixTransform(svgEl.getScreenCTM());
             const centerX = screenPoint.x;
             const centerY = screenPoint.y;
@@ -1910,16 +1915,20 @@ var setupTooltipObserver = (svgEl, specEl) => {
     subtree: true
   });
 };
-var parseSVGTooltip = (tipEl) => {
-  const result = { values: [] };
-  const transformVal = tipEl.getAttribute("transform");
+var parseTransform = (el) => {
+  const transformVal = el.getAttribute("transform");
   if (transformVal) {
     const match = transformVal.match(/translate\(([^)]+)\)/);
     if (match) {
       const [x, y] = match[1].split(",").map(Number);
-      result.transform = { x, y };
+      return { x, y };
     }
   }
+  return void 0;
+};
+var parseSVGTooltip = (tipEl) => {
+  const result = { values: [] };
+  result.transform = parseTransform(tipEl);
   const tspanEls = tipEl.querySelectorAll("tspan");
   tspanEls.forEach((tspan) => {
     let key = void 0;

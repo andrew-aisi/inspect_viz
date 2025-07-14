@@ -78,6 +78,14 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
                         const svgPoint = svgEl.createSVGPoint();
                         svgPoint.x = parsed.transform?.x || 0;
                         svgPoint.y = parsed.transform?.y || 0;
+
+                        // Apply any container transforms
+                        const containerTransform = parseTransform(tipContainerEl);
+                        if (containerTransform) {
+                            svgPoint.x += containerTransform.x;
+                            svgPoint.y += containerTransform.y;
+                        }
+
                         const screenPoint = svgPoint.matrixTransform(svgEl.getScreenCTM()!);
 
                         // Position the tooltip
@@ -213,19 +221,26 @@ interface ParsedTooltip {
     placement?: Placement | 'middle';
 }
 
+const parseTransform = (el: HTMLElement | SVGGElement): { x: number; y: number } | undefined => {
+    // Parse the transform attribute to capture the position
+    // offset (relative to SVG element)
+    const transformVal = el.getAttribute('transform');
+    if (transformVal) {
+        const match = transformVal.match(/translate\(([^)]+)\)/);
+        if (match) {
+            const [x, y] = match[1].split(',').map(Number);
+            return { x, y };
+        }
+    }
+    return undefined;
+};
+
 const parseSVGTooltip = (tipEl: SVGGElement): ParsedTooltip => {
     const result: ParsedTooltip = { values: [] };
 
     // Parse the transform attribute to capture the position
     // offset (relative to SVG element)
-    const transformVal = tipEl.getAttribute('transform');
-    if (transformVal) {
-        const match = transformVal.match(/translate\(([^)]+)\)/);
-        if (match) {
-            const [x, y] = match[1].split(',').map(Number);
-            result.transform = { x, y };
-        }
-    }
+    result.transform = parseTransform(tipEl);
 
     // Parse the child spans
     const tspanEls = tipEl.querySelectorAll('tspan');
