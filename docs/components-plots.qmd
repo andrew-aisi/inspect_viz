@@ -102,7 +102,7 @@ plot(
 
 ## Tooltips
 
-Tooltips enable you to provide additional details when the user hovers their mouse over various regions of the plot. Tooltips are enabled automatically for dot marks (`dot()`, `dot_x()`, `dot_y()`, `circle()`, and `hexagon()`) and can be enabled with `tip=True` for other marks. For example:
+Tooltips enable you to provide additional details when the user hovers their mouse over various regions of the plot. Tooltips are enabled automatically for dot marks (`dot()`, `dot_x()`, `dot_y()`, `circle()`, and `hexagon()`) and cell marks (`cell()`, `cell_x()`, etc.) and can be enabled with `tip=True` for other marks. For example:
 
 ```python
 plot(
