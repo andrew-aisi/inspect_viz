@@ -348,7 +348,7 @@ def main():
             'model_short_name': model_short_name,
             'organization': organization,
             'release_date': release_date,
-            'benchmark': benchmark_display,
+            'eval': benchmark_display,
             'score': score,
             'scorer': scorer,
             'stderr': stderr,
@@ -366,14 +366,14 @@ def main():
     final_df = df[df['organization'].isin(organizations)]
     
     # Sort by benchmark and score
-    final_df = final_df.sort_values(['benchmark', 'score'], ascending=[True, False])
+    final_df = final_df.sort_values(['eval', 'score'], ascending=[True, False])
     
     # Display summary
     print("\n=== Data Preparation Complete ===")
     print(f"\nTotal rows: {len(final_df)}")
     print(f"\nBenchmarks included:")
-    for benchmark in final_df['benchmark'].unique():
-        count = len(final_df[final_df['benchmark'] == benchmark])
+    for benchmark in final_df['eval'].unique():
+        count = len(final_df[final_df['eval'] == benchmark])
         print(f"  - {benchmark}: {count} runs")
     
     print(f"\nOrganizations found:")
@@ -385,7 +385,7 @@ def main():
     print(f"  - Release dates missing: {final_df['release_date'].isna().sum()}")
     
     # Save to parquet
-    output_path = "benchmarks.parquet"
+    output_path = "evals.parquet"
     final_df.to_parquet(output_path, index=False)
     print(f"\nData saved to: {output_path}")
     
@@ -395,9 +395,9 @@ def main():
     print(final_df.head().to_string())
     
     print("\n\nSample from each benchmark:")
-    for benchmark in final_df['benchmark'].unique():
+    for benchmark in final_df['eval'].unique():
         print(f"\n{benchmark}:")
-        sample = final_df[final_df['benchmark'] == benchmark].head(2)
+        sample = final_df[final_df['eval'] == benchmark].head(2)
         print(sample[['model_short_name', 'organization', 'release_date', 'scorer', 'score', 'stderr']].to_string())
     
     return final_df

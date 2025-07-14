@@ -22,60 +22,60 @@ from inspect_viz.table import table
 from inspect_viz.transform import sql
 
 # read data
-benchmarks = Data.from_file("benchmarks.parquet")
+evals = Data.from_file("benchmarks.parquet") # <1>
 
 # provide explicit sequence of org names
-orgs = ["OpenAI", "Anthropic", "Google", "Meta AI", "xAI", "Mistral AI"]
+orgs = ["OpenAI", "Anthropic", "Google", "Meta AI", "xAI", "Mistral AI"] 
 
 # compute confidence interval value
-def ci_value(direction): 
+def ci_value(direction):  # <2>
     Z_ALPHA = 1.960
     return sql(
         "score" +
         f"{direction}" +
         f"({Z_ALPHA} * stderr)"
-    ) 
+    )  # <2>
 
 vconcat(
     # select benchmark
-    select(benchmarks, label="Benchmark: ", column="benchmark", value="GPQA Diamond", width=370),
+    select(evals, label="Eval: ", column="eval", value="GPQA Diamond", width=425),
     
     # filter models by organization(s)
-    checkbox_group(benchmarks, column="organization", options=orgs),
+    checkbox_group(evals, column="organization", options=orgs),
     
     # dot plot w/ error bars
     vspace(15),
     plot(
         dot(
-            benchmarks,
+            evals,
             x="release_date",
             y="score",
             r=3,
             fill="organization",
-            channels= {
+            channels= {  # <3>
                 "Model": "model", 
                 "Scorer": "scorer", 
                 "Stderr": "stderr",
                 "Log Viewer": "log_viewer"
-            }
+            } # <3>
         ),
         rule_x( 
-            benchmarks,
+            evals,
             x="release_date",
             y="score",
-            y1=ci_value("-"),
+            y1=ci_value("-"),  # <4>
             y2=ci_value("+"),
             stroke="organization",
-            stroke_opacity=0.4,
+            stroke_opacity=0.4, # <4>
             marker="tick-x",
         ), 
-        legend=legend("color", target=benchmarks.selection),
-        x_domain="fixed",
-        y_domain=[0,1.0],
+        legend=legend("color", target=evals.selection), # <5>
+        x_domain="fixed",  # <6>
+        y_domain=[0,1.0],  # <6>
+        color_domain=orgs, 
         x_label="Release Date",
         y_label="Score",
-        color_label="Organization",
-        color_domain=orgs
+        color_label="Organization"
     )
 )
 ```

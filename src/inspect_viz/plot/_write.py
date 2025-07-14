@@ -20,7 +20,6 @@ def to_html(component: Component, dependencies: bool = True) -> str:
     """Genreate an HTML snippet for a plot or other component.
 
     Args:
-       file: Target filename.
        component: Compontent to export.
        dependencies: Include JavaScript dependencies required for Jupyter widget rendering.
           Dependencies should only be included once per web-page, so if you already have

@@ -15,7 +15,7 @@ page-layout: full
 
 ## Example
 
-Here is the [Penguin Explorer](examples/penguins/index.qmd) example from this repository re-written as a dashboard (this is a live dashboard embedded as an iframe):
+Here is the [Penguin Explorer](examples/general/penguins/index.qmd) example from this repository re-written as a dashboard (this is a live dashboard embedded as an iframe):
 
 ```{=html}
 <iframe src="https://jja.quarto.pub/penguins-explorer/" style="width: 100%; height: 800px;" class="border column-body-outset-right"></iframe>

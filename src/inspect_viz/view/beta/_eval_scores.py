@@ -10,7 +10,7 @@ from inspect_viz.transform import sql
 
 
 def eval_scores(
-    evals: Data,
+    data: Data,
     x: str = "model",
     fx: str = "task_name",
     y: str = "score_headline_value",
@@ -28,7 +28,7 @@ def eval_scores(
     Default field names are taken from the schema yielded by the Inspect `evals_df()` function. Pass alternate field names if you are plotting from a different dataset sechema.
 
     Args:
-       evals: Evals data table. This is typically created using a data frame read with the inspect `evals_df()` function.
+       data: Evals data table. This is typically created using a data frame read with the inspect `evals_df()` function.
        x: Name of field for x axis (defaults to "model")
        fx: Name of field for x facet (defaults to "task_name")
        y: Name of field for y axis (defaults to "score_headline_value").
@@ -40,7 +40,7 @@ def eval_scores(
        **attributes: Additional `PlotAttributes`. By default, the `y_inset_top` and `margin_bottom` are set to 10 pixels and `x_ticks` is set to `[]`.
     """
     # start with bar plot
-    components = [bar_y(evals, x=x, fx=fx, y=y, fill=x, tip=True)]
+    components = [bar_y(data, x=x, fx=fx, y=y, fill=x, tip=True)]
 
     # add ci if requested
     if y_ci is not False:
@@ -48,7 +48,7 @@ def eval_scores(
         z_alpha = _z_alpha(y_ci)
         components.append(
             rule_x(
-                evals,
+                data,
                 x=x,
                 fx=fx,
                 y1=sql(f"{y} - ({z_alpha} * {y_stderr})"),

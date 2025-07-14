@@ -44,14 +44,13 @@ def area(
        filter_by: Selection to filter by (defaults to data source selection).
        offset: After stacking, an optional **offset** can be applied to translate and scale stacks, say to produce a streamgraph; defaults to null for a zero baseline (**y** = 0 for stackY, and **x** = 0 for stackX). If the *wiggle* offset is used, the default **order** changes to *inside-out*.
        order: The order in which stacks are layered; one of:
+          - null (default) for input order
+          - a named stack order method such as *inside-out* or *sum*
+          - a field name, for natural order of the corresponding values
+          - a function of data, for natural order of the corresponding values
+          - an array of explicit **z** values in the desired order
 
-         - null (default) for input order
-         - a named stack order method such as *inside-out* or *sum*
-         - a field name, for natural order of the corresponding values
-         - a function of data, for natural order of the corresponding values
-         - an array of explicit **z** values in the desired order
-
-         If the *wiggle* **offset** is used, as for a streamgraph, the default changes to *inside-out*.
+          If the *wiggle* **offset** is used, as for a streamgraph, the default changes to *inside-out*.
        curve: The curve (interpolation) method for connecting adjacent points.
        **options: Additional `MarkOptions`.
     """
@@ -106,13 +105,13 @@ def area_x(
        offset: After stacking, an optional **offset** can be applied to translate and scale stacks, say to produce a streamgraph; defaults to null for a zero baseline (**y** = 0 for stackY, and **x** = 0 for stackX). If the *wiggle* offset is used, the default **order** changes to *inside-out*.
        order: The order in which stacks are layered; one of:
 
-         - null (default) for input order
-         - a named stack order method such as *inside-out* or *sum*
-         - a field name, for natural order of the corresponding values
-         - a function of data, for natural order of the corresponding values
-         - an array of explicit **z** values in the desired order
+          - null (default) for input order
+          - a named stack order method such as *inside-out* or *sum*
+          - a field name, for natural order of the corresponding values
+          - a function of data, for natural order of the corresponding values
+          - an array of explicit **z** values in the desired order
 
-         If the *wiggle* **offset** is used, as for a streamgraph, the default changes to *inside-out*.
+          If the *wiggle* **offset** is used, as for a streamgraph, the default changes to *inside-out*.
        curve: The curve (interpolation) method for connecting adjacent points.
        **options: Additional `MarkOptions`.
     """
@@ -167,13 +166,13 @@ def area_y(
        offset: After stacking, an optional **offset** can be applied to translate and scale stacks, say to produce a streamgraph; defaults to null for a zero baseline (**y** = 0 for stackY, and **x** = 0 for stackX). If the *wiggle* offset is used, the default **order** changes to *inside-out*.
        order: The order in which stacks are layered; one of:
 
-         - null (default) for input order
-         - a named stack order method such as *inside-out* or *sum*
-         - a field name, for natural order of the corresponding values
-         - a function of data, for natural order of the corresponding values
-         - an array of explicit **z** values in the desired order
+          - null (default) for input order
+          - a named stack order method such as *inside-out* or *sum*
+          - a field name, for natural order of the corresponding values
+          - a function of data, for natural order of the corresponding values
+          - an array of explicit **z** values in the desired order
 
-         If the *wiggle* **offset** is used, as for a streamgraph, the default changes to *inside-out*.
+          If the *wiggle* **offset** is used, as for a streamgraph, the default changes to *inside-out*.
        curve: The curve (interpolation) method for connecting adjacent points.
        **options: Additional `MarkOptions`.
     """

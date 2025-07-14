@@ -14,7 +14,8 @@ We start with a simple bar chart faceted by evaluation task:
 
 from inspect_viz import Data
 from inspect_viz.plot import plot, legend
-from inspect_viz.mark import bar_y
+from inspect_viz.mark import bar_y, TipOptions
+from inspect_viz.transform import sql
 
 evals = Data.from_file("evals.parquet")
 

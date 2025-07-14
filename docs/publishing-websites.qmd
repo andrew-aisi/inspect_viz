@@ -21,7 +21,7 @@ The [Quarto](https://quarto.org) publishing system can create websites that incl
 pip install quarto-cli
 ```
 
-Quarto is a markdown-based publishing system that enables you to embed executable Python blocks whose output is included in the published website. For instance, Here is the source code for the [Bias Parameter](examples/bias-parameter/index.qmd) example: 
+Quarto is a markdown-based publishing system that enables you to embed executable Python blocks whose output is included in the published website. For instance, Here is the source code for the [Bias Parameter](examples/general/bias-parameter/index.qmd) example: 
 
 ````python
 ---

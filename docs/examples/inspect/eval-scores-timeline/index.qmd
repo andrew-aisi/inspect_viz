@@ -1,8 +1,8 @@
 ---
 title: "Benchmarks"
-subtitle: "Data: [benchmarks.parquet](benchmarks.parquet)"
+subtitle: "Data: [evals.parquet](evals.parquet)"
 resources:
-   - benchmarks.py
+   - import.py
 ---
 
 This example plots several benchmarks against models from various organizations, with release date on the x-axis. The original data for this plot was published by the [Epoch AI Benchmarking Hub](https://epoch.ai/data/ai-benchmarking-dashboard).
@@ -19,7 +19,7 @@ from inspect_viz.table import table
 from inspect_viz.transform import sql
 
 # read data
-benchmarks = Data.from_file("benchmarks.parquet") # <1>
+evals = Data.from_file("evals.parquet") # <1>
 
 # provide explicit sequence of org names
 orgs = ["OpenAI", "Anthropic", "Google", "Meta AI", "xAI", "Mistral AI"] 
@@ -35,16 +35,16 @@ def ci_value(direction):  # <2>
 
 vconcat(
     # select benchmark
-    select(benchmarks, label="Benchmark: ", column="benchmark", value="GPQA Diamond", width=370),
+    select(evals, label="Eval: ", column="eval", value="GPQA Diamond", width=425),
     
     # filter models by organization(s)
-    checkbox_group(benchmarks, column="organization", options=orgs),
+    checkbox_group(evals, column="organization", options=orgs),
     
     # dot plot w/ error bars
     vspace(15),
     plot(
         dot(
-            benchmarks,
+            evals,
             x="release_date",
             y="score",
             r=3,
@@ -57,7 +57,7 @@ vconcat(
             } # <3>
         ),
         rule_x( 
-            benchmarks,
+            evals,
             x="release_date",
             y="score",
             y1=ci_value("-"),  # <4>
@@ -66,7 +66,7 @@ vconcat(
             stroke_opacity=0.4, # <4>
             marker="tick-x",
         ), 
-        legend=legend("color", target=benchmarks.selection), # <5>
+        legend=legend("color", target=evals.selection), # <5>
         x_domain="fixed",  # <6>
         y_domain=[0,1.0],  # <6>
         color_domain=orgs, 
@@ -77,7 +77,7 @@ vconcat(
 )
 ```
 
-1. Benchmark data sourced from [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard) and prepared with [benchmark.py](benchmarks.py).
+1. Benchmark data sourced from [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard) and prepared with [import.py](import.py).
 
 2. Function to dynamically compute confidence intervals using the `sql()` function.
 

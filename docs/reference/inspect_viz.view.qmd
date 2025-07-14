@@ -9,11 +9,6 @@ View functions are currently in beta and are exported from the **inspect_ai.view
 
 ## Evals
 
-### evals_bar_plot
-### evals_table 
+### eval_scores
+### eval_scores_timeline
 
-## Axes
-
-### axis_score
-### AxisValue
-### AxisFilter

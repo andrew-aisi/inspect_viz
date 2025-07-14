@@ -53,22 +53,21 @@ def bar_x(
        y: The optional vertical position of the bar; a ordinal channel typically bound to the *y* scale. If not specified, the bar spans the vertical extent of the frame; otherwise the *y* scale must be a *band* scale. If *y* represents quantitative or temporal values, use a rectX mark instead.
        interval: How to convert a continuous value (**x** for barX, or **y** for barY) into an interval (**x1** and **x2** for barX, or **y1** and **y2** for barY); one of:
 
-         - a named time interval such as *day* (for date intervals)
-         - a number (for number intervals), defining intervals at integer multiples of *n*
+          - a named time interval such as *day* (for date intervals)
+          - a number (for number intervals), defining intervals at integer multiples of *n*
 
-         Setting this option disables the implicit stack transform (stackX for barX, or stackY for barY).
+          Setting this option disables the implicit stack transform (stackX for barX, or stackY for barY).
        filter_by: Selection to filter by (defaults to data source selection).
        offset: After stacking, an optional **offset** can be applied to translate and scale stacks, say to produce a streamgraph; defaults to null for a zero baseline (**y** = 0 for stackY, and **x** = 0 for stackX). If the *wiggle* offset is used, the default **order** changes to *inside-out*.
        order: The order in which stacks are layered; one of:
 
-         - null (default) for input order
-         - a named stack order method such as *inside-out* or *sum*
-         - a field name, for natural order of the corresponding values
-         - a function of data, for natural order of the corresponding values
-         - an array of explicit **z** values in the desired order
+          - null (default) for input order
+          - a named stack order method such as *inside-out* or *sum*
+          - a field name, for natural order of the corresponding values
+          - a function of data, for natural order of the corresponding values
+          - an array of explicit **z** values in the desired order
 
-         If the *wiggle* **offset** is used, as for a streamgraph, the default changes to *inside-out*.
-       reverse: If true, reverse the effective order of the stacks.
+          If the *wiggle* **offset** is used, as for a streamgraph, the default changes to *inside-out*.
        z: The **z** channel defines the series of each value in the stack. Used when the **order** is *sum*, *appearance*, *inside-out*, or an explicit array of **z** values.
        inset: Shorthand to set the same default for all four insets.
        inset_top: Insets the top edge by the specified number of pixels. A positive value insets towards the bottom edge (reducing effective area), while a negative value insets away from the bottom edge (increasing it).
@@ -145,22 +144,21 @@ def bar_y(
        x: The optional horizontal position of the bar; a ordinal channel typically bound to the *x* scale. If not specified, the bar spans the horizontal extent of the frame; otherwise the *x* scale must be a *band* scale. If *x* represents quantitative or temporal values, use a rectY mark instead.
        interval: How to convert a continuous value (**x** for barX, or **y** for barY) into an interval (**x1** and **x2** for barX, or **y1** and **y2** for barY); one of:
 
-         - a named time interval such as *day* (for date intervals)
-         - a number (for number intervals), defining intervals at integer multiples of *n*
+          - a named time interval such as *day* (for date intervals)
+          - a number (for number intervals), defining intervals at integer multiples of *n*
 
-         Setting this option disables the implicit stack transform (stackX for barX, or stackY for barY).
+          Setting this option disables the implicit stack transform (stackX for barX, or stackY for barY).
        filter_by: Selection to filter by (defaults to data source selection).
        offset: After stacking, an optional **offset** can be applied to translate and scale stacks, say to produce a streamgraph; defaults to null for a zero baseline (**y** = 0 for stackY, and **x** = 0 for stackX). If the *wiggle* offset is used, the default **order** changes to *inside-out*.
        order: The order in which stacks are layered; one of:
 
-         - null (default) for input order
-         - a named stack order method such as *inside-out* or *sum*
-         - a field name, for natural order of the corresponding values
-         - a function of data, for natural order of the corresponding values
-         - an array of explicit **z** values in the desired order
+          - null (default) for input order
+          - a named stack order method such as *inside-out* or *sum*
+          - a field name, for natural order of the corresponding values
+          - a function of data, for natural order of the corresponding values
+          - an array of explicit **z** values in the desired order
 
-         If the *wiggle* **offset** is used, as for a streamgraph, the default changes to *inside-out*.
-       reverse: If true, reverse the effective order of the stacks.
+          If the *wiggle* **offset** is used, as for a streamgraph, the default changes to *inside-out*.
        z: The **z** channel defines the series of each value in the stack. Used when the **order** is *sum*, *appearance*, *inside-out*, or an explicit array of **z** values.
        inset: Shorthand to set the same default for all four insets.
        inset_top: Insets the top edge by the specified number of pixels. A positive value insets towards the bottom edge (reducing effective area), while a negative value insets away from the bottom edge (increasing it).
