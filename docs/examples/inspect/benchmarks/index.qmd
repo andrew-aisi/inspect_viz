@@ -1,0 +1,53 @@
+---
+title: "Benchmarks"
+subtitle: "Data: [benchmarks.parquet](benchmarks.parquet)"
+resources:
+   - benchmarks.py
+---
+
+This example plots several benchmarks against models from various organizations, with release date on the x-axis. The original data for this plot was published by the [Epoch AI Benchmarking Hub](https://epoch.ai/data/ai-benchmarking-dashboard).
+
+```{python}
+#| filename: Code
+
+from inspect_viz import Data, Selection
+from inspect_viz.input import checkbox_group, select
+from inspect_viz.layout import hconcat, vconcat, vspace
+from inspect_viz.plot import plot, legend
+from inspect_viz.mark import dot
+from inspect_viz.table import table
+
+# read data
+benchmarks = Data.from_file("benchmarks.parquet")
+
+orgs = ["OpenAI", "Anthropic", "Google", "Meta AI", "xAI", "Mistral AI"]
+
+vconcat(
+    # select benchmark
+    select(benchmarks, label="Benchmark: ", column="benchmark", value="GPQA Diamond", width=370),
+    
+    # filter models by organization(s)
+    checkbox_group(benchmarks, column="organization", options=orgs),
+    
+    # dot plot w/ error bars
+    vspace(15),
+    plot(
+        dot(
+            benchmarks,
+            x="release_date",
+            y="score",
+            fill="organization",
+            channels= {
+                "model": "model", 
+                "scorer": "scorer", 
+                "stderr": "stderr"
+            }
+        ),
+        legend=legend("color"),
+        color_domain=orgs,
+        y_domain=[0,1.0],
+        y_label="Score",
+        x_label="Release date"
+    )
+)
+```
