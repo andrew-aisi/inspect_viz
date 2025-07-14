@@ -1782,8 +1782,10 @@ var configureSpecSvgTooltips = (specEl) => {
 };
 var tooltipInstance = void 0;
 function hideTooltip() {
-  tooltipInstance.hide();
-  window.removeEventListener("scroll", hideTooltip);
+  if (!tooltipInstance.popper.matches(":hover")) {
+    tooltipInstance.hide();
+    window.removeEventListener("scroll", hideTooltip);
+  }
 }
 function showTooltip() {
   tooltipInstance.show();
@@ -1804,21 +1806,15 @@ var setupTooltipObserver = (svgEl, specEl) => {
         if (tipElements.length === 1) {
           const tipContainerEl = tipElements[0];
           tipContainerEl.style.display = "none";
-          const tipEl = tipContainerEl.firstChild;
+          const pathEl = tipContainerEl.querySelector("path");
+          const tipEl = pathEl?.parentElement;
           if (!tipEl) {
-            if (!tooltipInstance.popper.matches(":hover")) {
-              hideTooltip();
-            }
+            hideTooltip();
           } else {
-            const parsed = parseSVGTooltip(tipEl);
+            const parsed = parseSVGTooltip(tipContainerEl, tipEl);
             const svgPoint = svgEl.createSVGPoint();
             svgPoint.x = parsed.transform?.x || 0;
             svgPoint.y = parsed.transform?.y || 0;
-            const containerTransform = parseTransform(tipContainerEl);
-            if (containerTransform) {
-              svgPoint.x += containerTransform.x;
-              svgPoint.y += containerTransform.y;
-            }
             const screenPoint = svgPoint.matrixTransform(svgEl.getScreenCTM());
             const centerX = screenPoint.x;
             const centerY = screenPoint.y;
@@ -1926,9 +1922,8 @@ var parseTransform = (el) => {
   }
   return void 0;
 };
-var parseSVGTooltip = (tipEl) => {
+var parseSVGTooltip = (tipContainerEl, tipEl) => {
   const result = { values: [] };
-  result.transform = parseTransform(tipEl);
   const tspanEls = tipEl.querySelectorAll("tspan");
   tspanEls.forEach((tspan) => {
     let key = void 0;
@@ -1960,9 +1955,36 @@ var parseSVGTooltip = (tipEl) => {
     if (pathData) {
       result.placement = parseArrowDirection(pathData);
     }
+    const transforms = getTransformsBetween(pathEl, tipContainerEl);
+    if (transforms.length > 0) {
+      result.transform = transforms.reduce(
+        (acc, transform) => {
+          acc.x += transform.x;
+          acc.y += transform.y;
+          return acc;
+        },
+        { x: 0, y: 0 }
+      );
+    }
   }
   return result;
 };
+function getTransformsBetween(pathElement, containerElement) {
+  const transforms = [];
+  let current = pathElement.parentElement;
+  while (current) {
+    const transform = parseTransform(current);
+    if (transform) {
+      transforms.unshift(transform);
+    }
+    if (current !== containerElement) {
+      current = current.parentElement;
+    } else {
+      break;
+    }
+  }
+  return transforms;
+}
 var parseArrowPosition = (a, b) => {
   if (a < b) {
     return "end";

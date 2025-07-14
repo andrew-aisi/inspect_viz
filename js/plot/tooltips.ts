@@ -33,8 +33,10 @@ const configureSpecSvgTooltips = (specEl: HTMLElement) => {
 let tooltipInstance: any | undefined = undefined;
 
 function hideTooltip() {
-    tooltipInstance.hide();
-    window.removeEventListener('scroll', hideTooltip);
+    if (!tooltipInstance.popper.matches(':hover')) {
+        tooltipInstance.hide();
+        window.removeEventListener('scroll', hideTooltip);
+    }
 }
 
 function showTooltip() {
@@ -58,33 +60,27 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
         mutations.forEach(mutation => {
             if (mutation.type === 'childList') {
                 const tipElements = svgEl.querySelectorAll('g[aria-label="tip"]');
+
                 if (tipElements.length === 1) {
                     const tipContainerEl = tipElements[0] as SVGGElement;
                     tipContainerEl.style.display = 'none';
 
                     // If the tip container is empty, the tooltip has been dismissed
                     // hide the tooltip
-                    const tipEl = tipContainerEl.firstChild as SVGGElement | null;
+                    const pathEl = tipContainerEl.querySelector('path');
+                    const tipEl = pathEl?.parentElement as SVGGElement | null;
+
                     if (!tipEl) {
-                        if (!tooltipInstance.popper.matches(':hover')) {
-                            hideTooltip();
-                        }
+                        hideTooltip();
                     } else {
                         // Find the tip container and parse it to determine how the tooltips
                         // are configured and what is being displayed.
-                        const parsed = parseSVGTooltip(tipEl);
+                        const parsed = parseSVGTooltip(tipContainerEl, tipEl);
 
                         // Convert the SVG point to screen coordinates
                         const svgPoint = svgEl.createSVGPoint();
                         svgPoint.x = parsed.transform?.x || 0;
                         svgPoint.y = parsed.transform?.y || 0;
-
-                        // Apply any container transforms
-                        const containerTransform = parseTransform(tipContainerEl);
-                        if (containerTransform) {
-                            svgPoint.x += containerTransform.x;
-                            svgPoint.y += containerTransform.y;
-                        }
 
                         const screenPoint = svgPoint.matrixTransform(svgEl.getScreenCTM()!);
 
@@ -235,12 +231,8 @@ const parseTransform = (el: HTMLElement | SVGGElement): { x: number; y: number }
     return undefined;
 };
 
-const parseSVGTooltip = (tipEl: SVGGElement): ParsedTooltip => {
+const parseSVGTooltip = (tipContainerEl: SVGElement, tipEl: SVGGElement): ParsedTooltip => {
     const result: ParsedTooltip = { values: [] };
-
-    // Parse the transform attribute to capture the position
-    // offset (relative to SVG element)
-    result.transform = parseTransform(tipEl);
 
     // Parse the child spans
     const tspanEls = tipEl.querySelectorAll('tspan');
@@ -279,10 +271,45 @@ const parseSVGTooltip = (tipEl: SVGGElement): ParsedTooltip => {
         if (pathData) {
             result.placement = parseArrowDirection(pathData);
         }
+
+        // Walk the transforms to compute the position
+        const transforms = getTransformsBetween(pathEl, tipContainerEl);
+        if (transforms.length > 0) {
+            result.transform = transforms.reduce(
+                (acc, transform) => {
+                    acc.x += transform.x;
+                    acc.y += transform.y;
+                    return acc;
+                },
+                { x: 0, y: 0 }
+            );
+        }
     }
 
     return result;
 };
+
+function getTransformsBetween(
+    pathElement: HTMLElement | SVGElement,
+    containerElement: HTMLElement | SVGElement
+) {
+    const transforms = [];
+    let current = pathElement.parentElement;
+
+    while (current) {
+        const transform = parseTransform(current);
+        if (transform) {
+            transforms.unshift(transform);
+        }
+        if (current !== containerElement) {
+            current = current.parentElement;
+        } else {
+            break;
+        }
+    }
+
+    return transforms;
+}
 
 const parseArrowPosition = (a: number, b: number): 'start' | 'center' | 'end' => {
     if (a < b) {
