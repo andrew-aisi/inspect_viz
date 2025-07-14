@@ -3,11 +3,65 @@ title: "Tool Usage"
 subtitle: "Dataset: [cybench_tools.parquet](cybench_tools.parquet)"
 ---
 
-In this example we visualize tool usage over a series of turns in a Cybench evaluation.
+In this example we visualize tool usage over a series of turns in a Cybench evaluation. We use a `cell()` mark to visualize tool use over messages in each sample of an evaluation. We note any limit that ended the sample using a `text()` mark on the right side of the frame.
 
-## Data Preparation
+```{python}
+#| filename: Code
 
-For analysis we read a raw messages data frame from an eval log^[The eval log read for this example is in the [inspect-viz-example-logs](https://github.com/meridianlabs-ai/inspect-viz-example-logs/blob/main/logs/cybench/2025-06-28T12-26-01%2B00-00_cybench_cHgZahEpPHqsSx8GfGjKai.eval) repo], fill the tool call field with "role" if there are no tool calls, then filter down to just the fields we need for visualization:
+from inspect_viz import Data
+from inspect_viz.plot import plot, legend
+from inspect_viz.mark import cell, text
+
+# read data (see 'Data Preparation' below)
+tools = Data.from_file("cybench_tools.parquet") # <1>
+
+tools_domain = ["bash", "python", "submit", "(none)"]
+
+plot(
+    cell( # <2>
+        tools,
+        x="order",
+        y="id",
+        fill="tool_call_function"
+    ), # <2>
+    
+    text( # <3>
+        tools, 
+        text="limit", 
+        y="id",
+        frame_anchor="right", 
+        font_size=8, 
+        font_weight=200,
+        dx=50
+    ),  # <3>
+    legend=legend("color", location="right"),
+    margin_top=0,   # <4>
+    margin_left=20,
+    margin_right=100,  # <4>
+    x_ticks=list(range(0, 400, 50)), # <5>
+    y_ticks=[], # <5>
+    x_label="Message", # <6>
+    y_label="Sample",  # <6>
+    color_label="Tool",  # <6>
+    color_domain=tools_domain  # <6>
+)
+```
+
+1. Read tool call data (see [Data Preparation](#data-preparation) for details).
+
+2. `cell()` mark showing tool calls.
+
+3. `text()` mark showing whether the sample terminated due to a limit.
+
+4. Tweak the margins so the axis labels and text annotations appear correctly.
+
+5. Reduce the number of tick marks on the x-axis and eliminate y-ticks.
+
+6. Set some custom labels and ensure that tools follow our designed order.
+
+### Data Preparation {.unlisted}
+
+To create the plot we read a raw messages data frame from an eval log^[The eval log read for this example is in the [inspect-viz-example-logs](https://github.com/meridianlabs-ai/inspect-viz-example-logs/blob/main/logs/cybench/2025-06-28T12-26-01%2B00-00_cybench_cHgZahEpPHqsSx8GfGjKai.eval) repo], fill the tool call field with "(none)" if there are no tool calls, then filter down to just the fields we require for visualization:
 
 <!-- ~/meridianlabs/inspect-viz-example-logs/logs/cybench/2025-06-28T12-26-01+00-00_cybench_cHgZahEpPHqsSx8GfGjKai.eval -->
 
@@ -32,145 +86,5 @@ tools_df = df[[
 ]]
 ```
 
-
-```{python}
-#| include: false
-import pandas as pd
-tools_df = pd.read_parquet("cybench_tools.parquet")
-```
-
 Note that the trimming of columns is particularly important because Inspect Viz embeds datasets directly in the web pages that host them (so we want to minimize their size for page load performance and bandwidth usage).
 
-## Trajectory Analysis
-
-Here we use a `cell()` mark to visualize tool use over messages in each sample of an evaluation. We note any limit that ended the sample using a `text()` mark on the right side of the frame.
-
-```{python}
-#| filename: Code
-
-from inspect_viz import Data
-from inspect_viz.plot import plot, legend
-from inspect_viz.mark import cell, text
-
-tools = Data.from_dataframe(tools_df)
-
-tools_domain = ["bash", "python", "submit", "(none)"]
-
-plot(
-    cell( # <1>
-        tools,
-        x="order",
-        y="id",
-        fill="tool_call_function",
-    ), # <1>
-    
-    text( # <2>
-        tools, 
-        text="limit", 
-        y="id",
-        frame_anchor="right", 
-        font_size=8, 
-        font_weight=200,
-        dx=50
-    ),  # <2>
-    legend=legend("color", location="right"),
-    color_domain=tools_domain,  # <3>
-    margin_top=0,   # <4>
-    margin_left=200,  # <4>
-    margin_right=100,  # <4>
-    x_ticks=list(range(0, 400, 50)), # <5>
-    x_tick_size=4, # <5>
-    x_label=None,  # <6>
-    y_label=None  # <6>
-)
-```
-
-1. `cell()` mark showing tool calls.
-
-2. `text()` mark showing whether the sample terminated due to a limit.
-
-3. Fix the color domian to our pre-set tool ordering.
-
-4. Tweak the margins so the axis labels and text annotations appear correctly.
-
-5. Reduce the number of tick marks on the x-axis.
-
-6. No labels as axes are obvious from tick marks and legand.
-
-## Sample Drill Down
-
-Here we stack two plots on top of each other---the original sample-level tool calling plot as well as a bar plot counting the messages which called various tools. You can click on any sample in the top plot to update the bottom plot to count only the tool calls for that sample.
-
-```{python}
-#| filename: Code
-
-from inspect_viz import Data, Selection
-from inspect_viz.plot import plot, legend
-from inspect_viz.mark import cell, text, bar_x
-from inspect_viz.interactor import toggle_y
-from inspect_viz.layout import vconcat
-from inspect_viz.transform import count
-
-tools = Data.from_dataframe(tools_df)
-
-click = Selection.single() # <1>
-
-vconcat(
-    plot(
-        cell(
-            tools,
-            filter_by=click,  # <2>
-            x="order",
-            y="id",
-            fill="tool_call_function",
-        ),
-        toggle_y(target=click),  # <3>
-        text(
-            tools, 
-            filter_by=click,
-            text="limit", 
-            y="id",
-            frame_anchor="right", 
-            font_size=8, 
-            font_weight=200,
-            dx=50
-        ),
-        legend=legend("color", location="right"),
-        color_domain=tools_domain,
-        margin_top=0,
-        margin_bottom=0,
-        margin_left=200,
-        margin_right=100,
-        x_ticks=list(range(0, 400, 50)),
-        x_tick_size=4,
-        y_domain="fixed", # <4>
-        x_domain="fixed", # <4>
-        x_label=None,
-        y_label=None
-    ),
-    plot(
-        bar_x(
-            tools, 
-            filter_by=click,  # <5>
-            x=count(), 
-            y="tool_call_function", 
-            fill="tool_call_function",
-        ),
-        y_label=None,
-        y_domain="fixed",
-        color_domain=tools_domain[:-1],
-        margin_left=50,
-        height=170
-    )
-)
-```
-
-1. `Selection` used to filter the plot display (A "single" selection filters out all points not in the target selection).
-
-2. Marks are filtered by the "click" selection.
-
-3. The `toggle_y()` interactor updates the "click" selection with the y-value ("sample") that has been clicked.
-
-4. Fix the x and y domains so that click selections don't cause the axes to change.
-
-5. Bar plot is also filtered by the "click" selection. 
