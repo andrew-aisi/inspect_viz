@@ -47,7 +47,8 @@ vconcat(
         color_domain=orgs,
         y_domain=[0,1.0],
         y_label="Score",
-        x_label="Release date"
+        x_label="Release date",
+        x_domain="fixed"
     )
 )
 ```
