@@ -1,5 +1,6 @@
 import svgPathParser from 'https://cdn.jsdelivr.net/npm/svg-path-parser@1.1.0/+esm';
 import tippy, { Placement } from 'https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm';
+import { isLinkableUrl } from '../util/url';
 
 export const replaceTooltipImpl = (specEl: HTMLElement) => {
     // Check if SVG already exists
@@ -47,6 +48,7 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
         tooltipInstance = tippy(specEl, {
             trigger: 'manual',
             theme: 'inspect',
+            interactive: true,
         });
     }
 
@@ -149,7 +151,19 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
                             const valueEl = document.createElement('div');
                             valueEl.className = 'inspect-tip-value';
 
-                            valueEl.append(document.createTextNode(row.value));
+                            if (row.href) {
+                                const linkEl = document.createElement('a');
+                                linkEl.href = row.href;
+                                linkEl.target = '_blank';
+                                linkEl.rel = 'noopener noreferrer';
+                                linkEl.className = 'inspect-tip-link';
+                                linkEl.textContent = row.value;
+                                valueEl.appendChild(linkEl);
+                            } else {
+                                valueEl.append(document.createTextNode(row.value));
+                            }
+
+                            // Add a color, if provided
                             if (row.color) {
                                 const colorEl = document.createElement('span');
                                 colorEl.className = 'inspect-tip-color';
@@ -184,6 +198,7 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
 interface TooltipRow {
     key: string;
     value: string;
+    href?: string;
     color?: string;
 }
 
@@ -230,8 +245,13 @@ const parseSVGTooltip = (tipEl: SVGGElement): ParsedTooltip => {
                 value = node.textContent?.trim();
             }
         });
+
         if (key !== undefined && value !== undefined) {
-            result.values.push({ key, value, color });
+            if (isLinkableUrl(value)) {
+                result.values.push({ key, value: 'link', href: value, color });
+            } else {
+                result.values.push({ key, value, color });
+            }
         }
     });
 
