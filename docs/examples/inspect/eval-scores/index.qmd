@@ -1,9 +1,9 @@
 ---
-title: Evals Summary
+title: Eval Scores
 subtitle: "Dataset: [evals.parquet](evals.parquet)"
 ---
 
-This examples summarizes the results of 4 evaluation tasks (gpqa_diamond, aime2024, mmlu_pro, cybench, and swe_bench) across 4 models (OpenAI o4-mini and o3, and Anthropic Claude Sonnet 3.7 and 4.0).
+This example summarizes the scores of 4 evaluation tasks (gpqa_diamond, aime2024, mmlu_pro, cybench, and swe_bench) across 4 models (OpenAI o4-mini and o3, and Anthropic Claude Sonnet 3.7 and 4.0).
 
 ## Bar Chart 
 
@@ -24,7 +24,7 @@ plot(
         x="model", 
         fx="task_name", # <1>
         y="score_headline_value",
-        fill="model",
+        fill="model"
     ),
     legend=legend("color", location="bottom"),
     x_label=None, fx_label=None, x_ticks=[],  # <2> 
@@ -61,6 +61,7 @@ plot(
         evals, x="model", fx="task_name", 
         y="score_headline_value",
         fill="model",
+        tip=True
     ),
     rule_x(  # <2>
         evals,

@@ -18,7 +18,9 @@ from ._legend import legend as create_legend
 def plot(
     *plot: Mark | Interactor | Legend | Sequence[Mark | Interactor | Legend],
     x_label: str | Param | None | NotGiven = NOT_GIVEN,
+    fx_label: str | Param | None | NotGiven = NOT_GIVEN,
     y_label: str | Param | None | NotGiven = NOT_GIVEN,
+    fy_label: str | Param | None | NotGiven = NOT_GIVEN,
     grid: bool | str | Param | None = None,
     x_grid: bool | str | Interval | list[str | float] | Param | None = None,
     y_grid: bool | str | Interval | list[str | float] | Param | None = None,
@@ -36,10 +38,12 @@ def plot(
             By default the scale label is inferred from channel definitions, possibly with
             an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value. Pass
             `None` for no x_label.
+        fx_label:  A textual label to show on the axis or legend; if `None`, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.
         y_label: A textual label to show on the axis or legend; if null, show no label.
             By default the scale label is inferred from channel definitions, possibly with
             an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value. Pass
             `None` for no y_label.
+        fy_label:  A textual label to show on the axis or legend; if `None`, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.
         grid: Whether to show a grid aligned with the scale's ticks. If true, show a grid
             with the currentColor stroke; if a string, show a grid with the specified
             stroke color.
@@ -74,6 +78,10 @@ def plot(
         config["xLabel"] = x_label
     if not isinstance(y_label, NotGiven):
         config["yLabel"] = y_label
+    if not isinstance(fx_label, NotGiven):
+        config["fxLabel"] = fx_label
+    if not isinstance(fy_label, NotGiven):
+        config["fyLabel"] = fy_label
 
     if grid is not None:
         config["grid"] = grid

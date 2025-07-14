@@ -63,7 +63,7 @@ website:
             text: Examples
           - section: Inspect
             contents:
-              - href: examples/inspect/evals-summary/index.qmd
+              - href: examples/inspect/eval-scores/index.qmd
               - href: examples/inspect/benchmarks/index.qmd
               - href: examples/inspect/tool-usage/index.qmd
           - section: General

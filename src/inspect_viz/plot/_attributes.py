@@ -799,13 +799,6 @@ class PlotAttributes(TypedDict, total=False):
     fx_line: bool | Param | None
     """If true, draw a line along the axis; if false (default), do not."""
 
-    fx_label: str | None | Param | None
-    """A textual label to show on the axis or legend; if null, show no label. By
-    default the scale label is inferred from channel definitions, possibly with
-    an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.
-
-    For axes and legends only."""
-
     fx_label_anchor: Literal["right", "left", "center"] | Param | None
     """Where to place the axis **label** relative to the plot's frame. For
     vertical position scales (*y* and *fy*), may be *top*, *bottom*, or
@@ -941,13 +934,6 @@ class PlotAttributes(TypedDict, total=False):
 
     fy_line: bool | Param | None
     """If true, draw a line along the axis; if false (default), do not."""
-
-    fy_label: str | None | Param | None
-    """A textual label to show on the axis or legend; if null, show no label. By
-    default the scale label is inferred from channel definitions, possibly with
-    an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.
-
-    For axes and legends only."""
 
     fy_label_anchor: Literal["top", "bottom", "center"] | Param | None
     """Where to place the axis **label** relative to the plot's frame. For
