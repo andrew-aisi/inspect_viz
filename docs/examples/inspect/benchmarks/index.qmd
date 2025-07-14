@@ -12,7 +12,7 @@ This example plots several benchmarks against models from various organizations,
 
 from inspect_viz import Data, Selection
 from inspect_viz.input import checkbox_group, select
-from inspect_viz.layout import hconcat, vconcat, vspace
+from inspect_viz.layout import vconcat, vspace
 from inspect_viz.plot import plot, legend
 from inspect_viz.mark import dot, rule_x
 from inspect_viz.table import table
@@ -21,10 +21,10 @@ from inspect_viz.transform import sql
 # read data
 benchmarks = Data.from_file("benchmarks.parquet")
 
+# provide explicit sequence of org names
 orgs = ["OpenAI", "Anthropic", "Google", "Meta AI", "xAI", "Mistral AI"]
 
-orgs_selection = Selection.intersect(include=benchmarks.selection)
-
+# compute confidence interval value
 def ci_value(direction): 
     Z_ALPHA = 1.960
     return sql(
@@ -33,20 +33,18 @@ def ci_value(direction):
         f"({Z_ALPHA} * stderr)"
     ) 
 
-
 vconcat(
     # select benchmark
     select(benchmarks, label="Benchmark: ", column="benchmark", value="GPQA Diamond", width=370),
     
     # filter models by organization(s)
-    checkbox_group(benchmarks, column="organization", options=orgs, target=orgs_selection),
+    checkbox_group(benchmarks, column="organization", options=orgs),
     
     # dot plot w/ error bars
     vspace(15),
     plot(
         dot(
             benchmarks,
-            filter_by=orgs_selection,
             x="release_date",
             y="score",
             r=3,
@@ -59,7 +57,6 @@ vconcat(
         ),
         rule_x( 
             benchmarks,
-            filter_by=orgs_selection,
             x="release_date",
             y="score",
             y1=ci_value("-"),
@@ -68,12 +65,12 @@ vconcat(
             stroke_opacity=0.4,
             marker="tick-x",
         ), 
-        legend=legend("color", target=orgs_selection),
-        color_domain=orgs,
+        legend=legend("color", target=benchmarks.selection),
+        x_domain="fixed",
         y_domain=[0,1.0],
+        x_label="Release Date",
         y_label="Score",
-        x_label="Release date",
-        x_domain="fixed"
+        color_domain=orgs,
     )
 )
 ```
