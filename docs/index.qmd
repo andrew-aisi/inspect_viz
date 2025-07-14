@@ -8,12 +8,94 @@ subtitle: |
 
 Welcome to Inspect Viz, a data visualisation library for [Inspect AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. You can author visualisations in any [Jupyter Notebook](https://jupyter.org/) then include them in documents as static images or or websites as interactive Jupyter Widgets.
 
+Here's an Inspect Viz plot that compares benchmarks scores over time for varioius providers. Use the filters to switch benchmarks and restrict to models from various organization(s). Hover over the points to get additional details on them.
+
+```{python}
+#| echo: false
+
+from inspect_viz import Data, Selection
+from inspect_viz.input import checkbox_group, select
+from inspect_viz.layout import vconcat, vspace
+from inspect_viz.plot import plot, legend
+from inspect_viz.mark import dot, rule_x
+from inspect_viz.table import table
+from inspect_viz.transform import sql
+
+# read data
+benchmarks = Data.from_file("benchmarks.parquet")
+
+# provide explicit sequence of org names
+orgs = ["OpenAI", "Anthropic", "Google", "Meta AI", "xAI", "Mistral AI"]
+
+# compute confidence interval value
+def ci_value(direction): 
+    Z_ALPHA = 1.960
+    return sql(
+        "score" +
+        f"{direction}" +
+        f"({Z_ALPHA} * stderr)"
+    ) 
+
+vconcat(
+    # select benchmark
+    select(benchmarks, label="Benchmark: ", column="benchmark", value="GPQA Diamond", width=370),
+    
+    # filter models by organization(s)
+    checkbox_group(benchmarks, column="organization", options=orgs),
+    
+    # dot plot w/ error bars
+    vspace(15),
+    plot(
+        dot(
+            benchmarks,
+            x="release_date",
+            y="score",
+            r=3,
+            fill="organization",
+            channels= {
+                "Model": "model", 
+                "Scorer": "scorer", 
+                "Stderr": "stderr",
+                "Log Viewer": "log_viewer"
+            }
+        ),
+        rule_x( 
+            benchmarks,
+            x="release_date",
+            y="score",
+            y1=ci_value("-"),
+            y2=ci_value("+"),
+            stroke="organization",
+            stroke_opacity=0.4,
+            marker="tick-x",
+        ), 
+        legend=legend("color", target=benchmarks.selection),
+        x_domain="fixed",
+        y_domain=[0,1.0],
+        x_label="Release Date",
+        y_label="Score",
+        color_label="Organization",
+        color_domain=orgs
+    )
+)
+```
+
+#### Why Inspect Viz?
+
+Why use a visualisation library specific to Inspect? Why not just use Matplotlib or Plotly which you might already be familiar with and which LLMs have experience writing code for? Inspect Viz is indeed not for every scenario, and it does have a learning curve. You should consider Inspect Viz for situations where:
+
+1. You want to create _interactive_ visualizations (either filtering as shown above or directly selecting points on one plot to dynamially drive the contents of other plots).
+
+2. You want to create plots that include direct links to the Inspect log viewer (try hovering over the points above and then clicking the log viewer link).
+
+3. You value the more modern appearance and flexible compositions available in [Observable Plot](https://observablehq.com/plot/), the plotting library Inspect Viz is built on.
+
+
 #### Getting Started
 
-First, install the `inspect_ai` and `inspect_viz` package from GitHub as follows:
+First, install the `inspect_viz` package from GitHub as follows:
 
 ``` bash
-pip install git+https://github.com/UKGovernmentBEIS/inspect_ai
 pip install git+https://github.com/meridianlabs-ai/inspect_viz
 ```
 
