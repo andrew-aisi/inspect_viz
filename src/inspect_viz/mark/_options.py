@@ -2,7 +2,7 @@ from typing import Literal, TypeAlias, TypedDict, Union
 
 from .._core.param import Param
 from ._channel import Channel, ChannelName, ChannelSpec, SortOrder
-from ._types import FrameAnchor
+from ._types import FrameAnchor, TextStyles
 
 
 class MarkOptions(TypedDict, total=False):
@@ -208,7 +208,7 @@ TipPointer: TypeAlias = Literal["x", "y", "xy"]
 """The pointer mode for the tip; corresponds to pointerX, pointerY, and pointer."""
 
 
-class TipOptions(TypedDict, total=False):
+class TipOptions(MarkOptions, TextStyles, total=False):
     """Options for the tip mark."""
 
     pointer: TipPointer

@@ -86,15 +86,18 @@ Marker: TypeAlias = Literal[
 ]
 """Symbols used as plot markers."""
 
-TextOverflow: TypeAlias = Literal[
-    "clip",
-    "ellipsis",
-    "clip-start",
-    "clip-end",
-    "ellipsis-start",
-    "ellipsis-middle",
-    "ellipsis-end",
-]
+TextOverflow: TypeAlias = (
+    Literal[
+        "clip",
+        "ellipsis",
+        "clip-start",
+        "clip-end",
+        "ellipsis-start",
+        "ellipsis-middle",
+        "ellipsis-end",
+    ]
+    | None
+)
 """How to truncate (or wrap) lines of text longer than the given **line_width**; one of:
 
 - null (default) preserve overflowing characters (and wrap if needed);
