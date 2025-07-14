@@ -1793,7 +1793,8 @@ var setupTooltipObserver = (svgEl, specEl) => {
   if (!tooltipInstance) {
     tooltipInstance = tippy(specEl, {
       trigger: "manual",
-      theme: "inspect"
+      theme: "inspect",
+      interactive: true
     });
   }
   const observer = new MutationObserver((mutations) => {

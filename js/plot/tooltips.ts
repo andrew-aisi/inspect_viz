@@ -48,6 +48,7 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
         tooltipInstance = tippy(specEl, {
             trigger: 'manual',
             theme: 'inspect',
+            interactive: true,
         });
     }
 
