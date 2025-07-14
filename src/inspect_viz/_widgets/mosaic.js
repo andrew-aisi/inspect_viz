@@ -1747,6 +1747,21 @@ function isVSCodeNotebook() {
 // js/plot/tooltips.ts
 import svgPathParser from "https://cdn.jsdelivr.net/npm/svg-path-parser@1.1.0/+esm";
 import tippy from "https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm";
+
+// js/util/url.ts
+var isUrl = (value) => {
+  try {
+    new URL(value);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+var isLinkableUrl = (value) => {
+  return isUrl(value) && value.startsWith("http");
+};
+
+// js/plot/tooltips.ts
 var replaceTooltipImpl = (specEl) => {
   configureSpecSvgTooltips(specEl);
   const observer = new MutationObserver(() => {
@@ -1855,7 +1870,17 @@ var setupTooltipObserver = (svgEl, specEl) => {
               keyEl.append(document.createTextNode(row.key));
               const valueEl = document.createElement("div");
               valueEl.className = "inspect-tip-value";
-              valueEl.append(document.createTextNode(row.value));
+              if (row.href) {
+                const linkEl = document.createElement("a");
+                linkEl.href = row.href;
+                linkEl.target = "_blank";
+                linkEl.rel = "noopener noreferrer";
+                linkEl.className = "inspect-tip-link";
+                linkEl.textContent = row.value;
+                valueEl.appendChild(linkEl);
+              } else {
+                valueEl.append(document.createTextNode(row.value));
+              }
               if (row.color) {
                 const colorEl = document.createElement("span");
                 colorEl.className = "inspect-tip-color";
@@ -1910,7 +1935,11 @@ var parseSVGTooltip = (tipEl) => {
       }
     });
     if (key !== void 0 && value !== void 0) {
-      result.values.push({ key, value, color });
+      if (isLinkableUrl(value)) {
+        result.values.push({ key, value: "link", href: value, color });
+      } else {
+        result.values.push({ key, value, color });
+      }
     }
   });
   const pathEl = tipEl.querySelector("path");
