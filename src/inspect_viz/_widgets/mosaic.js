@@ -1806,7 +1806,9 @@ var setupTooltipObserver = (svgEl, specEl) => {
           tipContainerEl.style.display = "none";
           const tipEl = tipContainerEl.firstChild;
           if (!tipEl) {
-            hideTooltip();
+            if (!tooltipInstance.popper.matches(":hover")) {
+              hideTooltip();
+            }
           } else {
             const parsed = parseSVGTooltip(tipEl);
             const svgPoint = svgEl.createSVGPoint();
@@ -1937,7 +1939,7 @@ var parseSVGTooltip = (tipEl) => {
     });
     if (key !== void 0 && value !== void 0) {
       if (isLinkableUrl(value)) {
-        result.values.push({ key, value: "link", href: value, color });
+        result.values.push({ key, value: "Link", href: value, color });
       } else {
         result.values.push({ key, value, color });
       }

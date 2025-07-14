@@ -66,7 +66,9 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
                     // hide the tooltip
                     const tipEl = tipContainerEl.firstChild as SVGGElement | null;
                     if (!tipEl) {
-                        hideTooltip();
+                        if (!tooltipInstance.popper.matches(':hover')) {
+                            hideTooltip();
+                        }
                     } else {
                         // Find the tip container and parse it to determine how the tooltips
                         // are configured and what is being displayed.
@@ -248,7 +250,7 @@ const parseSVGTooltip = (tipEl: SVGGElement): ParsedTooltip => {
 
         if (key !== undefined && value !== undefined) {
             if (isLinkableUrl(value)) {
-                result.values.push({ key, value: 'link', href: value, color });
+                result.values.push({ key, value: 'Link', href: value, color });
             } else {
                 result.values.push({ key, value, color });
             }
