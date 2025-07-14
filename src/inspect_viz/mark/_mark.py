@@ -18,12 +18,20 @@ class Mark(Component):
         options: MarkOptions,
         defaults: MarkOptions | None = None,
     ) -> None:
-        super().__init__(
-            {"mark": type}
-            | config
-            | mark_options_to_camel(defaults or {})
-            | mark_options_to_camel(options)
-        )
+        # resolve options against defaults
+        resolved_options: dict[str, Any] = mark_options_to_camel(
+            defaults or {}
+        ) | mark_options_to_camel(options)
+
+        # set line_width for tip if necessary
+        INFINITE_LINE = 1000000000
+        tip = resolved_options.get("tip")
+        if tip is True:
+            resolved_options["tip"] = {"lineWidth": INFINITE_LINE}
+        elif isinstance(tip, dict):
+            tip["lineWidth"] = INFINITE_LINE
+
+        super().__init__({"mark": type} | config | resolved_options)
 
 
 def mark_options_to_camel(options: MarkOptions) -> dict[str, Any]:
