@@ -40,7 +40,7 @@ ChannelName: TypeAlias = Literal[
 
 
 Channel: TypeAlias = (
-    str | Transform | Sequence[int | float | bool] | int | float | bool | None
+    str | Transform | Sequence[int | float | bool | str] | int | float | bool | None
 )
 """Data channel for visualization.
 

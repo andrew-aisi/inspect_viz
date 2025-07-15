@@ -13,8 +13,8 @@ from ._util import column_param
 
 
 def rule_x(
-    data: Data,
-    x: ChannelSpec | Param,
+    data: Data | None = None,
+    x: ChannelSpec | Param | None = None,
     y: ChannelIntervalSpec | Param | None = None,
     y1: ChannelSpec | Param | None = None,
     y2: ChannelSpec | Param | None = None,
@@ -52,7 +52,7 @@ def rule_x(
     """
     config: dict[str, Any] = dict_remove_none(
         dict(
-            data=data._plot_from(filter_by),
+            data=data._plot_from(filter_by) if data else None,
             x=column_param(data, x),
             y=column_param(data, y),
             y1=column_param(data, y1),

@@ -1,0 +1,71 @@
+---
+title: Scores With Baseline
+subtitle: "Dataset: [gpqa_diamond.parquet](gpqa_diamond.parquet)"
+---
+
+This example summarizes the scores of a single evaluation task, gpqa_diamond, showing performance for 18 different models. Models are ordered based upon their headline score (defaulting to descending). You may add one or more baselines which
+are useful to illustrate important threshholds.
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.view.beta import scores_with_baseline, Baseline
+
+evals = Data.from_file("./gpqa_diamond.parquet")
+scores_with_baseline(evals, baseline=0.697)
+```
+
+See the documentation on the [`scores_with_baseline()`](../../../reference/inspect_viz.view.qmd#scores_with_baseline) function for details on the data it requires as well as customizing varioius aspects of the plot. If you are curious about how the plot was implemented, read on below.
+
+
+## Implementation
+
+Here is an annotated version of the code required to produce the timeline plot above (click on the numbers in the right margin for additional explanation).
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.plot import plot
+from inspect_viz.mark import bar_x, rule_x, text
+
+baseline_color = "#000000"
+baseline_value = 0.697
+    
+plot(
+    bar_x(                                    # <1>
+        evals,                                # <1>
+        x="score_headline_value",             # <1>
+        y="model",                            # <1>
+        sort={"y": "x", "reverse": True},     # <1>
+        fill="#416AD0",                       # <1>
+        tip=True                              # <1>
+    ),                                        # <1>
+    rule_x(                                   # <2>
+            x=[baseline_value],               # <2>
+            strokeDasharray="2,4",            # <2>
+            strokeWidth=1,                    # <2> 
+            stroke=[baseline_color]           # <2>
+    ),                                        # <2>
+    text(                                     # <3>
+            x=[baseline_value],               # <3>
+            frame_anchor="top",               # <3>
+            line_anchor="bottom",             # <3>
+            dy=-3,                            # <3>
+            text=["Baseline"],                # <3>
+            textAnchor="middle",              # <3>
+            fill=[baseline_color]             # <3>
+    ),                                        # <3>
+    marginLeft=250,                           # <4>
+    marginTop=30,                             # <4>
+    x_domain=[0, 1.0],
+    y_label=None,
+    x_label="Accuracy"
+)
+```
+
+
+1. This draws the core bar chart, sorting the y-axis by the value of x.
+
+2. This draws the baseline at the `baseline_value` position. Note that we are passing an explicit value for baseline rather that reading the value from the data frame.
+
+3. This draws the text label for the baseline, positioning it at the top of the frame and anchoring the bottom of the text to the that top position.
+
+4. Provide margin to allow space for the y-axis labels and for the baseline text above the plot.
