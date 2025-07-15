@@ -252,6 +252,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">eval_scores_timeline</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/inspect_viz.view.html#eval_tool_calls" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">eval_tool_calls</span></a>
+  </div>
+</li>
       </ul>
   </li>
           <li class="sidebar-item sidebar-item-section">
@@ -1345,11 +1351,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#evals" id="toc-evals" class="nav-link active" data-scroll-target="#evals">Evals</a>
-  <ul class="collapse">
-  <li><a href="#eval_scores" id="toc-eval_scores" class="nav-link" data-scroll-target="#eval_scores">eval_scores</a></li>
+  <li><a href="#eval_scores" id="toc-eval_scores" class="nav-link active" data-scroll-target="#eval_scores">eval_scores</a></li>
   <li><a href="#eval_scores_timeline" id="toc-eval_scores_timeline" class="nav-link" data-scroll-target="#eval_scores_timeline">eval_scores_timeline</a></li>
-  </ul></li>
+  <li><a href="#eval_tool_calls" id="toc-eval_tool_calls" class="nav-link" data-scroll-target="#eval_tool_calls">eval_tool_calls</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/meridianlabs-ai/inspect_viz/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -1388,15 +1392,13 @@ Note
 <p>View functions are currently in beta and are exported from the <strong>inspect_ai.view.beta</strong> module. The beta module will be preserved after final release so that code written against it now will continue to work after the beta.</p>
 </div>
 </div>
-<section id="evals" class="level2">
-<h2 class="anchored" data-anchor-id="evals">Evals</h2>
 <section id="eval_scores" class="level3">
 <h3 class="anchored" data-anchor-id="eval_scores">eval_scores</h3>
 <p>Bar plot for comparing eval scores.</p>
 <p>Summarize eval scores using a bar plot. By default, scores (<code>y</code>) are plotted by “task_name” (<code>fx</code>) and “model” (<code>x</code>). By default, confidence intervals are also plotted (disable this with <code>y_ci=False</code>).</p>
 <p>Default field names are taken from the schema yielded by the Inspect <code>evals_df()</code> function. Pass alternate field names if you are plotting from a different dataset sechema.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/view/beta/_eval_scores.py#L13">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/96f65ced82e0a0f5f1ae6ee143f543cf0f30f21e/src/inspect_viz/view/beta/_eval_scores.py#L13">Source</a>
 </div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eval_scores(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1457,7 +1459,7 @@ Note
 <h3 class="anchored" data-anchor-id="eval_scores_timeline">eval_scores_timeline</h3>
 <p>Eval scores by model, organization, and release date.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/view/beta/_eval_scores_timeline.py#L15">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/96f65ced82e0a0f5f1ae6ee143f543cf0f30f21e/src/inspect_viz/view/beta/_eval_scores_timeline.py#L15">Source</a>
 </div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eval_scores_timeline(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1508,9 +1510,74 @@ Note
 <p>Additional <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>. By default, the <code>x_domain</code> is set to “fixed”, the <code>y_domain</code> is set to <code>[0,1.0]</code>, <code>color_label</code> is set to “Organizations”, and <code>color_domain</code> is set to <code>organizations</code>.</p>
 </dd>
 </dl>
-
-
 </section>
+<section id="eval_tool_calls" class="level3">
+<h3 class="anchored" data-anchor-id="eval_tool_calls">eval_tool_calls</h3>
+<p>Heat map visualising tool calls over evaluation turns.</p>
+<div class="source-link">
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/96f65ced82e0a0f5f1ae6ee143f543cf0f30f21e/src/inspect_viz/view/beta/_eval_tool_calls.py#L10">Source</a>
+</div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eval_tool_calls(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    x: <span class="bu">str</span> <span class="op">=</span> <span class="st">"order"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    y: <span class="bu">str</span> <span class="op">=</span> <span class="st">"id"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    tool: <span class="bu">str</span> <span class="op">=</span> <span class="st">"tool_call_function"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    limit: <span class="bu">str</span> <span class="op">=</span> <span class="st">"limit"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    tools: <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    x_label: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="st">"Message"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    y_label: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="st">"Sample"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<dl>
+<dt><code class="ref-definition">data</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
+<dd>
+<p>Messages data table. This is typically created using a data frame read with the inspect <code>messages_df()</code> function.</p>
+</dd>
+<dt><code class="ref-definition">x</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
+<dd>
+<p>Name of field for x axis (defaults to “order”)</p>
+</dd>
+<dt><code class="ref-definition">y</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
+<dd>
+<p>Name of field for y axis (defaults to “id”).</p>
+</dd>
+<dt><code class="ref-definition">tool</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
+<dd>
+<p>Name of field with tool name (defaults to “tool_call_function”)</p>
+</dd>
+<dt><code class="ref-definition">limit</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
+<dd>
+<p>Name of field with sample limit (defaults to “limit”).</p>
+</dd>
+<dt><code class="ref-definition">tools</code> <span class="element-type">list[<span class="element-type-name">str</span>] | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Tools to include in plot (and order to include them). Defaults to all tools found in <code>data</code>.</p>
+</dd>
+<dt><code class="ref-definition">x_label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>x-axis label (defaults to “Message”).</p>
+</dd>
+<dt><code class="ref-definition">y_label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>y-axis label (defaults to “Sample”).</p>
+</dd>
+<dt><code class="ref-definition">width</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>The outer width of the plot in pixels, including margins. Defaults to 700.</p>
+</dd>
+<dt><code class="ref-definition">height</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>The outer height of the plot in pixels, including margins. The default is width / 1.618 (the <a href="https://en.wikipedia.org/wiki/Golden_ratio">golden ratio</a>)</p>
+</dd>
+<dt><code class="ref-definition">**attributes</code> <span class="element-type"><span class="element-type-name">Unpack</span>[<span class="element-type-name"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>]</span></dt>
+<dd>
+<p>Additional <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>. By default, the <code>margin_top</code> is set to 0, <code>margin_left</code> to 20, <code>margin_right</code> to 100, <code>color_label</code> is “Tool”, <code>y_ticks</code> is empty, and <code>x_ticks</code> and <code>color_domain</code> are calculated from <code>data</code>.</p>
+</dd>
+</dl>
+
+
 </section>
 
 </main> <!-- /main -->
