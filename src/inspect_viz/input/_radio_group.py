@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Mapping, Sequence
 
 from .._core import Component, Data, Param, Selection
 from ._params import data_params, label_param, options_params
@@ -9,7 +9,9 @@ def radio_group(
     data: Data | None = None,
     *,
     column: str | None = None,
-    options: list[str | bool | float] | dict[str, str | bool | float] | None = None,
+    options: Sequence[str | bool | float]
+    | Mapping[str, str | bool | float]
+    | None = None,
     target: Param | Selection | None = None,
     field: str | None = None,
     label: str | None = None,

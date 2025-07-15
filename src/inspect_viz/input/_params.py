@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Mapping, Sequence
 
 from .._core.data import Data
 from .._core.param import Param
@@ -13,12 +13,14 @@ def label_param(label: str | None) -> dict[str, Any]:
 
 
 def options_params(
-    options: list[str | bool | float] | dict[str, str | bool | float] | None = None,
+    options: Sequence[str | bool | float]
+    | Mapping[str, str | bool | float]
+    | None = None,
     target: Param | Selection | None = None,
 ) -> dict[str, Any]:
     config: dict[str, Any] = {}
     if options is not None:
-        if isinstance(options, list):
+        if isinstance(options, Sequence):
             config["options"] = options
         else:
             config["options"] = [dict(label=k, value=v) for k, v in options.items()]

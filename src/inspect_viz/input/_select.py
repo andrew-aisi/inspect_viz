@@ -1,4 +1,4 @@
-from typing import Any, Literal
+from typing import Any, Literal, Mapping, Sequence
 
 from inspect_viz._util.marshall import dict_remove_none
 
@@ -12,7 +12,9 @@ def select(
     *,
     filter_by: Selection | None = None,
     column: str | None = None,
-    options: list[str | bool | float] | dict[str, str | bool | float] | None = None,
+    options: Sequence[str | bool | float]
+    | Mapping[str, str | bool | float]
+    | None = None,
     value: Literal["all", "auto"] | str | list[str] = "all",
     multiple: bool = False,
     target: Param | Selection | None = None,

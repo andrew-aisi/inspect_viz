@@ -1432,6 +1432,7 @@ def plot_attributes_mosaic(attributes: PlotAttributes) -> dict[str, Any]:
     for key, value in attributes.items():
         if key.endswith("_domain") and value == "fixed":
             value = "Fixed"
-        mosaic_attributes[snake_to_camel(key)] = value
+        if value is not None:
+            mosaic_attributes[snake_to_camel(key)] = value
 
     return mosaic_attributes

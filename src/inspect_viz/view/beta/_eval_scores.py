@@ -3,6 +3,7 @@ from typing import Unpack
 from inspect_viz import Component, Data
 from inspect_viz._core.param import Param
 from inspect_viz._util.notgiven import NOT_GIVEN, NotGiven
+from inspect_viz._util.stats import z_score
 from inspect_viz.mark import bar_y, rule_x
 from inspect_viz.plot import legend, plot
 from inspect_viz.plot._attributes import PlotAttributes
@@ -45,7 +46,7 @@ def eval_scores(
     # add ci if requested
     if y_ci is not False:
         y_ci = 0.95 if y_ci is True else y_ci
-        z_alpha = _z_alpha(y_ci)
+        z_alpha = z_score(y_ci)
         components.append(
             rule_x(
                 data,
@@ -58,13 +59,13 @@ def eval_scores(
             ),
         )
 
-    # resolve attributes
-    if "y_inset_top" not in attributes:
-        attributes["y_inset_top"] = 10
-    if "margin_bottom" not in attributes:
-        attributes["margin_bottom"] = 10
-    if "x_ticks" not in attributes:
-        attributes["x_ticks"] = []
+    # resolve defaults
+    defaults: PlotAttributes = {
+        "y_inset_top": 10,
+        "margin_bottom": 10,
+        "x_ticks": [],
+    }
+    attributes = defaults | attributes
 
     # render plot
     return plot(
@@ -77,32 +78,3 @@ def eval_scores(
         height=height,
         **attributes,
     )
-
-
-def _z_alpha(ci: float = 0.95) -> float:
-    """
-    Calculate z_alpha (critical value) for a given confidence level
-
-    Args:
-        ci: Confidence level (e.g., 0.95 for 95%)
-
-    Returns:
-        z_alpha: Critical value for the confidence interval
-    """
-    z_values = {
-        0.80: 1.282,
-        0.85: 1.440,
-        0.90: 1.645,
-        0.95: 1.960,
-        0.975: 2.241,
-        0.99: 2.576,
-        0.995: 2.807,
-        0.999: 3.291,
-    }
-
-    if ci in z_values:
-        return z_values[ci]
-    else:
-        raise ValueError(
-            f"Please use one of these confidence levels: {list(z_values.keys())}"
-        )

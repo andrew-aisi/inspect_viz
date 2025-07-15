@@ -34,6 +34,7 @@ title: inspect_viz.transform
 ### var_pop
 ### argmin
 ### argmax
+### ci_bounds
 
 ## Window
 

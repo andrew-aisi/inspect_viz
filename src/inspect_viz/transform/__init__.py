@@ -18,6 +18,7 @@ from ._aggregate import (
     var_pop,
     variance,
 )
+from ._ci import ci_bounds
 from ._column import bin, column, date_day, date_month, date_month_day
 from ._sql import sql
 from ._transform import Transform
@@ -57,6 +58,7 @@ __all__ = [
     "mode",
     "product",
     "quantile",
+    "ci_bounds",
     "stddev",
     "stddev_pop",
     "sum",

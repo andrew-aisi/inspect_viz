@@ -1,5 +1,5 @@
 ---
-title: "Benchmarks"
+title: "Eval Scores Timeline"
 subtitle: "Data: [evals.parquet](evals.parquet)"
 resources:
    - import.py
@@ -10,35 +10,43 @@ This example plots several benchmarks against models from various organizations,
 ```{python}
 #| filename: Code
 
+from inspect_viz import Data
+from inspect_viz.view.beta import eval_scores_timeline
+
+evals = Data.from_file("evals.parquet")
+eval_scores_timeline(evals)
+```
+
+See the documentation on the [`eval_scores_timeline()`](../../../reference/inspect_viz.view.qmd#eval_scores_timeline) function for details on the data it requires as well as customizing varioius aspects of the plot. If you are curious about how the plot was implemented, read on below.
+
+## Implementation
+
+Here is an annotated version of the code required to produce the timeline plot above (click on the numbers in the right margin for additional explanation).
+
+```{python}
+#| filename: Code
+#| output: false
+
 from inspect_viz import Data, Selection
 from inspect_viz.input import checkbox_group, select
 from inspect_viz.layout import vconcat, vspace
 from inspect_viz.plot import plot, legend
 from inspect_viz.mark import dot, rule_x
 from inspect_viz.table import table
-from inspect_viz.transform import sql
+from inspect_viz.transform import ci_bounds
 
 # read data
 evals = Data.from_file("evals.parquet") # <1>
 
-# provide explicit sequence of org names
-orgs = ["OpenAI", "Anthropic", "Google", "Meta AI", "xAI", "Mistral AI"] 
-
-# compute confidence interval value
-def ci_value(direction):  # <2>
-    Z_ALPHA = 1.960
-    return sql(
-        "score" +
-        f"{direction}" +
-        f"({Z_ALPHA} * stderr)"
-    )  # <2>
+# transforms to compute ci bounds from score and stderr columns
+ci_lower, ci_upper = ci_bounds(0.95, score="score", stderr="stderr") # <2>
 
 vconcat(
     # select benchmark
     select(evals, label="Eval: ", column="eval", value="GPQA Diamond", width=425),
     
     # filter models by organization(s)
-    checkbox_group(evals, column="organization", options=orgs),
+    checkbox_group(evals, column="organization"),
     
     # dot plot w/ error bars
     vspace(15),
@@ -60,8 +68,8 @@ vconcat(
             evals,
             x="release_date",
             y="score",
-            y1=ci_value("-"),  # <4>
-            y2=ci_value("+"),
+            y1=ci_lower,
+            y2=ci_upper,
             stroke="organization",
             stroke_opacity=0.4, # <4>
             marker="tick-x",
@@ -69,7 +77,6 @@ vconcat(
         legend=legend("color", target=evals.selection), # <5>
         x_domain="fixed",  # <6>
         y_domain=[0,1.0],  # <6>
-        color_domain=orgs, 
         x_label="Release Date",
         y_label="Score",
         color_label="Organization"
@@ -79,7 +86,7 @@ vconcat(
 
 1. Benchmark data sourced from [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard) and prepared with [import.py](import.py).
 
-2. Function to dynamically compute confidence intervals using the `sql()` function.
+2. Create transforms used to compute the confidence intervals for each point.
 
 3. Additional channels are added to the tooltip.
 

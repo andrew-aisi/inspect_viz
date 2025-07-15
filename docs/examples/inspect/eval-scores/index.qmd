@@ -5,12 +5,53 @@ subtitle: "Dataset: [evals.parquet](evals.parquet)"
 
 This example summarizes the scores of 4 evaluation tasks (gpqa_diamond, aime2024, mmlu_pro, cybench, and swe_bench) across 4 models (OpenAI o4-mini and o3, and Anthropic Claude Sonnet 3.7 and 4.0).
 
-## Bar Chart 
+```{python}
+#| filename: Code
 
-We start with a simple bar chart faceted by evaluation task:
+from inspect_viz import Data
+from inspect_viz.view.beta import eval_scores
+
+evals = Data.from_file("evals.parquet")
+eval_scores(evals)
+```
+
+See the documentation on the [`eval_scores()`](../../../reference/inspect_viz.view.qmd#eval_scores) function for details on the data it requires as well as customizing varioius aspects of the plot. 
+
+Below we'll describe how to add filtering to the plot as well as provide additional details on how it was implemented.
+
+
+## Filtering
+
+Here we add filtering inputs to enable viewing a single model and/or single task at a time. We use the `hconcat()` and `vconcat()` functions to layout the inputs and the plot.
 
 ```{python}
 #| filename: Code
+from inspect_viz.input import select
+from inspect_viz.layout import hconcat, vconcat
+
+vconcat( # <1>
+    hconcat(
+        select(evals, label="Model", column="model"),  # <2>
+        select(evals, label="Task", column="task_name"),  # <2>
+    ),
+    eval_scores(evals)
+)
+```
+
+1. Use layout functions to arrange inputs and plot.
+
+2. `select()` inputs and `bar_y()` are automatically bound to the dataset selection for `evals`. 
+
+
+
+
+## Implementation
+
+Here is an annotated version of the code required to produce the plot above (click on the numbers in the right margins for additional explanation). We start with a simple bar chart faceted by evaluation task.
+
+```{python}
+#| filename: Code
+#| output: false
 
 from inspect_viz import Data
 from inspect_viz.plot import plot, legend
@@ -39,9 +80,9 @@ plot(
 
 3. Ensure that y-axis shows the full range of scores (by default it caps at the maximum).
 
-## Confidence Interval
+#### Confidence Interval
 
-Here, we add a confidence interval for each reported score by adding a `rule_x()` mark. Note that we compute the confidence interval range dynamically using a `sql()` transform:
+Next, we add a confidence interval for each reported score by adding a `rule_x()` mark. Note that we compute the confidence interval range dynamically using a `sql()` transform:
 
 ```{python}
 #| filename: Code
@@ -82,38 +123,3 @@ plot(
 1. Dynanically compute each side of the confidence interval using a `sql()` transform.
 
 2. Draw the confidence interval using a `rule_x()` mark.
-
-## Filtering
-
-Here we add filtering inputs to enable viewing a single model and/or single task at a time. We use the `hconcat()` and `vconcat()` functions to layout the inputs and the plot.
-
-```{python}
-#| filename: Code
-
-from inspect_viz.input import select
-from inspect_viz.layout import hconcat, vconcat
-
-vconcat( # <1>
-    hconcat(
-        select(evals, label="Model", column="model"),  # <2>
-        select(evals, label="Task", column="task_name"),  # <2>
-    ),
-    plot(
-        bar_y( 
-            evals, 
-            x="model", 
-            fx="task_name",
-            y="score_headline_value",
-            fill="model",
-        ),
-        legend=legend("color", location="bottom"),
-        x_label=None, fx_label=None, x_ticks=[], 
-        y_label="score", y_domain=[0, 1.0] 
-    )
-)
-```
-
-1. Use layout functions to arrange inputs and plot.
-
-2. `select()` inputs and `bar_y()` are automatically bound to the dataset selection for `evals`. 
-

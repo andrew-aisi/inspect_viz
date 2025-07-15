@@ -24,6 +24,7 @@ __all__ = [
     "PlotAttributes",
     "PlotDefaults",
     "plot_defaults",
+    "plot_attributes",
     "PositionScale",
     "Projection",
     "ContinuousScale",

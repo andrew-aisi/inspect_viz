@@ -365,6 +365,10 @@ def main():
     organizations = ["OpenAI", "Anthropic", "Google", "Meta AI", "xAI", "Mistral AI"]
     final_df = df[df['organization'].isin(organizations)]
     
+    # filter evals
+    evals = ['GPQA Diamond', 'SWE-bench Verified', 'Math Level 5', 'OTIS Mock Aime 2024-2025']
+    final_df = final_df[final_df['eval'].isin(evals)]
+
     # Sort by benchmark and score
     final_df = final_df.sort_values(['eval', 'score'], ascending=[True, False])
     
