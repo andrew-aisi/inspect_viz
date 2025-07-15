@@ -30,6 +30,10 @@ website:
           href: reference/inspect_viz.view.qmd#eval_scores_timeline
         - text: eval_tool_calls
           href: reference/inspect_viz.view.qmd#eval_tool_calls
+        - text: scores_with_baseline
+          href: reference/inspect_viz.view.qmd#scores_with_baseline
+        - text: Baseline
+          href: reference/inspect_viz.view.qmd#baseline
       - section: inspect_viz.plot
         href: reference/inspect_viz.plot.qmd
         contents:
