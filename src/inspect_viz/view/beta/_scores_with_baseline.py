@@ -12,28 +12,25 @@ from inspect_viz.transform._sql import sql
 
 
 class Baseline(TypedDict):
-    """A baseline is a reference line that can be used to highlight important thresholds (for example, expert human performance).
-
-    Attributes:
-        label (str): The display text that appears alongside the baseline line.
-        value (int | float): The numeric value where the baseline will be positioned
-            on the chart's scale.
-        color (str | None, optional): The color of the baseline line and label. Can be any valid
-            CSS color value (hex, rgb, named colors, etc.). If None, defaults to black.
-        width (int | float | None, optional): The thickness of the baseline line in pixels. Defaults to 1.
-        dasharray (str | None, optional): SVG dash pattern for the line (e.g., "5,5" for
-            dashed line, "2,3,5,3" for dash-dot pattern). Defaults to "2,4" (a dashed line).
-        position (Literal["top", "bottom"] | None, optional): Controls where the label
-            text appears relative to the baseline line. "top" places the label above
-            the line, "bottom" places it below. Defaults to the "top" position.
-    """
+    """A baseline is a reference line that can be used to highlight important thresholds (for example, expert human performance)."""
 
     label: str
+    """The display text that appears alongside the baseline line."""
+
     value: int | float
+    """The numeric value where the baseline will be positioned on the chart's scale."""
+
     color: NotRequired[str | None]
+    """The color of the baseline line and label. Can be any valid CSS color value (hex, rgb, named colors, etc.). If None, defaults to black."""
+
     width: NotRequired[int | float | None]
+    """The thickness of the baseline line in pixels. Defaults to 1."""
+
     dasharray: NotRequired[str | None]
+    """SVG dash pattern for the line (e.g., "5,5" for dashed line, "2,3,5,3" for dash-dot pattern). Defaults to "2,4" (a dashed line)."""
+
     position: NotRequired[Literal["top", "bottom"] | None]
+    """Controls where the label text appears relative to the baseline line. "top" places the label above the line, "bottom" places it below. Defaults to the "top" position."""
 
 
 def scores_with_baseline(
