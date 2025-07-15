@@ -66,7 +66,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../reference/inspect_viz.plot.qmd#plot" rel="next">
-<link href="../reference/inspect_viz.view.qmd#axisfilter" rel="prev">
+<link href="../reference/inspect_viz.view.qmd#eval_scores_timeline" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -242,32 +242,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#evals_bar_plot" class="sidebar-item-text sidebar-link">
- <span class="menu-text">evals_bar_plot</span></a>
+  <a href="../reference/inspect_viz.view.html#eval_scores" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">eval_scores</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#evals_table " class="sidebar-item-text sidebar-link">
- <span class="menu-text">evals_table</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#axis_score" class="sidebar-item-text sidebar-link">
- <span class="menu-text">axis_score</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#axisvalue" class="sidebar-item-text sidebar-link">
- <span class="menu-text">AxisValue</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#axisfilter" class="sidebar-item-text sidebar-link">
- <span class="menu-text">AxisFilter</span></a>
+  <a href="../reference/inspect_viz.view.html#eval_scores_timeline" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">eval_scores_timeline</span></a>
   </div>
 </li>
       </ul>
@@ -1168,6 +1150,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../reference/inspect_viz.transform.html#ci_bounds" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ci_bounds</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../reference/inspect_viz.transform.html#row_number" class="sidebar-item-text sidebar-link">
  <span class="menu-text">row_number</span></a>
   </div>
@@ -1419,21 +1407,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="plot-1">plot</h3>
 <p>Create a plot.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_plot.py#L18">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_plot.py#L18">Source</a>
 </div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>plot: Mark <span class="op">|</span> Interactor <span class="op">|</span> Legend <span class="op">|</span> Sequence[Mark <span class="op">|</span> Interactor <span class="op">|</span> Legend],</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    x_label: <span class="bu">str</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">|</span> NotGiven <span class="op">=</span> NOT_GIVEN,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    y_label: <span class="bu">str</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">|</span> NotGiven <span class="op">=</span> NOT_GIVEN,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    grid: <span class="bu">bool</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    x_grid: <span class="bu">bool</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> Interval <span class="op">|</span> <span class="bu">list</span>[<span class="bu">str</span> <span class="op">|</span> <span class="bu">float</span>] <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    y_grid: <span class="bu">bool</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> Interval <span class="op">|</span> <span class="bu">list</span>[<span class="bu">str</span> <span class="op">|</span> <span class="bu">float</span>] <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    name: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    legend: Literal[<span class="st">"color"</span>, <span class="st">"opacity"</span>, <span class="st">"symbol"</span>] <span class="op">|</span> Legend <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    fx_label: <span class="bu">str</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">|</span> NotGiven <span class="op">=</span> NOT_GIVEN,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    y_label: <span class="bu">str</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">|</span> NotGiven <span class="op">=</span> NOT_GIVEN,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    fy_label: <span class="bu">str</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">|</span> NotGiven <span class="op">=</span> NOT_GIVEN,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    grid: <span class="bu">bool</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    x_grid: <span class="bu">bool</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> Interval <span class="op">|</span> <span class="bu">list</span>[<span class="bu">str</span> <span class="op">|</span> <span class="bu">float</span>] <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    y_grid: <span class="bu">bool</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> Interval <span class="op">|</span> <span class="bu">list</span>[<span class="bu">str</span> <span class="op">|</span> <span class="bu">float</span>] <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    name: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    legend: Literal[<span class="st">"color"</span>, <span class="st">"opacity"</span>, <span class="st">"symbol"</span>] <span class="op">|</span> Legend <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl>
 <dt><code class="ref-definition">*plot</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.mark.html#mark">Mark</a></span> | <span class="element-type-name"><a href="../reference/inspect_viz.interactor.html#interactor">Interactor</a></span> | <span class="element-type-name"><a href="../reference/inspect_viz.plot.html#legend">Legend</a></span> | <span class="element-type-name">Sequence</span>[<span class="element-type-name"><a href="../reference/inspect_viz.mark.html#mark">Mark</a></span> | <span class="element-type-name"><a href="../reference/inspect_viz.interactor.html#interactor">Interactor</a></span> | <span class="element-type-name"><a href="../reference/inspect_viz.plot.html#legend">Legend</a></span>]</span></dt>
 <dd>
@@ -1443,9 +1433,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>A textual label to show on the axis or legend; if null, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value. Pass <code>None</code> for no x_label.</p>
 </dd>
+<dt><code class="ref-definition">fx_label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name"><a href="../reference/inspect_viz.html#param">Param</a></span> | <span class="element-type-name">None</span> | <span class="element-type-name">NotGiven</span></span></dt>
+<dd>
+<p>A textual label to show on the axis or legend; if <code>None</code>, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.</p>
+</dd>
 <dt><code class="ref-definition">y_label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name"><a href="../reference/inspect_viz.html#param">Param</a></span> | <span class="element-type-name">None</span> | <span class="element-type-name">NotGiven</span></span></dt>
 <dd>
 <p>A textual label to show on the axis or legend; if null, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value. Pass <code>None</code> for no y_label.</p>
+</dd>
+<dt><code class="ref-definition">fy_label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name"><a href="../reference/inspect_viz.html#param">Param</a></span> | <span class="element-type-name">None</span> | <span class="element-type-name">NotGiven</span></span></dt>
+<dd>
+<p>A textual label to show on the axis or legend; if <code>None</code>, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.</p>
 </dd>
 <dt><code class="ref-definition">grid</code> <span class="element-type"><span class="element-type-name">bool</span> | <span class="element-type-name">str</span> | <span class="element-type-name"><a href="../reference/inspect_viz.html#param">Param</a></span> | <span class="element-type-name">None</span></span></dt>
 <dd>
@@ -1485,7 +1483,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="plotattributes">PlotAttributes</h3>
 <p>Plot attributes.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_attributes.py#L155">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_attributes.py#L155">Source</a>
 </div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> PlotAttributes(TypedDict, total<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section class="level4">
@@ -1986,11 +1984,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>If true, draw a line along the axis; if false (default), do not.</p>
 </dd>
-<dt><code class="ref-definition">fx_label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span> | <span class="element-type-name"><a href="../reference/inspect_viz.html#param">Param</a></span> | <span class="element-type-name">None</span></span></dt>
-<dd>
-<p>A textual label to show on the axis or legend; if null, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.</p>
-<p>For axes and legends only.</p>
-</dd>
 <dt><code class="ref-definition">fx_label_anchor</code> <span class="element-type"><span class="element-type-name">Literal</span>['right', 'left', 'center'] | <span class="element-type-name"><a href="../reference/inspect_viz.html#param">Param</a></span> | <span class="element-type-name">None</span></span></dt>
 <dd>
 <p>Where to place the axis <strong>label</strong> relative to the plot’s frame. For vertical position scales (<em>y</em> and <em>fy</em>), may be <em>top</em>, <em>bottom</em>, or <em>center</em>; for horizontal position scales (<em>x</em> and <em>fx</em>), may be <em>left</em>, <em>right</em>, or <em>center</em>. Defaults to <em>center</em> for ordinal scales (including <em>fx</em> and <em>fy</em>), and otherwise <em>top</em> for <em>y</em>, and <em>right</em> for <em>x</em>.</p>
@@ -2104,11 +2097,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dt><code class="ref-definition">fy_line</code> <span class="element-type"><span class="element-type-name">bool</span> | <span class="element-type-name"><a href="../reference/inspect_viz.html#param">Param</a></span> | <span class="element-type-name">None</span></span></dt>
 <dd>
 <p>If true, draw a line along the axis; if false (default), do not.</p>
-</dd>
-<dt><code class="ref-definition">fy_label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span> | <span class="element-type-name"><a href="../reference/inspect_viz.html#param">Param</a></span> | <span class="element-type-name">None</span></span></dt>
-<dd>
-<p>A textual label to show on the axis or legend; if null, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.</p>
-<p>For axes and legends only.</p>
 </dd>
 <dt><code class="ref-definition">fy_label_anchor</code> <span class="element-type"><span class="element-type-name">Literal</span>['top', 'bottom', 'center'] | <span class="element-type-name"><a href="../reference/inspect_viz.html#param">Param</a></span> | <span class="element-type-name">None</span></span></dt>
 <dd>
@@ -2454,7 +2442,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="legend-1">legend</h3>
 <p>Create a legend.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_legend.py#L38">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_legend.py#L38">Source</a>
 </div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> legend(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    legend: Literal[<span class="st">"color"</span>, <span class="st">"opacity"</span>, <span class="st">"symbol"</span>],</span>
@@ -2535,7 +2523,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="legend-2">Legend</h3>
 <p>Plot legend (create legends using the <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.plot.html#legend">legend()</a></span> function).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_legend.py#L8">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_legend.py#L8">Source</a>
 </div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Legend(Component)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
@@ -2546,7 +2534,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="to_html">to_html</h3>
 <p>Genreate an HTML snippet for a plot or other component.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_write.py#L19">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_write.py#L19">Source</a>
 </div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_html(component: Component, dependencies: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>) <span class="op">-&gt;</span> <span class="bu">str</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl>
@@ -2564,7 +2552,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="write_html">write_html</h3>
 <p>Write an HTML file for a plot or other component.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_write.py#L76">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_write.py#L75">Source</a>
 </div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> write_html(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">file</span>: <span class="bu">str</span> <span class="op">|</span> Path, component: Component, dependencies: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span></span>
@@ -2588,7 +2576,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="write_png">write_png</h3>
 <p>Export a plot or table to a PNG.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_write.py#L92">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_write.py#L91">Source</a>
 </div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> write_png(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">file</span>: <span class="bu">str</span> <span class="op">|</span> Path, component: Component, scale: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, padding: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span></span>
@@ -2620,7 +2608,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Set global plot defaults.</p>
 <p>Note that this function should be called once at the outset (subsequent calls to it do not reset the defaults).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_defaults.py#L44">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_defaults.py#L44">Source</a>
 </div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_defaults(<span class="op">**</span>defaults: Unpack[PlotDefaults]) <span class="op">-&gt;</span> <span class="va">None</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl>
@@ -2635,7 +2623,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Default options for plots.</p>
 <p>Use the <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.plot.html#plot_defaults">plot_defaults()</a></span> function to set global defaults for plot options.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_defaults.py#L10">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_defaults.py#L10">Source</a>
 </div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> PlotDefaults(PlotAttributes, total<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section class="level4">
@@ -2679,7 +2667,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="positionscale">PositionScale</h3>
 <p>How a scale encodes abstract data, say by applying a mathematical transformation.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_attributes.py#L7">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_attributes.py#L7">Source</a>
 </div>
 <div class="sourceCode" id="cb10"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>PositionScale: TypeAlias <span class="op">=</span> Literal[</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"linear"</span>,</span>
@@ -2703,7 +2691,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Built-in projection types.</p>
 <p>Named projections are scaled and translated to fit the <strong>domain</strong> to the plot’s frame (minus insets).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_attributes.py#L25">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_attributes.py#L25">Source</a>
 </div>
 <div class="sourceCode" id="cb11"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Projection: TypeAlias <span class="op">=</span> Literal[</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"albers"</span>,</span>
@@ -2728,7 +2716,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="continuousscale">ContinuousScale</h3>
 <p>Continuous scaling transformations.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_attributes.py#L48">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_attributes.py#L48">Source</a>
 </div>
 <div class="sourceCode" id="cb12"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ContinuousScale: TypeAlias <span class="op">=</span> Literal[</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"linear"</span>,</span>
@@ -2745,7 +2733,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="colorscale">ColorScale</h3>
 <p>Color scale tranformations.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_attributes.py#L60">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_attributes.py#L60">Source</a>
 </div>
 <div class="sourceCode" id="cb13"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ColorScale: TypeAlias <span class="op">=</span> Literal[</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"linear"</span>,</span>
@@ -2774,7 +2762,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="colorscheme">ColorScheme</h3>
 <p>Color schemes.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_attributes.py#L84">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_attributes.py#L84">Source</a>
 </div>
 <div class="sourceCode" id="cb14"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ColorScheme: TypeAlias <span class="op">=</span> Literal[</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"accent"</span>,</span>
@@ -2825,7 +2813,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="interpolate">Interpolate</h3>
 <p>How to interpolate color range values.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_attributes.py#L130">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_attributes.py#L130">Source</a>
 </div>
 <div class="sourceCode" id="cb15"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Interpolate: TypeAlias <span class="op">=</span> Literal[</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rgb"</span>,</span>
@@ -2839,7 +2827,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="labelarrow">LabelArrow</h3>
 <p>Whether to apply a directional arrow to an axis scale label.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/plot/_attributes.py#L140">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/plot/_attributes.py#L140">Source</a>
 </div>
 <div class="sourceCode" id="cb16"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>LabelArrow <span class="op">=</span> (</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    Literal[</span>
@@ -3301,8 +3289,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../reference/inspect_viz.view.html#axisfilter" class="pagination-link" aria-label="AxisFilter">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">AxisFilter</span>
+      <a href="../reference/inspect_viz.view.html#eval_scores_timeline" class="pagination-link" aria-label="eval_scores_timeline">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">eval_scores_timeline</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

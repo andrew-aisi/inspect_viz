@@ -65,7 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../reference/inspect_viz.view.qmd#evals_bar_plot" rel="next">
+<link href="../reference/inspect_viz.view.qmd#eval_scores" rel="next">
 <link href="../reference/inspect_viz.qmd#paramvalue" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -242,32 +242,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#evals_bar_plot" class="sidebar-item-text sidebar-link">
- <span class="menu-text">evals_bar_plot</span></a>
+  <a href="../reference/inspect_viz.view.html#eval_scores" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">eval_scores</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#evals_table " class="sidebar-item-text sidebar-link">
- <span class="menu-text">evals_table</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#axis_score" class="sidebar-item-text sidebar-link">
- <span class="menu-text">axis_score</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#axisvalue" class="sidebar-item-text sidebar-link">
- <span class="menu-text">AxisValue</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#axisfilter" class="sidebar-item-text sidebar-link">
- <span class="menu-text">AxisFilter</span></a>
+  <a href="../reference/inspect_viz.view.html#eval_scores_timeline" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">eval_scores_timeline</span></a>
   </div>
 </li>
       </ul>
@@ -1168,6 +1150,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../reference/inspect_viz.transform.html#ci_bounds" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ci_bounds</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../reference/inspect_viz.transform.html#row_number" class="sidebar-item-text sidebar-link">
  <span class="menu-text">row_number</span></a>
   </div>
@@ -1359,14 +1347,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#evals" id="toc-evals" class="nav-link active" data-scroll-target="#evals">Evals</a>
   <ul class="collapse">
-  <li><a href="#evals_bar_plot" id="toc-evals_bar_plot" class="nav-link" data-scroll-target="#evals_bar_plot">evals_bar_plot</a></li>
-  <li><a href="#evals_table" id="toc-evals_table" class="nav-link" data-scroll-target="#evals_table">evals_table</a></li>
-  </ul></li>
-  <li><a href="#axes" id="toc-axes" class="nav-link" data-scroll-target="#axes">Axes</a>
-  <ul class="collapse">
-  <li><a href="#axis_score" id="toc-axis_score" class="nav-link" data-scroll-target="#axis_score">axis_score</a></li>
-  <li><a href="#axisvalue" id="toc-axisvalue" class="nav-link" data-scroll-target="#axisvalue">AxisValue</a></li>
-  <li><a href="#axisfilter" id="toc-axisfilter" class="nav-link" data-scroll-target="#axisfilter">AxisFilter</a></li>
+  <li><a href="#eval_scores" id="toc-eval_scores" class="nav-link" data-scroll-target="#eval_scores">eval_scores</a></li>
+  <li><a href="#eval_scores_timeline" id="toc-eval_scores_timeline" class="nav-link" data-scroll-target="#eval_scores_timeline">eval_scores_timeline</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/meridianlabs-ai/inspect_viz/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
@@ -1408,22 +1390,28 @@ Note
 </div>
 <section id="evals" class="level2">
 <h2 class="anchored" data-anchor-id="evals">Evals</h2>
-<section id="evals_bar_plot" class="level3">
-<h3 class="anchored" data-anchor-id="evals_bar_plot">evals_bar_plot</h3>
-<p>Bar plot for comparing evals.</p>
+<section id="eval_scores" class="level3">
+<h3 class="anchored" data-anchor-id="eval_scores">eval_scores</h3>
+<p>Bar plot for comparing eval scores.</p>
+<p>Summarize eval scores using a bar plot. By default, scores (<code>y</code>) are plotted by “task_name” (<code>fx</code>) and “model” (<code>x</code>). By default, confidence intervals are also plotted (disable this with <code>y_ci=False</code>).</p>
+<p>Default field names are taken from the schema yielded by the Inspect <code>evals_df()</code> function. Pass alternate field names if you are plotting from a different dataset sechema.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/view/beta/evals/bar_plot.py#L14">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/view/beta/_eval_scores.py#L13">Source</a>
 </div>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evals_bar_plot(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    evals: Data,</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eval_scores(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    x: <span class="bu">str</span> <span class="op">=</span> <span class="st">"model"</span>,</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    fx: <span class="bu">str</span> <span class="op">=</span> <span class="st">"task_name"</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    y: AxisValue <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    x_filter: <span class="bu">bool</span> <span class="op">|</span> AxisFilter <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    fx_filter: <span class="bu">bool</span> <span class="op">|</span> AxisFilter <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    y: <span class="bu">str</span> <span class="op">=</span> <span class="st">"score_headline_value"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    y_stderr: <span class="bu">str</span> <span class="op">=</span> <span class="st">"score_headline_stderr"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    y_ci: <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    y_label: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">|</span> NotGiven <span class="op">=</span> NOT_GIVEN,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl>
-<dt><code class="ref-definition">evals</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
+<dt><code class="ref-definition">data</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
 <dd>
 <p>Evals data table. This is typically created using a data frame read with the inspect <code>evals_df()</code> function.</p>
 </dd>
@@ -1435,120 +1423,93 @@ Note
 <dd>
 <p>Name of field for x facet (defaults to “task_name”)</p>
 </dd>
-<dt><code class="ref-definition">y</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.view.html#axisvalue">AxisValue</a></span> | <span class="element-type-name">None</span></span></dt>
+<dt><code class="ref-definition">y</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
 <dd>
-<p>Definition for y axis (defaults to <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.view.html#axis_score">axis_score()</a></span>)</p>
+<p>Name of field for y axis (defaults to “score_headline_value”).</p>
 </dd>
-<dt><code class="ref-definition">x_filter</code> <span class="element-type"><span class="element-type-name">bool</span> | <span class="element-type-name"><a href="../reference/inspect_viz.view.html#axisfilter">AxisFilter</a></span></span></dt>
+<dt><code class="ref-definition">y_stderr</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
 <dd>
-<p>Optional filtering control for x axis.</p>
+<p>Name of field for stderr (defaults to “score_headline_metric”).</p>
 </dd>
-<dt><code class="ref-definition">fx_filter</code> <span class="element-type"><span class="element-type-name">bool</span> | <span class="element-type-name"><a href="../reference/inspect_viz.view.html#axisfilter">AxisFilter</a></span></span></dt>
+<dt><code class="ref-definition">y_ci</code> <span class="element-type"><span class="element-type-name">bool</span> | <span class="element-type-name">float</span></span></dt>
 <dd>
-<p>Optional filtering control for fx axis.</p>
+<p>Confidence interval (e.g.&nbsp;0.80, 0.90, 0.95, etc.). Defaults to 0.95.</p>
 </dd>
-</dl>
-</section>
-<section id="evals_table" class="level3">
-<h3 class="anchored" data-anchor-id="evals_table">evals_table</h3>
-<p>Table that summarizes eval scores by model and task.</p>
-<div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/view/beta/evals/table.py#L7">Source</a>
-</div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evals_table(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    evals: Data, columns: Sequence[<span class="bu">str</span> <span class="op">|</span> Column] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<dl>
-<dt><code class="ref-definition">evals</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
+<dt><code class="ref-definition">y_label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span> | <span class="element-type-name">NotGiven</span></span></dt>
 <dd>
-<p>Evals data table.</p>
+<p>Y axis label (pass None for no label).</p>
 </dd>
-<dt><code class="ref-definition">columns</code> <span class="element-type"><span class="element-type-name">Sequence</span>[<span class="element-type-name">str</span> | <span class="element-type-name">Column</span>] | <span class="element-type-name">None</span></span></dt>
+<dt><code class="ref-definition">width</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name"><a href="../reference/inspect_viz.html#param">Param</a></span> | <span class="element-type-name">None</span></span></dt>
 <dd>
-<p>Column definitions (defaults to model, task_name, and headline metric).</p>
+<p>The outer width of the plot in pixels, including margins. Defaults to 700.</p>
+</dd>
+<dt><code class="ref-definition">height</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name"><a href="../reference/inspect_viz.html#param">Param</a></span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>The outer height of the plot in pixels, including margins. The default is width / 1.618 (the <a href="https://en.wikipedia.org/wiki/Golden_ratio">golden ratio</a>)</p>
+</dd>
+<dt><code class="ref-definition">**attributes</code> <span class="element-type"><span class="element-type-name">Unpack</span>[<span class="element-type-name"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>]</span></dt>
+<dd>
+<p>Additional <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>. By default, the <code>y_inset_top</code> and <code>margin_bottom</code> are set to 10 pixels and <code>x_ticks</code> is set to <code>[]</code>.</p>
 </dd>
 </dl>
 </section>
-</section>
-<section id="axes" class="level2">
-<h2 class="anchored" data-anchor-id="axes">Axes</h2>
-<section id="axis_score" class="level3">
-<h3 class="anchored" data-anchor-id="axis_score">axis_score</h3>
-<p>Axis definition for scores from <code>evals_df()</code> data frames.</p>
+<section id="eval_scores_timeline" class="level3">
+<h3 class="anchored" data-anchor-id="eval_scores_timeline">eval_scores_timeline</h3>
+<p>Eval scores by model, organization, and release date.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/view/beta/axis.py#L41">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/view/beta/_eval_scores_timeline.py#L15">Source</a>
 </div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> axis_score(ci: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.95</span>) <span class="op">-&gt;</span> AxisValue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eval_scores_timeline(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    organizations: <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    ci: <span class="bu">float</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    x_label: <span class="bu">str</span> <span class="op">=</span> <span class="st">"Release Date"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    y_label: <span class="bu">str</span> <span class="op">=</span> <span class="st">"Score"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    eval_label: <span class="bu">str</span> <span class="op">=</span> <span class="st">"Eval"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl>
-<dt><code class="ref-definition">ci</code> <span class="element-type"><span class="element-type-name">float</span></span></dt>
+<dt><code class="ref-definition">data</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
 <dd>
-<p>Confidence interval (e.g.&nbsp;0.80, 0.90, 0.95, etc.).</p>
+<p>Data with the following fields:</p>
+<ul>
+<li><code>model</code>: Model name (e.g.&nbsp;“gpt-4o”)</li>
+<li><code>organization</code>: Organization that created the model (e.g.&nbsp;“OpenAI”)</li>
+<li><code>release_date</code>: Date of model release.</li>
+<li><code>eval</code>: Name of eval (e.g.&nbsp;“SWE-bench Verified”)</li>
+<li><code>scorer</code>: Scorer used (e.g.&nbsp;“choice”).</li>
+<li><code>score</code>: Benchmark score (scaled 0-1).</li>
+<li><code>stderr</code>: Standard error.</li>
+<li><code>log_viewer</code>: Optional. URL to view evaluation log.</li>
+</ul>
 </dd>
-</dl>
-</section>
-<section id="axisvalue" class="level3">
-<h3 class="anchored" data-anchor-id="axisvalue">AxisValue</h3>
-<p>Axis value options.</p>
-<div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/view/beta/axis.py#L6">Source</a>
-</div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> AxisValue(BaseModel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<section class="level4">
-<h4 class="anchored" data-anchor-id="">Attributes</h4>
-<dl>
-<dt><code class="ref-definition">label</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
+<dt><code class="ref-definition">organizations</code> <span class="element-type">list[<span class="element-type-name">str</span>] | <span class="element-type-name">None</span></span></dt>
 <dd>
-<p>Axis label.</p>
+<p>List of organizations to include (in order of desired presentation).</p>
 </dd>
-<dt><code class="ref-definition">value_field</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
+<dt><code class="ref-definition">ci</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name">bool</span></span></dt>
 <dd>
-<p>Field to read value from.</p>
+<p>Confidence interval (defaults to 0.95, pass <code>False</code> for no confidence intervals)</p>
 </dd>
-<dt><code class="ref-definition">stderr_field</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span></span></dt>
+<dt><code class="ref-definition">x_label</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
 <dd>
-<p>Field to read stderr from (optional, required for plotting confidence intervals).</p>
+<p>x-axis label</p>
 </dd>
-<dt><code class="ref-definition">ci</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name">None</span></span></dt>
+<dt><code class="ref-definition">y_label</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
 <dd>
-<p>Confidence interval (e.g.&nbsp;0.80, 0.90, 0.95, etc.).</p>
+<p>y-axis label</p>
 </dd>
-<dt><code class="ref-definition">domain</code> <span class="element-type">list[<span class="element-type-name">float</span>] | <span class="element-type-name">None</span></span></dt>
+<dt><code class="ref-definition">eval_label</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
 <dd>
-<p>Domain of axis (range of values to display).</p>
+<p>Eval select label.</p>
 </dd>
-</dl>
-</section>
-</section>
-<section id="axisfilter" class="level3">
-<h3 class="anchored" data-anchor-id="axisfilter">AxisFilter</h3>
-<p>Filter definition for plot axis.</p>
-<div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/view/beta/axis.py#L25">Source</a>
-</div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> AxisFilter(BaseModel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<section class="level4">
-<h4 class="anchored" data-anchor-id="">Attributes</h4>
-<dl>
-<dt><code class="ref-definition">label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span></span></dt>
+<dt><code class="ref-definition">**attributes</code> <span class="element-type"><span class="element-type-name">Unpack</span>[<span class="element-type-name"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>]</span></dt>
 <dd>
-<p>Filter label (defaults to column namne).</p>
-</dd>
-<dt><code class="ref-definition">value</code> <span class="element-type"><span class="element-type-name">Literal</span>['all'] | <span class="element-type-name">str</span> | list[<span class="element-type-name">str</span>]</span></dt>
-<dd>
-<p>Initial value (defaults to “all” which applies to filter).</p>
-</dd>
-<dt><code class="ref-definition">multiple</code> <span class="element-type"><span class="element-type-name">bool</span></span></dt>
-<dd>
-<p>Enable filtering on multiple values.</p>
-</dd>
-<dt><code class="ref-definition">width</code> <span class="element-type"><span class="element-type-name">int</span> | <span class="element-type-name">None</span></span></dt>
-<dd>
-<p>Width of filter input in pixels.</p>
+<p>Additional <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>. By default, the <code>x_domain</code> is set to “fixed”, the <code>y_domain</code> is set to <code>[0,1.0]</code>, <code>color_label</code> is set to “Organizations”, and <code>color_domain</code> is set to <code>organizations</code>.</p>
 </dd>
 </dl>
 
 
-</section>
 </section>
 </section>
 
@@ -2000,8 +1961,8 @@ Note
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../reference/inspect_viz.view.html#evals_bar_plot" class="pagination-link" aria-label="evals_bar_plot">
-        <span class="nav-page-text">evals_bar_plot</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../reference/inspect_viz.view.html#eval_scores" class="pagination-link" aria-label="eval_scores">
+        <span class="nav-page-text">eval_scores</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

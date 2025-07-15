@@ -242,32 +242,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#evals_bar_plot" class="sidebar-item-text sidebar-link">
- <span class="menu-text">evals_bar_plot</span></a>
+  <a href="../reference/inspect_viz.view.html#eval_scores" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">eval_scores</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#evals_table " class="sidebar-item-text sidebar-link">
- <span class="menu-text">evals_table</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#axis_score" class="sidebar-item-text sidebar-link">
- <span class="menu-text">axis_score</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#axisvalue" class="sidebar-item-text sidebar-link">
- <span class="menu-text">AxisValue</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#axisfilter" class="sidebar-item-text sidebar-link">
- <span class="menu-text">AxisFilter</span></a>
+  <a href="../reference/inspect_viz.view.html#eval_scores_timeline" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">eval_scores_timeline</span></a>
   </div>
 </li>
       </ul>
@@ -1168,6 +1150,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../reference/inspect_viz.transform.html#ci_bounds" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ci_bounds</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../reference/inspect_viz.transform.html#row_number" class="sidebar-item-text sidebar-link">
  <span class="menu-text">row_number</span></a>
   </div>
@@ -1396,21 +1384,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Select inputs have a <code>target</code> which is either a <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#param">Param</a></span> or <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#selection">Selection</a></span>. In the latter case, the <code>field</code> parameter determines the data column name to use within generated selection clause predicates (defaulting to <code>column</code>). If no <code>target</code> is specified then the data source’s selection is used as the target.</p>
 <p>The intitial selected value will be “All” when <code>target</code> is a <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#selection">Selection</a></span> (indicating select all records) and the param value when <code>target</code> is a <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#param">Param</a></span>.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/input/_select.py#L10">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/input/_select.py#L10">Source</a>
 </div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> select(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    data: Data <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    filter_by: Selection <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    column: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    options: <span class="bu">list</span>[<span class="bu">str</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span>] <span class="op">|</span> <span class="bu">dict</span>[<span class="bu">str</span>, <span class="bu">str</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span>] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    value: Literal[<span class="st">"all"</span>, <span class="st">"auto"</span>] <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">=</span> <span class="st">"all"</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    multiple: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    target: Param <span class="op">|</span> Selection <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    field: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    label: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    options: Sequence[<span class="bu">str</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> Mapping[<span class="bu">str</span>, <span class="bu">str</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span>]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    value: Literal[<span class="st">"all"</span>, <span class="st">"auto"</span>] <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    multiple: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    target: Param <span class="op">|</span> Selection <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    field: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    label: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl>
 <dt><code class="ref-definition">data</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span> | <span class="element-type-name">None</span></span></dt>
 <dd>
@@ -1424,7 +1414,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>The name of a column from which to pull options. The unique column values are used as options. Used in conjunction with the <code>data</code> parameter.</p>
 </dd>
-<dt><code class="ref-definition">options</code> <span class="element-type">list[<span class="element-type-name">str</span> | <span class="element-type-name">bool</span> | <span class="element-type-name">float</span>] | dict[<span class="element-type-name">str</span>, <span class="element-type-name">str</span> | <span class="element-type-name">bool</span> | <span class="element-type-name">float</span>] | <span class="element-type-name">None</span></span></dt>
+<dt><code class="ref-definition">options</code> <span class="element-type"><span class="element-type-name">Sequence</span>[<span class="element-type-name">str</span> | <span class="element-type-name">bool</span> | <span class="element-type-name">float</span>] | <span class="element-type-name">Mapping</span>[<span class="element-type-name">str</span>, <span class="element-type-name">str</span> | <span class="element-type-name">bool</span> | <span class="element-type-name">float</span>] | <span class="element-type-name">None</span></span></dt>
 <dd>
 <p>A <code>list</code> or <code>dict</code> of options (provide a <code>dict</code> if you want values to map to alternate labels). Alternative to populating options from a database column via <code>data</code> and <code>column</code>.</p>
 </dd>
@@ -1458,7 +1448,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="slider">slider</h3>
 <p>Select input widget.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/input/_slider.py#L10">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/input/_slider.py#L10">Source</a>
 </div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> slider(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    data: Data <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
@@ -1530,7 +1520,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="search">search</h3>
 <p>Text search input widget</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/input/_search.py#L10">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/input/_search.py#L10">Source</a>
 </div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> search(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1589,7 +1579,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Checkboxes have a <code>target</code> which is either a <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#param">Param</a></span> or <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#selection">Selection</a></span>. In the latter case, the <code>field</code> parameter determines the data column name to use within generated selection clause predicates (defaulting to <code>column</code>). If no <code>target</code> is specified then the data source’s selection is used as the target.</p>
 <p>The <code>values</code> tuple enables you to determine what value is communicated to the target for checked and unchecked states (by default, this is <code>True</code> and <code>False</code>).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/input/_checkbox.py#L8">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/input/_checkbox.py#L8">Source</a>
 </div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> checkbox(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    data: Data <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
@@ -1634,18 +1624,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Radio groups have a <code>target</code> which is either a <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#param">Param</a></span> or <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#selection">Selection</a></span>. In the latter case, the <code>field</code> parameter determines the data column name to use within generated selection clause predicates (defaulting to <code>column</code>). If no <code>target</code> is specified then the data source’s selection is used as the target.</p>
 <p>The intitial selected value will be “All” when <code>target</code> is a <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#selection">Selection</a></span> (indicating select all records) and the param value when <code>target</code> is a <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#param">Param</a></span>.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/input/_radio_group.py#L8">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/input/_radio_group.py#L8">Source</a>
 </div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> radio_group(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    data: Data <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    column: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    options: <span class="bu">list</span>[<span class="bu">str</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span>] <span class="op">|</span> <span class="bu">dict</span>[<span class="bu">str</span>, <span class="bu">str</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span>] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    target: Param <span class="op">|</span> Selection <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    field: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    label: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    filter_by: Selection <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    options: Sequence[<span class="bu">str</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span>]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> Mapping[<span class="bu">str</span>, <span class="bu">str</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span>]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    target: Param <span class="op">|</span> Selection <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    field: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    label: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    filter_by: Selection <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <dl>
 <dt><code class="ref-definition">data</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span> | <span class="element-type-name">None</span></span></dt>
 <dd>
@@ -1655,7 +1647,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>The name of a column from which to pull options. The unique column values are used as options. Used in conjunction with the <code>data</code> parameter.</p>
 </dd>
-<dt><code class="ref-definition">options</code> <span class="element-type">list[<span class="element-type-name">str</span> | <span class="element-type-name">bool</span> | <span class="element-type-name">float</span>] | dict[<span class="element-type-name">str</span>, <span class="element-type-name">str</span> | <span class="element-type-name">bool</span> | <span class="element-type-name">float</span>] | <span class="element-type-name">None</span></span></dt>
+<dt><code class="ref-definition">options</code> <span class="element-type"><span class="element-type-name">Sequence</span>[<span class="element-type-name">str</span> | <span class="element-type-name">bool</span> | <span class="element-type-name">float</span>] | <span class="element-type-name">Mapping</span>[<span class="element-type-name">str</span>, <span class="element-type-name">str</span> | <span class="element-type-name">bool</span> | <span class="element-type-name">float</span>] | <span class="element-type-name">None</span></span></dt>
 <dd>
 <p>A <code>list</code> or <code>dict</code> of options (provide a <code>dict</code> if you want values to map to alternate labels). Alternative to populating options from a database column via <code>data</code> and <code>column</code>.</p>
 </dd>
@@ -1684,13 +1676,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Checkbox groups have a <code>target</code> which is either a <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#param">Param</a></span> or <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#selection">Selection</a></span>. In the latter case, the <code>field</code> parameter determines the data column name to use within generated selection clause predicates (defaulting to <code>column</code>). If no <code>target</code> is specified then the data source’s selection is used as the target.</p>
 <p>The intitial selected values will be empty when <code>target</code> is a <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#selection">Selection</a></span> (indicating select all records) and the param value(s) when <code>target</code> is a <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.html#param">Param</a></span> (param values should be an array with one or more checkbox values).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cc82844b05f769d6980b3cb1057da3570fcf150f/src/inspect_viz/input/_checkbox_group.py#L8">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/44b072212d7c330b581cf6569e584cf158e1b4e8/src/inspect_viz/input/_checkbox_group.py#L8">Source</a>
 </div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> checkbox_group(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    data: Data <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    column: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    options: <span class="bu">list</span>[<span class="bu">str</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span>] <span class="op">|</span> <span class="bu">dict</span>[<span class="bu">str</span>, <span class="bu">str</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span>] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    options: Sequence[<span class="bu">str</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span>] <span class="op">|</span> <span class="bu">dict</span>[<span class="bu">str</span>, <span class="bu">str</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span>] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    target: Param <span class="op">|</span> Selection <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    field: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    label: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
@@ -1705,7 +1697,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>The name of a column from which to pull options. The unique column values are used as options. Used in conjunction with the <code>data</code> parameter.</p>
 </dd>
-<dt><code class="ref-definition">options</code> <span class="element-type">list[<span class="element-type-name">str</span> | <span class="element-type-name">bool</span> | <span class="element-type-name">float</span>] | dict[<span class="element-type-name">str</span>, <span class="element-type-name">str</span> | <span class="element-type-name">bool</span> | <span class="element-type-name">float</span>] | <span class="element-type-name">None</span></span></dt>
+<dt><code class="ref-definition">options</code> <span class="element-type"><span class="element-type-name">Sequence</span>[<span class="element-type-name">str</span> | <span class="element-type-name">bool</span> | <span class="element-type-name">float</span>] | dict[<span class="element-type-name">str</span>, <span class="element-type-name">str</span> | <span class="element-type-name">bool</span> | <span class="element-type-name">float</span>] | <span class="element-type-name">None</span></span></dt>
 <dd>
 <p>A <code>list</code> or <code>dict</code> of options (provide a <code>dict</code> if you want values to map to alternate labels). Alternative to populating options from a database column via <code>data</code> and <code>column</code>.</p>
 </dd>
