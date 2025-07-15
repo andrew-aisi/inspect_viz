@@ -38,9 +38,7 @@ def eval_scores_timeline(
        ci: Confidence interval (defaults to 0.95, pass `False` for no confidence intervals)
        x_label: x-axis label
        y_label: y-axis label
-       color_label: color scale label.
        eval_label: Eval select label.
-       color_range: List of colors to use for fill, stroke, etc.
        **attributes: Additional `PlotAttributes`. By default, the `x_domain` is set to "fixed", the `y_domain` is set to `[0,1.0]`, `color_label` is set to "Organizations", and `color_domain` is set to `organizations`.
     """
     # validate the required fields

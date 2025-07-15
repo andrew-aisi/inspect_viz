@@ -65,7 +65,7 @@ website:
             contents:
               - href: examples/inspect/eval-scores/index.qmd
               - href: examples/inspect/eval-scores-timeline/index.qmd
-              - href: examples/inspect/eval-tool-usage/index.qmd
+              - href: examples/inspect/eval-tool-calls/index.qmd
           - section: General
             contents:
               - href: examples/general/penguins/index.qmd

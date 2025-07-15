@@ -1,0 +1,85 @@
+from typing import Unpack
+
+from inspect_viz import Component, Data
+from inspect_viz.mark import cell, text
+from inspect_viz.mark._types import TextStyles
+from inspect_viz.plot import legend, plot
+from inspect_viz.plot._attributes import PlotAttributes
+
+
+def eval_tool_calls(
+    data: Data,
+    x: str = "order",
+    y: str = "id",
+    tool: str = "tool_call_function",
+    limit: str = "limit",
+    tools: list[str] | None = None,
+    x_label: str | None = "Message",
+    y_label: str | None = "Sample",
+    width: float | None = None,
+    height: float | None = None,
+    **attributes: Unpack[PlotAttributes],
+) -> Component:
+    """Heat map visualising tool calls over evaluation turns.
+
+    Args:
+       data: Messages data table. This is typically created using a data frame read with the inspect `messages_df()` function.
+       x: Name of field for x axis (defaults to "order")
+       y: Name of field for y axis (defaults to "id").
+       tool: Name of field with tool name (defaults to "tool_call_function")
+       limit: Name of field with sample limit (defaults to "limit").
+       tools: Tools to include in plot (and order to include them). Defaults to all tools found in `data`.
+       x_label: x-axis label (defaults to "Message").
+       y_label: y-axis label (defaults to "Sample").
+       width: The outer width of the plot in pixels, including margins. Defaults to 700.
+       height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
+       **attributes: Additional `PlotAttributes`. By default, the `margin_top` is set to 0, `margin_left` to 20, `margin_right` to 100, `color_label` is "Tool", `y_ticks` is empty,  and `x_ticks` and `color_domain` are calculated from `data`.
+    """
+    # determine unique values for tools
+    if tools is None:
+        tools = data.column_unique(tool)
+        tools = [tool for tool in tools if isinstance(tool, str)]
+
+    # determine range for x
+    x_ticks: list[int] = []
+    max_order = data.column_max(x)
+    boundary = 25
+    while True:
+        if max_order < boundary:
+            x_ticks = list(range(0, boundary, boundary // 5))
+            break
+        else:
+            boundary = boundary * 2
+
+    # attribute defaults
+    defaults = PlotAttributes(
+        margin_top=0,
+        margin_left=20,
+        margin_right=100,
+        x_ticks=x_ticks,
+        y_ticks=[],
+        color_label="Tool",
+        color_domain=tools,
+    )
+    attributes = defaults | attributes
+
+    return plot(
+        cell(data, x=x, y=y, fill=tool),
+        text(
+            data,
+            text=limit,
+            y=y,
+            frame_anchor="right",
+            styles=TextStyles(
+                font_size=8,
+                font_weight=200,
+            ),
+            dx=50,
+        ),
+        width=width,
+        height=height,
+        legend=legend("color", location="right"),
+        x_label=x_label,
+        y_label=y_label,
+        **attributes,
+    )

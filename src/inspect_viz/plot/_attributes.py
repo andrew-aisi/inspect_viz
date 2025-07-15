@@ -251,6 +251,10 @@ class PlotAttributes(TypedDict, total=False):
 
     For position axes only."""
 
+    grid: bool | str | Param
+    """Whether to show a grid aligned with the scale's ticks. If true, show a grid with the currentColor stroke; if a string, show a grid with the specified stroke color.
+    """
+
     aria_label: str | None
     """The [aria-label attribute][1] on the SVG root.
 
@@ -405,6 +409,10 @@ class PlotAttributes(TypedDict, total=False):
 
     x_tick_rotate: float | Param | None
     """The rotation angle of axis tick labels in degrees clocksize; defaults to 0."""
+
+    x_grid: bool | str | Interval | list[str | float] | Param
+    """Whether to show a grid aligned with the scale's ticks. If true, show a grid with the currentColor stroke; if a string, show a grid with the specified stroke color; if an approximate number of ticks, an interval, or an array of tick values, show corresponding grid lines.
+    """
 
     x_line: bool | Param | None
     """If true, draw a line along the axis; if false (default), do not."""
@@ -597,6 +605,9 @@ class PlotAttributes(TypedDict, total=False):
 
     y_tick_rotate: float | Param | None
     """The rotation angle of axis tick labels in degrees clocksize; defaults to 0."""
+
+    y_grid: bool | str | Interval | list[str | float] | Param
+    """Whether to show a grid aligned with the scale's ticks. If true, show a grid with the currentColor stroke; if a string, show a grid with the specified stroke color; if an approximate number of ticks, an interval, or an array of tick values, show corresponding grid lines."""
 
     y_line: bool | Param | None
     """If true, draw a line along the axis; if false (default), do not."""

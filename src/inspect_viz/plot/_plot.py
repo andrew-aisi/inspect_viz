@@ -6,7 +6,6 @@ from inspect_viz._util.notgiven import NOT_GIVEN, NotGiven
 
 from .._core import Component
 from .._core.param import Param
-from .._core.types import Interval
 from ..interactor._interactors import Interactor
 from ..layout._concat import hconcat, vconcat
 from ..mark._mark import Mark
@@ -21,9 +20,6 @@ def plot(
     fx_label: str | Param | None | NotGiven = NOT_GIVEN,
     y_label: str | Param | None | NotGiven = NOT_GIVEN,
     fy_label: str | Param | None | NotGiven = NOT_GIVEN,
-    grid: bool | str | Param | None = None,
-    x_grid: bool | str | Interval | list[str | float] | Param | None = None,
-    y_grid: bool | str | Interval | list[str | float] | Param | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
     name: str | None = None,
@@ -44,17 +40,6 @@ def plot(
             an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value. Pass
             `None` for no y_label.
         fy_label:  A textual label to show on the axis or legend; if `None`, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.
-        grid: Whether to show a grid aligned with the scale's ticks. If true, show a grid
-            with the currentColor stroke; if a string, show a grid with the specified
-            stroke color.
-        x_grid: Whether to show a grid aligned with the scale's ticks. If true, show a
-            grid with the currentColor stroke; if a string, show a grid with the specified
-            stroke color; if an approximate number of ticks, an interval, or an array
-            of tick values, show corresponding grid lines.
-        y_grid: Whether to show a grid aligned with the scale's ticks. If true, show a
-            grid with the currentColor stroke; if a string, show a grid with the specified
-            stroke color; if an approximate number of ticks, an interval, or an array
-            of tick values, show corresponding grid lines.
         width: The outer width of the plot in pixels, including margins. Defaults to 700.
         height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
         name: A unique name for the plot. The name is used by standalone legend
@@ -82,15 +67,6 @@ def plot(
         config["fxLabel"] = fx_label
     if not isinstance(fy_label, NotGiven):
         config["fyLabel"] = fy_label
-
-    if grid is not None:
-        config["grid"] = grid
-
-    if x_grid is not None:
-        config["xGrid"] = x_grid
-
-    if y_grid is not None:
-        config["yGrid"] = y_grid
 
     # plot width and height (use quarto default if not specified)
     if width is not None:

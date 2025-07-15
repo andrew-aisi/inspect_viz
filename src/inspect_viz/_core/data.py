@@ -1,6 +1,6 @@
 import os
 from os import PathLike
-from typing import cast
+from typing import Any, cast
 
 import narwhals as nw
 import pandas as pd
@@ -79,6 +79,15 @@ class Data:
     def columns(self) -> list[str]:
         """Column names for data source."""
         return self._ndf.columns
+
+    def column_unique(self, column: str) -> list[Any]:
+        return self._ndf[column].unique().to_list()
+
+    def column_min(self, column: str) -> Any:
+        return self._ndf[column].min()
+
+    def column_max(self, column: str) -> Any:
+        return self._ndf[column].max()
 
     def _plot_from(self, filter_by: Selection | None = None) -> dict[str, JsonValue]:
         return {"from": self.table, "filterBy": filter_by or f"${self.selection.id}"}

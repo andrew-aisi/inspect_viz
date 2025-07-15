@@ -1,5 +1,5 @@
 ---
-title: "Task Tool Usage"
+title: "Eval Tool Calls"
 subtitle: "Dataset: [cybench_tools.parquet](cybench_tools.parquet)"
 ---
 
@@ -9,24 +9,41 @@ In this example we visualize tool usage over a series of turns in a Cybench eval
 #| filename: Code
 
 from inspect_viz import Data
+from inspect_viz.view.beta import eval_tool_calls
+
+tools = Data.from_file("cybench_tools.parquet")
+
+eval_tool_calls(tools)
+```
+
+See the documentation on the [`eval_tool_calls()`](../../../reference/inspect_viz.view.qmd#eval_tool_calls) function for details on the data it requires as well as customizing varioius aspects of the plot.  If you are curious about how the plot was implemented, read on below.
+
+## Implementation
+
+Here is an annotated version of the code required to produce the tool call plot above (click on the numbers in the right margin for additional explanation).
+
+```{python}
+#| filename: Code
+
+from inspect_viz import Data
 from inspect_viz.plot import plot, legend
 from inspect_viz.mark import cell, text
 
 # read data (see 'Data Preparation' below)
-tools = Data.from_file("cybench_tools.parquet") # <1>
+data = Data.from_file("cybench_tools.parquet") # <1>
 
-tools_domain = ["bash", "python", "submit", "(none)"]
+tools = ["bash", "python", "submit"]
 
 plot(
     cell( # <2>
-        tools,
+        data,
         x="order",
         y="id",
         fill="tool_call_function"
     ), # <2>
     
     text( # <3>
-        tools, 
+        data, 
         text="limit", 
         y="id",
         frame_anchor="right", 
@@ -38,12 +55,12 @@ plot(
     margin_top=0,   # <4>
     margin_left=20,
     margin_right=100,  # <4>
-    x_ticks=list(range(0, 400, 50)), # <5>
+    x_ticks=list(range(0, 400, 80)), # <5>
     y_ticks=[], # <5>
     x_label="Message", # <6>
     y_label="Sample",  # <6>
     color_label="Tool",  # <6>
-    color_domain=tools_domain  # <6>
+    color_domain=tools # <7>
 )
 ```
 
@@ -59,6 +76,8 @@ plot(
 
 6. Set some custom labels and ensure that tools follow our designed order.
 
+7. Specify which tools we should show and in what order.
+
 ### Data Preparation {.unlisted}
 
 To create the plot we read a raw messages data frame from an eval log^[The eval log read for this example is in the [inspect-viz-example-logs](https://github.com/meridianlabs-ai/inspect-viz-example-logs/blob/main/logs/cybench/2025-06-28T12-26-01%2B00-00_cybench_cHgZahEpPHqsSx8GfGjKai.eval) repo], fill the tool call field with "(none)" if there are no tool calls, then filter down to just the fields we require for visualization:
@@ -72,9 +91,6 @@ from inspect_ai.analysis.beta import messages_df, MessageColumns, SampleSummary
 # read messages from log
 log = "<path-to-log>.eval"
 df = messages_df(log, columns=SampleSummary + MessageColumns)
-
-# mark messages with no tool calls
-df.loc[df["tool_call_function"].isna(), "tool_call_function"] = "(none)"
 
 # trim columns
 tools_df = df[[

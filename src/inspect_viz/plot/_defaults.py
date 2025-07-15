@@ -3,7 +3,6 @@ from typing import Any
 from typing_extensions import Unpack
 
 from .._core.param import Param
-from .._core.types import Interval
 from ._attributes import PlotAttributes, plot_attributes_mosaic
 
 
@@ -17,20 +16,19 @@ class PlotDefaults(PlotAttributes, total=False):
     """A textual label to show on the axis or legend; if null, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.
     """
 
+    fx_label: str | Param
+    """
+    A textual label to show on the axis or legend; if null, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.\n\nFor axes and legends only.
+    """
+
     y_label: str | Param
     """A textual label to show on the axis or legend; if null, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.
     """
 
-    grid: bool | str | Param
-    """Whether to show a grid aligned with the scale's ticks. If true, show a grid with the currentColor stroke; if a string, show a grid with the specified stroke color.
+    fy_label: str | Param
     """
-
-    x_grid: bool | str | Interval | list[str | float] | Param
-    """Whether to show a grid aligned with the scale's ticks. If true, show a grid with the currentColor stroke; if a string, show a grid with the specified stroke color; if an approximate number of ticks, an interval, or an array of tick values, show corresponding grid lines.
+    A textual label to show on the axis or legend; if null, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.\n\nFor axes and legends only.
     """
-
-    y_grid: bool | str | Interval | list[str | float] | Param
-    """Whether to show a grid aligned with the scale's ticks. If true, show a grid with the currentColor stroke; if a string, show a grid with the specified stroke color; if an approximate number of ticks, an interval, or an array of tick values, show corresponding grid lines."""
 
     width: float | Param
     """The outer width of the plot in pixels, including margins. Defaults to 640.
