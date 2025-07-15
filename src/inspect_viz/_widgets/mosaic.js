@@ -1803,105 +1803,111 @@ var setupTooltipObserver = (svgEl, specEl) => {
     mutations.forEach((mutation) => {
       if (mutation.type === "childList") {
         const tipElements = svgEl.querySelectorAll('g[aria-label="tip"]');
-        if (tipElements.length === 1) {
-          const tipContainerEl = tipElements[0];
-          tipContainerEl.style.display = "none";
-          const pathEl = tipContainerEl.querySelector("path");
-          const tipEl = pathEl?.parentElement;
-          if (!tipEl) {
-            hideTooltip();
-          } else {
-            const parsed = parseSVGTooltip(tipContainerEl, tipEl);
-            const svgPoint = svgEl.createSVGPoint();
-            svgPoint.x = parsed.transform?.x || 0;
-            svgPoint.y = parsed.transform?.y || 0;
-            const screenPoint = svgPoint.matrixTransform(svgEl.getScreenCTM());
-            const centerX = screenPoint.x;
-            const centerY = screenPoint.y;
-            tooltipInstance.setProps({
-              placement: parsed.placement !== "middle" ? parsed.placement || "top" : "top",
-              getReferenceClientRect: () => {
-                return {
-                  width: 0,
-                  height: 0,
-                  top: centerY,
-                  bottom: centerY,
-                  left: centerX,
-                  right: centerX,
-                  x: centerX,
-                  y: centerY,
-                  toJSON: () => {
-                  }
-                };
-              },
-              arrow: parsed.placement !== "middle",
-              offset: parsed.placement === "middle" ? [0, 0] : void 0,
-              popperOptions: (
-                // Special handling for middle placement, which isn't a supported
-                // tippy placement
-                parsed.placement === "middle" ? {
-                  modifiers: [
-                    {
-                      name: "preventOverflow",
-                      enabled: false
-                    },
-                    {
-                      name: "flip",
-                      enabled: false
-                    },
-                    {
-                      name: "customMiddle",
-                      enabled: true,
-                      phase: "main",
-                      fn: ({ state }) => {
-                        state.modifiersData.popperOffsets.x = centerX - state.rects.popper.width / 2;
-                        state.modifiersData.popperOffsets.y = centerY - state.rects.popper.height / 2;
-                      }
-                    }
-                  ]
-                } : void 0
-              )
-            });
-            const contentEl = document.createElement("div");
-            contentEl.classList.add("inspect-tip-container");
-            let count2 = 0;
-            for (const row of parsed.values) {
-              const rowEl = document.createElement("div");
-              rowEl.className = "inspect-tip-row";
-              contentEl.appendChild(rowEl);
-              const keyEl = document.createElement("div");
-              keyEl.className = "inspect-tip-key";
-              keyEl.append(document.createTextNode(row.key));
-              const valueEl = document.createElement("div");
-              valueEl.className = "inspect-tip-value";
-              if (row.href) {
-                const linkEl = document.createElement("a");
-                linkEl.href = row.href;
-                linkEl.target = "_blank";
-                linkEl.rel = "noopener noreferrer";
-                linkEl.className = "inspect-tip-link";
-                linkEl.textContent = row.value;
-                valueEl.appendChild(linkEl);
-              } else {
-                valueEl.append(document.createTextNode(row.value));
-              }
-              if (row.color) {
-                const colorEl = document.createElement("span");
-                colorEl.className = "inspect-tip-color";
-                colorEl.style.backgroundColor = row.color;
-                valueEl.append(colorEl);
-              }
-              rowEl.appendChild(keyEl);
-              rowEl.appendChild(valueEl);
-              count2++;
-            }
-            tooltipInstance.setContent(contentEl);
-            showTooltip();
+        for (const tipElement of tipElements) {
+          const tipContainerEl2 = tipElement;
+          tipContainerEl2.style.display = "none";
+        }
+        let tipEl = void 0;
+        let tipContainerEl = void 0;
+        for (const tipElement of tipElements) {
+          const searchElement = tipElement;
+          const pathEl = searchElement.querySelector("path");
+          const pathElParent = pathEl?.parentElement;
+          if (pathElParent) {
+            tipEl = pathElParent;
+            tipContainerEl = searchElement;
+            break;
           }
+        }
+        if (!tipEl || !tipContainerEl) {
+          hideTooltip();
         } else {
-          throw new Error(
-            `Expected exactly one tip element, found ${tipElements.length}`
-          );
+          const parsed = parseSVGTooltip(tipContainerEl, tipEl);
+          const svgPoint = svgEl.createSVGPoint();
+          svgPoint.x = parsed.transform?.x || 0;
+          svgPoint.y = parsed.transform?.y || 0;
+          const screenPoint = svgPoint.matrixTransform(svgEl.getScreenCTM());
+          const centerX = screenPoint.x;
+          const centerY = screenPoint.y;
+          tooltipInstance.setProps({
+            placement: parsed.placement !== "middle" ? parsed.placement || "top" : "top",
+            getReferenceClientRect: () => {
+              return {
+                width: 0,
+                height: 0,
+                top: centerY,
+                bottom: centerY,
+                left: centerX,
+                right: centerX,
+                x: centerX,
+                y: centerY,
+                toJSON: () => {
+                }
+              };
+            },
+            arrow: parsed.placement !== "middle",
+            offset: parsed.placement === "middle" ? [0, 0] : void 0,
+            popperOptions: (
+              // Special handling for middle placement, which isn't a supported
+              // tippy placement
+              parsed.placement === "middle" ? {
+                modifiers: [
+                  {
+                    name: "preventOverflow",
+                    enabled: false
+                  },
+                  {
+                    name: "flip",
+                    enabled: false
+                  },
+                  {
+                    name: "customMiddle",
+                    enabled: true,
+                    phase: "main",
+                    fn: ({ state }) => {
+                      state.modifiersData.popperOffsets.x = centerX - state.rects.popper.width / 2;
+                      state.modifiersData.popperOffsets.y = centerY - state.rects.popper.height / 2;
+                    }
+                  }
+                ]
+              } : void 0
+            )
+          });
+          const contentEl = document.createElement("div");
+          contentEl.classList.add("inspect-tip-container");
+          let count2 = 0;
+          for (const row of parsed.values) {
+            const rowEl = document.createElement("div");
+            rowEl.className = "inspect-tip-row";
+            contentEl.appendChild(rowEl);
+            const keyEl = document.createElement("div");
+            keyEl.className = "inspect-tip-key";
+            keyEl.append(document.createTextNode(row.key));
+            const valueEl = document.createElement("div");
+            valueEl.className = "inspect-tip-value";
+            if (row.href) {
+              const linkEl = document.createElement("a");
+              linkEl.href = row.href;
+              linkEl.target = "_blank";
+              linkEl.rel = "noopener noreferrer";
+              linkEl.className = "inspect-tip-link";
+              linkEl.textContent = row.value;
+              valueEl.appendChild(linkEl);
+            } else {
+              valueEl.append(document.createTextNode(row.value));
+            }
+            if (row.color) {
+              const colorEl = document.createElement("span");
+              colorEl.className = "inspect-tip-color";
+              colorEl.style.backgroundColor = row.color;
+              valueEl.append(colorEl);
+            }
+            rowEl.appendChild(keyEl);
+            rowEl.appendChild(valueEl);
+            count2++;
+          }
+          tooltipInstance.setContent(contentEl);
+          showTooltip();
         }
       }
     });
