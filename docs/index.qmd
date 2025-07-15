@@ -12,72 +12,12 @@ Here's an Inspect Viz plot that compares benchmarks scores over time for varioiu
 
 ```{python}
 #| echo: false
+#| 
+from inspect_viz import Data
+from inspect_viz.view.beta import scores_timeline
 
-from inspect_viz import Data, Selection
-from inspect_viz.input import checkbox_group, select
-from inspect_viz.layout import vconcat, vspace
-from inspect_viz.plot import plot, legend
-from inspect_viz.mark import dot, rule_x
-from inspect_viz.table import table
-from inspect_viz.transform import sql
-
-# read data
-evals = Data.from_file("benchmarks.parquet") # <1>
-
-# provide explicit sequence of org names
-orgs = ["OpenAI", "Anthropic", "Google", "Meta AI", "xAI", "Mistral AI"] 
-
-# compute confidence interval value
-def ci_value(direction):  # <2>
-    Z_ALPHA = 1.960
-    return sql(
-        "score" +
-        f"{direction}" +
-        f"({Z_ALPHA} * stderr)"
-    )  # <2>
-
-vconcat(
-    # select benchmark
-    select(evals, label="Eval: ", column="eval", value="GPQA Diamond", width=425),
-    
-    # filter models by organization(s)
-    checkbox_group(evals, column="organization", options=orgs),
-    
-    # dot plot w/ error bars
-    vspace(15),
-    plot(
-        dot(
-            evals,
-            x="release_date",
-            y="score",
-            r=3,
-            fill="organization",
-            channels= {  # <3>
-                "Model": "model", 
-                "Scorer": "scorer", 
-                "Stderr": "stderr",
-                "Log Viewer": "log_viewer"
-            } # <3>
-        ),
-        rule_x( 
-            evals,
-            x="release_date",
-            y="score",
-            y1=ci_value("-"),  # <4>
-            y2=ci_value("+"),
-            stroke="organization",
-            stroke_opacity=0.4, # <4>
-            marker="tick-x",
-        ), 
-        legend=legend("color", target=evals.selection), # <5>
-        x_domain="fixed",  # <6>
-        y_domain=[0,1.0],  # <6>
-        color_domain=orgs, 
-        x_label="Release Date",
-        y_label="Score",
-        color_label="Organization"
-    )
-)
+evals = Data.from_file("benchmarks.parquet")
+scores_timeline(evals)
 ```
 
 #### Why Inspect Viz?

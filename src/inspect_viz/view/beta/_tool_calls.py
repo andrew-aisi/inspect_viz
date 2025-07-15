@@ -7,7 +7,7 @@ from inspect_viz.plot import legend, plot
 from inspect_viz.plot._attributes import PlotAttributes
 
 
-def eval_tool_calls(
+def tool_calls(
     data: Data,
     x: str = "order",
     y: str = "id",

@@ -1,5 +1,5 @@
 ---
-title: Eval Scores
+title: Scores by Task
 subtitle: "Dataset: [evals.parquet](evals.parquet)"
 ---
 
@@ -9,13 +9,13 @@ This example summarizes the scores of 4 evaluation tasks (gpqa_diamond, aime2024
 #| filename: Code
 
 from inspect_viz import Data
-from inspect_viz.view.beta import eval_scores
+from inspect_viz.view.beta import scores_by_task
 
 evals = Data.from_file("evals.parquet")
-eval_scores(evals)
+scores_by_task(evals)
 ```
 
-See the documentation on the [`eval_scores()`](../../../reference/inspect_viz.view.qmd#eval_scores) function for details on the data it requires as well as customizing varioius aspects of the plot. 
+See the documentation on the [`scores_by_task()`](../../../reference/inspect_viz.view.qmd#scores_by_task) function for details on the data it requires as well as customizing varioius aspects of the plot. 
 
 Below we'll describe how to add filtering to the plot as well as provide additional details on how it was implemented.
 
@@ -34,7 +34,7 @@ vconcat( # <1>
         select(evals, label="Model", column="model"),  # <2>
         select(evals, label="Task", column="task_name"),  # <2>
     ),
-    eval_scores(evals)
+    scores_by_task(evals)
 )
 ```
 

@@ -12,7 +12,7 @@ from inspect_viz.plot._plot import plot
 from inspect_viz.transform import ci_bounds
 
 
-def eval_scores_timeline(
+def scores_timeline(
     data: Data,
     organizations: list[str] | None = None,
     ci: float | bool = 0.95,

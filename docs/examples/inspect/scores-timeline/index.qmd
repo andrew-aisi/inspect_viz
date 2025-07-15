@@ -1,5 +1,5 @@
 ---
-title: "Eval Scores Timeline"
+title: "Scores Timeline"
 subtitle: "Data: [evals.parquet](evals.parquet)"
 resources:
    - import.py
@@ -11,13 +11,13 @@ This example plots several benchmarks against models from various organizations,
 #| filename: Code
 
 from inspect_viz import Data
-from inspect_viz.view.beta import eval_scores_timeline
+from inspect_viz.view.beta import scores_timeline
 
 evals = Data.from_file("evals.parquet")
-eval_scores_timeline(evals)
+scores_timeline(evals)
 ```
 
-See the documentation on the [`eval_scores_timeline()`](../../../reference/inspect_viz.view.qmd#eval_scores_timeline) function for details on the data it requires as well as customizing varioius aspects of the plot. If you are curious about how the plot was implemented, read on below.
+See the documentation on the [`scores_timeline()`](../../../reference/inspect_viz.view.qmd#scores_timeline) function for details on the data it requires as well as customizing varioius aspects of the plot. If you are curious about how the plot was implemented, read on below.
 
 ## Implementation
 

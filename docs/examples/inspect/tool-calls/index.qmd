@@ -1,5 +1,5 @@
 ---
-title: "Eval Tool Calls"
+title: "Tool Calls"
 subtitle: "Dataset: [cybench_tools.parquet](cybench_tools.parquet)"
 ---
 
@@ -9,14 +9,14 @@ In this example we visualize tool usage over a series of turns in a Cybench eval
 #| filename: Code
 
 from inspect_viz import Data
-from inspect_viz.view.beta import eval_tool_calls
+from inspect_viz.view.beta import tool_calls
 
 tools = Data.from_file("cybench_tools.parquet")
 
-eval_tool_calls(tools)
+tool_calls(tools)
 ```
 
-See the documentation on the [`eval_tool_calls()`](../../../reference/inspect_viz.view.qmd#eval_tool_calls) function for details on the data it requires as well as customizing varioius aspects of the plot.  If you are curious about how the plot was implemented, read on below.
+See the documentation on the [`tool_calls()`](../../../reference/inspect_viz.view.qmd#tool_calls) function for details on the data it requires as well as customizing varioius aspects of the plot.  If you are curious about how the plot was implemented, read on below.
 
 ## Implementation
 

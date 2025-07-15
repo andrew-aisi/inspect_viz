@@ -10,7 +10,7 @@ from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.transform import sql
 
 
-def eval_scores(
+def scores_by_task(
     data: Data,
     x: str = "model",
     fx: str = "task_name",

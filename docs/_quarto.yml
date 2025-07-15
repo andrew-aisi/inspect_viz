@@ -63,9 +63,9 @@ website:
             text: Examples
           - section: Inspect
             contents:
-              - href: examples/inspect/eval-scores/index.qmd
-              - href: examples/inspect/eval-scores-timeline/index.qmd
-              - href: examples/inspect/eval-tool-calls/index.qmd
+              - href: examples/inspect/scores-by-task/index.qmd
+              - href: examples/inspect/scores-timeline/index.qmd
+              - href: examples/inspect/tool-calls/index.qmd
           - section: General
             contents:
               - href: examples/general/penguins/index.qmd
