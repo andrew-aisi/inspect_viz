@@ -14,7 +14,7 @@
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/reference/inspect_viz.view.html</loc>
-    <lastmod>2025-07-15T14:33:12.610Z</lastmod>
+    <lastmod>2025-07-15T21:14:58.352Z</lastmod>
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/reference/inspect_viz.input.html</loc>
@@ -26,7 +26,7 @@
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/index.html</loc>
-    <lastmod>2025-07-15T19:22:27.910Z</lastmod>
+    <lastmod>2025-07-15T21:14:23.741Z</lastmod>
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/general/athletes-regression/index.html</loc>
@@ -37,52 +37,56 @@
     <lastmod>2025-07-12T13:14:50.957Z</lastmod>
   </url>
   <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/eval-scores/index.html</loc>
-    <lastmod>2025-07-15T18:02:53.636Z</lastmod>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-with-baseline/index.html</loc>
+    <lastmod>2025-07-15T21:13:08.730Z</lastmod>
   </url>
   <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/eval-tool-calls/index.html</loc>
-    <lastmod>2025-07-15T19:21:03.457Z</lastmod>
-  </url>
-  <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/publishing-websites.html</loc>
-    <lastmod>2025-07-14T19:29:42.866Z</lastmod>
-  </url>
-  <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/components-tables.html</loc>
-    <lastmod>2025-07-08T14:51:17.531Z</lastmod>
-  </url>
-  <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/publishing-dashboards.html</loc>
-    <lastmod>2025-07-14T19:33:02.446Z</lastmod>
-  </url>
-  <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/publishing-plots.html</loc>
-    <lastmod>2025-07-09T20:14:22.899Z</lastmod>
-  </url>
-  <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/publishing.html</loc>
-    <lastmod>2025-07-10T13:00:49.103Z</lastmod>
-  </url>
-  <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/components-plots.html</loc>
-    <lastmod>2025-07-14T19:37:32.296Z</lastmod>
-  </url>
-  <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/components-selections.html</loc>
-    <lastmod>2025-07-08T14:51:17.530Z</lastmod>
-  </url>
-  <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/index.html</loc>
-    <lastmod>2025-07-14T19:24:10.641Z</lastmod>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-timeline/index.html</loc>
+    <lastmod>2025-07-15T21:07:59.741Z</lastmod>
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/components-inputs.html</loc>
     <lastmod>2025-07-08T14:51:17.529Z</lastmod>
   </url>
   <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/eval-scores-timeline/index.html</loc>
-    <lastmod>2025-07-15T14:13:22.219Z</lastmod>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/index.html</loc>
+    <lastmod>2025-07-15T21:13:11.245Z</lastmod>
+  </url>
+  <url>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/components-selections.html</loc>
+    <lastmod>2025-07-08T14:51:17.530Z</lastmod>
+  </url>
+  <url>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/components-plots.html</loc>
+    <lastmod>2025-07-14T19:37:32.296Z</lastmod>
+  </url>
+  <url>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/publishing.html</loc>
+    <lastmod>2025-07-10T13:00:49.103Z</lastmod>
+  </url>
+  <url>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/publishing-plots.html</loc>
+    <lastmod>2025-07-09T20:14:22.899Z</lastmod>
+  </url>
+  <url>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/publishing-dashboards.html</loc>
+    <lastmod>2025-07-14T19:33:02.446Z</lastmod>
+  </url>
+  <url>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/components-tables.html</loc>
+    <lastmod>2025-07-08T14:51:17.531Z</lastmod>
+  </url>
+  <url>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/publishing-websites.html</loc>
+    <lastmod>2025-07-14T19:29:42.866Z</lastmod>
+  </url>
+  <url>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-by-task/index.html</loc>
+    <lastmod>2025-07-15T21:07:49.455Z</lastmod>
+  </url>
+  <url>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/tool-calls/index.html</loc>
+    <lastmod>2025-07-15T21:08:25.921Z</lastmod>
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/general/penguins/index.html</loc>
