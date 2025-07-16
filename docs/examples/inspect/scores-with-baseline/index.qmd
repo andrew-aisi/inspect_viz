@@ -40,8 +40,8 @@ plot(
     ),                                        # <1>
     rule_x(                                   # <2>
             x=[baseline_value],               # <2>
-            strokeDasharray="2,4",            # <2>
-            strokeWidth=1,                    # <2> 
+            stroke_dasharray="2,4",            # <2>
+            stroke_width=1,                    # <2> 
             stroke=[baseline_color]           # <2>
     ),                                        # <2>
     text(                                     # <3>
@@ -50,7 +50,7 @@ plot(
             line_anchor="bottom",             # <3>
             dy=-3,                            # <3>
             text=["Baseline"],                # <3>
-            textAnchor="middle",              # <3>
+            text_anchor="middle",              # <3>
             fill=[baseline_color]             # <3>
     ),                                        # <3>
     marginLeft=250,                           # <4>
