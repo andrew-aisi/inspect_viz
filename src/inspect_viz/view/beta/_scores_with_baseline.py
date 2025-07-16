@@ -106,6 +106,11 @@ def scores_with_baseline(
     )
     attributes = defaultAttributes | attributes
 
+    # channels
+    channels: dict[str, str] = {}
+    if "log_viewer" in data.columns:
+        channels["Log Viewer"] = "log_viewer"
+
     # The plot
     return plot(
         bar_x(
@@ -117,6 +122,7 @@ def scores_with_baseline(
             # This uses a SQL transform provide the same fill value for every
             # bar, which will ensure that they bars are themed and the same color
             fill=sql("1"),
+            channels=channels,
         ),
         *baseline_marks(resolved_baselines),
         y_label=y_label,

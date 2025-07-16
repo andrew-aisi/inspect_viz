@@ -50,6 +50,7 @@ website:
              contents:
                - href: components-plots.qmd
                - href: components-marks.qmd
+               - href: components-links.qmd
                - href: components-tables.qmd
                - href: components-inputs.qmd
                - href: components-selections.qmd

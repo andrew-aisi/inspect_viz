@@ -6,6 +6,19 @@ subtitle: "Dataset: [evals.parquet](evals.parquet)"
 This example summarizes the scores of 4 evaluation tasks (gpqa_diamond, aime2024, mmlu_pro, cybench, and swe_bench) across 4 models (OpenAI o4-mini and o3, and Anthropic Claude Sonnet 3.7 and 4.0).
 
 ```{python}
+#| eval: false
+#| echo: false
+
+from inspect_ai.analysis.beta import evals_df, prepare, log_viewer
+
+LOG_DIR = "~/meridianlabs/inspect-viz-example-logs/logs/"
+df = evals_df(LOG_DIR)
+df = prepare(df, log_viewer("evals", {LOG_DIR: "https://samples.meridianlabs.ai"}))
+df.to_parquet("evals.parquet")
+```
+
+
+```{python}
 #| filename: Code
 
 from inspect_viz import Data
