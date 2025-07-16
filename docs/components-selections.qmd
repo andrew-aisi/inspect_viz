@@ -2,6 +2,15 @@
 title: Selections
 ---
 
+```{python}
+#| echo: false
+from inspect_viz.plot import plot_defaults
+plot_defaults(
+    width=800,
+    height=500
+)
+```
+
 ## Overview
 
 _Selections_ enable filtering and cross-filtering of plot data based based on [Inputs](components-inputs.qmd) and [Interactors](#interactors). Each `Data` table has a built-in selection and you can also create `Selection` instances for more sophisticated behaviors.

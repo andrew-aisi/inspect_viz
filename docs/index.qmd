@@ -4,11 +4,20 @@ subtitle: |
    Data visualization for [Inspect AI](https://inspect.aisi.org.uk/) large language model evalutions.
 ---
 
+```{python}
+#| echo: false
+from inspect_viz.plot import plot_defaults
+plot_defaults(
+    width=800,
+    height=500
+)
+```
+
 ## Welcome
 
-Welcome to Inspect Viz, a data visualisation library for [Inspect AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. You can author visualisations in any [Jupyter Notebook](https://jupyter.org/) then include them in documents as static images or or websites as interactive Jupyter Widgets.
+Welcome to Inspect Viz, a data visualisation library for [Inspect AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. 
 
-Here's an Inspect Viz plot that compares benchmarks scores over time for varioius providers. Use the filters to switch benchmarks and restrict to models from various organization(s). Hover over the points to get additional details on them.
+Here's an Inspect Viz plot that compares benchmarks scores over time for various providers^[The original data used for the scores timeline plot was published by the [Epoch AI Benchmarking Hub](https://epoch.ai/data/ai-benchmarking-dashboard)]:
 
 ```{python}
 #| echo: false
@@ -20,16 +29,20 @@ evals = Data.from_file("benchmarks.parquet")
 scores_timeline(evals)
 ```
 
+Use the filters to switch benchmarks and restrict to models from various organization(s). Hover over the points to get additional details on them or view the underlying Inspect log for the evals.
+
+::: {.callout-note}
+
 #### Why Inspect Viz?
 
 Why use a visualisation library specific to Inspect? Why not just use Matplotlib or Plotly which you might already be familiar with and which LLMs have experience writing code for? Inspect Viz is indeed not for every scenario, and it does have a learning curve. You should consider Inspect Viz for situations where:
 
-1. You want to create _interactive_ visualizations (either filtering as shown above or directly selecting points on one plot to dynamially drive the contents of other plots).
-
+1. You want to take advantage of its pre-built [Views](views.qmd) that go directly from Inspect log [data frames](https://inspect.aisi.org.uk/dataframe.html) to visualizations.
 2. You want to create plots that include direct links to the Inspect log viewer (try hovering over the points above and then clicking the log viewer link).
-
-3. You value the more modern appearance and flexible compositions available in [Observable Plot](https://observablehq.com/plot/), the plotting library Inspect Viz is built on.
-
+3. You want to create _interactive_ visualizations (either filtering as shown above or directly selecting points on one plot to dynamially drive the contents of other plots).
+4. You value the more modern appearance and flexible compositions available in [Observable Plot](https://observablehq.com/plot/), the plotting library Inspect Viz is built on.
+ 
+:::
 
 #### Getting Started
 
@@ -39,14 +52,52 @@ First, install the `inspect_viz` package from GitHub as follows:
 pip install git+https://github.com/meridianlabs-ai/inspect_viz
 ```
 
-Then, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, check out the [Examples](examples/index.qmd)  and read the [Components](components-plots.qmd) articles for a more in depth explanation of the library's features and how they fit together.
+You can author visualisations in any [Jupyter Notebook](https://jupyter.org/) then include them in documents as static images or in websites as interactive Jupyter Widgets (see [Publishing](publishing.qmd) for details).
 
+
+## Views
+
+Inspect Viz [Views](views.qmd) are pre-built plots that work with data created by the Inspect log [data frame](https://inspect.aisi.org.uk/dataframe.html) reading functions. For example, the timeline plot above was created with a single call to `scores_timeline()`:
+
+```{python}
+#| eval: false
+from inspect_viz import Data
+from inspect_viz.view.beta import scores_timeline
+
+evals = Data.from_file("benchmarks.parquet")
+scores_timeline(evals)
+```
+
+#### Tool Calls
+
+The `tool_calls()` view enables you to visualize tool calls by sample:
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.view.beta import tool_calls
+
+tools = Data.from_file("cybench_tools.parquet")
+
+tool_calls(tools)
+```
+
+#### Scores with Baseline
+
+The `scores_with_baseline()` view enables you to view an ordered set of eval scores with one or more baselines:
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.view.beta import scores_with_baseline, Baseline
+
+evals = Data.from_file("gpqa_diamond.parquet")
+scores_with_baseline(evals, baseline=0.697)
+```
+
+See the article on [Views](views.qmd) to learn about all available pre-built views and the various options for customizing their appearance and behavior.
 
 ## Plots
 
-{{< include _observable-tip.md >}}
-
-Plots in `inspect_viz` are composed of one or more [marks](reference/inspect_viz.mark.qmd), which can do either higher level plotting (e.g. `dot()`, `bar_x()`, `bar_y()`, `area()`, `heatmap()`, etc.) or lower level drawing on the plot canvas (e.g. `text()`, `image()`, `arrow()`, etc.)
+While pre-built views are useful, you also may want to create your own custom plots. Plots in `inspect_viz` are composed of one or more [marks](reference/inspect_viz.mark.qmd), which can do either higher level plotting (e.g. `dot()`, `bar_x()`, `bar_y()`, `area()`, `heatmap()`, etc.) or lower level drawing on the plot canvas (e.g. `text()`, `image()`, `arrow()`, etc.)
 
 ### Dot Plot
 
@@ -97,6 +148,9 @@ plot(
 ```
 
 The `x` axis for this plot is not mapped to a column, but rather to a `count()` transform ( [transforms](reference/inspect_viz.transform.qmd) enable you to perform computations on columns for plotting). The `fill` option gives each species it's own color. We also specify that we don't want a `y_label` (as the species names serve that purpose) and a smaller than normal height.
+
+
+{{< include _observable-tip.md >}}
 
 ## Tables
 
@@ -335,6 +389,8 @@ vconcat(
 ## Learning More
 
 Use these resources to learn more about using Inspect Viz:
+
+-   [Views](views.qmd) describes the various available pre-built views and how to customize them.
 
 -   [Components](components-plots.qmd) goes into further depth on the main concepts and components of the library.
 

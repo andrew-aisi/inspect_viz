@@ -2,6 +2,15 @@
 title: Marks
 ---
 
+```{python}
+#| echo: false
+from inspect_viz.plot import plot_defaults
+plot_defaults(
+    width=800,
+    height=500
+)
+```
+
 ## Overview
 
 *Marks* are graphical primitives, often with accompanying data transforms, that serve as chart layers. Marks accept a `Data` source (which are queried as required) and a set of supported options, including encoding *channels* (such as `x`, `y`, `fill`, and `stroke`) that can encode data *fields*.

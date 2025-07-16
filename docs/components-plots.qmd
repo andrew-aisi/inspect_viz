@@ -3,6 +3,15 @@ title: "Plots"
 tbl-colwidths: [30,70]
 ---
 
+```{python}
+#| echo: false
+from inspect_viz.plot import plot_defaults
+plot_defaults(
+    width=800,
+    height=500
+)
+```
+
 A `plot()` produces a single visualisation as a Web element. Similar to other grammars, a `plot` consists of *marks*---graphical primitives such as bars, areas, and lines---which serve as chart layers. Plots use the semantics of [Observable Plot](https://observablehq.com/plot/what-is-plot), such that each `plot` has a dedicated set of encoding *channels* with named *scale* mappings such as `x`, `y`, `color`, `opacity`, etc.
 
 ## Basics

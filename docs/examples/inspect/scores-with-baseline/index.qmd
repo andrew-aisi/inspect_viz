@@ -1,5 +1,5 @@
 ---
-title: Scores With Baseline
+title: Scores with Baseline
 subtitle: "Dataset: [gpqa_diamond.parquet](gpqa_diamond.parquet)"
 ---
 
@@ -10,7 +10,7 @@ are useful to illustrate important threshholds.
 from inspect_viz import Data
 from inspect_viz.view.beta import scores_with_baseline, Baseline
 
-evals = Data.from_file("./gpqa_diamond.parquet")
+evals = Data.from_file("gpqa_diamond.parquet")
 scores_with_baseline(evals, baseline=0.697)
 ```
 
@@ -39,19 +39,19 @@ plot(
         tip=True                              # <1>
     ),                                        # <1>
     rule_x(                                   # <2>
-            x=[baseline_value],               # <2>
-            stroke_dasharray="2,4",            # <2>
-            stroke_width=1,                    # <2> 
-            stroke=[baseline_color]           # <2>
+        x=[baseline_value],               # <2>
+        stroke_dasharray="2,4",            # <2>
+        stroke_width=1,                    # <2> 
+        stroke=[baseline_color]           # <2>
     ),                                        # <2>
     text(                                     # <3>
-            x=[baseline_value],               # <3>
-            frame_anchor="top",               # <3>
-            line_anchor="bottom",             # <3>
-            dy=-3,                            # <3>
-            text=["Baseline"],                # <3>
-            text_anchor="middle",              # <3>
-            fill=[baseline_color]             # <3>
+        x=[baseline_value],               # <3>
+        frame_anchor="top",               # <3>
+        line_anchor="bottom",             # <3>
+        dy=-3,                            # <3>
+        text=["Baseline"],                # <3>
+        text_anchor="middle",              # <3>
+        fill=[baseline_color]             # <3>
     ),                                        # <3>
     marginLeft=250,                           # <4>
     marginTop=30,                             # <4>

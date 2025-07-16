@@ -24,6 +24,8 @@ website:
       left:      
           - text: "Getting Started"
             href: index.qmd
+          - text: "Views"
+            href: views.qmd
           - text: "Components"
             href: components-plots.qmd
           - text: "Publishing"
@@ -43,6 +45,7 @@ website:
         contents:
            - href: index.qmd
              text: Welcome
+           - href: views.qmd
            - text: Components
              contents:
                - href: components-plots.qmd
@@ -65,6 +68,8 @@ website:
             contents:
               - href: examples/inspect/scores-by-task/index.qmd
               - href: examples/inspect/scores-timeline/index.qmd
+              - href: examples/inspect/scores-with-baseline/index.qmd
+                text: "Scores w/ Baseline"
               - href: examples/inspect/tool-calls/index.qmd
           - section: General
             contents:
