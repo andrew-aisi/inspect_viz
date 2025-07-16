@@ -40,8 +40,13 @@ def scores_by_task(
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        **attributes: Additional `PlotAttributes`. By default, the `y_inset_top` and `margin_bottom` are set to 10 pixels and `x_ticks` is set to `[]`.
     """
+    # establish channels
+    channels: dict[str, str] = {}
+    if "log_viewer" in data.columns:
+        channels["Log Viewer"] = "log_viewer"
+
     # start with bar plot
-    components = [bar_y(data, x=x, fx=fx, y=y, fill=x, tip=True)]
+    components = [bar_y(data, x=x, fx=fx, y=y, fill=x, channels=channels, tip=True)]
 
     # add ci if requested
     if y_ci is not False:
