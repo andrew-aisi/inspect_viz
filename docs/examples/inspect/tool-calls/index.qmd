@@ -80,7 +80,7 @@ plot(
 
 ### Data Preparation {.unlisted}
 
-To create the plot we read a raw messages data frame from an eval log^[The eval log read for this example is in the [inspect-viz-example-logs](https://github.com/meridianlabs-ai/inspect-viz-example-logs/blob/main/logs/cybench/2025-06-28T12-26-01%2B00-00_cybench_cHgZahEpPHqsSx8GfGjKai.eval) repo], fill the tool call field with "(none)" if there are no tool calls, then filter down to just the fields we require for visualization:
+To create the plot we read a raw messages data frame from an eval log^[The eval log read for this example is in the [inspect-viz-example-logs](https://github.com/meridianlabs-ai/inspect-viz-example-logs/blob/main/logs/cybench/2025-06-28T12-26-01%2B00-00_cybench_cHgZahEpPHqsSx8GfGjKai.eval) repo] then filter down to just the fields we require for visualization:
 
 <!-- ~/meridianlabs/inspect-viz-example-logs/logs/cybench/2025-06-28T12-26-01+00-00_cybench_cHgZahEpPHqsSx8GfGjKai.eval -->
 
