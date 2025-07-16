@@ -284,14 +284,24 @@
     "href": "examples/inspect/scores-with-baseline/index.html",
     "title": "Scores With Baseline",
     "section": "",
-    "text": "This example summarizes the scores of a single evaluation task, gpqa_diamond, showing performance for 18 different models. Models are ordered based upon their headline score (defaulting to descending). You may add one or more baselines which are useful to illustrate important threshholds.\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_with_baseline, Baseline\n\nevals = Data.from_file(\"./gpqa_diamond.parquet\")\nscores_with_baseline(evals, baseline=0.697)\nSee the documentation on the scores_with_baseline() function for details on the data it requires as well as customizing varioius aspects of the plot. If you are curious about how the plot was implemented, read on below."
+    "text": "This example summarizes the scores of a single evaluation task, showing performance for 13 different models. Models are ordered based upon their headline score (defaulting to descending). You may add one or more baselines which are useful to illustrate important thresholds.\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_with_baseline, Baseline\n\nevals = Data.from_file(\"agi-lsat-ar.parquet\")\nscores_with_baseline(evals, baseline=0.91)\nSee the documentation on the scores_with_baseline() function for details on the data it requires as well as customizing varioius aspects of the plot. If you are curious about how the plot was implemented, read on below.",
+    "crumbs": [
+      "Examples",
+      "Inspect",
+      "Scores w/ Baseline"
+    ]
   },
   {
     "objectID": "examples/inspect/scores-with-baseline/index.html#implementation",
     "href": "examples/inspect/scores-with-baseline/index.html#implementation",
     "title": "Scores With Baseline",
     "section": "Implementation",
-    "text": "Implementation\nHere is an annotated version of the code required to produce the timeline plot above (click on the numbers in the right margin for additional explanation).\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import bar_x, rule_x, text\n\nbaseline_color = \"#000000\"\nbaseline_value = 0.697\n    \nplot(\n1    bar_x(\n        evals,\n        x=\"score_headline_value\",\n        y=\"model\",\n        sort={\"y\": \"x\", \"reverse\": True},\n        fill=\"#416AD0\",\n        tip=True\n    ),\n2    rule_x(\n            x=[baseline_value],\n            strokeDasharray=\"2,4\",\n            strokeWidth=1,\n            stroke=[baseline_color]\n    ),\n3    text(\n            x=[baseline_value],\n            frame_anchor=\"top\",\n            line_anchor=\"bottom\",\n            dy=-3,\n            text=[\"Baseline\"],\n            textAnchor=\"middle\",\n            fill=[baseline_color]\n    ),\n4    marginLeft=250,\n    marginTop=30,\n    x_domain=[0, 1.0],\n    y_label=None,\n    x_label=\"Accuracy\"\n)\n\n\n1\n\nThis draws the core bar chart, sorting the y-axis by the value of x.\n\n2\n\nThis draws the baseline at the baseline_value position. Note that we are passing an explicit value for baseline rather that reading the value from the data frame.\n\n3\n\nThis draws the text label for the baseline, positioning it at the top of the frame and anchoring the bottom of the text to the that top position.\n\n4\n\nProvide margin to allow space for the y-axis labels and for the baseline text above the plot."
+    "text": "Implementation\nHere is an annotated version of the code required to produce the timeline plot above (click on the numbers in the right margin for additional explanation).\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import bar_x, rule_x, text\n\nbaseline_color = \"#000000\"\nbaseline_value = 0.91\n    \nplot(\n1    bar_x(\n        evals,\n        x=\"score_headline_value\",\n        y=\"model\",\n        sort={\"y\": \"x\", \"reverse\": True},\n        fill=\"#416AD0\",\n        tip=True\n    ),\n2    rule_x(\n        x=[baseline_value],\n        stroke_dasharray=\"2,4\",\n        stroke_width=1,\n        stroke=[baseline_color]\n    ),\n3    text(\n        x=[baseline_value],\n        frame_anchor=\"top\",\n        line_anchor=\"bottom\",\n        dy=-3,\n        text=[\"Baseline\"],\n        text_anchor=\"middle\",\n        fill=[baseline_color]\n    ),\n4    marginLeft=250,\n    marginTop=30,\n    x_domain=[0, 1.0],\n    y_label=None,\n    x_label=\"Accuracy\"\n)\n\n\n1\n\nThis draws the core bar chart, sorting the y-axis by the value of x.\n\n2\n\nThis draws the baseline at the baseline_value position. Note that we are passing an explicit value for baseline rather that reading the value from the data frame.\n\n3\n\nThis draws the text label for the baseline, positioning it at the top of the frame and anchoring the bottom of the text to the that top position.\n\n4\n\nProvide margin to allow space for the y-axis labels and for the baseline text above the plot.",
+    "crumbs": [
+      "Examples",
+      "Inspect",
+      "Scores w/ Baseline"
+    ]
   },
   {
     "objectID": "examples/inspect/scores-timeline/index.html",
@@ -406,7 +416,7 @@
     "href": "index.html",
     "title": "Inspect Viz",
     "section": "",
-    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. You can author visualisations in any Jupyter Notebook then include them in documents as static images or or websites as interactive Jupyter Widgets.\nHere’s an Inspect Viz plot that compares benchmarks scores over time for varioius providers. Use the filters to switch benchmarks and restrict to models from various organization(s). Hover over the points to get additional details on them.\n\n\n\n\n\n\n\nWhy use a visualisation library specific to Inspect? Why not just use Matplotlib or Plotly which you might already be familiar with and which LLMs have experience writing code for? Inspect Viz is indeed not for every scenario, and it does have a learning curve. You should consider Inspect Viz for situations where:\n\nYou want to create interactive visualizations (either filtering as shown above or directly selecting points on one plot to dynamially drive the contents of other plots).\nYou want to create plots that include direct links to the Inspect log viewer (try hovering over the points above and then clicking the log viewer link).\nYou value the more modern appearance and flexible compositions available in Observable Plot, the plotting library Inspect Viz is built on.\n\n\n\n\nFirst, install the inspect_viz package from GitHub as follows:\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, check out the Examples and read the Components articles for a more in depth explanation of the library’s features and how they fit together.",
+    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations.\nHere’s an Inspect Viz plot that compares benchmarks scores over time for various providers1:\n\n\n\n\n\nUse the filters to switch benchmarks and restrict to models from various organization(s). Hover over the points to get additional details on them or view the underlying Inspect log for the evals.\n\n\n\n\n\n\nWhy Inspect Viz?\n\n\n\nWhy use a visualisation library specific to Inspect? Why not just use Matplotlib or Plotly which you might already be familiar with and which LLMs have experience writing code for? Inspect Viz is indeed not for every scenario, and it does have a learning curve. You should consider Inspect Viz for situations where:\n\nYou want to take advantage of its pre-built Views that go directly from Inspect log data frames to visualizations.\nYou want to create plots that include direct links to the Inspect log viewer (try hovering over the points above and then clicking the log viewer link).\nYou want to create interactive visualizations (either filtering as shown above or directly selecting points on one plot to dynamially drive the contents of other plots).\nYou value the more modern appearance and flexible compositions available in Observable Plot, the plotting library Inspect Viz is built on.\n\n\n\n\n\nFirst, install the inspect_viz package from GitHub as follows:\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nYou can author visualisations in any Jupyter Notebook then include them in documents as static images or in websites as interactive Jupyter Widgets (see Publishing for details).",
     "crumbs": [
       "Getting Started",
       "Welcome"
@@ -417,7 +427,18 @@
     "href": "index.html#welcome",
     "title": "Inspect Viz",
     "section": "",
-    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. You can author visualisations in any Jupyter Notebook then include them in documents as static images or or websites as interactive Jupyter Widgets.\nHere’s an Inspect Viz plot that compares benchmarks scores over time for varioius providers. Use the filters to switch benchmarks and restrict to models from various organization(s). Hover over the points to get additional details on them.\n\n\n\n\n\n\n\nWhy use a visualisation library specific to Inspect? Why not just use Matplotlib or Plotly which you might already be familiar with and which LLMs have experience writing code for? Inspect Viz is indeed not for every scenario, and it does have a learning curve. You should consider Inspect Viz for situations where:\n\nYou want to create interactive visualizations (either filtering as shown above or directly selecting points on one plot to dynamially drive the contents of other plots).\nYou want to create plots that include direct links to the Inspect log viewer (try hovering over the points above and then clicking the log viewer link).\nYou value the more modern appearance and flexible compositions available in Observable Plot, the plotting library Inspect Viz is built on.\n\n\n\n\nFirst, install the inspect_viz package from GitHub as follows:\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nThen, read on below for a tutorial on the basics of Inspect Viz. Once you are up to speed on the basics, check out the Examples and read the Components articles for a more in depth explanation of the library’s features and how they fit together.",
+    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations.\nHere’s an Inspect Viz plot that compares benchmarks scores over time for various providers1:\n\n\n\n\n\nUse the filters to switch benchmarks and restrict to models from various organization(s). Hover over the points to get additional details on them or view the underlying Inspect log for the evals.\n\n\n\n\n\n\nWhy Inspect Viz?\n\n\n\nWhy use a visualisation library specific to Inspect? Why not just use Matplotlib or Plotly which you might already be familiar with and which LLMs have experience writing code for? Inspect Viz is indeed not for every scenario, and it does have a learning curve. You should consider Inspect Viz for situations where:\n\nYou want to take advantage of its pre-built Views that go directly from Inspect log data frames to visualizations.\nYou want to create plots that include direct links to the Inspect log viewer (try hovering over the points above and then clicking the log viewer link).\nYou want to create interactive visualizations (either filtering as shown above or directly selecting points on one plot to dynamially drive the contents of other plots).\nYou value the more modern appearance and flexible compositions available in Observable Plot, the plotting library Inspect Viz is built on.\n\n\n\n\n\nFirst, install the inspect_viz package from GitHub as follows:\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nYou can author visualisations in any Jupyter Notebook then include them in documents as static images or in websites as interactive Jupyter Widgets (see Publishing for details).",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#views",
+    "href": "index.html#views",
+    "title": "Inspect Viz",
+    "section": "Views",
+    "text": "Views\nInspect Viz Views are pre-built plots that work with data created by the Inspect log data frame reading functions. For example, the timeline plot above was created with a single call to scores_timeline():\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_timeline\n\nevals = Data.from_file(\"benchmarks.parquet\")\nscores_timeline(evals)\n\n\nTool Calls\nThe tool_calls() view enables you to visualize tool calls by sample:\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import tool_calls\n\ntools = Data.from_file(\"cybench_tools.parquet\")\n\ntool_calls(tools)\n\n\n\n\n\n\nScores with Baseline\nThe scores_with_baseline() view enables you to view an ordered set of eval scores with one or more baselines:\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_with_baseline, Baseline\n\nevals = Data.from_file(\"agi-lsat-ar.parquet\")\nscores_with_baseline(evals, baseline=0.91)\n\n\n\n\nSee the article on Views to learn about all available pre-built views and the various options for customizing their appearance and behavior.",
     "crumbs": [
       "Getting Started",
       "Welcome"
@@ -428,7 +449,7 @@
     "href": "index.html#plots",
     "title": "Inspect Viz",
     "section": "Plots",
-    "text": "Plots\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Mosaic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.\n\n\nPlots in inspect_viz are composed of one or more marks, which can do either higher level plotting (e.g. dot(), bar_x(), bar_y(), area(), heatmap(), etc.) or lower level drawing on the plot canvas (e.g. text(), image(), arrow(), etc.)\n\nDot Plot\nHere is an example of a simple dot plot using the Palmer Penquins dataset:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\n1penguins = Data.from_file(\"penguins.parquet\")\n\nplot(\n    dot(\n        penguins, \n2        x=\"body_mass\", y=\"flipper_length\",\n3        stroke=\"species\", symbol=\"species\"\n    ),\n    grid=True,\n4    legend=\"symbol\"\n)\n\n\n1\n\nRead the dataset from a parquet file. You can can also use Data.from_dataframe() to read data from any Pandas, Polars, or PyArrow data frame.\n\n2\n\nPlot using a dot() mark. The plot() function takes one or more marks or interactors.\n\n3\n\nMap the “species” column to the stroke and symbol scales of the plot (causing each species to have its own color and symbol).\n\n4\n\nAdd a legend to the plot as a key to our scale mappings.\n\n\n\n\n\n\n\n\n\nBar Plot\nHere is a simple horizontal bar plot that counts the number of each species:\n\nfrom inspect_viz.mark import bar_x\nfrom inspect_viz.transform import count\n\nplot(\n    bar_x(penguins, x=count(), y=\"species\", fill=\"species\"),\n    y_label=None,\n    height=200,\n    margin_left=60\n)\n\n\n\n\nThe x axis for this plot is not mapped to a column, but rather to a count() transform ( transforms enable you to perform computations on columns for plotting). The fill option gives each species it’s own color. We also specify that we don’t want a y_label (as the species names serve that purpose) and a smaller than normal height.",
+    "text": "Plots\nWhile pre-built views are useful, you also may want to create your own custom plots. Plots in inspect_viz are composed of one or more marks, which can do either higher level plotting (e.g. dot(), bar_x(), bar_y(), area(), heatmap(), etc.) or lower level drawing on the plot canvas (e.g. text(), image(), arrow(), etc.)\n\nDot Plot\nHere is an example of a simple dot plot using the Palmer Penquins dataset:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\n1penguins = Data.from_file(\"penguins.parquet\")\n\nplot(\n    dot(\n        penguins, \n2        x=\"body_mass\", y=\"flipper_length\",\n3        stroke=\"species\", symbol=\"species\"\n    ),\n    grid=True,\n4    legend=\"symbol\"\n)\n\n\n1\n\nRead the dataset from a parquet file. You can can also use Data.from_dataframe() to read data from any Pandas, Polars, or PyArrow data frame.\n\n2\n\nPlot using a dot() mark. The plot() function takes one or more marks or interactors.\n\n3\n\nMap the “species” column to the stroke and symbol scales of the plot (causing each species to have its own color and symbol).\n\n4\n\nAdd a legend to the plot as a key to our scale mappings.\n\n\n\n\n\n\n\n\n\nBar Plot\nHere is a simple horizontal bar plot that counts the number of each species:\n\nfrom inspect_viz.mark import bar_x\nfrom inspect_viz.transform import count\n\nplot(\n    bar_x(penguins, x=count(), y=\"species\", fill=\"species\"),\n    y_label=None,\n    height=200,\n    margin_left=60\n)\n\n\n\n\nThe x axis for this plot is not mapped to a column, but rather to a count() transform ( transforms enable you to perform computations on columns for plotting). The fill option gives each species it’s own color. We also specify that we don’t want a y_label (as the species names serve that purpose) and a smaller than normal height.\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Mosaic data visualization system which is in turn built on Observable Plot.\nThe Inspect Viz Python API typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.",
     "crumbs": [
       "Getting Started",
       "Welcome"
@@ -516,7 +537,18 @@
     "href": "index.html#learning-more",
     "title": "Inspect Viz",
     "section": "Learning More",
-    "text": "Learning More\nUse these resources to learn more about using Inspect Viz:\n\nComponents goes into further depth on the main concepts and components of the library.\nPublishing covers publishing Inspect Viz content as standalone plots, notebooks, websites, and dashboards.\nReference provides details on the available marks, interactors, transforms, and inputs.\nExamples demonstrates more advanced plotting and interactivity features.",
+    "text": "Learning More\nUse these resources to learn more about using Inspect Viz:\n\nViews describes the various available pre-built views and how to customize them.\nComponents goes into further depth on the main concepts and components of the library.\nPublishing covers publishing Inspect Viz content as standalone plots, notebooks, websites, and dashboards.\nReference provides details on the available marks, interactors, transforms, and inputs.\nExamples demonstrates more advanced plotting and interactivity features.",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#footnotes",
+    "href": "index.html#footnotes",
+    "title": "Inspect Viz",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nThe original data used for the scores timeline plot was published by the Epoch AI Benchmarking Hub↩︎",
     "crumbs": [
       "Getting Started",
       "Welcome"
@@ -599,7 +631,7 @@
     "href": "components-plots.html#basics",
     "title": "Plots",
     "section": "Basics",
-    "text": "Basics\nPlots support faceting of the x and y dimensions, producing associated fx and fy scales. Plots are rendered to SVG output using Observable Plot.\nHere is a simple dot plot that demonstrates some key concepts:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nplot(\n1    dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n        stroke=\"species\", symbol=\"species\"),\n2    legend=\"symbol\",\n3    grid=True,\n    width=700,\n    height=400\n)\n\n\n1\n\ndot() mark for a simple dot plot, using a distinct stroke and symbol to denote the “species” column.\n\n2\n\nLegend in the default location, keyed by symbol.\n\n3\n\nAdditional attributes that affect plot size and appearance.\n\n\n\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Mosaic data visualization system which is in turn built on Observable Plot.\nBelow we’ll describe the the Inspect Viz Python API, which typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.",
+    "text": "Basics\nPlots support faceting of the x and y dimensions, producing associated fx and fy scales. Plots are rendered to SVG output using Observable Plot.\nHere is a simple dot plot that demonstrates some key concepts:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nplot(\n1    dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n        stroke=\"species\", symbol=\"species\"),\n2    legend=\"symbol\",\n3    grid=True,\n    width=700,\n    height=400\n)\n\n\n1\n\ndot() mark for a simple dot plot, using a distinct stroke and symbol to denote the “species” column.\n\n2\n\nLegend in the default location, keyed by symbol.\n\n3\n\nAdditional attributes that affect plot size and appearance.\n\n\n\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Mosaic data visualization system which is in turn built on Observable Plot.\nThe Inspect Viz Python API typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.",
     "crumbs": [
       "Getting Started",
       "Components",
@@ -691,17 +723,6 @@
     ]
   },
   {
-    "objectID": "publishing.html",
-    "href": "publishing.html",
-    "title": "Publishing",
-    "section": "",
-    "text": "There are several ways to publish Inspect Viz content, ranging from PNG images suitable for embedding in documents all the way up to notebooks, websites, and dashboards.\n\n\n\nPlots\nPublish single plots as PNG images or HTML snippets.\n\n\nNotebooks\nPublish collections of plots and tables as a notebook.\n\n\nWebsites\nEmbed plots and tables in a larger website.\n\n\nDashboards\nCreate a dashboard to provide easy navigation of collections of plots.",
-    "crumbs": [
-      "Getting Started",
-      "Publishing"
-    ]
-  },
-  {
     "objectID": "publishing-plots.html",
     "href": "publishing-plots.html",
     "title": "Plots",
@@ -747,6 +768,72 @@
       "Getting Started",
       "Publishing",
       "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing.html",
+    "href": "publishing.html",
+    "title": "Publishing",
+    "section": "",
+    "text": "There are several ways to publish Inspect Viz content, ranging from PNG images suitable for embedding in documents all the way up to notebooks, websites, and dashboards.\n\n\n\nPlots\nPublish single plots as PNG images or HTML snippets.\n\n\nNotebooks\nPublish collections of plots and tables as a notebook.\n\n\nWebsites\nEmbed plots and tables in a larger website.\n\n\nDashboards\nCreate a dashboard to provide easy navigation of collections of plots.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing"
+    ]
+  },
+  {
+    "objectID": "views.html",
+    "href": "views.html",
+    "title": "Views",
+    "section": "",
+    "text": "Note\n\n\n\nView functions are currently in beta and are exported from the inspect_ai.view.beta module. The beta module will be preserved after final release so that code written against it now will continue to work after the beta.",
+    "crumbs": [
+      "Getting Started",
+      "Views"
+    ]
+  },
+  {
+    "objectID": "views.html#scores-by-task",
+    "href": "views.html#scores-by-task",
+    "title": "Views",
+    "section": "Scores by Task",
+    "text": "Scores by Task\nThe scores_by_task() function renders a bar plot for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_task\n\nevals = Data.from_file(\"evals.parquet\")\nscores_by_task(evals)\n\n\n\n\n\nData Preparation\nThe scores by task plot is intended to operate on data read directly from an Inspect log directory with the evals_df() function.\n\n\nOptions\nBy default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False). See the scores_by_task() reference for further details on available options.",
+    "crumbs": [
+      "Getting Started",
+      "Views"
+    ]
+  },
+  {
+    "objectID": "views.html#scores-timeline",
+    "href": "views.html#scores-timeline",
+    "title": "Views",
+    "section": "Scores Timeline",
+    "text": "Scores Timeline\nThe scores_timeline() function plots eval scores by model, organization, and release date.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_timeline\n\nevals = Data.from_file(\"benchmarks.parquet\")\nscores_timeline(evals)\n\n\n\n\n\nData Preparation\nThe scores by timeline plot expects Data with the following fields:\n\nmodel: Model name (e.g. “gpt-4o”)\norganization: Organization that created the model (e.g. “OpenAI”)\nrelease_date: Date of model release.\neval: Name of eval (e.g. “SWE-bench Verified”)\nscorer: Scorer used (e.g. “choice”).\nscore: Benchmark score (scaled 0-1).\nstderr: Standard error.\nlog_viewer: Optional. URL to view evaluation log.\n\n\n\nOptions\nUse the organizations option to customize the list of organizations to include (in order of desired presentation). Use the ci parameter to set a confidence interval (or disable confidence intervals). See the scores_timeline() reference for further details on available options.",
+    "crumbs": [
+      "Getting Started",
+      "Views"
+    ]
+  },
+  {
+    "objectID": "views.html#scores-with-baseline",
+    "href": "views.html#scores-with-baseline",
+    "title": "Views",
+    "section": "Scores with Baseline",
+    "text": "Scores with Baseline\nThe scores_with_baseline() function creates a horizontal bar plot for comparing the scores of different models on a single evaluation, with one or more baselines overlaid as vertical lines.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_with_baseline, Baseline\n\nevals = Data.from_file(\"gpqa_diamond.parquet\")\nscores_with_baseline(evals, baseline=0.697)\n\n\n\n\n\nData Preparation\nThe scores by task plot is intended to operate on data read directly from an Inspect log directory with the evals_df() function.\n\n\nOptions\nYou can speciry one more or more Baseline definitions using the baseline option. You can customize the sort order using the sort option (defaults to descening). See the scores_with_baseline() reference for further details on available options.",
+    "crumbs": [
+      "Getting Started",
+      "Views"
+    ]
+  },
+  {
+    "objectID": "views.html#tool-calls",
+    "href": "views.html#tool-calls",
+    "title": "Views",
+    "section": "Tool Calls",
+    "text": "Tool Calls\nThe tool_calls() function creates a heat map visualising tool calls over evaluation turns.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import tool_calls\n\ntools = Data.from_file(\"cybench_tools.parquet\")\ntool_calls(tools)\n\n\n\n\n\nData Preparation\nTo create the plot we read a raw messages data frame from an eval log using the messages_df() function, then filter down to just the fields we require for visualization:\n\nfrom inspect_ai.analysis.beta import messages_df, MessageColumns, SampleSummary\n\n# read messages from log\nlog = \"&lt;path-to-log&gt;.eval\"\ndf = messages_df(log, columns=SampleSummary + MessageColumns)\n\n# trim columns\ntools_df = df[[\n    \"eval_id\",\n    \"id\",\n    \"order\",\n    \"tool_call_function\",\n    \"limit\"\n]]\n\nNote that the trimming of columns is particularly important because Inspect Viz embeds datasets directly in the web pages that host them (so we want to minimize their size for page load performance and bandwidth usage).\n\n\nOptions\nUse the tools option to customize the list of tools to include (in order of desired presentation). See the tool_calls() reference for further details on available options.",
+    "crumbs": [
+      "Getting Started",
+      "Views"
     ]
   },
   {
@@ -1042,7 +1129,7 @@
     "href": "examples/inspect/tool-calls/index.html#implementation",
     "title": "Tool Calls",
     "section": "Implementation",
-    "text": "Implementation\nHere is an annotated version of the code required to produce the tool call plot above (click on the numbers in the right margin for additional explanation).\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import cell, text\n\n# read data (see 'Data Preparation' below)\n1data = Data.from_file(\"cybench_tools.parquet\")\n\ntools = [\"bash\", \"python\", \"submit\"]\n\nplot(\n2    cell(\n        data,\n        x=\"order\",\n        y=\"id\",\n        fill=\"tool_call_function\"\n    ),\n    \n3    text(\n        data, \n        text=\"limit\", \n        y=\"id\",\n        frame_anchor=\"right\", \n        font_size=8, \n        font_weight=200,\n        dx=50\n    ),\n    legend=legend(\"color\", location=\"right\"),\n4    margin_top=0,\n    margin_left=20,\n    margin_right=100,\n5    x_ticks=list(range(0, 400, 80)),\n    y_ticks=[],\n6    x_label=\"Message\",\n    y_label=\"Sample\",\n    color_label=\"Tool\",\n7    color_domain=tools\n)\n\n\n\n1\n\nRead tool call data (see Data Preparation for details).\n\n2\n\ncell() mark showing tool calls.\n\n3\n\ntext() mark showing whether the sample terminated due to a limit.\n\n4\n\nTweak the margins so the axis labels and text annotations appear correctly.\n\n5\n\nReduce the number of tick marks on the x-axis and eliminate y-ticks.\n\n6\n\nSet some custom labels and ensure that tools follow our designed order.\n\n7\n\nSpecify which tools we should show and in what order.\n\n\n\n\n\n\n\n\nData Preparation\nTo create the plot we read a raw messages data frame from an eval log1, fill the tool call field with “(none)” if there are no tool calls, then filter down to just the fields we require for visualization:\n\n\nfrom inspect_ai.analysis.beta import messages_df, MessageColumns, SampleSummary\n\n# read messages from log\nlog = \"&lt;path-to-log&gt;.eval\"\ndf = messages_df(log, columns=SampleSummary + MessageColumns)\n\n# trim columns\ntools_df = df[[\n    \"eval_id\",\n    \"id\",\n    \"order\",\n    \"tool_call_function\",\n    \"limit\"\n]]\n\nNote that the trimming of columns is particularly important because Inspect Viz embeds datasets directly in the web pages that host them (so we want to minimize their size for page load performance and bandwidth usage).",
+    "text": "Implementation\nHere is an annotated version of the code required to produce the tool call plot above (click on the numbers in the right margin for additional explanation).\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import cell, text\n\n# read data (see 'Data Preparation' below)\n1data = Data.from_file(\"cybench_tools.parquet\")\n\ntools = [\"bash\", \"python\", \"submit\"]\n\nplot(\n2    cell(\n        data,\n        x=\"order\",\n        y=\"id\",\n        fill=\"tool_call_function\"\n    ),\n    \n3    text(\n        data, \n        text=\"limit\", \n        y=\"id\",\n        frame_anchor=\"right\", \n        font_size=8, \n        font_weight=200,\n        dx=50\n    ),\n    legend=legend(\"color\", location=\"right\"),\n4    margin_top=0,\n    margin_left=20,\n    margin_right=100,\n5    x_ticks=list(range(0, 400, 80)),\n    y_ticks=[],\n6    x_label=\"Message\",\n    y_label=\"Sample\",\n    color_label=\"Tool\",\n7    color_domain=tools\n)\n\n\n\n1\n\nRead tool call data (see Data Preparation for details).\n\n2\n\ncell() mark showing tool calls.\n\n3\n\ntext() mark showing whether the sample terminated due to a limit.\n\n4\n\nTweak the margins so the axis labels and text annotations appear correctly.\n\n5\n\nReduce the number of tick marks on the x-axis and eliminate y-ticks.\n\n6\n\nSet some custom labels and ensure that tools follow our designed order.\n\n7\n\nSpecify which tools we should show and in what order.\n\n\n\n\n\n\n\n\nData Preparation\nTo create the plot we read a raw messages data frame from an eval log1 then filter down to just the fields we require for visualization:\n\n\nfrom inspect_ai.analysis.beta import messages_df, MessageColumns, SampleSummary\n\n# read messages from log\nlog = \"&lt;path-to-log&gt;.eval\"\ndf = messages_df(log, columns=SampleSummary + MessageColumns)\n\n# trim columns\ntools_df = df[[\n    \"eval_id\",\n    \"id\",\n    \"order\",\n    \"tool_call_function\",\n    \"limit\"\n]]\n\nNote that the trimming of columns is particularly important because Inspect Viz embeds datasets directly in the web pages that host them (so we want to minimize their size for page load performance and bandwidth usage).",
     "crumbs": [
       "Examples",
       "Inspect",

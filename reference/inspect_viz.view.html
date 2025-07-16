@@ -130,6 +130,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Getting Started</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="../views.html"> 
+<span class="menu-text">Views</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="../components-plots.html"> 
 <span class="menu-text">Components</span></a>
   </li>  
@@ -1423,7 +1427,7 @@ Note
 <p>Summarize eval scores using a bar plot. By default, scores (<code>y</code>) are plotted by “task_name” (<code>fx</code>) and “model” (<code>x</code>). By default, confidence intervals are also plotted (disable this with <code>y_ci=False</code>).</p>
 <p>Default field names are taken from the schema yielded by the Inspect <code>evals_df()</code> function. Pass alternate field names if you are plotting from a different dataset sechema.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/a628005615b27adaf641ca95f5b46853bd24f988/src/inspect_viz/view/beta/_scores_by_task.py#L13">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/a0b72f23d2b2c43992ecbd410e0e978704ae38da/src/inspect_viz/view/beta/_scores_by_task.py#L13">Source</a>
 </div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_by_task(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1484,7 +1488,7 @@ Note
 <h3 class="anchored" data-anchor-id="scores_timeline">scores_timeline</h3>
 <p>Eval scores by model, organization, and release date.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/a628005615b27adaf641ca95f5b46853bd24f988/src/inspect_viz/view/beta/_scores_timeline.py#L15">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/a0b72f23d2b2c43992ecbd410e0e978704ae38da/src/inspect_viz/view/beta/_scores_timeline.py#L15">Source</a>
 </div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_timeline(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1542,7 +1546,7 @@ Note
 <p>Summarize eval scores using a bar plot. By default, scores (<code>y</code>) are plotted by “task_name” (<code>fx</code>) and “model” (<code>x</code>). By default, confidence intervals are also plotted (disable this with <code>y_ci=False</code>).</p>
 <p>Default field names are taken from the schema yielded by the Inspect <code>evals_df()</code> function. Pass alternate field names if you are plotting from a different dataset sechema.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/a628005615b27adaf641ca95f5b46853bd24f988/src/inspect_viz/view/beta/_scores_with_baseline.py#L36">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/a0b72f23d2b2c43992ecbd410e0e978704ae38da/src/inspect_viz/view/beta/_scores_with_baseline.py#L36">Source</a>
 </div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_with_baseline(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1607,7 +1611,7 @@ Note
 <h3 class="anchored" data-anchor-id="tool_calls">tool_calls</h3>
 <p>Heat map visualising tool calls over evaluation turns.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/a628005615b27adaf641ca95f5b46853bd24f988/src/inspect_viz/view/beta/_tool_calls.py#L10">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/a0b72f23d2b2c43992ecbd410e0e978704ae38da/src/inspect_viz/view/beta/_tool_calls.py#L10">Source</a>
 </div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tool_calls(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1676,7 +1680,7 @@ Note
 <h3 class="anchored" data-anchor-id="baseline">Baseline</h3>
 <p>A baseline is a reference line that can be used to highlight important thresholds (for example, expert human performance).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/a628005615b27adaf641ca95f5b46853bd24f988/src/inspect_viz/view/beta/_scores_with_baseline.py#L14">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/a0b72f23d2b2c43992ecbd410e0e978704ae38da/src/inspect_viz/view/beta/_scores_with_baseline.py#L14">Source</a>
 </div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Baseline(TypedDict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section class="level4">
