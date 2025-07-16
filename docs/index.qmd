@@ -89,8 +89,8 @@ The `scores_with_baseline()` view enables you to view an ordered set of eval sco
 from inspect_viz import Data
 from inspect_viz.view.beta import scores_with_baseline, Baseline
 
-evals = Data.from_file("gpqa_diamond.parquet")
-scores_with_baseline(evals, baseline=0.697)
+evals = Data.from_file("agi-lsat-ar.parquet")
+scores_with_baseline(evals, baseline=0.91)
 ```
 
 See the article on [Views](views.qmd) to learn about all available pre-built views and the various options for customizing their appearance and behavior.
