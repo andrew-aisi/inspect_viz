@@ -123,6 +123,7 @@ plot(
 
 Note that tooltips can interfere with plot interactions---for example, if your bar plot was clickable to drive selections in other plots you would not want to specify `tip=True`.
 
+
 ### Values
 
 Tooltips show the values of all columns from the dataset that provide scales (e.g. `x`, `y`, `fx`, `stroke`, `fill`, `symbol`, etc.):
@@ -139,6 +140,24 @@ plot(
 )
 ```
 
+
+## Colors
+
+Use the `color_scheme` option to the `plot()` function to pick a theme (see the `ColorScheme` reference for available schemes). Use the `color_range` option to specify an explicit set of colors. For example, here we use the "tableau10" `color_scheme`:
+
+```{python}
+plot(
+    bar_y( 
+        evals, x="model", fx="task_name",
+        y="score_headline_value",
+        fill="model",
+    ),
+    legend=legend("color", location="bottom"),
+    x_label=None, x_ticks=[], fx_label=None,
+    y_label="score", y_domain=[0, 1.0],
+    color_scheme="tableau10"
+)
+```
 
 ## Titles
 
