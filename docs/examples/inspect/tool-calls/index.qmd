@@ -3,24 +3,11 @@ title: "Tool Calls"
 subtitle: "Dataset: [cybench_tools.parquet](cybench_tools.parquet)"
 ---
 
-In this example we visualize tool usage over a series of turns in a Cybench evaluation. We use a `cell()` mark to visualize tool use over messages in each sample of an evaluation. We note any limit that ended the sample using a `text()` mark on the right side of the frame.
+This example illustrates the code behind the [`tool_calls()`](../../../reference/inspect_viz.view.qmd#tool_calls) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
 
-```{python}
-#| filename: Code
+The plot visualizes tool usage over a series of turns in a Cybench evaluation. We use a `cell()` mark to visualize tool use over messages in each sample of an evaluation. We note any limit that ended the sample using a `text()` mark on the right side of the frame. See the [Data Preparation](#data-preparation) section below for details on how the data frame for the plot was created.
 
-from inspect_viz import Data
-from inspect_viz.view.beta import tool_calls
-
-tools = Data.from_file("cybench_tools.parquet")
-
-tool_calls(tools)
-```
-
-See the documentation on the [`tool_calls()`](../../../reference/inspect_viz.view.qmd#tool_calls) function for details on the data it requires as well as customizing varioius aspects of the plot.  If you are curious about how the plot was implemented, read on below.
-
-## Implementation
-
-Here is an annotated version of the code required to produce the tool call plot above (click on the numbers in the right margin for additional explanation).
+Here is the plot and an annotated version of the code required to produce it (click on the numbers in the right margin for additional explanation).
 
 ```{python}
 #| filename: Code
@@ -81,8 +68,6 @@ plot(
 ### Data Preparation {.unlisted}
 
 To create the plot we read a raw messages data frame from an eval log^[The eval log read for this example is in the [inspect-viz-example-logs](https://github.com/meridianlabs-ai/inspect-viz-example-logs/blob/main/logs/cybench/2025-06-28T12-26-01%2B00-00_cybench_cHgZahEpPHqsSx8GfGjKai.eval) repo] then filter down to just the fields we require for visualization:
-
-<!-- ~/meridianlabs/inspect-viz-example-logs/logs/cybench/2025-06-28T12-26-01+00-00_cybench_cHgZahEpPHqsSx8GfGjKai.eval -->
 
 ```{python}
 #| eval: false

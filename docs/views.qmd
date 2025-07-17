@@ -29,7 +29,7 @@ scores_by_task(evals)
 
 #### Data Preparation
 
-The scores by task plot is intended to operate on data read directly from an Inspect log directory with the [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df) function.
+The scores by task plot is intended to operate on data read directly from an Inspect log directory with the [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df) function. In addition, the data frame was amended with [links](components-links.qmd) to log files.
 
 #### Options
 
@@ -79,7 +79,7 @@ scores_with_baseline(evals, baseline=0.697)
 
 #### Data Preparation
 
-The scores by task plot is intended to operate on data read directly from an Inspect log directory with the [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df) function.
+The scores by task plot is intended to operate on data read directly from an Inspect log directory with the [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df) function. In addition, if the data frame is amended with [links](components-links.qmd) they are used automatically in the plot's tooltips.
 
 #### Options
 

@@ -3,30 +3,21 @@ title: Scores With Baseline
 subtitle: "Dataset: [agi-lsat-ar.parquet](agi-lsat-ar.parquet)"
 ---
 
-This example summarizes the scores of a single evaluation task, showing performance for 13 different models. Models are ordered based upon their headline score (defaulting to descending). You may add one or more baselines which
-are useful to illustrate important thresholds.
+This example illustrates the code behind the [`scores_with_baseline()`](../../../reference/inspect_viz.view.qmd#scores_with_baseline) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
+
+The plot summarizes the scores of a single evaluation task, showing performance for 13 different models. Models are ordered based upon their headline score (defaulting to descending). 
+
+The data for plotting is read using the [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df) function (and amended with [links](../../../components-links.qmd)) to the published logs).
+
 
 ```{python}
-from inspect_viz import Data
-from inspect_viz.view.beta import scores_with_baseline, Baseline
-
-evals = Data.from_file("agi-lsat-ar.parquet")
-scores_with_baseline(evals, baseline=0.91)
-```
-
-See the documentation on the [`scores_with_baseline()`](../../../reference/inspect_viz.view.qmd#scores_with_baseline) function for details on the data it requires as well as customizing varioius aspects of the plot. If you are curious about how the plot was implemented, read on below.
-
-
-## Implementation
-
-Here is an annotated version of the code required to produce the timeline plot above (click on the numbers in the right margin for additional explanation).
-
-```{python}
-#| output: false
+#| filename: Code
 
 from inspect_viz import Data
 from inspect_viz.plot import plot
 from inspect_viz.mark import bar_x, rule_x, text
+
+evals = Data.from_file("agi-lsat-ar.parquet")
 
 baseline_color = "#000000"
 baseline_value = 0.91
@@ -38,6 +29,7 @@ plot(
         y="model",                            # <1>
         sort={"y": "x", "reverse": True},     # <1>
         fill="#416AD0",                       # <1>
+        channels={"Log Viewer": "log_viewer"}, # <1>
         tip=True                              # <1>
     ),                                        # <1>
     rule_x(                                   # <2>

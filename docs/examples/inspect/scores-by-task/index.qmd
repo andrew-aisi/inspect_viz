@@ -3,68 +3,13 @@ title: Scores by Task
 subtitle: "Dataset: [evals.parquet](evals.parquet)"
 ---
 
-This example summarizes the scores of 4 evaluation tasks (gpqa_diamond, aime2024, mmlu_pro, cybench, and swe_bench) across 4 models (OpenAI o4-mini and o3, and Anthropic Claude Sonnet 3.7 and 4.0).
+This example illustrates the code behind the 
+This example illustrates the code behind the [`scores_by_task()`](../../../reference/inspect_viz.view.qmd#scores_by_task) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
 
-```{python}
-#| eval: false
-#| echo: false
-
-from inspect_ai.analysis.beta import evals_df, prepare, log_viewer
-
-LOG_DIR = "~/meridianlabs/inspect-viz-example-logs/logs/"
-df = evals_df(LOG_DIR)
-df = prepare(df, log_viewer("evals", {LOG_DIR: "https://samples.meridianlabs.ai"}))
-df.to_parquet("evals.parquet")
-```
-
+Here is the base bar plot with data read using the [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df) function (and amended with [links](../../../components-links.qmd)) to the published logs):
 
 ```{python}
 #| filename: Code
-
-from inspect_viz import Data
-from inspect_viz.view.beta import scores_by_task
-
-evals = Data.from_file("evals.parquet")
-scores_by_task(evals)
-```
-
-See the documentation on the [`scores_by_task()`](../../../reference/inspect_viz.view.qmd#scores_by_task) function for details on the data it requires as well as customizing varioius aspects of the plot. 
-
-Below we'll describe how to add filtering to the plot as well as provide additional details on how it was implemented.
-
-
-## Filtering
-
-Here we add filtering inputs to enable viewing a single model and/or single task at a time. We use the `hconcat()` and `vconcat()` functions to layout the inputs and the plot.
-
-```{python}
-#| filename: Code
-from inspect_viz.input import select
-from inspect_viz.layout import hconcat, vconcat
-
-vconcat( # <1>
-    hconcat(
-        select(evals, label="Model", column="model"),  # <2>
-        select(evals, label="Task", column="task_name"),  # <2>
-    ),
-    scores_by_task(evals)
-)
-```
-
-1. Use layout functions to arrange inputs and plot.
-
-2. `select()` inputs and `bar_y()` are automatically bound to the dataset selection for `evals`. 
-
-
-
-
-## Implementation
-
-Here is an annotated version of the code required to produce the plot above (click on the numbers in the right margins for additional explanation). We start with a simple bar chart faceted by evaluation task.
-
-```{python}
-#| filename: Code
-#| output: false
 
 from inspect_viz import Data
 from inspect_viz.plot import plot, legend
@@ -79,42 +24,47 @@ plot(
         x="model", 
         fx="task_name", # <1>
         y="score_headline_value",
-        fill="model"
+        channels= { "Log Viewer": "log_viewer" }, # <2>
+        fill="model",
+        tip=True
     ),
     legend=legend("color", location="bottom"),
-    x_label=None, fx_label=None, x_ticks=[],  # <2> 
-    y_label="score", y_domain=[0, 1.0] # <3>
+    x_label=None, fx_label=None, x_ticks=[],  # <3> 
+    y_label="score", y_domain=[0, 1.0], # <4>
+    color_label="Model"
 )
 ```
 
-1. Facet the x-axis (i.e. create multiple groups of bars) by task name.
+1.  Facet the x-axis (i.e. create multiple groups of bars) by task name.
 
-2. We don't need an explicit "model" or "task_name" label as they are obvious from context. We also don't need ticks b/c the fill color and legend provide this.
+2.  Add a channel with links to the Inspect log files (links appear in the tooltip).
 
-3. Ensure that y-axis shows the full range of scores (by default it caps at the maximum).
+3.  We don't need an explicit "model" or "task_name" label as they are obvious from context. We also don't need ticks b/c the fill color and legend provide this.
+
+4.  Ensure that y-axis shows the full range of scores (by default it caps at the maximum).
 
 #### Confidence Interval
 
-Next, we add a confidence interval for each reported score by adding a `rule_x()` mark. Note that we compute the confidence interval range dynamically using a `sql()` transform:
+Here we add a confidence interval for each reported score by adding a `rule_x()` mark. Note that we compute the confidence interval range dynamically using a `sql()` transform:
 
 ```{python}
 #| filename: Code
 
 from inspect_viz.mark import rule_x
-from inspect_viz.transform import sql
+from inspect_viz.transform import sql, ci_bounds
 
-def ci_value(direction):   # <1>
-    Z_ALPHA = 1.960
-    return sql(
-        "score_headline_value" +
-        f"{direction}" +
-        f"({Z_ALPHA} * score_headline_stderr)"
-    ) # <1>
+# confidence interval bounds  # <1>
+ci_lower, ci_upper = ci_bounds(
+    0.95, 
+    score="score_headline_value", 
+    stderr="score_headline_stderr"
+) # <1>
 
 plot(
     bar_y( 
         evals, x="model", fx="task_name", 
         y="score_headline_value",
+        channels= { "Log Viewer": "log_viewer" },
         fill="model",
         tip=True
     ),
@@ -122,17 +72,18 @@ plot(
         evals,
         x="model",
         fx="task_name",
-        y1=ci_value("-"),
-        y2=ci_value("+"),
+        y1=ci_lower,
+        y2=ci_upper,
         stroke="black",
         marker="tick-x",
     ),  # <2>
     legend=legend("color", location="bottom"),
     x_label=None, fx_label=None, x_ticks=[],
-    y_label="score", y_domain=[0, 1.0]
+    y_label="score", y_domain=[0, 1.0],
+    color_label="Model"
 )
 ```
 
-1. Dynanically compute each side of the confidence interval using a `sql()` transform.
+1.  Use the `ci_bounds()` bounds function to create transforms that we will pass for `y1` and `y2`.
 
-2. Draw the confidence interval using a `rule_x()` mark.
+2.  Draw the confidence interval using a `rule_x()` mark.

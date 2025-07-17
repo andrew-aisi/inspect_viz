@@ -5,27 +5,23 @@ resources:
    - import.py
 ---
 
-This example plots several benchmarks against models from various organizations, with release date on the x-axis. The original data for this plot was published by the [Epoch AI Benchmarking Hub](https://epoch.ai/data/ai-benchmarking-dashboard).
+This example illustrates the code behind the [`scores_timeline()`](../../../reference/inspect_viz.view.qmd#scores_timeline) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
+
+We plot several benchmarks against models from various organizations, with release date on the x-axis. The original data for this plot was published by the [Epoch AI Benchmarking Hub](https://epoch.ai/data/ai-benchmarking-dashboard). The fields in the dataset are as follows:
+
+- `model`: Model name (e.g. "gpt-4o")
+- `organization`: Organization that created the model (e.g. "OpenAI")
+- `release_date`: Date of model release.
+- `eval`: Name of eval (e.g. "SWE-bench Verified")
+- `scorer`: Scorer used (e.g. "choice").
+- `score`: Benchmark score (scaled 0-1).
+- `stderr`: Standard error.
+- `log_viewer`: Optional. URL to view evaluation log.
+
+Here is the plot and code required to produce it (click on the numbers at right for further explanation):
 
 ```{python}
 #| filename: Code
-
-from inspect_viz import Data
-from inspect_viz.view.beta import scores_timeline
-
-evals = Data.from_file("evals.parquet")
-scores_timeline(evals)
-```
-
-See the documentation on the [`scores_timeline()`](../../../reference/inspect_viz.view.qmd#scores_timeline) function for details on the data it requires as well as customizing varioius aspects of the plot. If you are curious about how the plot was implemented, read on below.
-
-## Implementation
-
-Here is an annotated version of the code required to produce the timeline plot above (click on the numbers in the right margin for additional explanation).
-
-```{python}
-#| filename: Code
-#| output: false
 
 from inspect_viz import Data, Selection
 from inspect_viz.input import checkbox_group, select

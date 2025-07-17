@@ -38,7 +38,7 @@ Use the filters to switch benchmarks and restrict to models from various organiz
 Why use a visualisation library specific to Inspect? Why not just use Matplotlib or Plotly which you might already be familiar with and which LLMs have experience writing code for? Inspect Viz is indeed not for every scenario, and it does have a learning curve. You should consider Inspect Viz for situations where:
 
 1. You want to take advantage of its pre-built [Views](views.qmd) that go directly from Inspect log [data frames](https://inspect.aisi.org.uk/dataframe.html) to visualizations.
-2. You want to create plots that include direct links to the Inspect log viewer (try hovering over the points above and then clicking the log viewer link).
+2. You want to create plots that include direct [links](components-links.qmd) to the Inspect log viewer (try hovering over the points above and then clicking the log viewer link).
 3. You want to create _interactive_ visualizations (either filtering as shown above or directly selecting points on one plot to dynamially drive the contents of other plots).
 4. You value the more modern appearance and flexible compositions available in [Observable Plot](https://observablehq.com/plot/), the plotting library Inspect Viz is built on.
  
@@ -163,6 +163,16 @@ table(penguins)
 ```
 
 You can sort and filter tables by column, use a scrolling or paginated display, and customize several other aspects of table appearance and behavior.
+
+## Links
+
+Inspect Viz supports creating direct links from visualizations to published Inspect log transcripts. Links can be made at the eval level, or to individual samples, messages, or events. For example, this plot produced with `scores_with_baseline()` includes a link to the underlying logs in its tooltips:
+
+```{python}
+scores_with_baseline(evals, baseline=0.91)
+```
+
+The pre-built [Views](views.qmd) all support linking when a `log_viewer` column is available in the dataset. To learn more about ammending datasets with viewer URLs as well as adding linking support to your own plots see the article on [Links](components-links.qmd).
 
 ## Filters
 
