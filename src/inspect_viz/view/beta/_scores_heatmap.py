@@ -55,7 +55,7 @@ class CellOptions(TypedDict, total=False):
 
 
 def scores_heatmap(
-    evals: Data,
+    data: Data,
     x: str = "task_name",
     y: str = "model",
     fill: str = "score_headline_value",
@@ -73,7 +73,7 @@ def scores_heatmap(
     Creates a heatmap plot of success rate of eval data.
 
     Args:
-       evals: Evals data table.
+       data: Evals data table.
        x: Name of column to use for columns.
        y: Name of column to use for rows.
        fill: Name of the column to use as values to determine cell color.
@@ -93,8 +93,8 @@ def scores_heatmap(
         resolved_y = sql("split_part(model, '/', 2)")
 
     # Compute the color domain
-    min_value = evals.column_min(fill)
-    max_value = evals.column_max(fill)
+    min_value = data.column_min(fill)
+    max_value = data.column_max(fill)
 
     color_domain = [min_value, max_value]
     if min_value >= 0 and max_value <= 1:
@@ -139,7 +139,7 @@ def scores_heatmap(
     if cell is not None:
         components.append(
             text(
-                evals,
+                data,
                 x=x,
                 y=resolved_y,
                 text=fill,
@@ -148,9 +148,14 @@ def scores_heatmap(
             )
         )
 
+    # channels
+    channels: dict[str, str] = {}
+    if "log_viewer" in data.columns:
+        channels["Log Viewer"] = "log_viewer"
+
     heatmap = plot(
         cell_mark(
-            evals,
+            data,
             x=x,
             y=resolved_y,
             fill=avg(fill),
@@ -160,6 +165,7 @@ def scores_heatmap(
                 "y": {"value": "fill", "reduce": "sum", "reverse": ascending},
                 "x": {"value": "fill", "reduce": "sum", "reverse": not ascending},
             },
+            channels=channels,
         ),
         *components,
         legend=(
