@@ -1,0 +1,43 @@
+---
+title: Scores by Task
+subtitle: "Dataset: [evals.parquet](evals.parquet)"
+---
+
+This example summarizes the scores of 4 evaluation tasks (gpqa_diamond, aime2024, mmlu_pro, cybench, and swe_bench) across 4 models (OpenAI o4-mini and o3, and Anthropic Claude Sonnet 3.7 and 4.0).
+
+```{python}
+#| filename: Code
+import pandas as pd
+from inspect_viz import Data
+from inspect_viz.view.beta import scores_heatmap
+
+evals_df = pd.read_parquet("evals.parquet")
+evals_data = Data.from_dataframe(evals_df)
+
+scores_heatmap(evals_data, height=250, legend="right", padding=0.00001)
+
+
+
+```
+
+See the documentation on the [`scores_heatmap()`](../../../reference/inspect_viz.view.qmd#scores_heatmap) function for details on the data it requires as well as customizing varioius aspects of the plot. 
+
+Below we'll describe how to add filtering to the plot as well as provide additional details on how it was implemented.
+
+
+
+
+## Implementation
+
+Here is an annotated version of the code required to produce the plot above (click on the numbers in the right margins for additional explanation). We start with a simple bar chart faceted by evaluation task.
+
+```{python}
+#| filename: Code
+#| output: false
+
+
+```
+
+1. Dynanically compute each side of the confidence interval using a `sql()` transform.
+
+2. Draw the confidence interval using a `rule_x()` mark.
