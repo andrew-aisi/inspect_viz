@@ -1,11 +1,9 @@
-from typing import Literal, Unpack
+from typing import Literal, TypedDict, Unpack
 
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
 from inspect_viz._util.notgiven import NotGiven
-from inspect_viz.input._select import select
-from inspect_viz.layout._concat import hconcat, vconcat
-from inspect_viz.mark import cell
+from inspect_viz.mark import cell as cell_mark
 from inspect_viz.mark._channel import Channel
 from inspect_viz.mark._text import text
 from inspect_viz.plot import plot
@@ -14,9 +12,48 @@ from inspect_viz.plot._legend import legend as create_legend
 from inspect_viz.transform._aggregate import avg
 from inspect_viz.transform._sql import sql
 
-# TODO: value color based upon background color?
 # TODO: sorting parameter seems very sketchy
-# TODO: center the legend (Add class to plot?)
+
+
+class LegendOptions(TypedDict, total=False):
+    """Legend options."""
+
+    label: str | None
+    """The label for the legend. If None, no label is shown."""
+
+    location: Literal["bottom", "left", "right", "top"]
+    """The location of the legend relative to the plot. Defaults to "bottom"."""
+
+    width: float
+    """The width of the legend in pixels. Defaults to 370."""
+
+    height: float | None
+    """The height of the legend in pixels. Defaults to None, which means the height is determined by the content."""
+
+    margin_left: float | None
+    """Left margin in pixels. Defaults to None."""
+
+    margin_right: float | None
+    """Right margin in pixels. Defaults to None."""
+
+    margin_top: float | None
+    """Top margin in pixels. Defaults to None."""
+
+    margin_bottom: float | None
+    """Bottom margin in pixels. Defaults to None."""
+
+    tick_size: float | None
+    """Size of the ticks in pixels. Defaults to None, which means no ticks are shown."""
+
+
+class CellOptions(TypedDict, total=False):
+    """Cell options for the heatmap."""
+
+    inset: float | None
+    """Inset for the cell marks. Defaults to 1 pixel."""
+
+    text: str | None
+    """Text color for the cell marks. Defaults to "white". Set to None to disable text."""
 
 
 def scores_heatmap(
@@ -24,12 +61,14 @@ def scores_heatmap(
     x: str = "task_name",
     y: str = "model",
     fill: str = "score_headline_value",
+    cell: CellOptions | None = None,
+    tip: bool = True,
     ascending: bool = True,
     height: float | None = None,
     width: float | None = None,
     x_label: str | None | NotGiven = None,
     y_label: str | None | NotGiven = None,
-    legend: Literal["bottom", "left", "right", "top", "none"] = "none",
+    legend: LegendOptions | None = None,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """
@@ -40,12 +79,14 @@ def scores_heatmap(
        x: Name of column to use for columns.
        y: Name of column to use for rows.
        fill: Name of the column to use as values to determine cell color.
+       cell: Options for the cell marks.
+       tip: Whether to show a tooltip with the value when hovering over a cell (defaults to True).
+       legend: Options for the legend. Pass None to disable the legend.
        ascending: Sort order for the x and y axes. Defaults to True.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio)).
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        x_label: x-axis label (defaults to None).
        y_label: y-axis label (defaults to None).
-       legend: Location of the legend. Can be "bottom", "left", "right", "top", or "none". Defaults to "none".
        **attributes: Additional `PlotAttributes
     """
     # resolve the y value
@@ -70,39 +111,65 @@ def scores_heatmap(
         margin_bottom=75,
         color_scale="linear",
         padding=0,
-        color_scheme="blues",
+        color_scheme="viridis",
         color_domain=color_domain,
     )
     attributes = defaultAttributes | attributes
 
+    # resolve cell options
+    default_cell_options = CellOptions(
+        inset=1,
+        text="white",
+    )
+    cell = default_cell_options | (cell or {})
+
+    # resolve legend options
+    default_legend_options = LegendOptions(
+        location="bottom",
+    )
+    legend = default_legend_options | (legend or {})
+
+    # set special defaults
+    if legend["location"] in ["bottom"]:
+        if "margin_left" not in legend:
+            legend["margin_left"] = 156
+        if "width" not in legend:
+            legend["width"] = 370
+
+    # resolve the text marks
+    components = []
+    if cell is not None:
+        components.append(
+            text(
+                evals,
+                x=x,
+                y=resolved_y,
+                text=fill,
+                fill=cell["text"],
+                styles={"font_weight": 600},
+            )
+        )
+
     heatmap = plot(
-        cell(
+        cell_mark(
             evals,
             x=x,
             y=resolved_y,
             fill=avg(fill),
-            tip=True,
-            inset=1,
+            tip=tip,
+            inset=cell["inset"] if cell else None,
             sort={
                 "y": {"value": "fill", "reduce": "sum", "reverse": ascending},
                 "x": {"value": "fill", "reduce": "sum", "reverse": not ascending},
             },
         ),
-        text(
-            evals,
-            x=x,
-            y=resolved_y,
-            text=fill,
-            fill="black",
-            styles={"font_weight": 600},
-        ),
+        *components,
         legend=(
             create_legend(
                 "color",
-                label="Score",
-                location=legend,
+                **legend if legend is not None else None,
             )
-            if legend != "none"
+            if legend is not None
             else None
         ),
         width=width,
@@ -112,10 +179,4 @@ def scores_heatmap(
         **attributes,
     )
 
-    return vconcat(
-        hconcat(
-            select(evals, label=x, column=x, multiple=True),
-            select(evals, label=y, column=y, multiple=True),
-        ),
-        heatmap,
-    )
+    return heatmap

@@ -9,15 +9,12 @@ This example summarizes the scores of 4 evaluation tasks (gpqa_diamond, aime2024
 #| filename: Code
 import pandas as pd
 from inspect_viz import Data
-from inspect_viz.view.beta import scores_heatmap
+from inspect_viz.view.beta import scores_heatmap, CellOptions, LegendOptions
 
 evals_df = pd.read_parquet("evals.parquet")
 evals_data = Data.from_dataframe(evals_df)
 
-scores_heatmap(evals_data, height=250, legend="right", padding=0.00001)
-
-
-
+scores_heatmap(evals_data, height=250)
 ```
 
 See the documentation on the [`scores_heatmap()`](../../../reference/inspect_viz.view.qmd#scores_heatmap) function for details on the data it requires as well as customizing varioius aspects of the plot. 
