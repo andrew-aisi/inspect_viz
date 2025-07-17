@@ -7,8 +7,8 @@ from ._tool_calls import tool_calls
 __all__ = [
     "scores_by_task",
     "scores_timeline",
+    "scores_heatmap",
     "scores_with_baseline",
     "tool_calls",
     "Baseline",
-    "scores_heatmap",
 ]

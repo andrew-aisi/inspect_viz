@@ -1,5 +1,5 @@
 ---
-title: Scores by Task
+title: Scores Heatmap
 subtitle: "Dataset: [evals.parquet](evals.parquet)"
 ---
 

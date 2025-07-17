@@ -68,6 +68,7 @@ website:
           - section: Inspect
             contents:
               - href: examples/inspect/scores-by-task/index.qmd
+              - href: examples/inspect/scores-heatmap/index.qmd
               - href: examples/inspect/scores-timeline/index.qmd
               - href: examples/inspect/scores-with-baseline/index.qmd
                 text: "Scores w/ Baseline"
