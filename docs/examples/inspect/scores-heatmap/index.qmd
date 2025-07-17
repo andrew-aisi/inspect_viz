@@ -3,19 +3,17 @@ title: Scores Heatmap
 subtitle: "Dataset: [evals.parquet](evals.parquet)"
 ---
 
-This example illustrates the code behind the [`scores_heatmap()`](../../../reference/inspect_viz.view.qmd#scores_heatmap) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
+This example illustrates the code behind the [`scores_heatmap()`](../../../view-scores-heatmap.qmd) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
 
 The data for plotting is read using the [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df) function (and amended with [links](../../../components-links.qmd)) to the published logs.
 
 ```{python}
 #| filename: Code
-import pandas as pd
 from inspect_viz import Data
 from inspect_viz.plot import plot
 from inspect_viz.mark import cell, text
 
-evals_df = pd.read_parquet("evals.parquet")
-evals_data = Data.from_dataframe(evals_df)
+evals_data = Data.from_file("evals.parquet")
 
 plot(
     cell(                                                                   # <1>

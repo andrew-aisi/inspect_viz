@@ -1,0 +1,34 @@
+---
+title: "Scores Heatmap"
+reference: "inspect_viz.view.beta"
+filters: 
+   - at: pre-ast
+     type: json
+     path: reference/filter/filter.py
+   - at: pre-ast
+     path: reference/filter/post.lua
+---
+
+## Overview
+
+The `scores_heatmap()`function renders a heatmap for comparing eval scores.
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.view.beta import scores_heatmap
+
+evals = Data.from_file("evals.parquet")
+scores_heatmap(evals, height=200)
+```
+
+## Data Preparation
+
+The scores heatmap plot is intended to operate on data read directly from an Inspect log directory with the [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df) function. In addition, if the data frame is amended with [links](components-links.qmd) they are used automatically in the plot's tooltips.
+
+
+## Function Reference {reference="scores_heatmap"}
+
+## Implementation
+
+The [Scores Heatmap](examples/inspect/scores-heatmap/index.qmd) example demonstrates how this view was implemented using lower level plotting components.
+
