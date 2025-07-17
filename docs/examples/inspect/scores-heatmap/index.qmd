@@ -3,38 +3,59 @@ title: Scores Heatmap
 subtitle: "Dataset: [evals.parquet](evals.parquet)"
 ---
 
-This example summarizes the scores of 4 evaluation tasks (gpqa_diamond, aime2024, mmlu_pro, cybench, and swe_bench) across 4 models (OpenAI o4-mini and o3, and Anthropic Claude Sonnet 3.7 and 4.0).
+This example illustrates the code behind the [`scores_heatmap()`](../../../reference/inspect_viz.view.qmd#scores_heatmap) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
+
+The data for plotting is read using the [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df) function (and amended with [links](../../../components-links.qmd)) to the published logs.
 
 ```{python}
 #| filename: Code
 import pandas as pd
 from inspect_viz import Data
-from inspect_viz.view.beta import scores_heatmap, CellOptions, LegendOptions
+from inspect_viz.plot import plot
+from inspect_viz.mark import cell, text
 
 evals_df = pd.read_parquet("evals.parquet")
 evals_data = Data.from_dataframe(evals_df)
 
-scores_heatmap(evals_data, height=250)
+plot(
+    cell(                                                                   # <1>
+        evals_data,                                                         
+        x="task_name",                                                      
+        y="model",
+        fill="score_headline_value",                                        # <2>
+        tip=True,
+        inset=1,                                                            # <3>
+        sort={                                                              # <4>
+            "y": {"value": "fill", "reduce": "sum", "reverse": True},       # <4>
+            "x": {"value": "fill", "reduce": "sum", "reverse": False},      # <4>
+        },                                                                  # <4>
+    ),
+    text(                                                                   # <5>
+        evals_data,
+        x="task_name",
+        y="model",
+        text="score_headline_value",
+        fill="white",
+        styles={"font_weight": 600},
+    ),
+    padding=0,                                                              # <6>
+    color_scheme="viridis",
+    height=250,
+    margin_left=150,
+    x_label=None,
+    y_label=None
+)
 ```
 
-See the documentation on the [`scores_heatmap()`](../../../reference/inspect_viz.view.qmd#scores_heatmap) function for details on the data it requires as well as customizing varioius aspects of the plot. 
+1. The `cell` mark draws the cells, position each cell along the x and y axis using the fields specified in `x` and `y`.
 
-Below we'll describe how to add filtering to the plot as well as provide additional details on how it was implemented.
+2. The cell's color is determined using the field specified in the `fill`.
 
+3. The cell inset controls the space between cells.
 
+4. Sorting of the cells is important in a heatmap to cause colors to be grouped along the x and y axis. In this case, we sort using the sum of the rows and columns, place the highest values at the top righ and lowest values at the bottom left.
 
+5. Place the value as text centered in the cell.
 
-## Implementation
+6. Remove plot padding so the inset along controls spacing between cells.
 
-Here is an annotated version of the code required to produce the plot above (click on the numbers in the right margins for additional explanation). We start with a simple bar chart faceted by evaluation task.
-
-```{python}
-#| filename: Code
-#| output: false
-
-
-```
-
-1. Dynanically compute each side of the confidence interval using a `sql()` transform.
-
-2. Draw the confidence interval using a `rule_x()` mark.
