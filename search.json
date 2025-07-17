@@ -170,7 +170,7 @@
     "href": "reference/inspect_viz.view.html#scores",
     "title": "inspect_viz.view.beta",
     "section": "Scores",
-    "text": "Scores\n\nscores_by_task\nBar plot for comparing eval scores.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\nDefault field names are taken from the schema yielded by the Inspect evals_df() function. Pass alternate field names if you are plotting from a different dataset sechema.\n\nSource\n\ndef scores_by_task(\n    data: Data,\n    x: str = \"model\",\n    fx: str = \"task_name\",\n    y: str = \"score_headline_value\",\n    y_stderr: str = \"score_headline_stderr\",\n    y_ci: bool | float = 0.95,\n    y_label: str | None | NotGiven = NOT_GIVEN,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “model”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny str\n\nName of field for y axis (defaults to “score_headline_value”).\n\ny_stderr str\n\nName of field for stderr (defaults to “score_headline_metric”).\n\ny_ci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.\n\ny_label str | None | NotGiven\n\nY axis label (pass None for no label).\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].\n\n\n\n\nscores_timeline\nEval scores by model, organization, and release date.\n\nSource\n\ndef scores_timeline(\n    data: Data,\n    organizations: list[str] | None = None,\n    ci: float | bool = 0.95,\n    x_label: str = \"Release Date\",\n    y_label: str = \"Score\",\n    eval_label: str = \"Eval\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nData with the following fields:\n\nmodel: Model name (e.g. “gpt-4o”)\norganization: Organization that created the model (e.g. “OpenAI”)\nrelease_date: Date of model release.\neval: Name of eval (e.g. “SWE-bench Verified”)\nscorer: Scorer used (e.g. “choice”).\nscore: Benchmark score (scaled 0-1).\nstderr: Standard error.\nlog_viewer: Optional. URL to view evaluation log.\n\n\norganizations list[str] | None\n\nList of organizations to include (in order of desired presentation).\n\nci float | bool\n\nConfidence interval (defaults to 0.95, pass False for no confidence intervals)\n\nx_label str\n\nx-axis label\n\ny_label str\n\ny-axis label\n\neval_label str\n\nEval select label.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the x_domain is set to “fixed”, the y_domain is set to [0,1.0], color_label is set to “Organizations”, and color_domain is set to organizations.\n\n\n\n\nscores_with_baseline\nBar plot for comparing the scores of different models on a single evaluation.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\nDefault field names are taken from the schema yielded by the Inspect evals_df() function. Pass alternate field names if you are plotting from a different dataset sechema.\n\nSource\n\ndef scores_with_baseline(\n    data: Data,\n    *,\n    x: str = \"score_headline_value\",\n    y: str | None = None,\n    width: float | None = None,\n    height: float | None = None,\n    baseline: int | float | Baseline | list[Baseline] | None = None,\n    sort: Literal[\"asc\", \"desc\"] | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “score_headline_value”).\n\ny str | None\n\nName of field for x axis (defaults to “model”)\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\nbaseline int | float | Baseline | list[Baseline] | None\n\nBaseline value or values to draw on the plot. This can be a single value, a Baseline dictionary, or a list of Baseline dictionaries. If None, no baseline is drawn.\n\nsort Literal['asc', 'desc'] | None\n\nSort order for the bars (sorts using the ‘x’ value). Can be “asc” or “desc”. Defaults to “asc”.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].",
+    "text": "Scores\n\nscores_by_task\nBar plot for comparing eval scores.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\nDefault field names are taken from the schema yielded by the Inspect evals_df() function. Pass alternate field names if you are plotting from a different dataset sechema.\n\nSource\n\ndef scores_by_task(\n    data: Data,\n    x: str = \"model\",\n    fx: str = \"task_name\",\n    y: str = \"score_headline_value\",\n    y_stderr: str = \"score_headline_stderr\",\n    y_ci: bool | float = 0.95,\n    y_label: str | None | NotGiven = NOT_GIVEN,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “model”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny str\n\nName of field for y axis (defaults to “score_headline_value”).\n\ny_stderr str\n\nName of field for stderr (defaults to “score_headline_metric”).\n\ny_ci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.\n\ny_label str | None | NotGiven\n\nY axis label (pass None for no label).\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].\n\n\n\n\nscores_timeline\nEval scores by model, organization, and release date.\n\nSource\n\ndef scores_timeline(\n    data: Data,\n    organizations: list[str] | None = None,\n    ci: float | bool = 0.95,\n    x_label: str = \"Release Date\",\n    y_label: str = \"Score\",\n    eval_label: str = \"Eval\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nData with the following fields:\n\nmodel: Model name (e.g. “gpt-4o”)\norganization: Organization that created the model (e.g. “OpenAI”)\nrelease_date: Date of model release.\neval: Name of eval (e.g. “SWE-bench Verified”)\nscorer: Scorer used (e.g. “choice”).\nscore: Benchmark score (scaled 0-1).\nstderr: Standard error.\nlog_viewer: Optional. URL to view evaluation log.\n\n\norganizations list[str] | None\n\nList of organizations to include (in order of desired presentation).\n\nci float | bool\n\nConfidence interval (defaults to 0.95, pass False for no confidence intervals)\n\nx_label str\n\nx-axis label\n\ny_label str\n\ny-axis label\n\neval_label str\n\nEval select label.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the x_domain is set to “fixed”, the y_domain is set to [0,1.0], color_label is set to “Organizations”, and color_domain is set to organizations.\n\n\n\n\nscores_with_baseline\nBar plot for comparing the scores of different models on a single evaluation.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\nDefault field names are taken from the schema yielded by the Inspect evals_df() function. Pass alternate field names if you are plotting from a different dataset sechema.\n\nSource\n\ndef scores_with_baseline(\n    data: Data,\n    *,\n    x: str = \"score_headline_value\",\n    y: str | None = None,\n    width: float | None = None,\n    height: float | None = None,\n    baseline: int | float | Baseline | list[Baseline] | None = None,\n    sort: Literal[\"asc\", \"desc\"] | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    fill: str | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “score_headline_value”).\n\ny str | None\n\nName of field for x axis (defaults to “model”)\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\nbaseline int | float | Baseline | list[Baseline] | None\n\nBaseline value or values to draw on the plot. This can be a single value, a Baseline dictionary, or a list of Baseline dictionaries. If None, no baseline is drawn.\n\nsort Literal['asc', 'desc'] | None\n\nSort order for the bars (sorts using the ‘x’ value). Can be “asc” or “desc”. Defaults to “asc”.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\nfill str | None\n\nThe fill color for the bars. Defaults to “#416AD0”. Pass any valid css color value (hex, rgb, named colors, etc.).\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].",
     "crumbs": [
       "Reference",
       "Python API",
@@ -226,101 +226,109 @@
     ]
   },
   {
-    "objectID": "examples/index.html",
-    "href": "examples/index.html",
-    "title": "Inspect Viz Examples",
+    "objectID": "publishing-notebooks.html",
+    "href": "publishing-notebooks.html",
+    "title": "Notebooks",
     "section": "",
-    "text": "These examples demonstrate various plotting and interactivity features. If you are just beginning to use Inspect Viz you review the Getting Started article before exploring these examples.",
+    "text": "A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks (Quarto and nbconvert), and then these documents can in turn be printed to PDF if required.\nYou can also share a live version of a notebook that supports filtering and plot interactions by pubishing it on a platform like Google Colab.",
     "crumbs": [
-      "Examples"
+      "Getting Started",
+      "Publishing",
+      "Notebooks"
     ]
   },
   {
-    "objectID": "examples/index.html#inspect",
-    "href": "examples/index.html#inspect",
-    "title": "Inspect Viz Examples",
-    "section": "Inspect",
-    "text": "Inspect\nThese examples demonstrates creating visualisations from Inspect log files (leveraging the functions in inspect_ai.analysis module for creation of data frames from logs).\n\n\n\n\n\n\n\nScores by Task\nBar plot summarizing eval scores by model and task.\n\n\nScores Timeline\nEval scores for various models, with release date on the x-axis.\n\n\nScores with Baseline\nVisualise model scores on a single evaluation, with one or more baselines.\n\n\nTool Calls\nVisualise tool usage over a series of turns.",
-    "crumbs": [
-      "Examples"
-    ]
-  },
-  {
-    "objectID": "examples/index.html#general",
-    "href": "examples/index.html#general",
-    "title": "Inspect Viz Examples",
-    "section": "General",
-    "text": "General\nThese examples demonstrate general plotting techniques using a variety of other examples datasets.\n\n\n\n\n\n\n\nPenguins Explorer\nDot plots, tables, color and symbol channels, filtering inputs.\n\n\nBias Parameter\nArea plots; slider inputs; channel expressions.\n\n\nSeattle Weather\nDot plots; bar plots; color and radius channels; x-interval selections, interactive legend.\n\n\nAthletes (Regression)\nDot plots; regression lines; tables, filtering inputs, xy selections.\n\n\nAthletes (Error Bars)\nError bars; text annotations; params, slider inputs.",
-    "crumbs": [
-      "Examples"
-    ]
-  },
-  {
-    "objectID": "examples/general/athletes-regression/index.html",
-    "href": "examples/general/athletes-regression/index.html",
-    "title": "Athletes (Regression)",
+    "objectID": "publishing-notebooks.html#overview",
+    "href": "publishing-notebooks.html#overview",
+    "title": "Notebooks",
     "section": "",
-    "text": "Use the drop downs to filter by sport or sex. Select a range on the plot to filter the table and see the regression lines for the selected range. Hover over the table to highlight the corresponding point on the plot.\n\n\n\nCode\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.input import search, select\nfrom inspect_viz.interactor import Brush, interval_xy\nfrom inspect_viz.layout import hconcat, vconcat\nfrom inspect_viz.mark import TextStyles, dot, regression_y, text\nfrom inspect_viz.plot import plot\nfrom inspect_viz.table import column, table\n\nathletes = Data.from_file(\"athletes.parquet\")\n\ncategory = Selection.intersect()\nquery = Selection.intersect(include=category)\nhover = Selection.intersect(empty=True)\n\nvconcat(\n    hconcat(\n        select(athletes, label=\"Sport\", column=\"sport\", target=category),\n        select(athletes, label=\"Sex\", column=\"sex\", target=category),\n    ),\n    plot(\n        text(\n            text=[\"Olympic Athletes\"],\n            frame_anchor=\"top\",\n            styles=TextStyles(font_size=14),\n            dy=-20\n        ),\n        dot(\n            athletes,\n            filter_by=query,\n            x=\"weight\",\n            y=\"height\",\n            fill=\"sex\",\n            r=2,\n            opacity=0.1,\n        ),\n        regression_y(athletes, filter_by=query, x=\"weight\", y=\"height\", stroke=\"sex\"),\n        interval_xy(target=query, brush=Brush(fill_opacity=0, stroke=\"black\")),\n        dot(\n            athletes,\n            filter_by=hover,\n            x=\"weight\",\n            y=\"height\",\n            fill=\"sex\",\n            stroke=\"currentColor\",\n            stroke_width=1,\n            r=3\n        ),\n        xy_domain=\"fixed\",\n        r_domain=\"fixed\",\n        color_domain=\"fixed\"\n    ),\n    table(\n        athletes, \n        filter_by=query, \n        target=hover, \n        columns=[\n            column(\"name\", width=200), \n            \"sex\", \n            \"height\", \n            \"weight\", \n            \"sport\"\n        ],\n    )\n)",
+    "text": "A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks (Quarto and nbconvert), and then these documents can in turn be printed to PDF if required.\nYou can also share a live version of a notebook that supports filtering and plot interactions by pubishing it on a platform like Google Colab.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Notebooks"
+    ]
+  },
+  {
+    "objectID": "publishing-notebooks.html#quarto",
+    "href": "publishing-notebooks.html#quarto",
+    "title": "Notebooks",
+    "section": "Quarto",
+    "text": "Quarto\nThe Quarto publishing system can also convert notebooks to HTML. To install the quarto-cli Python package:\npip install quarto-cli\nThen, convert any notebook which includes Inspect Viz plots as follows:\nquarto render notebook.ipynb --to html --execute\nThis will create an HTML file named “notebook.html” and a directory named “notebook_files” alongside the “notebook.ipynb”.\nYou can also specify that you’d like code cells removed using the -M echo:false option:\nquarto render notebook.ipynb --to html --execute -M echo:false\nIf you need a PDF version of the notebook, open the file in a browser and print to PDF.\n\nPublishing\nYou can use the Quarto Publish command to publish a notebook to GitHub Pages, Hugging Face Spaces, Netlify, or Quarto’s own publishing service.\nTo publish a notebook, pass it to the quarto publish command:\nquarto publish notebook.ipynb",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Notebooks"
+    ]
+  },
+  {
+    "objectID": "publishing-notebooks.html#nbconvert",
+    "href": "publishing-notebooks.html#nbconvert",
+    "title": "Notebooks",
+    "section": "nbconvert",
+    "text": "nbconvert\nThe nbconvert Python package enables export of any Jupyter notebook to HTML. Install nbconvert with:\npip install nbconvert\nThen, convert any notebook which includes Inspect Viz plots as follows:\njupyter nbconvert --to html --execute notebook.ipynb\nThis will create an HTML file named “notebook.html” alongside the “notebook.ipynb”.\nYou can also specify that you’d like code cells removed using the --no-input option:\njupyter nbconvert --to html --execute --no-input notebook.ipynb\nIf you need a PDF version of the notebook, open the file in a browser and print to PDF.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Notebooks"
+    ]
+  },
+  {
+    "objectID": "examples/general/seattle-weather/index.html",
+    "href": "examples/general/seattle-weather/index.html",
+    "title": "Seattle Weather",
+    "section": "",
+    "text": "Select a horizontal range on the dot pot to filter the contents of the bar plot. Click the legend or the bar plot to filter by weather conditions.\n\n\n\nCode\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.interactor import Brush, highlight, interval_x, toggle_y\nfrom inspect_viz.plot import legend, plot, plot_defaults\nfrom inspect_viz.mark import bar_x, dot\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.transform import count, date_month_day\n\n# data\nseattle = Data.from_file(\"seattle-weather.parquet\")\n\n# plot defaults for domain and range\nweather = [\"sun\", \"fog\", \"drizzle\", \"rain\", \"snow\"]\nplot_defaults(\n    color_domain=weather,\n    color_range=[\"#e7ba52\", \"#a7a7a7\", \"#aec7e8\", \"#1f77b4\", \"#9467bd\"]\n)\n\n# selections (scatter x-range and bar/legend click)\nrange = Selection(\"intersect\")\nclick = Selection(\"single\")\n\nvconcat(\n    plot(\n        dot(\n            data=seattle,\n            filter_by=click,\n            x=date_month_day(\"date\"),\n            y=\"temp_max\",\n            fill=\"weather\",\n            fill_opacity=0.7,\n            r=\"precipitation\",\n        ),\n        interval_x(target=range, brush=Brush(fill=\"none\", stroke=\"#888\")),\n        highlight(by=range, fill=\"#ccc\", fill_opacity=0.2),\n        legend=legend(\"color\", target=click),\n        xy_domain=\"fixed\",\n        x_tick_format=\"%b\",\n        r_domain=\"fixed\",\n        r_range=[2, 10]\n    ),\n    plot(\n        bar_x(seattle, x=count(), y=\"weather\", fill=\"#ccc\", fill_opacity=0.2),\n        bar_x(seattle, filter_by=range, x=count(), y=\"weather\", fill=\"weather\"),\n        toggle_y(target=click),\n        highlight(by=click),\n        x_domain=\"fixed\",\n        y_domain=weather,\n        y_label=None,\n        height=200\n    )\n)",
     "crumbs": [
       "Examples",
       "General",
-      "Athletes (Regression)"
+      "Seattle Weather"
     ]
   },
   {
-    "objectID": "examples/general/athletes-errorbars/index.html",
-    "href": "examples/general/athletes-errorbars/index.html",
-    "title": "Athletes (Error Bars)",
+    "objectID": "examples/general/bias-parameter/index.html",
+    "href": "examples/general/bias-parameter/index.html",
+    "title": "Bias Parameter",
     "section": "",
-    "text": "Confidence intervals of Olympic athlete heights, in meters. Data are batched into groups of 10 samples per sport. Use the samples slider to see how the intervals update as the sample size increases (as in online aggregation). For each sport, the numbers on the right show the maximum number of athletes in the full dataset.\n\n\n\nCode\n\nimport pandas as pd\nimport numpy as np\n\nfrom inspect_viz import Data, Param, Selection\nfrom inspect_viz.mark import error_bar_x, text\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.transform import count\nfrom inspect_viz.input import slider\nfrom inspect_viz.layout import hconcat, vconcat, vspace\n\n# prepare data (create batch column so we can target various numbers of samples)\ndf = pd.read_parquet(\"athletes.parquet\")\ndf = df[df['height'].notna()]\ndf['row_num'] = df.groupby('sport').cumcount() + 1\ndf['batch'] = 10 * np.ceil(df['row_num'] / 10).astype(int)\ndf = df.drop('row_num', axis=1)\ndf = df.reset_index(drop=True)\n\nathletes = Data.from_dataframe(df)\n\nci = Param(0.95)\nquery = Selection.single()\n\nvconcat(\n    hconcat(\n        slider(\n            athletes, label=\"Samples\", select=\"interval\", target=query, \n            column=\"batch\", step=10, value=(0,20)\n        ),\n        slider(\n            label=\"Conf.\", target=ci, \n            min=0.5, max=0.999, value=0.95, step=0.001\n        )\n    ),\n    plot(\n        error_bar_x(\n            athletes, filter_by=query, ci=ci, \n            x=\"height\", y=\"sport\", stroke=\"sex\", stroke_width=1,\n            marker=\"tick\", sort={ \"y\": \"-x\"}\n        ),\n        text(\n            athletes, text=count(), y=\"sport\", dx=25,\n            frame_anchor=\"right\", font_size=8, fill=\"#999\"\n        ),\n        legend=legend(\"color\", location=\"bottom\"),\n        x_domain=[1.5,2.1],\n        y_domain=\"fixed\",\n        y_grid=True,\n        y_label=None,\n        margin_top=0,\n        margin_left=105\n    )\n)",
+    "text": "Use the slider to create bias offsets for the y-axis.\n\n\n\nCode\n\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import area_y\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import sql\n\nrandom_walk = Data.from_file(\"random-walk.parquet\")\nbias = Param(100)\n\nvconcat(\n    slider(label=\"Bias\", target=bias, min=0, max=1000, step=1),\n    plot(area_y(random_walk, x=\"t\", y=sql(f\"v + {bias}\"), fill=\"steelblue\"))\n)",
     "crumbs": [
       "Examples",
       "General",
-      "Athletes (Error Bars)"
+      "Bias Parameter"
     ]
   },
   {
-    "objectID": "examples/inspect/scores-with-baseline/index.html",
-    "href": "examples/inspect/scores-with-baseline/index.html",
-    "title": "Scores With Baseline",
+    "objectID": "examples/general/penguins/index.html",
+    "href": "examples/general/penguins/index.html",
+    "title": "Penguins Explorer",
     "section": "",
-    "text": "This example summarizes the scores of a single evaluation task, showing performance for 13 different models. Models are ordered based upon their headline score (defaulting to descending). You may add one or more baselines which are useful to illustrate important thresholds.\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_with_baseline, Baseline\n\nevals = Data.from_file(\"agi-lsat-ar.parquet\")\nscores_with_baseline(evals, baseline=0.91)\nSee the documentation on the scores_with_baseline() function for details on the data it requires as well as customizing varioius aspects of the plot. If you are curious about how the plot was implemented, read on below.",
+    "text": "Use the species drop down to see only points for a particular species. Use the x and y drop downs to explore differnet variables.\n\n\n\nCode\n\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import hconcat, vconcat\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\n\naxes = [\"body_mass\", \"flipper_length\", \"bill_depth\", \"bill_length\"]\nx_axis = Param(\"body_mass\")\ny_axis = Param(\"flipper_length\")\n\nvconcat(\n    hconcat(\n        select(penguins, label=\"Species\", column=\"species\"),\n        select(label=\"X\", options=axes, target=x_axis),\n        select(label=\"Y\", options=axes, target=y_axis)\n    ),\n    plot(\n        dot(penguins, x=x_axis, y=y_axis, stroke=\"species\", symbol=\"species\"),\n        grid=True,\n        x_label=\"Body mass (g) →\",\n        y_label=\"↑ Flipper length (mm)\",\n        legend=\"symbol\",\n    ),\n    table(penguins)\n)",
     "crumbs": [
       "Examples",
-      "Inspect",
-      "Scores w/ Baseline"
+      "General",
+      "Penguins Explorer"
     ]
   },
   {
-    "objectID": "examples/inspect/scores-with-baseline/index.html#implementation",
-    "href": "examples/inspect/scores-with-baseline/index.html#implementation",
-    "title": "Scores With Baseline",
+    "objectID": "examples/inspect/scores-heatmap/index.html",
+    "href": "examples/inspect/scores-heatmap/index.html",
+    "title": "Scores Heatmap",
+    "section": "",
+    "text": "This example summarizes the scores of 4 evaluation tasks (gpqa_diamond, aime2024, mmlu_pro, cybench, and swe_bench) across 4 models (OpenAI o4-mini and o3, and Anthropic Claude Sonnet 3.7 and 4.0).\nCode\n\nimport pandas as pd\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_heatmap\n\nevals_df = pd.read_parquet(\"evals.parquet\")\nevals_data = Data.from_dataframe(evals_df)\n\nscores_heatmap(evals_data, height=250, legend=\"right\", padding=0.00001)\nSee the documentation on the scores_heatmap() function for details on the data it requires as well as customizing varioius aspects of the plot.\nBelow we’ll describe how to add filtering to the plot as well as provide additional details on how it was implemented."
+  },
+  {
+    "objectID": "examples/inspect/scores-heatmap/index.html#implementation",
+    "href": "examples/inspect/scores-heatmap/index.html#implementation",
+    "title": "Scores Heatmap",
     "section": "Implementation",
-    "text": "Implementation\nHere is an annotated version of the code required to produce the timeline plot above (click on the numbers in the right margin for additional explanation).\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import bar_x, rule_x, text\n\nbaseline_color = \"#000000\"\nbaseline_value = 0.91\n    \nplot(\n1    bar_x(\n        evals,\n        x=\"score_headline_value\",\n        y=\"model\",\n        sort={\"y\": \"x\", \"reverse\": True},\n        fill=\"#416AD0\",\n        tip=True\n    ),\n2    rule_x(\n        x=[baseline_value],\n        stroke_dasharray=\"2,4\",\n        stroke_width=1,\n        stroke=[baseline_color]\n    ),\n3    text(\n        x=[baseline_value],\n        frame_anchor=\"top\",\n        line_anchor=\"bottom\",\n        dy=-3,\n        text=[\"Baseline\"],\n        text_anchor=\"middle\",\n        fill=[baseline_color]\n    ),\n4    marginLeft=250,\n    marginTop=30,\n    x_domain=[0, 1.0],\n    y_label=None,\n    x_label=\"Accuracy\"\n)\n\n\n1\n\nThis draws the core bar chart, sorting the y-axis by the value of x.\n\n2\n\nThis draws the baseline at the baseline_value position. Note that we are passing an explicit value for baseline rather that reading the value from the data frame.\n\n3\n\nThis draws the text label for the baseline, positioning it at the top of the frame and anchoring the bottom of the text to the that top position.\n\n4\n\nProvide margin to allow space for the y-axis labels and for the baseline text above the plot.",
-    "crumbs": [
-      "Examples",
-      "Inspect",
-      "Scores w/ Baseline"
-    ]
+    "text": "Implementation\nHere is an annotated version of the code required to produce the plot above (click on the numbers in the right margins for additional explanation). We start with a simple bar chart faceted by evaluation task.\n\nDynanically compute each side of the confidence interval using a sql() transform.\nDraw the confidence interval using a rule_x() mark."
   },
   {
     "objectID": "examples/inspect/scores-timeline/index.html",
     "href": "examples/inspect/scores-timeline/index.html",
     "title": "Scores Timeline",
     "section": "",
-    "text": "This example plots several benchmarks against models from various organizations, with release date on the x-axis. The original data for this plot was published by the Epoch AI Benchmarking Hub.\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_timeline\n\nevals = Data.from_file(\"evals.parquet\")\nscores_timeline(evals)\nSee the documentation on the scores_timeline() function for details on the data it requires as well as customizing varioius aspects of the plot. If you are curious about how the plot was implemented, read on below.",
-    "crumbs": [
-      "Examples",
-      "Inspect",
-      "Scores Timeline"
-    ]
-  },
-  {
-    "objectID": "examples/inspect/scores-timeline/index.html#implementation",
-    "href": "examples/inspect/scores-timeline/index.html#implementation",
-    "title": "Scores Timeline",
-    "section": "Implementation",
-    "text": "Implementation\nHere is an annotated version of the code required to produce the timeline plot above (click on the numbers in the right margin for additional explanation).\n\n\n\nCode\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.input import checkbox_group, select\nfrom inspect_viz.layout import vconcat, vspace\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import dot, rule_x\nfrom inspect_viz.table import table\nfrom inspect_viz.transform import ci_bounds\n\n# read data\n1evals = Data.from_file(\"evals.parquet\")\n\n# transforms to compute ci bounds from score and stderr columns\n2ci_lower, ci_upper = ci_bounds(0.95, score=\"score\", stderr=\"stderr\")\n\nvconcat(\n    # select benchmark\n    select(evals, label=\"Eval: \", column=\"eval\", value=\"GPQA Diamond\", width=425),\n    \n    # filter models by organization(s)\n    checkbox_group(evals, column=\"organization\"),\n    \n    # dot plot w/ error bars\n    vspace(15),\n    plot(\n        dot(\n            evals,\n            x=\"release_date\",\n            y=\"score\",\n            r=3,\n            fill=\"organization\",\n3            channels= {\n                \"Model\": \"model\", \n                \"Scorer\": \"scorer\", \n                \"Stderr\": \"stderr\",\n                \"Log Viewer\": \"log_viewer\"\n            }\n        ),\n        rule_x( \n            evals,\n            x=\"release_date\",\n            y=\"score\",\n            y1=ci_lower,\n            y2=ci_upper,\n            stroke=\"organization\",\n4            stroke_opacity=0.4,\n            marker=\"tick-x\",\n        ), \n5        legend=legend(\"color\", target=evals.selection),\n6        x_domain=\"fixed\",\n        y_domain=[0,1.0],\n        x_label=\"Release Date\",\n        y_label=\"Score\",\n        color_label=\"Organization\"\n    )\n)\n\n\n\n1\n\nBenchmark data sourced from Epoch AI and prepared with import.py.\n\n2\n\nCreate transforms used to compute the confidence intervals for each point.\n\n3\n\nAdditional channels are added to the tooltip.\n\n4\n\nConfidence interval: compute dynamically using ci_value(), color by organization, and reduce opacity.\n\n5\n\nSpecifying target makes the legend clickable.\n\n6\n\nDomains: x_domain fixed so that the axes don’t jump around for organization selections; y_domain should always span up to 1.0.",
+    "text": "This example illustrates the code behind the scores_timeline() pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.\nWe plot several benchmarks against models from various organizations, with release date on the x-axis. The original data for this plot was published by the Epoch AI Benchmarking Hub. The fields in the dataset are as follows:\n\nmodel: Model name (e.g. “gpt-4o”)\norganization: Organization that created the model (e.g. “OpenAI”)\nrelease_date: Date of model release.\neval: Name of eval (e.g. “SWE-bench Verified”)\nscorer: Scorer used (e.g. “choice”).\nscore: Benchmark score (scaled 0-1).\nstderr: Standard error.\nlog_viewer: Optional. URL to view evaluation log.\n\nHere is the plot and code required to produce it (click on the numbers at right for further explanation):\n\n\n\nCode\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.input import checkbox_group, select\nfrom inspect_viz.layout import vconcat, vspace\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import dot, rule_x\nfrom inspect_viz.table import table\nfrom inspect_viz.transform import ci_bounds\n\n# read data\n1evals = Data.from_file(\"evals.parquet\")\n\n# transforms to compute ci bounds from score and stderr columns\n2ci_lower, ci_upper = ci_bounds(0.95, score=\"score\", stderr=\"stderr\")\n\nvconcat(\n    # select benchmark\n    select(evals, label=\"Eval: \", column=\"eval\", value=\"GPQA Diamond\", width=425),\n    \n    # filter models by organization(s)\n    checkbox_group(evals, column=\"organization\"),\n    \n    # dot plot w/ error bars\n    vspace(15),\n    plot(\n        dot(\n            evals,\n            x=\"release_date\",\n            y=\"score\",\n            r=3,\n            fill=\"organization\",\n3            channels= {\n                \"Model\": \"model\", \n                \"Scorer\": \"scorer\", \n                \"Stderr\": \"stderr\",\n                \"Log Viewer\": \"log_viewer\"\n            }\n        ),\n        rule_x( \n            evals,\n            x=\"release_date\",\n            y=\"score\",\n            y1=ci_lower,\n            y2=ci_upper,\n            stroke=\"organization\",\n4            stroke_opacity=0.4,\n            marker=\"tick-x\",\n        ), \n5        legend=legend(\"color\", target=evals.selection),\n6        x_domain=\"fixed\",\n        y_domain=[0,1.0],\n        x_label=\"Release Date\",\n        y_label=\"Score\",\n        color_label=\"Organization\"\n    )\n)\n\n\n\n1\n\nBenchmark data sourced from Epoch AI and prepared with import.py.\n\n2\n\nCreate transforms used to compute the confidence intervals for each point.\n\n3\n\nAdditional channels are added to the tooltip.\n\n4\n\nConfidence interval: compute dynamically using ci_value(), color by organization, and reduce opacity.\n\n5\n\nSpecifying target makes the legend clickable.\n\n6\n\nDomains: x_domain fixed so that the axes don’t jump around for organization selections; y_domain should always span up to 1.0.",
     "crumbs": [
       "Examples",
       "Inspect",
@@ -461,6 +469,17 @@
     "title": "Inspect Viz",
     "section": "Tables",
     "text": "Tables\nYou can also display data in a tabular layout using the table() function:\n\nfrom inspect_viz.table import table\n\ntable(penguins)\n\n\n\n\nYou can sort and filter tables by column, use a scrolling or paginated display, and customize several other aspects of table appearance and behavior.",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#links",
+    "href": "index.html#links",
+    "title": "Inspect Viz",
+    "section": "Links",
+    "text": "Links\nInspect Viz supports creating direct links from visualizations to published Inspect log transcripts. Links can be made at the eval level, or to individual samples, messages, or events. For example, this plot produced with scores_with_baseline() includes a link to the underlying logs in its tooltips:\n\nscores_with_baseline(evals, baseline=0.91)\n\n\n\n\nThe pre-built Views all support linking when a log_viewer column is available in the dataset. To learn more about ammending datasets with viewer URLs as well as adding linking support to your own plots see the article on Links.",
     "crumbs": [
       "Getting Started",
       "Welcome"
@@ -675,6 +694,18 @@
     ]
   },
   {
+    "objectID": "components-plots.html#colors",
+    "href": "components-plots.html#colors",
+    "title": "Plots",
+    "section": "Colors",
+    "text": "Colors\nUse the color_scheme option to the plot() function to pick a theme (see the ColorScheme reference for available schemes). Use the color_range option to specify an explicit set of colors. For example, here we use the “tableau10” color_scheme:\n\nplot(\n    bar_y( \n        evals, x=\"model\", fx=\"task_name\",\n        y=\"score_headline_value\",\n        fill=\"model\",\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n    x_label=None, x_ticks=[], fx_label=None,\n    y_label=\"score\", y_domain=[0, 1.0],\n    color_scheme=\"tableau10\"\n)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Plots"
+    ]
+  },
+  {
     "objectID": "components-plots.html#titles",
     "href": "components-plots.html#titles",
     "title": "Plots",
@@ -797,7 +828,7 @@
     "href": "views.html#scores-by-task",
     "title": "Views",
     "section": "Scores by Task",
-    "text": "Scores by Task\nThe scores_by_task() function renders a bar plot for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_task\n\nevals = Data.from_file(\"evals.parquet\")\nscores_by_task(evals)\n\n\n\n\n\nData Preparation\nThe scores by task plot is intended to operate on data read directly from an Inspect log directory with the evals_df() function.\n\n\nOptions\nBy default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False). See the scores_by_task() reference for further details on available options.",
+    "text": "Scores by Task\nThe scores_by_task() function renders a bar plot for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_task\n\nevals = Data.from_file(\"evals.parquet\")\nscores_by_task(evals)\n\n\n\n\n\nData Preparation\nThe scores by task plot is intended to operate on data read directly from an Inspect log directory with the evals_df() function. In addition, the data frame was amended with links to log files.\n\n\nOptions\nBy default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False). See the scores_by_task() reference for further details on available options.",
     "crumbs": [
       "Getting Started",
       "Views"
@@ -819,7 +850,7 @@
     "href": "views.html#scores-with-baseline",
     "title": "Views",
     "section": "Scores with Baseline",
-    "text": "Scores with Baseline\nThe scores_with_baseline() function creates a horizontal bar plot for comparing the scores of different models on a single evaluation, with one or more baselines overlaid as vertical lines.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_with_baseline, Baseline\n\nevals = Data.from_file(\"gpqa_diamond.parquet\")\nscores_with_baseline(evals, baseline=0.697)\n\n\n\n\n\nData Preparation\nThe scores by task plot is intended to operate on data read directly from an Inspect log directory with the evals_df() function.\n\n\nOptions\nYou can speciry one more or more Baseline definitions using the baseline option. You can customize the sort order using the sort option (defaults to descening). See the scores_with_baseline() reference for further details on available options.",
+    "text": "Scores with Baseline\nThe scores_with_baseline() function creates a horizontal bar plot for comparing the scores of different models on a single evaluation, with one or more baselines overlaid as vertical lines.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_with_baseline, Baseline\n\nevals = Data.from_file(\"gpqa_diamond.parquet\")\nscores_with_baseline(evals, baseline=0.697)\n\n\n\n\n\nData Preparation\nThe scores by task plot is intended to operate on data read directly from an Inspect log directory with the evals_df() function. In addition, if the data frame is amended with links they are used automatically in the plot’s tooltips.\n\n\nOptions\nYou can speciry one more or more Baseline definitions using the baseline option. You can customize the sort order using the sort option (defaults to descening). See the scores_with_baseline() reference for further details on available options.",
     "crumbs": [
       "Getting Started",
       "Views"
@@ -1081,31 +1112,7 @@
     "href": "examples/inspect/scores-by-task/index.html",
     "title": "Scores by Task",
     "section": "",
-    "text": "This example summarizes the scores of 4 evaluation tasks (gpqa_diamond, aime2024, mmlu_pro, cybench, and swe_bench) across 4 models (OpenAI o4-mini and o3, and Anthropic Claude Sonnet 3.7 and 4.0).\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_task\n\nevals = Data.from_file(\"evals.parquet\")\nscores_by_task(evals)\nSee the documentation on the scores_by_task() function for details on the data it requires as well as customizing varioius aspects of the plot.\nBelow we’ll describe how to add filtering to the plot as well as provide additional details on how it was implemented.",
-    "crumbs": [
-      "Examples",
-      "Inspect",
-      "Scores by Task"
-    ]
-  },
-  {
-    "objectID": "examples/inspect/scores-by-task/index.html#filtering",
-    "href": "examples/inspect/scores-by-task/index.html#filtering",
-    "title": "Scores by Task",
-    "section": "Filtering",
-    "text": "Filtering\nHere we add filtering inputs to enable viewing a single model and/or single task at a time. We use the hconcat() and vconcat() functions to layout the inputs and the plot.\n\n\n\nCode\n\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import hconcat, vconcat\n\n1vconcat(\n    hconcat(\n2        select(evals, label=\"Model\", column=\"model\"),\n        select(evals, label=\"Task\", column=\"task_name\"),\n    ),\n    scores_by_task(evals)\n)\n\n\n\n1\n\nUse layout functions to arrange inputs and plot.\n\n2\n\nselect() inputs and bar_y() are automatically bound to the dataset selection for evals.",
-    "crumbs": [
-      "Examples",
-      "Inspect",
-      "Scores by Task"
-    ]
-  },
-  {
-    "objectID": "examples/inspect/scores-by-task/index.html#implementation",
-    "href": "examples/inspect/scores-by-task/index.html#implementation",
-    "title": "Scores by Task",
-    "section": "Implementation",
-    "text": "Implementation\nHere is an annotated version of the code required to produce the plot above (click on the numbers in the right margins for additional explanation). We start with a simple bar chart faceted by evaluation task.\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import bar_y, TipOptions\nfrom inspect_viz.transform import sql\n\nevals = Data.from_file(\"evals.parquet\")\n\nplot(\n    bar_y( \n        evals, \n        x=\"model\", \n1        fx=\"task_name\",\n        y=\"score_headline_value\",\n        fill=\"model\"\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n2    x_label=None, fx_label=None, x_ticks=[],\n3    y_label=\"score\", y_domain=[0, 1.0]\n)\n\n\n\n1\n\nFacet the x-axis (i.e. create multiple groups of bars) by task name.\n\n2\n\nWe don’t need an explicit “model” or “task_name” label as they are obvious from context. We also don’t need ticks b/c the fill color and legend provide this.\n\n3\n\nEnsure that y-axis shows the full range of scores (by default it caps at the maximum).\n\n\n\n\n\nConfidence Interval\nNext, we add a confidence interval for each reported score by adding a rule_x() mark. Note that we compute the confidence interval range dynamically using a sql() transform:\n\n\n\nCode\n\nfrom inspect_viz.mark import rule_x\nfrom inspect_viz.transform import sql\n\n1def ci_value(direction):\n    Z_ALPHA = 1.960\n    return sql(\n        \"score_headline_value\" +\n        f\"{direction}\" +\n        f\"({Z_ALPHA} * score_headline_stderr)\"\n    )\n\nplot(\n    bar_y( \n        evals, x=\"model\", fx=\"task_name\", \n        y=\"score_headline_value\",\n        fill=\"model\",\n        tip=True\n    ),\n2    rule_x(\n        evals,\n        x=\"model\",\n        fx=\"task_name\",\n        y1=ci_value(\"-\"),\n        y2=ci_value(\"+\"),\n        stroke=\"black\",\n        marker=\"tick-x\",\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n    x_label=None, fx_label=None, x_ticks=[],\n    y_label=\"score\", y_domain=[0, 1.0]\n)\n\n\n\n1\n\nDynanically compute each side of the confidence interval using a sql() transform.\n\n2\n\nDraw the confidence interval using a rule_x() mark.",
+    "text": "This example illustrates the code behind the scores_by_task() pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.\nHere is the base bar plot with data read using the evals_df() function (and amended with links) to the published logs):\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import bar_y, TipOptions\nfrom inspect_viz.transform import sql\n\nevals = Data.from_file(\"evals.parquet\")\n\nplot(\n    bar_y( \n        evals, \n        x=\"model\", \n1        fx=\"task_name\",\n        y=\"score_headline_value\",\n2        channels= { \"Log Viewer\": \"log_viewer\" },\n        fill=\"model\",\n        tip=True\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n3    x_label=None, fx_label=None, x_ticks=[],\n4    y_label=\"score\", y_domain=[0, 1.0],\n    color_label=\"Model\"\n)\n\n\n\n1\n\nFacet the x-axis (i.e. create multiple groups of bars) by task name.\n\n2\n\nAdd a channel with links to the Inspect log files (links appear in the tooltip).\n\n3\n\nWe don’t need an explicit “model” or “task_name” label as they are obvious from context. We also don’t need ticks b/c the fill color and legend provide this.\n\n4\n\nEnsure that y-axis shows the full range of scores (by default it caps at the maximum).\n\n\n\n\n\n\n\n\nConfidence Interval\nHere we add a confidence interval for each reported score by adding a rule_x() mark. Note that we compute the confidence interval range dynamically using a sql() transform:\n\n\n\nCode\n\nfrom inspect_viz.mark import rule_x\nfrom inspect_viz.transform import sql, ci_bounds\n\n1# confidence interval bounds\nci_lower, ci_upper = ci_bounds(\n    0.95, \n    score=\"score_headline_value\", \n    stderr=\"score_headline_stderr\"\n)\n\nplot(\n    bar_y( \n        evals, x=\"model\", fx=\"task_name\", \n        y=\"score_headline_value\",\n        channels= { \"Log Viewer\": \"log_viewer\" },\n        fill=\"model\",\n        tip=True\n    ),\n2    rule_x(\n        evals,\n        x=\"model\",\n        fx=\"task_name\",\n        y1=ci_lower,\n        y2=ci_upper,\n        stroke=\"black\",\n        marker=\"tick-x\",\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n    x_label=None, fx_label=None, x_ticks=[],\n    y_label=\"score\", y_domain=[0, 1.0],\n    color_label=\"Model\"\n)\n\n\n\n1\n\nUse the ci_bounds() bounds function to create transforms that we will pass for y1 and y2.\n\n2\n\nDraw the confidence interval using a rule_x() mark.",
     "crumbs": [
       "Examples",
       "Inspect",
@@ -1117,19 +1124,7 @@
     "href": "examples/inspect/tool-calls/index.html",
     "title": "Tool Calls",
     "section": "",
-    "text": "In this example we visualize tool usage over a series of turns in a Cybench evaluation. We use a cell() mark to visualize tool use over messages in each sample of an evaluation. We note any limit that ended the sample using a text() mark on the right side of the frame.\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import tool_calls\n\ntools = Data.from_file(\"cybench_tools.parquet\")\n\ntool_calls(tools)\nSee the documentation on the tool_calls() function for details on the data it requires as well as customizing varioius aspects of the plot. If you are curious about how the plot was implemented, read on below.",
-    "crumbs": [
-      "Examples",
-      "Inspect",
-      "Tool Calls"
-    ]
-  },
-  {
-    "objectID": "examples/inspect/tool-calls/index.html#implementation",
-    "href": "examples/inspect/tool-calls/index.html#implementation",
-    "title": "Tool Calls",
-    "section": "Implementation",
-    "text": "Implementation\nHere is an annotated version of the code required to produce the tool call plot above (click on the numbers in the right margin for additional explanation).\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import cell, text\n\n# read data (see 'Data Preparation' below)\n1data = Data.from_file(\"cybench_tools.parquet\")\n\ntools = [\"bash\", \"python\", \"submit\"]\n\nplot(\n2    cell(\n        data,\n        x=\"order\",\n        y=\"id\",\n        fill=\"tool_call_function\"\n    ),\n    \n3    text(\n        data, \n        text=\"limit\", \n        y=\"id\",\n        frame_anchor=\"right\", \n        font_size=8, \n        font_weight=200,\n        dx=50\n    ),\n    legend=legend(\"color\", location=\"right\"),\n4    margin_top=0,\n    margin_left=20,\n    margin_right=100,\n5    x_ticks=list(range(0, 400, 80)),\n    y_ticks=[],\n6    x_label=\"Message\",\n    y_label=\"Sample\",\n    color_label=\"Tool\",\n7    color_domain=tools\n)\n\n\n\n1\n\nRead tool call data (see Data Preparation for details).\n\n2\n\ncell() mark showing tool calls.\n\n3\n\ntext() mark showing whether the sample terminated due to a limit.\n\n4\n\nTweak the margins so the axis labels and text annotations appear correctly.\n\n5\n\nReduce the number of tick marks on the x-axis and eliminate y-ticks.\n\n6\n\nSet some custom labels and ensure that tools follow our designed order.\n\n7\n\nSpecify which tools we should show and in what order.\n\n\n\n\n\n\n\n\nData Preparation\nTo create the plot we read a raw messages data frame from an eval log1 then filter down to just the fields we require for visualization:\n\n\nfrom inspect_ai.analysis.beta import messages_df, MessageColumns, SampleSummary\n\n# read messages from log\nlog = \"&lt;path-to-log&gt;.eval\"\ndf = messages_df(log, columns=SampleSummary + MessageColumns)\n\n# trim columns\ntools_df = df[[\n    \"eval_id\",\n    \"id\",\n    \"order\",\n    \"tool_call_function\",\n    \"limit\"\n]]\n\nNote that the trimming of columns is particularly important because Inspect Viz embeds datasets directly in the web pages that host them (so we want to minimize their size for page load performance and bandwidth usage).",
+    "text": "This example illustrates the code behind the tool_calls() pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.\nThe plot visualizes tool usage over a series of turns in a Cybench evaluation. We use a cell() mark to visualize tool use over messages in each sample of an evaluation. We note any limit that ended the sample using a text() mark on the right side of the frame. See the Data Preparation section below for details on how the data frame for the plot was created.\nHere is the plot and an annotated version of the code required to produce it (click on the numbers in the right margin for additional explanation).\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import cell, text\n\n# read data (see 'Data Preparation' below)\n1data = Data.from_file(\"cybench_tools.parquet\")\n\ntools = [\"bash\", \"python\", \"submit\"]\n\nplot(\n2    cell(\n        data,\n        x=\"order\",\n        y=\"id\",\n        fill=\"tool_call_function\"\n    ),\n    \n3    text(\n        data, \n        text=\"limit\", \n        y=\"id\",\n        frame_anchor=\"right\", \n        font_size=8, \n        font_weight=200,\n        dx=50\n    ),\n    legend=legend(\"color\", location=\"right\"),\n4    margin_top=0,\n    margin_left=20,\n    margin_right=100,\n5    x_ticks=list(range(0, 400, 80)),\n    y_ticks=[],\n6    x_label=\"Message\",\n    y_label=\"Sample\",\n    color_label=\"Tool\",\n7    color_domain=tools\n)\n\n\n\n1\n\nRead tool call data (see Data Preparation for details).\n\n2\n\ncell() mark showing tool calls.\n\n3\n\ntext() mark showing whether the sample terminated due to a limit.\n\n4\n\nTweak the margins so the axis labels and text annotations appear correctly.\n\n5\n\nReduce the number of tick marks on the x-axis and eliminate y-ticks.\n\n6\n\nSet some custom labels and ensure that tools follow our designed order.\n\n7\n\nSpecify which tools we should show and in what order.",
     "crumbs": [
       "Examples",
       "Inspect",
@@ -1149,87 +1144,129 @@
     ]
   },
   {
-    "objectID": "examples/general/penguins/index.html",
-    "href": "examples/general/penguins/index.html",
-    "title": "Penguins Explorer",
+    "objectID": "examples/inspect/scores-with-baseline/index.html",
+    "href": "examples/inspect/scores-with-baseline/index.html",
+    "title": "Scores With Baseline",
     "section": "",
-    "text": "Use the species drop down to see only points for a particular species. Use the x and y drop downs to explore differnet variables.\n\n\n\nCode\n\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import hconcat, vconcat\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\n\naxes = [\"body_mass\", \"flipper_length\", \"bill_depth\", \"bill_length\"]\nx_axis = Param(\"body_mass\")\ny_axis = Param(\"flipper_length\")\n\nvconcat(\n    hconcat(\n        select(penguins, label=\"Species\", column=\"species\"),\n        select(label=\"X\", options=axes, target=x_axis),\n        select(label=\"Y\", options=axes, target=y_axis)\n    ),\n    plot(\n        dot(penguins, x=x_axis, y=y_axis, stroke=\"species\", symbol=\"species\"),\n        grid=True,\n        x_label=\"Body mass (g) →\",\n        y_label=\"↑ Flipper length (mm)\",\n        legend=\"symbol\",\n    ),\n    table(penguins)\n)",
+    "text": "This example illustrates the code behind the scores_with_baseline() pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.\nThe plot summarizes the scores of a single evaluation task, showing performance for 13 different models. Models are ordered based upon their headline score (defaulting to descending).\nThe data for plotting is read using the evals_df() function (and amended with links) to the published logs).\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import bar_x, rule_x, text\n\nevals = Data.from_file(\"agi-lsat-ar.parquet\")\n\nbaseline_color = \"#000000\"\nbaseline_value = 0.91\n    \nplot(\n1    bar_x(\n        evals,\n        x=\"score_headline_value\",\n        y=\"model\",\n        sort={\"y\": \"x\", \"reverse\": True},\n        fill=\"#416AD0\",\n        channels={\"Log Viewer\": \"log_viewer\"},\n        tip=True\n    ),\n2    rule_x(\n        x=[baseline_value],\n        stroke_dasharray=\"2,4\",\n        stroke_width=1,\n        stroke=[baseline_color]\n    ),\n3    text(\n        x=[baseline_value],\n        frame_anchor=\"top\",\n        line_anchor=\"bottom\",\n        dy=-3,\n        text=[\"Baseline\"],\n        text_anchor=\"middle\",\n        fill=[baseline_color]\n    ),\n4    marginLeft=250,\n    marginTop=30,\n    x_domain=[0, 1.0],\n    y_label=None,\n    x_label=\"Accuracy\"\n)\n\n\n\n1\n\nThis draws the core bar chart, sorting the y-axis by the value of x.\n\n2\n\nThis draws the baseline at the baseline_value position. Note that we are passing an explicit value for baseline rather that reading the value from the data frame.\n\n3\n\nThis draws the text label for the baseline, positioning it at the top of the frame and anchoring the bottom of the text to the that top position.\n\n4\n\nProvide margin to allow space for the y-axis labels and for the baseline text above the plot.",
+    "crumbs": [
+      "Examples",
+      "Inspect",
+      "Scores w/ Baseline"
+    ]
+  },
+  {
+    "objectID": "examples/general/athletes-errorbars/index.html",
+    "href": "examples/general/athletes-errorbars/index.html",
+    "title": "Athletes (Error Bars)",
+    "section": "",
+    "text": "Confidence intervals of Olympic athlete heights, in meters. Data are batched into groups of 10 samples per sport. Use the samples slider to see how the intervals update as the sample size increases (as in online aggregation). For each sport, the numbers on the right show the maximum number of athletes in the full dataset.\n\n\n\nCode\n\nimport pandas as pd\nimport numpy as np\n\nfrom inspect_viz import Data, Param, Selection\nfrom inspect_viz.mark import error_bar_x, text\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.transform import count\nfrom inspect_viz.input import slider\nfrom inspect_viz.layout import hconcat, vconcat, vspace\n\n# prepare data (create batch column so we can target various numbers of samples)\ndf = pd.read_parquet(\"athletes.parquet\")\ndf = df[df['height'].notna()]\ndf['row_num'] = df.groupby('sport').cumcount() + 1\ndf['batch'] = 10 * np.ceil(df['row_num'] / 10).astype(int)\ndf = df.drop('row_num', axis=1)\ndf = df.reset_index(drop=True)\n\nathletes = Data.from_dataframe(df)\n\nci = Param(0.95)\nquery = Selection.single()\n\nvconcat(\n    hconcat(\n        slider(\n            athletes, label=\"Samples\", select=\"interval\", target=query, \n            column=\"batch\", step=10, value=(0,20)\n        ),\n        slider(\n            label=\"Conf.\", target=ci, \n            min=0.5, max=0.999, value=0.95, step=0.001\n        )\n    ),\n    plot(\n        error_bar_x(\n            athletes, filter_by=query, ci=ci, \n            x=\"height\", y=\"sport\", stroke=\"sex\", stroke_width=1,\n            marker=\"tick\", sort={ \"y\": \"-x\"}\n        ),\n        text(\n            athletes, text=count(), y=\"sport\", dx=25,\n            frame_anchor=\"right\", font_size=8, fill=\"#999\"\n        ),\n        legend=legend(\"color\", location=\"bottom\"),\n        x_domain=[1.5,2.1],\n        y_domain=\"fixed\",\n        y_grid=True,\n        y_label=None,\n        margin_top=0,\n        margin_left=105\n    )\n)",
     "crumbs": [
       "Examples",
       "General",
-      "Penguins Explorer"
+      "Athletes (Error Bars)"
     ]
   },
   {
-    "objectID": "examples/general/bias-parameter/index.html",
-    "href": "examples/general/bias-parameter/index.html",
-    "title": "Bias Parameter",
+    "objectID": "examples/general/athletes-regression/index.html",
+    "href": "examples/general/athletes-regression/index.html",
+    "title": "Athletes (Regression)",
     "section": "",
-    "text": "Use the slider to create bias offsets for the y-axis.\n\n\n\nCode\n\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import area_y\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import sql\n\nrandom_walk = Data.from_file(\"random-walk.parquet\")\nbias = Param(100)\n\nvconcat(\n    slider(label=\"Bias\", target=bias, min=0, max=1000, step=1),\n    plot(area_y(random_walk, x=\"t\", y=sql(f\"v + {bias}\"), fill=\"steelblue\"))\n)",
+    "text": "Use the drop downs to filter by sport or sex. Select a range on the plot to filter the table and see the regression lines for the selected range. Hover over the table to highlight the corresponding point on the plot.\n\n\n\nCode\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.input import search, select\nfrom inspect_viz.interactor import Brush, interval_xy\nfrom inspect_viz.layout import hconcat, vconcat\nfrom inspect_viz.mark import TextStyles, dot, regression_y, text\nfrom inspect_viz.plot import plot\nfrom inspect_viz.table import column, table\n\nathletes = Data.from_file(\"athletes.parquet\")\n\ncategory = Selection.intersect()\nquery = Selection.intersect(include=category)\nhover = Selection.intersect(empty=True)\n\nvconcat(\n    hconcat(\n        select(athletes, label=\"Sport\", column=\"sport\", target=category),\n        select(athletes, label=\"Sex\", column=\"sex\", target=category),\n    ),\n    plot(\n        text(\n            text=[\"Olympic Athletes\"],\n            frame_anchor=\"top\",\n            styles=TextStyles(font_size=14),\n            dy=-20\n        ),\n        dot(\n            athletes,\n            filter_by=query,\n            x=\"weight\",\n            y=\"height\",\n            fill=\"sex\",\n            r=2,\n            opacity=0.1,\n        ),\n        regression_y(athletes, filter_by=query, x=\"weight\", y=\"height\", stroke=\"sex\"),\n        interval_xy(target=query, brush=Brush(fill_opacity=0, stroke=\"black\")),\n        dot(\n            athletes,\n            filter_by=hover,\n            x=\"weight\",\n            y=\"height\",\n            fill=\"sex\",\n            stroke=\"currentColor\",\n            stroke_width=1,\n            r=3\n        ),\n        xy_domain=\"fixed\",\n        r_domain=\"fixed\",\n        color_domain=\"fixed\"\n    ),\n    table(\n        athletes, \n        filter_by=query, \n        target=hover, \n        columns=[\n            column(\"name\", width=200), \n            \"sex\", \n            \"height\", \n            \"weight\", \n            \"sport\"\n        ],\n    )\n)",
     "crumbs": [
       "Examples",
       "General",
-      "Bias Parameter"
+      "Athletes (Regression)"
     ]
   },
   {
-    "objectID": "examples/general/seattle-weather/index.html",
-    "href": "examples/general/seattle-weather/index.html",
-    "title": "Seattle Weather",
+    "objectID": "examples/index.html",
+    "href": "examples/index.html",
+    "title": "Inspect Viz Examples",
     "section": "",
-    "text": "Select a horizontal range on the dot pot to filter the contents of the bar plot. Click the legend or the bar plot to filter by weather conditions.\n\n\n\nCode\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.interactor import Brush, highlight, interval_x, toggle_y\nfrom inspect_viz.plot import legend, plot, plot_defaults\nfrom inspect_viz.mark import bar_x, dot\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.transform import count, date_month_day\n\n# data\nseattle = Data.from_file(\"seattle-weather.parquet\")\n\n# plot defaults for domain and range\nweather = [\"sun\", \"fog\", \"drizzle\", \"rain\", \"snow\"]\nplot_defaults(\n    color_domain=weather,\n    color_range=[\"#e7ba52\", \"#a7a7a7\", \"#aec7e8\", \"#1f77b4\", \"#9467bd\"]\n)\n\n# selections (scatter x-range and bar/legend click)\nrange = Selection(\"intersect\")\nclick = Selection(\"single\")\n\nvconcat(\n    plot(\n        dot(\n            data=seattle,\n            filter_by=click,\n            x=date_month_day(\"date\"),\n            y=\"temp_max\",\n            fill=\"weather\",\n            fill_opacity=0.7,\n            r=\"precipitation\",\n        ),\n        interval_x(target=range, brush=Brush(fill=\"none\", stroke=\"#888\")),\n        highlight(by=range, fill=\"#ccc\", fill_opacity=0.2),\n        legend=legend(\"color\", target=click),\n        xy_domain=\"fixed\",\n        x_tick_format=\"%b\",\n        r_domain=\"fixed\",\n        r_range=[2, 10]\n    ),\n    plot(\n        bar_x(seattle, x=count(), y=\"weather\", fill=\"#ccc\", fill_opacity=0.2),\n        bar_x(seattle, filter_by=range, x=count(), y=\"weather\", fill=\"weather\"),\n        toggle_y(target=click),\n        highlight(by=click),\n        x_domain=\"fixed\",\n        y_domain=weather,\n        y_label=None,\n        height=200\n    )\n)",
+    "text": "These examples demonstrate various plotting and interactivity features. If you are just beginning to use Inspect Viz you review the Getting Started article before exploring these examples.",
     "crumbs": [
-      "Examples",
-      "General",
-      "Seattle Weather"
+      "Examples"
     ]
   },
   {
-    "objectID": "publishing-notebooks.html",
-    "href": "publishing-notebooks.html",
-    "title": "Notebooks",
+    "objectID": "examples/index.html#inspect",
+    "href": "examples/index.html#inspect",
+    "title": "Inspect Viz Examples",
+    "section": "Inspect",
+    "text": "Inspect\nThese examples demonstrates creating visualisations from Inspect log files (leveraging the functions in inspect_ai.analysis module for creation of data frames from logs).\n\n\n\n\n\n\n\nScores by Task\nBar plot summarizing eval scores by model and task.\n\n\nScores Timeline\nEval scores for various models, with release date on the x-axis.\n\n\nScores with Baseline\nVisualise model scores on a single evaluation, with one or more baselines.\n\n\nTool Calls\nVisualise tool usage over a series of turns.",
+    "crumbs": [
+      "Examples"
+    ]
+  },
+  {
+    "objectID": "examples/index.html#general",
+    "href": "examples/index.html#general",
+    "title": "Inspect Viz Examples",
+    "section": "General",
+    "text": "General\nThese examples demonstrate general plotting techniques using a variety of other examples datasets.\n\n\n\n\n\n\n\nPenguins Explorer\nDot plots, tables, color and symbol channels, filtering inputs.\n\n\nBias Parameter\nArea plots; slider inputs; channel expressions.\n\n\nSeattle Weather\nDot plots; bar plots; color and radius channels; x-interval selections, interactive legend.\n\n\nAthletes (Regression)\nDot plots; regression lines; tables, filtering inputs, xy selections.\n\n\nAthletes (Error Bars)\nError bars; text annotations; params, slider inputs.",
+    "crumbs": [
+      "Examples"
+    ]
+  },
+  {
+    "objectID": "components-links.html",
+    "href": "components-links.html",
+    "title": "Links",
     "section": "",
-    "text": "A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks (Quarto and nbconvert), and then these documents can in turn be printed to PDF if required.\nYou can also share a live version of a notebook that supports filtering and plot interactions by pubishing it on a platform like Google Colab.",
+    "text": "Inspect Viz supports creating direct links from visualizations to published Inspect log transcripts. Links can be made at the eval level, or to individual samples, messages, or events.\nThe basic steps required for creating links to logs from visualizations are:\n\nPublish your log directory using the inspect view bundle command.\nRead logs into a data frame using the log dataframe functions, then ammend the data frame with log viewer URLs that point to the published bundle (we’ll cover how to do this below).\nInclude the log viewer URLs as a custom channels on your plot marks as appropriate. The link will be available within the tooltip for your mark.",
     "crumbs": [
       "Getting Started",
-      "Publishing",
-      "Notebooks"
+      "Components",
+      "Links"
     ]
   },
   {
-    "objectID": "publishing-notebooks.html#overview",
-    "href": "publishing-notebooks.html#overview",
-    "title": "Notebooks",
+    "objectID": "components-links.html#overview",
+    "href": "components-links.html#overview",
+    "title": "Links",
     "section": "",
-    "text": "A convenient way to share sets of plots and related commentary is to publish a notebook. There are a couple of straightforward ways to create HTML documents from notebooks (Quarto and nbconvert), and then these documents can in turn be printed to PDF if required.\nYou can also share a live version of a notebook that supports filtering and plot interactions by pubishing it on a platform like Google Colab.",
+    "text": "Inspect Viz supports creating direct links from visualizations to published Inspect log transcripts. Links can be made at the eval level, or to individual samples, messages, or events.\nThe basic steps required for creating links to logs from visualizations are:\n\nPublish your log directory using the inspect view bundle command.\nRead logs into a data frame using the log dataframe functions, then ammend the data frame with log viewer URLs that point to the published bundle (we’ll cover how to do this below).\nInclude the log viewer URLs as a custom channels on your plot marks as appropriate. The link will be available within the tooltip for your mark.",
     "crumbs": [
       "Getting Started",
-      "Publishing",
-      "Notebooks"
+      "Components",
+      "Links"
     ]
   },
   {
-    "objectID": "publishing-notebooks.html#quarto",
-    "href": "publishing-notebooks.html#quarto",
-    "title": "Notebooks",
-    "section": "Quarto",
-    "text": "Quarto\nThe Quarto publishing system can also convert notebooks to HTML. To install the quarto-cli Python package:\npip install quarto-cli\nThen, convert any notebook which includes Inspect Viz plots as follows:\nquarto render notebook.ipynb --to html --execute\nThis will create an HTML file named “notebook.html” and a directory named “notebook_files” alongside the “notebook.ipynb”.\nYou can also specify that you’d like code cells removed using the -M echo:false option:\nquarto render notebook.ipynb --to html --execute -M echo:false\nIf you need a PDF version of the notebook, open the file in a browser and print to PDF.\n\nPublishing\nYou can use the Quarto Publish command to publish a notebook to GitHub Pages, Hugging Face Spaces, Netlify, or Quarto’s own publishing service.\nTo publish a notebook, pass it to the quarto publish command:\nquarto publish notebook.ipynb",
+    "objectID": "components-links.html#step-1-publish-logs",
+    "href": "components-links.html#step-1-publish-logs",
+    "title": "Links",
+    "section": "Step 1: Publish Logs",
+    "text": "Step 1: Publish Logs\nYou can use the command inspect view bundle (or the bundle_log_dir() function from Python) to create a self contained directory with the log viewer and a set of logs for display. This directory can then be deployed to any static web server (GitHub Pages, S3 buckets, Netlify, etc.) to provide a standalone version of the viewer.\nFor example, to bundle the logs directory to a directory named logs-www:\n$ inspect view bundle --log-dir logs --output-dir logs-www\nYou can then deploy logs-www to any static web host.",
     "crumbs": [
       "Getting Started",
-      "Publishing",
-      "Notebooks"
+      "Components",
+      "Links"
     ]
   },
   {
-    "objectID": "publishing-notebooks.html#nbconvert",
-    "href": "publishing-notebooks.html#nbconvert",
-    "title": "Notebooks",
-    "section": "nbconvert",
-    "text": "nbconvert\nThe nbconvert Python package enables export of any Jupyter notebook to HTML. Install nbconvert with:\npip install nbconvert\nThen, convert any notebook which includes Inspect Viz plots as follows:\njupyter nbconvert --to html --execute notebook.ipynb\nThis will create an HTML file named “notebook.html” alongside the “notebook.ipynb”.\nYou can also specify that you’d like code cells removed using the --no-input option:\njupyter nbconvert --to html --execute --no-input notebook.ipynb\nIf you need a PDF version of the notebook, open the file in a browser and print to PDF.",
+    "objectID": "components-links.html#step-2-prepare-data",
+    "href": "components-links.html#step-2-prepare-data",
+    "title": "Links",
+    "section": "Step 2: Prepare Data",
+    "text": "Step 2: Prepare Data\nNext, you’ll want to ammend the data frame that you’ve read with e.g. evals_df() or samples_df() with log viewer URLs that point to the published logs.\nYou can do this using the prepare() and log_viewer() functions from the inspect_ai.analysis module. For example, if you have previously published your “logs” directory to https://example.com/logs/:\nfrom inspect_viz import Data\nfrom inspect_ai.analysis.beta import evals_df, prepare, log_viewer\n\n# read evals and ammend with log viewer URL\ndf = evals_df(\"logs\")\ndf = prepare(df, log_viewer(\"evals\", {\n    \"logs\": \"https://example.com/logs/\"\n}))\n\n# read as inspect viz data\nevals = Data.from_dataframe(df)",
     "crumbs": [
       "Getting Started",
-      "Publishing",
-      "Notebooks"
+      "Components",
+      "Links"
+    ]
+  },
+  {
+    "objectID": "components-links.html#step-3-link-channel",
+    "href": "components-links.html#step-3-link-channel",
+    "title": "Links",
+    "section": "Step 3: Link Channel",
+    "text": "Step 3: Link Channel\nOnce your data is prepared, you need to ensure that links are incorporated onto plots.\n\nCustom Plot\nIf you are creating a custom plot, you should add a mapping to the “log_viewer” column to your mark’s channels. For example:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import bar_y\n\nevals = Data.from_file(\"evals.parquet\")\n\nplot(\n    bar_y( \n        evals, x=\"model\", fx=\"task_name\",\n        y=\"score_headline_value\",\n1        channels={ \"Log Viewer\": \"log_viewer\" },\n        fill=\"model\",\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n    x_label=None, x_ticks=[], fx_label=None,\n    y_label=\"score\", y_domain=[0, 1.0]\n)\n\n\n1\n\nAdd Log Viewer channel mapped to the log_viewer column created with the prepare() function above.\n\n\n\n\n\n\nBuilt-In Views\nThe built-in Views already support the log_viewer column, so links appear automatically when using those functions. For example:\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_with_baseline\n\nevals = Data.from_file(\"agi-lsat-ar.parquet\")\nscores_with_baseline(evals)\n\n\n\n\nIf you mouse over the bars you will see a log viewer link which you can click to navigate to the log.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Links"
     ]
   },
   {
