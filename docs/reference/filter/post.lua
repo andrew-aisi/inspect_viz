@@ -5,6 +5,12 @@ local pandoc = require('pandoc')
 
 -- read refs index
 refs_file = io.open("refs.json", "r")
+if refs_file == nil then
+    refs_file = io.open("reference/refs.json", "r")
+    prefix = "reference/"
+else
+    prefix = ""
+end
 refs = pandoc.json.decode(refs_file:read("a"))
 refs_file:close()
 
@@ -13,7 +19,7 @@ function Span(el)
         type = pandoc.utils.stringify(el)
         type_ref = refs[type]
         if type_ref ~= nil then
-            el.content = pandoc.Link(el.content:clone(), type_ref)
+            el.content = pandoc.Link(el.content:clone(), prefix .. type_ref)
             return el
         end
     end
