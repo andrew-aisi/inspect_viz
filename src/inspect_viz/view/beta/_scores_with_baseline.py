@@ -44,6 +44,7 @@ def scores_with_baseline(
     sort: Literal["asc", "desc"] | None = None,
     x_label: str | None | NotGiven = None,
     y_label: str | None | NotGiven = None,
+    fill: str | None = None,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """Bar plot for comparing the scores of different models on a single evaluation.
@@ -62,6 +63,7 @@ def scores_with_baseline(
        sort: Sort order for the bars (sorts using the 'x' value). Can be "asc" or "desc". Defaults to "asc".
        x_label: x-axis label (defaults to None).
        y_label: x-axis label (defaults to None).
+       fill: The fill color for the bars. Defaults to "#416AD0". Pass any valid css color value (hex, rgb, named colors, etc.).
        **attributes: Additional `PlotAttributes`. By default, the `y_inset_top` and `margin_bottom` are set to 10 pixels and `x_ticks` is set to `[]`.
     """
     # Validate that there is only a single evaluation
@@ -119,10 +121,8 @@ def scores_with_baseline(
             y=y or sql("split_part(model, '/', 2)"),
             sort={"y": "x", "reverse": sort != "asc"},
             tip=True,
-            # This uses a SQL transform provide the same fill value for every
-            # bar, which will ensure that they bars are themed and the same color
-            fill=sql("1"),
             channels=channels,
+            fill=fill or "#416AD0",
         ),
         *baseline_marks(resolved_baselines),
         y_label=y_label,
