@@ -1,7 +1,5 @@
 from typing import Literal, Unpack
 
-from pandas import DataFrame
-
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
 from inspect_viz._util.notgiven import NotGiven
