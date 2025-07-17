@@ -5,7 +5,7 @@ resources:
    - import.py
 ---
 
-This example illustrates the code behind the [`scores_timeline()`](../../../reference/inspect_viz.view.qmd#scores_timeline) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
+This example illustrates the code behind the [`scores_timeline()`](../../../view-scores-timeline.qmd) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
 
 We plot several benchmarks against models from various organizations, with release date on the x-axis. The original data for this plot was published by the [Epoch AI Benchmarking Hub](https://epoch.ai/data/ai-benchmarking-dashboard). The fields in the dataset are as follows:
 

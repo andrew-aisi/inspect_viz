@@ -1,0 +1,54 @@
+---
+title: "Tool Calls"
+reference: "inspect_viz.view.beta"
+filters: 
+   - at: pre-ast
+     type: json
+     path: reference/filter/filter.py
+   - at: pre-ast
+     path: reference/filter/post.lua
+---
+
+## Overview
+
+The `tool_calls()` function creates a heat map visualising tool calls over evaluation turns.
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.view.beta import tool_calls
+
+tools = Data.from_file("cybench_tools.parquet")
+tool_calls(tools)
+```
+
+
+## Data Preparation
+
+To create the plot we read a raw messages data frame from an eval log using the [`messages_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#messages_df) function, then filter down to just the fields we require for visualization:
+
+```{python}
+#| eval: false
+from inspect_ai.analysis.beta import messages_df, MessageColumns, SampleSummary
+
+# read messages from log
+log = "<path-to-log>.eval"
+df = messages_df(log, columns=SampleSummary + MessageColumns)
+
+# trim columns
+tools_df = df[[
+    "eval_id",
+    "id",
+    "order",
+    "tool_call_function",
+    "limit"
+]]
+```
+
+Note that the trimming of columns is particularly important because Inspect Viz embeds datasets directly in the web pages that host them (so we want to minimize their size for page load performance and bandwidth usage).
+
+## Function Reference {reference="tool_calls"}
+
+## Implementation
+
+The [Tool Calls](examples/inspect/tool-calls/index.qmd) example demonstrates how this view was implemented using lower level plotting components.
+

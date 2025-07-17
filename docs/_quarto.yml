@@ -46,6 +46,13 @@ website:
            - href: index.qmd
              text: Welcome
            - href: views.qmd
+             text: Views
+             contents:
+               - href: view-scores-by-task.qmd
+               - href: view-scores-timeline.qmd
+               - href: view-scores-with-baseline.qmd
+                 text: "Scores Baseline"
+               - href: view-tool-calls.qmd
            - text: Components
              contents:
                - href: components-plots.qmd

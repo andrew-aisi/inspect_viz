@@ -3,7 +3,7 @@ title: Scores With Baseline
 subtitle: "Dataset: [agi-lsat-ar.parquet](agi-lsat-ar.parquet)"
 ---
 
-This example illustrates the code behind the [`scores_with_baseline()`](../../../reference/inspect_viz.view.qmd#scores_with_baseline) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
+This example illustrates the code behind the [`scores_with_baseline()`](../../../view-scores-with-baseline.qmd) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
 
 The plot summarizes the scores of a single evaluation task, showing performance for 13 different models. Models are ordered based upon their headline score (defaulting to descending). 
 

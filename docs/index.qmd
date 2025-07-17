@@ -2,6 +2,7 @@
 title: "Inspect Viz"
 subtitle: |
    Data visualization for [Inspect AI](https://inspect.aisi.org.uk/) large language model evalutions.
+tbl-colwidths: [30,70]
 ---
 
 ```{python}
@@ -57,43 +58,19 @@ You can author visualisations in any [Jupyter Notebook](https://jupyter.org/) th
 
 ## Views
 
-Inspect Viz [Views](views.qmd) are pre-built plots that work with data created by the Inspect log [data frame](https://inspect.aisi.org.uk/dataframe.html) reading functions. For example, the timeline plot above was created with a single call to `scores_timeline()`:
-
-```{python}
-#| eval: false
-from inspect_viz import Data
-from inspect_viz.view.beta import scores_timeline
-
-evals = Data.from_file("benchmarks.parquet")
-scores_timeline(evals)
-```
-
-#### Tool Calls
-
-The `tool_calls()` view enables you to visualize tool calls by sample:
+Inspect Viz [Views](views.qmd) are pre-built plots that work with data created by the Inspect log [data frame](https://inspect.aisi.org.uk/dataframe.html) reading functions. For example, the `tool_calls()` view enables you to visualize tool calls by sample:
 
 ```{python}
 from inspect_viz import Data
 from inspect_viz.view.beta import tool_calls
 
 tools = Data.from_file("cybench_tools.parquet")
-
 tool_calls(tools)
 ```
 
-#### Scores with Baseline
+Available view functions include:
 
-The `scores_with_baseline()` view enables you to view an ordered set of eval scores with one or more baselines:
-
-```{python}
-from inspect_viz import Data
-from inspect_viz.view.beta import scores_with_baseline, Baseline
-
-evals = Data.from_file("agi-lsat-ar.parquet")
-scores_with_baseline(evals, baseline=0.91)
-```
-
-See the article on [Views](views.qmd) to learn about all available pre-built views and the various options for customizing their appearance and behavior.
+{{< include _views.md >}}
 
 ## Plots
 
@@ -169,6 +146,12 @@ You can sort and filter tables by column, use a scrolling or paginated display, 
 Inspect Viz supports creating direct links from visualizations to published Inspect log transcripts. Links can be made at the eval level, or to individual samples, messages, or events. For example, this plot produced with `scores_with_baseline()` includes a link to the underlying logs in its tooltips:
 
 ```{python}
+#| include: false
+evals = Data.from_file("agi-lsat-ar.parquet")
+```
+
+```{python}
+from inspect_viz.view.beta import scores_with_baseline
 scores_with_baseline(evals, baseline=0.91)
 ```
 

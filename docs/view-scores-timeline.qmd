@@ -1,0 +1,44 @@
+---
+title: "Scores Timeline"
+reference: "inspect_viz.view.beta"
+filters: 
+   - at: pre-ast
+     type: json
+     path: reference/filter/filter.py
+   - at: pre-ast
+     path: reference/filter/post.lua
+---
+
+## Overview
+
+The `scores_timeline()` function plots eval scores by model, organization, and release date.
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.view.beta import scores_timeline
+
+evals = Data.from_file("benchmarks.parquet")
+scores_timeline(evals)
+```
+
+
+## Data Preparation
+
+Data frames plotted with `scores_timeline()` should have the following fields:
+
+- `model`: Model name (e.g. "gpt-4o")
+- `organization`: Organization that created the model (e.g. "OpenAI")
+- `release_date`: Date of model release.
+- `eval`: Name of eval (e.g. "SWE-bench Verified")
+- `scorer`: Scorer used (e.g. "choice").
+- `score`: Benchmark score (scaled 0-1).
+- `stderr`: Standard error.
+- `log_viewer`: Optional. URL to view evaluation log.
+
+
+## Function Reference {reference="scores_timeline"}
+
+## Implementation
+
+The [Scores Timeline](examples/inspect/scores-timeline/index.qmd) example demonstrates how this view was implemented using lower level plotting components.
+
