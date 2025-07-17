@@ -86,6 +86,27 @@ The scores by task plot is intended to operate on data read directly from an Ins
 You can speciry one more or more [`Baseline`](reference/inspect_viz.view.qmd#baseline) definitions using the `baseline` option. You can customize the sort order using the `sort` option (defaults to descening).  See the [`scores_with_baseline()`](reference/inspect_viz.view.qmd#scores_with_baseline) reference for further details on available options.
 
 
+## Scores Heatmap
+
+The [`scores_heatmap()`](reference/inspect_viz.view.qmd#scores_heatmap)  function renders a heatmap for comparing eval scores.
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.view.beta import scores_heatmap
+
+evals = Data.from_file("evals.parquet")
+scores_heatmap(evals, height=200)
+```
+
+#### Data Preparation
+
+The scores by task plot is intended to operate on data read directly from an Inspect log directory with the [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df) function. In addition, if the data frame is amended with [links](components-links.qmd) they are used automatically in the plot's tooltips.
+
+#### Options
+
+You can customize the appearance of the heatmaps by passing plot options (for example, `color_scheme` to choose the colors used to fill the cells).  Use `ascending` to determine whether the highest values appear in the top right of the heatmap. You can customize the cell text using the `cell` parameter (including hiding it, by setting `cell.text = None`). Learn more about [cell options](reference/inspect_viz.view.qmd#celloptions) You can use the `legend` parameter to customize the legend's appearance and location. Learn more about [legend options](reference/inspect_viz.view.qmd#legendoptions).
+
+
 ## Tool Calls
 
 The [`tool_calls()`](reference/inspect_viz.view.qmd#tool_calls) function creates a heat map visualising tool calls over evaluation turns.
