@@ -103,11 +103,69 @@ ChannelIntervalSpec: TypeAlias = ChannelSpec | ChannelWithInterval
 
 
 class ChannelWithOrder(TypedDict, total=False):
+    """Channel with order option"""
+
     value: Channel
+    """The channel value to use for ordering."""
+
     order: Literal["ascending", "descending"]
+    """The order in which to sort the values. Defaults to "ascending"."""
 
 
-SortOrder: TypeAlias = Channel | ChannelWithOrder
+class ChannelDomainValueSpec(TypedDict, total=False):
+    """Channel domain value spec."""
+
+    value: str | None
+    """The value to use for sorting"""
+
+    order: Literal["ascending", "descending"] | None
+    """The order in which to sort the values. Defaults to "ascending"."""
+
+    reduce: str | None
+    """The reduction function to use for sorting. Defaults to None, which means no reduction is applied. See https://observablehq.com/plot/transforms/group#group-options for the list of named reducers """
+
+    reverse: bool | None
+    """Whether to reverse the order of the values. Defaults to False."""
+
+    limit: float | None
+    """The maximum number of values to include in the domain. Defaults to None, which means no limit is applied."""
+
+
+class ChannelDomainSort(TypedDict, total=False):
+    """Channel domain sort spec."""
+
+    x: ChannelDomainValueSpec
+    """Sorting specification for the x-axis."""
+
+    y: ChannelDomainValueSpec
+    """Sorting specification for the y-axis."""
+
+    color: ChannelDomainValueSpec
+    """Sorting specification for the color channel."""
+
+    fx: ChannelDomainValueSpec
+    """Sorting specification for the fx channel."""
+
+    fy: ChannelDomainValueSpec
+    """Sorting specification for the fy channel."""
+
+    r: ChannelDomainValueSpec
+    """Sorting specification for the r channel."""
+
+    length: ChannelDomainValueSpec
+    """Sorting specification for the length channel."""
+
+    opacity: ChannelDomainValueSpec
+    """Sorting specification for the opacity channel."""
+
+    symbol: ChannelDomainValueSpec
+    """Sorting specification for the symbol channel."""
+
+    reverse: bool | None
+    """Whether to reverse the order of the values. Defaults to False."""
+
+
+SortOrder: TypeAlias = Channel | ChannelWithOrder | ChannelDomainSort
 """Sort order for a plot mark's index.
 
   - a channel value definition for sorting given values (ascending)

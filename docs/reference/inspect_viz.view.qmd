@@ -11,6 +11,7 @@ View functions are currently in beta and are exported from the **inspect_ai.view
 ### scores_by_task
 ### scores_timeline
 ### scores_with_baseline
+### scores_heatmap
 
 ## Tools
 
@@ -19,3 +20,5 @@ View functions are currently in beta and are exported from the **inspect_ai.view
 ## Types
 
 ### Baseline
+### LegendOptions
+### CellOptions
