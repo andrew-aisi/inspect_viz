@@ -32,18 +32,6 @@ scores_timeline(evals)
 
 Use the filters to switch benchmarks and restrict to models from various organization(s). Hover over the points to get additional details on them or view the underlying Inspect log for the evals.
 
-::: {.callout-note}
-
-#### Why Inspect Viz?
-
-Why use a visualisation library specific to Inspect? Why not just use Matplotlib or Plotly which you might already be familiar with and which LLMs have experience writing code for? Inspect Viz is indeed not for every scenario, and it does have a learning curve. You should consider Inspect Viz for situations where:
-
-1. You want to take advantage of its pre-built [Views](views.qmd) that go directly from Inspect log [data frames](https://inspect.aisi.org.uk/dataframe.html) to visualizations.
-2. You want to create plots that include direct [links](components-links.qmd) to the Inspect log viewer (try hovering over the points above and then clicking the log viewer link).
-3. You want to create _interactive_ visualizations (either filtering as shown above or directly selecting points on one plot to dynamially drive the contents of other plots).
-4. You value the more modern appearance and flexible compositions available in [Observable Plot](https://observablehq.com/plot/), the plotting library Inspect Viz is built on.
- 
-:::
 
 #### Getting Started
 
@@ -68,7 +56,7 @@ tools = Data.from_file("cybench_tools.parquet")
 tool_calls(tools)
 ```
 
-Available view functions include:
+Available views include:
 
 {{< include _views.md >}}
 
