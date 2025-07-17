@@ -12,8 +12,6 @@ from inspect_viz.plot._legend import legend as create_legend
 from inspect_viz.transform._aggregate import avg
 from inspect_viz.transform._sql import sql
 
-# TODO: sorting parameter seems very sketchy
-
 
 class LegendOptions(TypedDict, total=False):
     """Legend options."""
