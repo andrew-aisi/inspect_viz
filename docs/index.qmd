@@ -2,7 +2,7 @@
 title: "Inspect Viz"
 subtitle: |
    Data visualization for [Inspect AI](https://inspect.aisi.org.uk/) large language model evalutions.
-tbl-colwidths: [30,70]
+tbl-colwidths: [35,75]
 ---
 
 ```{python}
