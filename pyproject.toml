@@ -49,6 +49,7 @@ doc = [
 [tool.hatch.build]
 only-packages = true
 exclude = ["docs/", "tests/"]
+artifacts = ["src/inspect_viz/_widgets"]
 
 [tool.hatch.version]
 source = "vcs"
@@ -58,13 +59,6 @@ version-file = "src/inspect_viz/_version.py"
 
 [tool.hatch.version.raw-options]
 local_scheme = "no-local-version" # Important for PyPI compatibility
-
-[tool.hatch.build.targets.sdist]
-include = ["src/inspect_viz/_widgets/**/*"]
-
-[tool.hatch.build.targets.wheel.force-include]
-"src/inspect_viz/_widgets" = "inspect_viz/_widgets"
-
 
 [tool.ruff]
 extend-exclude = ["docs"]
