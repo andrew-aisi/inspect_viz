@@ -1447,13 +1447,13 @@ Note
 <p>Bar plot for comparing eval scores.</p>
 <p>Summarize eval scores using a bar plot. By default, scores (<code>y</code>) are plotted by “task_name” (<code>fx</code>) and “model” (<code>x</code>). By default, confidence intervals are also plotted (disable this with <code>y_ci=False</code>).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/07e15c561c63be81e5ae1f18d50e2b036395cdd7/src/inspect_viz/view/beta/_scores_by_task.py#L13">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/e090872cbad24296b15d81c2395e3dd3959c8178/src/inspect_viz/view/beta/_scores_by_task.py#L21">Source</a>
 </div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_by_task(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    x: <span class="bu">str</span> <span class="op">=</span> <span class="st">"model"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    fx: <span class="bu">str</span> <span class="op">=</span> <span class="st">"task_name"</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    y: <span class="bu">str</span> <span class="op">=</span> <span class="st">"score_headline_value"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    x: <span class="bu">str</span> <span class="op">=</span> X_DEFAULT,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    fx: <span class="bu">str</span> <span class="op">=</span> FX_DEFAULT,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    y: <span class="bu">str</span> <span class="op">=</span> Y_DEFAULT,</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    y_stderr: <span class="bu">str</span> <span class="op">=</span> <span class="st">"score_headline_stderr"</span>,</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    y_ci: <span class="bu">bool</span> <span class="op">|</span> <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    y_label: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">|</span> NotGiven <span class="op">=</span> NOT_GIVEN,</span>
@@ -1508,7 +1508,7 @@ Note
 <h3 class="anchored" data-anchor-id="scores_timeline">scores_timeline</h3>
 <p>Eval scores by model, organization, and release date.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/07e15c561c63be81e5ae1f18d50e2b036395cdd7/src/inspect_viz/view/beta/_scores_timeline.py#L15">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/e090872cbad24296b15d81c2395e3dd3959c8178/src/inspect_viz/view/beta/_scores_timeline.py#L16">Source</a>
 </div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_timeline(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1565,13 +1565,13 @@ Note
 <p>Bar plot for comparing the scores of different models on a single evaluation.</p>
 <p>Summarize eval scores using a bar plot. By default, scores (<code>y</code>) are plotted by “task_name” (<code>fx</code>) and “model” (<code>x</code>). By default, confidence intervals are also plotted (disable this with <code>y_ci=False</code>).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/07e15c561c63be81e5ae1f18d50e2b036395cdd7/src/inspect_viz/view/beta/_scores_with_baseline.py#L36">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/e090872cbad24296b15d81c2395e3dd3959c8178/src/inspect_viz/view/beta/_scores_with_baseline.py#L41">Source</a>
 </div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_with_baseline(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    x: <span class="bu">str</span> <span class="op">=</span> <span class="st">"score_headline_value"</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    y: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    x: <span class="bu">str</span> <span class="op">=</span> X_DEFAULT,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    y: <span class="bu">str</span> <span class="op">=</span> Y_DEFAULT,</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    baseline: <span class="bu">int</span> <span class="op">|</span> <span class="bu">float</span> <span class="op">|</span> Baseline <span class="op">|</span> <span class="bu">list</span>[Baseline] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
@@ -1590,7 +1590,7 @@ Note
 <dd>
 <p>Name of field for x axis (defaults to “score_headline_value”).</p>
 </dd>
-<dt><code class="ref-definition">y</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span></span></dt>
+<dt><code class="ref-definition">y</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
 <dd>
 <p>Name of field for x axis (defaults to “model”)</p>
 </dd>
@@ -1632,13 +1632,13 @@ Note
 <h3 class="anchored" data-anchor-id="scores_heatmap">scores_heatmap</h3>
 <p>Creates a heatmap plot of success rate of eval data.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/07e15c561c63be81e5ae1f18d50e2b036395cdd7/src/inspect_viz/view/beta/_scores_heatmap.py#L57">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/e090872cbad24296b15d81c2395e3dd3959c8178/src/inspect_viz/view/beta/_scores_heatmap.py#L64">Source</a>
 </div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_heatmap(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    x: <span class="bu">str</span> <span class="op">=</span> <span class="st">"task_name"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    y: <span class="bu">str</span> <span class="op">=</span> <span class="st">"model"</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    fill: <span class="bu">str</span> <span class="op">=</span> <span class="st">"score_headline_value"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    x: <span class="bu">str</span> <span class="op">=</span> X_DEFAULT,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    y: <span class="bu">str</span> <span class="op">=</span> Y_DEFAULT,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    fill: <span class="bu">str</span> <span class="op">=</span> FILL_DEFAULT,</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    cell: CellOptions <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    tip: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>,</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    ascending: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>,</span>
@@ -1711,7 +1711,7 @@ Note
 <h3 class="anchored" data-anchor-id="tool_calls">tool_calls</h3>
 <p>Heat map visualising tool calls over evaluation turns.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/07e15c561c63be81e5ae1f18d50e2b036395cdd7/src/inspect_viz/view/beta/_tool_calls.py#L10">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/e090872cbad24296b15d81c2395e3dd3959c8178/src/inspect_viz/view/beta/_tool_calls.py#L10">Source</a>
 </div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tool_calls(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1780,7 +1780,7 @@ Note
 <h3 class="anchored" data-anchor-id="baseline">Baseline</h3>
 <p>A baseline is a reference line that can be used to highlight important thresholds (for example, expert human performance).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/07e15c561c63be81e5ae1f18d50e2b036395cdd7/src/inspect_viz/view/beta/_scores_with_baseline.py#L14">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/e090872cbad24296b15d81c2395e3dd3959c8178/src/inspect_viz/view/beta/_scores_with_baseline.py#L19">Source</a>
 </div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Baseline(TypedDict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section class="level4">
@@ -1817,7 +1817,7 @@ Note
 <h3 class="anchored" data-anchor-id="legendoptions">LegendOptions</h3>
 <p>Legend options.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/07e15c561c63be81e5ae1f18d50e2b036395cdd7/src/inspect_viz/view/beta/_scores_heatmap.py#L16">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/e090872cbad24296b15d81c2395e3dd3959c8178/src/inspect_viz/view/beta/_scores_heatmap.py#L23">Source</a>
 </div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LegendOptions(TypedDict, total<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section class="level4">
@@ -1866,7 +1866,7 @@ Note
 <h3 class="anchored" data-anchor-id="celloptions">CellOptions</h3>
 <p>Cell options for the heatmap.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/07e15c561c63be81e5ae1f18d50e2b036395cdd7/src/inspect_viz/view/beta/_scores_heatmap.py#L47">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/e090872cbad24296b15d81c2395e3dd3959c8178/src/inspect_viz/view/beta/_scores_heatmap.py#L54">Source</a>
 </div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CellOptions(TypedDict, total<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section class="level4">
