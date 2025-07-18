@@ -3,14 +3,10 @@ name: Publish Package
 on:
     workflow_dispatch:
         inputs:
-            target:
-                description: 'Where to publish'
+            confirm:
+                description: 'Type "yes" to confirm PyPI publication'
                 required: true
-                type: choice
-                options:
-                    - testpypi
-                    - pypi
-                    - both
+                type: string
 
 jobs:
     publish:
@@ -18,8 +14,8 @@ jobs:
         permissions:
             id-token: write # Required for OIDC/trusted publishing
         environment:
-            name: ${{ inputs.target == 'pypi' && 'pypi' || 'testpypi' }}
-            url: ${{ inputs.target == 'pypi' && 'https://pypi.org/p/inspect_viz' || 'https://test.pypi.org/p/inspect_viz' }}
+            name: pypi
+            url: https://pypi.org/p/inspect_viz
 
         steps:
             - uses: actions/checkout@v4
@@ -41,12 +37,6 @@ jobs:
                   python -m build
                   ls -la dist/
 
-            - name: Publish to TestPyPI
-              if: inputs.target == 'testpypi' || inputs.target == 'both'
-              uses: pypa/gh-action-pypi-publish@release/v1
-              with:
-                  repository-url: https://test.pypi.org/legacy/
-
             - name: Publish to PyPI
-              if: inputs.target == 'pypi' || inputs.target == 'both'
+              if: inputs.confirm == 'yes'
               uses: pypa/gh-action-pypi-publish@release/v1
