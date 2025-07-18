@@ -107,7 +107,7 @@ def scores_timeline(
         "x_domain": "fixed",
         "y_domain": [0, 1.0],
         "color_label": "Organizations",
-        "color_domain": organizations,
+        "color_domain": organizations or "fixed",
     }
     attributes = defaults | attributes
 

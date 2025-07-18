@@ -75,7 +75,8 @@ vconcat(
         y_domain=[0,1.0],  # <6>
         x_label="Release Date",
         y_label="Score",
-        color_label="Organization"
+        color_label="Organization",
+        color_domain="fixed"
     )
 )
 ```
