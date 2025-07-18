@@ -2,6 +2,8 @@ import svgPathParser from 'https://cdn.jsdelivr.net/npm/svg-path-parser@1.1.0/+e
 import tippy, { Placement } from 'https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm';
 import { isLinkableUrl } from '../util/url';
 
+const HIDDEN_USER_CHANNEL = '_user_channels';
+
 export const replaceTooltipImpl = (specEl: HTMLElement) => {
     // Check if SVG already exists
     configureSpecSvgTooltips(specEl);
@@ -88,9 +90,15 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
                 if (!tipEl || !tipContainerEl) {
                     hideTooltip();
                 } else {
+                    // Look for channels
+                    const userChannels = readUserChannels(svgEl);
+                    const userKeys = Object.keys(userChannels || {});
+
                     // Find the tip container and parse it to determine how the tooltips
                     // are configured and what is being displayed.
                     const parsed = parseSVGTooltip(tipContainerEl, tipEl);
+
+                    const tooltips = distillTooltips(parsed, userKeys);
 
                     // Convert the SVG point to screen coordinates
                     const svgPoint = svgEl.createSVGPoint();
@@ -157,7 +165,7 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
                     const contentEl = document.createElement('div');
                     contentEl.classList.add('inspect-tip-container');
                     let count = 0;
-                    for (const row of parsed.values) {
+                    for (const row of tooltips) {
                         // The row
                         const rowEl = document.createElement('div');
                         rowEl.className = 'inspect-tip-row';
@@ -298,6 +306,64 @@ const parseSVGTooltip = (tipContainerEl: SVGElement, tipEl: SVGGElement): Parsed
 
     return result;
 };
+
+function distillTooltips(parsed: ParsedTooltip, userKeys: string[]) {
+    const userValues = parsed.values
+        .filter(row => {
+            return userKeys.includes(row.key);
+        })
+        .map(row => row.value);
+
+    const filteredRows = parsed.values.filter(row => {
+        // Never show the internal channel
+        if (row.key === HIDDEN_USER_CHANNEL) {
+            return false;
+        }
+
+        // Include all user keys
+        if (userKeys.includes(row.key)) {
+            return true;
+        }
+
+        // Ignore values that have already been displayed as a user labeled values
+        if (userValues.includes(row.value)) {
+            return false;
+        }
+
+        return true;
+    });
+    return filteredRows;
+}
+
+function readUserChannels(svgEl: SVGSVGElement) {
+    const plotEl = svgEl.parentElement;
+    if (plotEl) {
+        // Read the value from the plot element
+        const value = (plotEl as any).value;
+
+        // Read the marks
+        const marks = value.marks || [];
+        for (const mark of marks) {
+            const markChannels = mark.channels || [];
+            const markChannelNames = markChannels.map((c: any) => c.channel);
+            // This is a mark with a tip
+            if (markChannelNames.includes('tip')) {
+                // Read the user channels
+                const userChannels = markChannels.find(
+                    (c: any) => c.channel === HIDDEN_USER_CHANNEL
+                );
+
+                const userChannelsValue = userChannels?.value;
+                if (userChannelsValue) {
+                    const parsedChannels = JSON.parse(userChannelsValue) as Record<string, string>;
+
+                    return parsedChannels;
+                }
+            }
+        }
+    }
+    return undefined;
+}
 
 function getTransformsBetween(
     pathElement: HTMLElement | SVGElement,

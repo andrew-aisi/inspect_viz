@@ -1762,6 +1762,7 @@ var isLinkableUrl = (value) => {
 };
 
 // js/plot/tooltips.ts
+var HIDDEN_USER_CHANNEL = "_user_channels";
 var replaceTooltipImpl = (specEl) => {
   configureSpecSvgTooltips(specEl);
   const observer = new MutationObserver(() => {
@@ -1822,7 +1823,10 @@ var setupTooltipObserver = (svgEl, specEl) => {
         if (!tipEl || !tipContainerEl) {
           hideTooltip();
         } else {
+          const userChannels = readUserChannels(svgEl);
+          const userKeys = Object.keys(userChannels || {});
           const parsed = parseSVGTooltip(tipContainerEl, tipEl);
+          const tooltips = distillTooltips(parsed, userKeys);
           const svgPoint = svgEl.createSVGPoint();
           svgPoint.x = parsed.transform?.x || 0;
           svgPoint.y = parsed.transform?.y || 0;
@@ -1876,7 +1880,7 @@ var setupTooltipObserver = (svgEl, specEl) => {
           const contentEl = document.createElement("div");
           contentEl.classList.add("inspect-tip-container");
           let count2 = 0;
-          for (const row of parsed.values) {
+          for (const row of tooltips) {
             const rowEl = document.createElement("div");
             rowEl.className = "inspect-tip-row";
             contentEl.appendChild(rowEl);
@@ -1975,6 +1979,46 @@ var parseSVGTooltip = (tipContainerEl, tipEl) => {
   }
   return result;
 };
+function distillTooltips(parsed, userKeys) {
+  const userValues = parsed.values.filter((row) => {
+    return userKeys.includes(row.key);
+  }).map((row) => row.value);
+  const filteredRows = parsed.values.filter((row) => {
+    if (row.key === HIDDEN_USER_CHANNEL) {
+      return false;
+    }
+    if (userKeys.includes(row.key)) {
+      return true;
+    }
+    if (userValues.includes(row.value)) {
+      return false;
+    }
+    return true;
+  });
+  return filteredRows;
+}
+function readUserChannels(svgEl) {
+  const plotEl = svgEl.parentElement;
+  if (plotEl) {
+    const value = plotEl.value;
+    const marks = value.marks || [];
+    for (const mark of marks) {
+      const markChannels = mark.channels || [];
+      const markChannelNames = markChannels.map((c) => c.channel);
+      if (markChannelNames.includes("tip")) {
+        const userChannels = markChannels.find(
+          (c) => c.channel === HIDDEN_USER_CHANNEL
+        );
+        const userChannelsValue = userChannels?.value;
+        if (userChannelsValue) {
+          const parsedChannels = JSON.parse(userChannelsValue);
+          return parsedChannels;
+        }
+      }
+    }
+  }
+  return void 0;
+}
 function getTransformsBetween(pathElement, containerElement) {
   const transforms = [];
   let current = pathElement.parentElement;

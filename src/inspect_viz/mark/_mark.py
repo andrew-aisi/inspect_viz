@@ -1,4 +1,5 @@
-from typing import Any
+import json
+from typing import Any, cast
 
 from pydantic import JsonValue
 
@@ -6,6 +7,8 @@ from inspect_viz.mark._options import MarkOptions
 
 from .._core.component import Component
 from .._util.marshall import snake_to_camel
+
+HIDDEN_USER_CHANNEL = "_user_channels"
 
 
 class Mark(Component):
@@ -30,6 +33,14 @@ class Mark(Component):
             resolved_options["tip"] = {"lineWidth": INFINITE_LINE}
         elif isinstance(tip, dict):
             tip["lineWidth"] = INFINITE_LINE
+
+        # capture channel information and pass it along
+        # as a hidden channel
+        if "channels" in options:
+            channels_json = json.dumps(options.get("channels", {}))
+
+            # Note - even though the types indicate a string must be passed through, a list will actually go through with a simple static value
+            options["channels"][HIDDEN_USER_CHANNEL] = cast(Any, [channels_json])
 
         super().__init__({"mark": type} | config | resolved_options)
 
