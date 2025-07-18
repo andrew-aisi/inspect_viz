@@ -134,31 +134,31 @@ class ChannelDomainValueSpec(TypedDict, total=False):
 class ChannelDomainSort(TypedDict, total=False):
     """Channel domain sort spec."""
 
-    x: ChannelDomainValueSpec
+    x: ChannelDomainValueSpec | str | None
     """Sorting specification for the x-axis."""
 
-    y: ChannelDomainValueSpec
+    y: ChannelDomainValueSpec | str | None
     """Sorting specification for the y-axis."""
 
-    color: ChannelDomainValueSpec
+    color: ChannelDomainValueSpec | str | None
     """Sorting specification for the color channel."""
 
-    fx: ChannelDomainValueSpec
+    fx: ChannelDomainValueSpec | str | None
     """Sorting specification for the fx channel."""
 
-    fy: ChannelDomainValueSpec
+    fy: ChannelDomainValueSpec | str | None
     """Sorting specification for the fy channel."""
 
-    r: ChannelDomainValueSpec
+    r: ChannelDomainValueSpec | str | None
     """Sorting specification for the r channel."""
 
-    length: ChannelDomainValueSpec
+    length: ChannelDomainValueSpec | str | None
     """Sorting specification for the length channel."""
 
-    opacity: ChannelDomainValueSpec
+    opacity: ChannelDomainValueSpec | str | None
     """Sorting specification for the opacity channel."""
 
-    symbol: ChannelDomainValueSpec
+    symbol: ChannelDomainValueSpec | str | None
     """Sorting specification for the symbol channel."""
 
     reverse: bool | None
