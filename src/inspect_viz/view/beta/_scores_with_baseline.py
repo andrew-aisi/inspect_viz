@@ -2,13 +2,18 @@ from typing import Literal, NotRequired, TypedDict, Unpack, cast
 
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
+from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.notgiven import NotGiven
 from inspect_viz.mark._bar import bar_x
 from inspect_viz.mark._rule import rule_x
 from inspect_viz.mark._text import text
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._plot import plot
-from inspect_viz.transform._sql import sql
+
+X_DEFAULT = "score_headline_value"
+X_CHANNEL_LABEL = "Score"
+Y_DEFAULT = "model"
+Y_CHANNEL_LABEL = "Model"
 
 
 class Baseline(TypedDict):
@@ -36,8 +41,8 @@ class Baseline(TypedDict):
 def scores_with_baseline(
     data: Data,
     *,
-    x: str = "score_headline_value",
-    y: str | None = None,
+    x: str = X_DEFAULT,
+    y: str = Y_DEFAULT,
     width: float | None = None,
     height: float | None = None,
     baseline: int | float | Baseline | list[Baseline] | None = None,
@@ -99,7 +104,7 @@ def scores_with_baseline(
     # Resolve default values
     defaultAttributes = PlotAttributes(
         x_domain=x_domain,
-        margin_left=200,
+        margin_left=210,
         margin_top=top_margin,
         margin_bottom=bottom_margin,
         color_domain=[1],
@@ -108,15 +113,18 @@ def scores_with_baseline(
 
     # channels
     channels: dict[str, str] = {}
-    if "log_viewer" in data.columns:
-        channels["Log Viewer"] = "log_viewer"
+    if y == Y_DEFAULT and y_label is None:
+        channels[Y_CHANNEL_LABEL] = y
+    if x == X_DEFAULT and x_label is None:
+        channels[X_CHANNEL_LABEL] = x
+    resolve_log_viewer_channel(data, channels)
 
-    # The plot
+    # The plots
     return plot(
         bar_x(
             data,
             x=x,
-            y=y or sql("split_part(model, '/', 2)"),
+            y=y,
             sort={"y": "x", "reverse": sort != "asc"},
             tip=True,
             channels=channels,

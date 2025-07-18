@@ -1,6 +1,7 @@
 from typing import Unpack
 
 from inspect_viz import Component, Data
+from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz.input import checkbox_group, select
 from inspect_viz.layout._concat import vconcat
 from inspect_viz.layout._space import vspace
@@ -66,12 +67,14 @@ def scores_timeline(
 
     # build channels (log_viewer is optional)
     channels: dict[str, str] = {
+        "Organization": "organization",
         "Model": "model",
+        "Release Date": "release_date",
         "Scorer": "scorer",
+        "Score": "score",
         "Stderr": "stderr",
     }
-    if "log_viewer" in data.columns:
-        channels["Log Viewer"] = "log_viewer"
+    resolve_log_viewer_channel(data, channels)
 
     # start with dot plot
     components = [

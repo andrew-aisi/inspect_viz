@@ -2,15 +2,22 @@ from typing import Literal, TypedDict, Unpack
 
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
+from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.notgiven import NotGiven
 from inspect_viz.mark import cell as cell_mark
-from inspect_viz.mark._channel import Channel
 from inspect_viz.mark._text import text
 from inspect_viz.plot import plot
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._legend import legend as create_legend
 from inspect_viz.transform._aggregate import avg
 from inspect_viz.transform._sql import sql
+
+X_DEFAULT = "task_name"
+X_CHANNEL_LABEL = "Task"
+Y_DEFAULT = "model"
+Y_CHANNEL_LABEL = "Model"
+FILL_DEFAULT = "score_headline_value"
+FILL_CHANNEL_LABEL = "Score"
 
 
 class LegendOptions(TypedDict, total=False):
@@ -56,9 +63,9 @@ class CellOptions(TypedDict, total=False):
 
 def scores_heatmap(
     data: Data,
-    x: str = "task_name",
-    y: str = "model",
-    fill: str = "score_headline_value",
+    x: str = X_DEFAULT,
+    y: str = Y_DEFAULT,
+    fill: str = FILL_DEFAULT,
     cell: CellOptions | None = None,
     tip: bool = True,
     ascending: bool = True,
@@ -87,11 +94,6 @@ def scores_heatmap(
        y_label: y-axis label (defaults to None).
        **attributes: Additional `PlotAttributes
     """
-    # resolve the y value
-    resolved_y: Channel = y
-    if y == "model":
-        resolved_y = sql("split_part(model, '/', 2)")
-
     # Compute the color domain
     min_value = data.column_min(fill)
     max_value = data.column_max(fill)
@@ -104,7 +106,7 @@ def scores_heatmap(
 
     # Resolve default values
     defaultAttributes = PlotAttributes(
-        margin_left=150,
+        margin_left=220,
         x_tick_rotate=45,
         margin_bottom=75,
         color_scale="linear",
@@ -130,7 +132,7 @@ def scores_heatmap(
     # set special defaults
     if legend["location"] in ["bottom"]:
         if "margin_left" not in legend:
-            legend["margin_left"] = 156
+            legend["margin_left"] = 222
         if "width" not in legend:
             legend["width"] = 370
 
@@ -141,7 +143,7 @@ def scores_heatmap(
             text(
                 data,
                 x=x,
-                y=resolved_y,
+                y=y,
                 text=fill,
                 fill=cell["text"],
                 styles={"font_weight": 600},
@@ -150,14 +152,19 @@ def scores_heatmap(
 
     # channels
     channels: dict[str, str] = {}
-    if "log_viewer" in data.columns:
-        channels["Log Viewer"] = "log_viewer"
+    if x == X_DEFAULT:
+        channels[X_CHANNEL_LABEL] = x
+    if y == Y_DEFAULT:
+        channels[Y_CHANNEL_LABEL] = y
+    if fill == FILL_DEFAULT:
+        channels[FILL_CHANNEL_LABEL] = fill
+    resolve_log_viewer_channel(data, channels)
 
     heatmap = plot(
         cell_mark(
             data,
             x=x,
-            y=resolved_y,
+            y=y,
             fill=avg(fill),
             tip=tip,
             inset=cell["inset"] if cell else None,
