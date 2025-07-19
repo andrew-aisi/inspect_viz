@@ -7,6 +7,7 @@ filters:
      path: reference/filter/filter.py
    - at: pre-ast
      path: reference/filter/post.lua
+datafile: "evals.parquet"
 ---
 
 ## Overview
@@ -24,7 +25,7 @@ scores_by_task(evals)
 
 ## Data Preparation
 
-The scores by task plot is intended to operate on data read directly from an Inspect log directory with the [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df) function. In addition, the data frame was amended with [links](components-links.qmd) to log files.
+{{< include _data_preparation.md >}}
 
 
 ## Function Reference {reference="scores_by_task"}

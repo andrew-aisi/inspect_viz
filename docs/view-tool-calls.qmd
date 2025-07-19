@@ -35,13 +35,16 @@ log = "<path-to-log>.eval"
 df = messages_df(log, columns=SampleSummary + MessageColumns)
 
 # trim columns
-tools_df = df[[
+df = df[[
     "eval_id",
     "id",
     "order",
     "tool_call_function",
     "limit"
 ]]
+
+# write to parquet
+df.to_parquet("cybench_tools.parquet")
 ```
 
 Note that the trimming of columns is particularly important because Inspect Viz embeds datasets directly in the web pages that host them (so we want to minimize their size for page load performance and bandwidth usage).

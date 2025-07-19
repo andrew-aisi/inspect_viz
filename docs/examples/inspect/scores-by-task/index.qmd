@@ -5,8 +5,6 @@ subtitle: "Dataset: [evals.parquet](evals.parquet)"
 
 This example illustrates the code behind the [`scores_by_task()`](../../../view-scores-by-task.qmd) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
 
-Here is the base bar plot with data read using the [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df) function (and amended with [links](../../../components-links.qmd)) to the published logs:
-
 ```{python}
 #| filename: Code
 

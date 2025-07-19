@@ -5,9 +5,8 @@ subtitle: "Dataset: [cybench_tools.parquet](cybench_tools.parquet)"
 
 This example illustrates the code behind the [`tool_calls()`](../../../reference/inspect_viz.view.qmd#tool_calls) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
 
-The plot visualizes tool usage over a series of turns in a Cybench evaluation. We use a `cell()` mark to visualize tool use over messages in each sample of an evaluation. We note any limit that ended the sample using a `text()` mark on the right side of the frame. See the [Data Preparation](#data-preparation) section below for details on how the data frame for the plot was created.
+The plot visualizes tool usage over a series of turns in a Cybench evaluation. We use a `cell()` mark to visualize tool use over messages in each sample of an evaluation. We note any limit that ended the sample using a `text()` mark on the right side of the frame. 
 
-Here is the plot and an annotated version of the code required to produce it (click on the numbers in the right margin for additional explanation).
 
 ```{python}
 #| filename: Code
@@ -64,28 +63,3 @@ plot(
 6. Set some custom labels and ensure that tools follow our designed order.
 
 7. Specify which tools we should show and in what order.
-
-### Data Preparation {.unlisted}
-
-To create the plot we read a raw messages data frame from an eval log^[The eval log read for this example is in the [inspect-viz-example-logs](https://github.com/meridianlabs-ai/inspect-viz-example-logs/blob/main/logs/cybench/2025-06-28T12-26-01%2B00-00_cybench_cHgZahEpPHqsSx8GfGjKai.eval) repo] then filter down to just the fields we require for visualization:
-
-```{python}
-#| eval: false
-from inspect_ai.analysis.beta import messages_df, MessageColumns, SampleSummary
-
-# read messages from log
-log = "<path-to-log>.eval"
-df = messages_df(log, columns=SampleSummary + MessageColumns)
-
-# trim columns
-tools_df = df[[
-    "eval_id",
-    "id",
-    "order",
-    "tool_call_function",
-    "limit"
-]]
-```
-
-Note that the trimming of columns is particularly important because Inspect Viz embeds datasets directly in the web pages that host them (so we want to minimize their size for page load performance and bandwidth usage).
-
