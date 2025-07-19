@@ -71,6 +71,13 @@ plot(
         evals, x="model", fx="task_name",  # <1>
         y="score_headline_value",
         fill="model",
+        tip=True,
+        channels={
+            "Task": "task_name",
+            "Model": "model",
+            "Score": "score_headline_value",
+            "Log Viewer": "log_viewer"
+        }
     ),
     legend=legend("color", location="bottom"),  # <2>
     x_label=None, x_ticks=[], fx_label=None,  # <3>
@@ -115,30 +122,59 @@ Tooltips enable you to provide additional details when the user hovers their mou
 
 ```python
 plot(
-    bar_x(penguins, x=count(), y="species", fill="species",
-          tip=True
-    )
+    bar_y( 
+        evals, x="model", fx="task_name",
+        y="score_headline_value",
+        fill="model",
+        tip=True
+    ),
+    legend=legend("color", location="bottom"),
+    x_label=None, x_ticks=[], fx_label=None,
+    y_label="score", y_domain=[0, 1.0]
 )
 ```
+
+1. Add `tip=True` to enable tooltips for marks where they are not automatically enabled.
 
 Note that tooltips can interfere with plot interactions---for example, if your bar plot was clickable to drive selections in other plots you would not want to specify `tip=True`.
 
 
-### Values
+### Channels
 
-Tooltips show the values of all columns from the dataset that provide scales (e.g. `x`, `y`, `fx`, `stroke`, `fill`, `symbol`, etc.):
+By default, tooltips show all dataset channels that provide scales (e.g. `x`, `y`, `fx`, `stroke`, `fill`, `symbol`, etc.). For the plot above that would look like this:
 
-![](tooltips.png)
+![](tooltip-basic.png){.border}
 
-You can add additional values to tooltips by specifying more `channels` (data table columns or transforms) in your mark. These channels won't appear on the plot but will appear on the tooltip:
+There are few things we can improve on here: 
+
+1. The labels are scale names rather than domain specific names (e.g. "fx" rather than "model")
+2. The order of labels isn't ideal.
+3. There are some duplicate values (e.g "fill" and "fx")
+4. We might want to include additional columns not used in the rest of the plot (e.g. a link to the log file).
+
+You can exercise more control over the tooltip by specifying `channels` along with the mark. For example:
 
 ```python
 plot(
-    dot(penguins, x="body_mass", y="flipper_length",  
-        stroke="species", symbol="species", 
-        channels={ "sex": "sex", "island": "island"}
+    bar_y( 
+        evals, x="model", fx="task_name",
+        y="score_headline_value",
+        fill="model",
+        tip=True,
+        channels={ # <1>
+            "Task": "task_name", 
+            "Model": "model",
+            "Score": "score_headline_value",
+            "Log Viewer": "log_viewer"
+        } # <1>
+    ),
+    ...
 )
 ```
+
+1. The `channels` option maps labels to columns in the underlying data---all defined `channels` will appear in the tooltip. URL values are automatically turned into links as shown here.
+
+![](tooltip-channels.png){.border}
 
 
 ## Colors
