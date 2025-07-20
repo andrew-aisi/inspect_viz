@@ -1,0 +1,52 @@
+
+
+
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.plot import plot, legend
+from inspect_viz.mark import Mark, bar_x, rule_y, frame
+from inspect_viz.transform import sql
+
+evals = Data.from_file("evals.csv")
+
+def score_rule(hint: str, offset: int) -> Mark:
+    return rule_y(
+        evals,
+        x1=0,
+        x2="score_overall_value",
+        y="model",
+        filter=sql(f"task_arg_hint = {hint}"),
+        dy=offset,
+        sort= { "y": "-x" },
+        stroke=sql("IF(NOT task_arg_hint, 'No hint', 'Hint')"),
+        stroke_width=3,
+        stroke_linecap="round",
+        marker_end="circle"
+    )
+
+plot(
+    frame("left", inset_top=15, inset_bottom=15),
+    score_rule("false", -10),
+    score_rule("true", 10),
+    legend="color",
+    margin_left=100,
+    y_label=None,
+    x_label="score",
+    x_domain=[0,0.30],
+    color_domain=["No hint", "Hint"],
+    color_range=["#a73d39", "#a73d3988"],
+    y_tick_size=0,
+    
+)
+
+```
+
+```{python}
+#| eval: false
+import pandas as pd
+df = pd.read_csv("scores.csv")
+df["score_headline_value"] = df["score_overall_value"]
+df["score_headline_stderr"] = df["score_overall_stderr"]
+df
+```
