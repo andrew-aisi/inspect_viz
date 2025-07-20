@@ -14,7 +14,7 @@ y_offset = 10
 
 ci = 0.95
 
-color = "#a73d39"
+colors = ["#3266ae", "#91b7e5"]
 
 factor = "task_arg_hint"
 factor_labels = [ 'No hint', 'Hint']
@@ -56,7 +56,7 @@ def ci_rule(factor_value: bool) -> Mark:
         filter=sql(f"{factor} = {factor_value}"),
         dy=offset,
         sort= { "y": "-x" },
-        stroke=f"{color}10",
+        stroke=f"{colors[0]}20",
         stroke_width=15,
     )
 
@@ -67,12 +67,12 @@ plot(
     score_rule(True),
     ci_rule(False),
     ci_rule(True),
-    legend="color",
+    legend=legend("color"),
     margin_left=100,
     y_label=None,
     x_label="score",
     color_domain=factor_labels,
-    color_range=[color, f"{color}66"],
+    color_range=colors,
     y_tick_size=0,
     
 )
