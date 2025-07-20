@@ -143,7 +143,7 @@ def scores_heatmap(
                 data,
                 x=x,
                 y=y,
-                text=fill,
+                text=avg(fill),
                 fill=cell["text"],
                 styles={"font_weight": 600},
             )
