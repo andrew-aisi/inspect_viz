@@ -10,64 +10,71 @@ from inspect_viz.transform import sql, ci_bounds
 
 evals = Data.from_file("evals.csv")
 
+y_offset = 10
+
+ci = 0.95
+
+color = "#a73d39"
+
+factor = "task_arg_hint"
+factor_labels = [ 'No hint', 'Hint']
+
+score = "score_overall_value"
+stderr = "score_overall_stderr"
+
+y = "model"
+
+
 ci_lower, ci_upper = ci_bounds(
-    0.95, 
-    score="score_overall_value", 
-    stderr="score_overall_stderr"
+    ci, 
+    score=score, 
+    stderr=stderr
 )
 
-def score_rule(hint: str, offset: int) -> Mark:
+def score_rule(factor_value: bool) -> Mark:
+    offset = y_offset if factor_value else -y_offset
     return rule_y(
         evals,
-        x="score_overall_value",
-        y="model",
-        filter=sql(f"task_arg_hint = {hint}"),
+        x=score,
+        y=y,
+        filter=sql(f"{factor} = {factor_value}"),
         dy=offset,
         sort= { "y": "-x" },
-        stroke=sql("IF(NOT task_arg_hint, 'No hint', 'Hint')"),
+        stroke=sql(f"IF(NOT {factor}, '{factor_labels[0]}', '{factor_labels[1]}')"),
         stroke_width=3,
         stroke_linecap="round",
-        marker_end="circle",
+        marker_end="circle"
     )
 
-def ci_rule(hint: str, offset: int) -> Mark:
+def ci_rule(factor_value: bool) -> Mark:
+    offset = y_offset if factor_value else -y_offset
     return rule_y(
         evals,
         x1=ci_lower,
         x2=ci_upper,
-        y="model",
-        filter=sql(f"task_arg_hint = {hint}"),
+        y=y,
+        filter=sql(f"{factor} = {factor_value}"),
         dy=offset,
         sort= { "y": "-x" },
-        stroke="#a73d3910",
-        stroke_width=15
+        stroke=f"{color}10",
+        stroke_width=15,
     )
-
 
 
 plot(
     frame("left", inset_top=15, inset_bottom=15),
-    score_rule("false", -10),
-    score_rule("true", 10),
-    ci_rule("false", -10),
-    ci_rule("true", 10),
+    score_rule(False),
+    score_rule(True),
+    ci_rule(False),
+    ci_rule(True),
     legend="color",
     margin_left=100,
     y_label=None,
     x_label="score",
-    color_domain=["No hint", "Hint"],
-    color_range=["#a73d39", "#a73d3966"],
+    color_domain=factor_labels,
+    color_range=[color, f"{color}66"],
     y_tick_size=0,
     
 )
 
-```
-
-```{python}
-#| eval: false
-import pandas as pd
-df = pd.read_csv("scores.csv")
-df["score_headline_value"] = df["score_overall_value"]
-df["score_headline_stderr"] = df["score_overall_stderr"]
-df
 ```
