@@ -39,9 +39,11 @@ def ci_rule(hint: str, offset: int) -> Mark:
         filter=sql(f"task_arg_hint = {hint}"),
         dy=offset,
         sort= { "y": "-x" },
-        stroke="#a73d3915",
+        stroke="#a73d3910",
         stroke_width=15
     )
+
+
 
 plot(
     frame("left", inset_top=15, inset_bottom=15),
