@@ -1,4 +1,4 @@
-from typing import Literal, TypedDict, Unpack
+from typing import TypedDict, Unpack
 
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
@@ -8,39 +8,9 @@ from inspect_viz.mark import cell as cell_mark
 from inspect_viz.mark._text import text
 from inspect_viz.plot import plot
 from inspect_viz.plot._attributes import PlotAttributes
+from inspect_viz.plot._legend import Legend
 from inspect_viz.plot._legend import legend as create_legend
 from inspect_viz.transform._aggregate import avg
-
-
-class LegendOptions(TypedDict, total=False):
-    """Legend options."""
-
-    label: str | None
-    """The label for the legend. If None, no label is shown."""
-
-    location: Literal["bottom", "left", "right", "top"]
-    """The location of the legend relative to the plot. Defaults to "bottom"."""
-
-    width: float
-    """The width of the legend in pixels. Defaults to 370."""
-
-    height: float | None
-    """The height of the legend in pixels. Defaults to None, which means the height is determined by the content."""
-
-    margin_left: float | None
-    """Left margin in pixels. Defaults to None."""
-
-    margin_right: float | None
-    """Right margin in pixels. Defaults to None."""
-
-    margin_top: float | None
-    """Top margin in pixels. Defaults to None."""
-
-    margin_bottom: float | None
-    """Bottom margin in pixels. Defaults to None."""
-
-    tick_size: float | None
-    """Size of the ticks in pixels. Defaults to None, which means no ticks are shown."""
 
 
 class CellOptions(TypedDict, total=False):
@@ -65,7 +35,7 @@ def scores_heatmap(
     width: float | None = None,
     x_label: str | None | NotGiven = None,
     y_label: str | None | NotGiven = None,
-    legend: LegendOptions | None = None,
+    legend: Legend | None = None,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """
@@ -115,19 +85,6 @@ def scores_heatmap(
     )
     cell = default_cell_options | (cell or {})
 
-    # resolve legend options
-    default_legend_options = LegendOptions(
-        location="bottom",
-    )
-    legend = default_legend_options | (legend or {})
-
-    # set special defaults
-    if legend["location"] in ["bottom"]:
-        if "margin_left" not in legend:
-            legend["margin_left"] = 222
-        if "width" not in legend:
-            legend["width"] = 370
-
     # resolve the text marks
     components = []
     if cell is not None:
@@ -169,11 +126,14 @@ def scores_heatmap(
         *components,
         legend=(
             create_legend(
-                "color",
-                **legend if legend is not None else None,
+                legend="color",
+                location="bottom",
+                columns="auto",
+                margin_left=222,
+                width=370,
             )
-            if legend is not None
-            else None
+            if legend is None
+            else legend
         ),
         width=width,
         height=height,

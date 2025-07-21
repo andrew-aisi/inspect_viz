@@ -36,8 +36,6 @@ website:
           href: reference/inspect_viz.view.qmd#tool_calls
         - text: Baseline
           href: reference/inspect_viz.view.qmd#baseline
-        - text: LegendOptions
-          href: reference/inspect_viz.view.qmd#legendoptions
         - text: CellOptions
           href: reference/inspect_viz.view.qmd#celloptions
       - section: inspect_viz.plot
