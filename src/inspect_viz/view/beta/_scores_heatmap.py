@@ -1,4 +1,5 @@
 from typing import TypedDict, Unpack
+from typing_extensions import Literal
 
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
@@ -35,7 +36,7 @@ def scores_heatmap(
     width: float | None = None,
     x_label: str | None | NotGiven = None,
     y_label: str | None | NotGiven = None,
-    legend: Legend | None = None,
+    legend: Legend | Literal[False] | None = None,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """
@@ -134,6 +135,8 @@ def scores_heatmap(
             )
             if legend is None
             else legend
+            if legend
+            else None
         ),
         width=width,
         height=height,
