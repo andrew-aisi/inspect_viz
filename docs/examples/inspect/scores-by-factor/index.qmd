@@ -12,6 +12,8 @@ evals = Data.from_file("evals.csv")
 
 y_offset = 10
 
+x_label = "Score"
+
 ci = 0.95
 
 colors = ["#3266ae", "#91b7e5"]
@@ -31,50 +33,47 @@ ci_lower, ci_upper = ci_bounds(
     stderr=stderr
 )
 
-def score_rule(factor_value: bool) -> Mark:
-    offset = y_offset if factor_value else -y_offset
-    return rule_y(
+
+plot(
+    frame("left", inset_top=5, inset_bottom=5),
+    rule_y(
         evals,
         x=score,
-        y=y,
-        filter=sql(f"{factor} = {factor_value}"),
-        dy=offset,
-        sort= { "y": "-x" },
+        y=factor,
+        fy=y,
+        sort= { "fy": "-x" },
         stroke=sql(f"IF(NOT {factor}, '{factor_labels[0]}', '{factor_labels[1]}')"),
         stroke_width=3,
         stroke_linecap="round",
-        marker_end="circle"
-    )
-
-def ci_rule(factor_value: bool) -> Mark:
-    offset = y_offset if factor_value else -y_offset
-    return rule_y(
+        marker_end="circle",
+        tip=True,
+        channels= {
+            "Hint": factor,
+            "Model": y,
+            "Score": score,
+            "Stderr": stderr
+        }
+    ),
+    rule_y(
         evals,
         x1=ci_lower,
         x2=ci_upper,
-        y=y,
-        filter=sql(f"{factor} = {factor_value}"),
-        dy=offset,
-        sort= { "y": "-x" },
+        y=factor,
+        fy=y,
+        sort= { "fy": "-x" },
         stroke=f"{colors[0]}20",
         stroke_width=15,
-    )
-
-
-plot(
-    frame("left", inset_top=15, inset_bottom=15),
-    score_rule(False),
-    score_rule(True),
-    ci_rule(False),
-    ci_rule(True),
-    legend=legend("color"),
+    ),
+    legend=legend("color", target=evals.selection),
     margin_left=100,
     y_label=None,
-    x_label="score",
+    y_ticks=[],
+    x_label=x_label,
     color_domain=factor_labels,
     color_range=colors,
     y_tick_size=0,
-    
+    fy_label=None,
+    fy_axis="left"
 )
 
 ```
