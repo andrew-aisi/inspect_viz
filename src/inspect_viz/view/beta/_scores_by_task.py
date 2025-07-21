@@ -10,19 +10,12 @@ from inspect_viz.plot import legend, plot
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.transform import sql
 
-X_DEFAULT = "model"
-X_CHANNEL_LABEL = "Model"
-FX_DEFAULT = "task_name"
-FX_CHANNEL_LABEL = "Task"
-Y_DEFAULT = "score_headline_value"
-Y_CHANNEL_LABEL = "Score"
-
 
 def scores_by_task(
     data: Data,
-    x: str = X_DEFAULT,
-    fx: str = FX_DEFAULT,
-    y: str = Y_DEFAULT,
+    x: str = "model",
+    fx: str = "task_name",
+    y: str = "score_headline_value",
     y_stderr: str = "score_headline_stderr",
     y_ci: bool | float = 0.95,
     y_label: str | None | NotGiven = NOT_GIVEN,
@@ -48,12 +41,12 @@ def scores_by_task(
     """
     # establish channels
     channels: dict[str, str] = {}
-    if fx == FX_DEFAULT:
-        channels[FX_CHANNEL_LABEL] = fx
-    if x == X_DEFAULT:
-        channels[X_CHANNEL_LABEL] = x
-    if y == Y_DEFAULT:
-        channels[Y_CHANNEL_LABEL] = y
+    if fx == "task_name":
+        channels["Task"] = fx
+    if x == "model":
+        channels["Model"] = x
+    if y == "score_headline_value":
+        channels["Score"] = y
     resolve_log_viewer_channel(data, channels)
 
     # start with bar plot

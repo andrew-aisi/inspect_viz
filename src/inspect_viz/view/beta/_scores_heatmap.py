@@ -11,13 +11,6 @@ from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._legend import legend as create_legend
 from inspect_viz.transform._aggregate import avg
 
-X_DEFAULT = "task_name"
-X_CHANNEL_LABEL = "Task"
-Y_DEFAULT = "model"
-Y_CHANNEL_LABEL = "Model"
-FILL_DEFAULT = "score_headline_value"
-FILL_CHANNEL_LABEL = "Score"
-
 
 class LegendOptions(TypedDict, total=False):
     """Legend options."""
@@ -62,9 +55,9 @@ class CellOptions(TypedDict, total=False):
 
 def scores_heatmap(
     data: Data,
-    x: str = X_DEFAULT,
-    y: str = Y_DEFAULT,
-    fill: str = FILL_DEFAULT,
+    x: str = "task_name",
+    y: str = "model",
+    fill: str = "score_headline_value",
     cell: CellOptions | None = None,
     tip: bool = True,
     ascending: bool = True,
@@ -151,12 +144,12 @@ def scores_heatmap(
 
     # channels
     channels: dict[str, str] = {}
-    if x == X_DEFAULT:
-        channels[X_CHANNEL_LABEL] = x
-    if y == Y_DEFAULT:
-        channels[Y_CHANNEL_LABEL] = y
-    if fill == FILL_DEFAULT:
-        channels[FILL_CHANNEL_LABEL] = fill
+    if x == "task_name":
+        channels["Task"] = x
+    if y == "model":
+        channels["Model"] = y
+    if fill == "score_headline_value":
+        channels["Score"] = fill
     resolve_log_viewer_channel(data, channels)
 
     heatmap = plot(

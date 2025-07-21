@@ -10,11 +10,6 @@ from inspect_viz.mark._text import text
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._plot import plot
 
-X_DEFAULT = "score_headline_value"
-X_CHANNEL_LABEL = "Score"
-Y_DEFAULT = "model"
-Y_CHANNEL_LABEL = "Model"
-
 
 class Baseline(TypedDict):
     """A baseline is a reference line that can be used to highlight important thresholds (for example, expert human performance)."""
@@ -41,8 +36,8 @@ class Baseline(TypedDict):
 def scores_with_baseline(
     data: Data,
     *,
-    x: str = X_DEFAULT,
-    y: str = Y_DEFAULT,
+    x: str = "score_headline_value",
+    y: str = "model",
     width: float | None = None,
     height: float | None = None,
     baseline: int | float | Baseline | list[Baseline] | None = None,
@@ -113,10 +108,10 @@ def scores_with_baseline(
 
     # channels
     channels: dict[str, str] = {}
-    if y == Y_DEFAULT and y_label is None:
-        channels[Y_CHANNEL_LABEL] = y
-    if x == X_DEFAULT and x_label is None:
-        channels[X_CHANNEL_LABEL] = x
+    if y == "model" and y_label is None:
+        channels["Model"] = y
+    if x == "score_headline_value" and x_label is None:
+        channels["Score"] = x
     resolve_log_viewer_channel(data, channels)
 
     # The plots
