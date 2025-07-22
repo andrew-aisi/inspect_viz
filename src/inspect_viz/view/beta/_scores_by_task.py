@@ -13,7 +13,7 @@ from inspect_viz.transform import sql
 
 def scores_by_task(
     data: Data,
-    x: str = "model",
+    x: str = "model_display_name",
     fx: str = "task_name",
     y: str = "score_headline_value",
     y_stderr: str = "score_headline_stderr",
@@ -29,7 +29,7 @@ def scores_by_task(
 
     Args:
        data: Evals data table. This is typically created using a data frame read with the inspect `evals_df()` function.
-       x: Name of field for x axis (defaults to "model")
+       x: Name of field for x axis (defaults to "model_display_name")
        fx: Name of field for x facet (defaults to "task_name")
        y: Name of field for y axis (defaults to "score_headline_value").
        y_stderr: Name of field for stderr (defaults to "score_headline_metric").
@@ -39,6 +39,11 @@ def scores_by_task(
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        **attributes: Additional `PlotAttributes`. By default, the `y_inset_top` and `margin_bottom` are set to 10 pixels and `x_ticks` is set to `[]`.
     """
+    # resolve the x
+    if x == "model_display_name" and "model_display_name" not in data.columns:
+        # fallback to using the raw model string
+        x = "model"
+
     # establish channels
     channels: dict[str, str] = {}
     if fx == "task_name":

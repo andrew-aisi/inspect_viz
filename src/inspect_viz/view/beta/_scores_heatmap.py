@@ -1,4 +1,5 @@
 from typing import TypedDict, Unpack
+
 from typing_extensions import Literal
 
 from inspect_viz._core.component import Component
@@ -27,7 +28,7 @@ class CellOptions(TypedDict, total=False):
 def scores_heatmap(
     data: Data,
     x: str = "task_name",
-    y: str = "model",
+    y: str = "model_display_name",
     fill: str = "score_headline_value",
     cell: CellOptions | None = None,
     tip: bool = True,
@@ -57,6 +58,15 @@ def scores_heatmap(
        y_label: y-axis label (defaults to None).
        **attributes: Additional `PlotAttributes
     """
+    # Resolve the y column to average
+    margin_left = None
+    if y == "model_display_name":
+        margin_left = 120
+        if "model_display_name" not in data.columns:
+            # fallback to using the raw model string
+            y = "model"
+            margin_left = 220
+
     # Compute the color domain
     min_value = data.column_min(fill)
     max_value = data.column_max(fill)
@@ -69,7 +79,7 @@ def scores_heatmap(
 
     # Resolve default values
     defaultAttributes = PlotAttributes(
-        margin_left=220,
+        margin_left=margin_left,
         x_tick_rotate=45,
         margin_bottom=75,
         color_scale="linear",
