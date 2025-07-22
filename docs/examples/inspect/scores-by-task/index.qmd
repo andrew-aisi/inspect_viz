@@ -10,12 +10,21 @@ This example illustrates the code behind the [`scores_by_task()`](../../../view-
 
 from inspect_viz import Data
 from inspect_viz.plot import plot, legend
-from inspect_viz.mark import bar_y, TipOptions
+from inspect_viz.mark import bar_y, TipOptions, text, TextStyles
 from inspect_viz.transform import sql
 
 evals = Data.from_file("evals.parquet")
 
 plot(
+    text(
+        text=["Plot Title"],
+        frame_anchor="top",
+        facet="super",
+        styles=TextStyles(
+            font_size=16
+        ),
+        dy=-40
+    ),
     bar_y( 
         evals, 
         x="model", 
@@ -28,7 +37,8 @@ plot(
     legend=legend("color", location="bottom"),
     x_label=None, fx_label=None, x_ticks=[],  # <3> 
     y_label="score", y_domain=[0, 1.0], # <4>
-    color_label="Model"
+    color_label="Model",
+    margin_top=40
 )
 ```
 
