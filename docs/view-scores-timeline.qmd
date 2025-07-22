@@ -24,16 +24,9 @@ scores_timeline(evals)
 
 ## Data Preparation
 
-Data frames plotted with `scores_timeline()` should have the following fields:
+{{< include _data_preparation.md >}}
 
-- `model`: Model name (e.g. "gpt-4o")
-- `organization`: Organization that created the model (e.g. "OpenAI")
-- `release_date`: Date of model release.
-- `eval`: Name of eval (e.g. "SWE-bench Verified")
-- `scorer`: Scorer used (e.g. "choice").
-- `score`: Benchmark score (scaled 0-1).
-- `stderr`: Standard error.
-- `log_viewer`: Optional. URL to view evaluation log.
+Since this view depends upon the presence of columns (such as `model_release_date`), data must be prepared with `model_info()`.
 
 
 ## Function Reference {reference="scores_timeline"}

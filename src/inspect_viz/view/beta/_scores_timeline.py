@@ -44,13 +44,13 @@ def scores_timeline(
     """
     # validate the required fields
     for field in [
-        "model",
-        "organization",
-        "release_date",
-        "eval",
-        "scorer",
-        "score",
-        "stderr",
+        "model_display_name",
+        "model_organization_name",
+        "model_release_date",
+        "task_name",
+        "score_headline_name",
+        "score_headline_value",
+        "score_headline_stderr",
     ]:
         if field not in data.columns:
             raise ValueError(f"Field '{field}' not provided in passed 'data'.")
@@ -59,20 +59,22 @@ def scores_timeline(
     benchmark_select = select(
         data,
         label=f"{eval_label}: ",
-        column="eval",
+        column="task_name",
         value="auto",
         width=370,
     )
-    org_checkboxes = checkbox_group(data, column="organization", options=organizations)
+    org_checkboxes = checkbox_group(
+        data, column="model_organization_name", options=organizations
+    )
 
     # build channels (log_viewer is optional)
     channels: dict[str, str] = {
-        "Organization": "organization",
-        "Model": "model",
-        "Release Date": "release_date",
-        "Scorer": "scorer",
-        "Score": "score",
-        "Stderr": "stderr",
+        "Organization": "model_organization_name",
+        "Model": "model_display_name",
+        "Release Date": "model_release_date",
+        "Scorer": "score_headline_name",
+        "Score": "score_headline_value",
+        "Stderr": "score_headline_stderr",
     }
     resolve_log_viewer_channel(data, channels)
 
@@ -80,10 +82,10 @@ def scores_timeline(
     components = [
         dot(
             data,
-            x="release_date",
-            y="score",
+            x="model_release_date",
+            y="score_headline_value",
             r=3,
-            fill="organization",
+            fill="model_organization_name",
             channels=channels,
         )
     ]
@@ -91,15 +93,17 @@ def scores_timeline(
     # add ci if requested
     if ci is not False:
         ci = 0.95 if ci is True else ci
-        ci_lower, ci_upper = ci_bounds(ci, score="score", stderr="stderr")
+        ci_lower, ci_upper = ci_bounds(
+            ci, score="score_headline_value", stderr="score_headline_stderr"
+        )
         components.append(
             rule_x(
                 data,
-                x="release_date",
-                y="score",
+                x="model_release_date",
+                y="score_headline_value",
                 y1=ci_lower,
                 y2=ci_upper,
-                stroke="organization",
+                stroke="model_organization_name",
                 stroke_opacity=0.4,
                 marker="tick-x",
             ),
