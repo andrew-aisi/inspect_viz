@@ -35,9 +35,13 @@ const configureSpecSvgTooltips = (specEl: HTMLElement) => {
 let tooltipInstance: any | undefined = undefined;
 
 function hideTooltip() {
+    tooltipInstance.hide();
+    window.removeEventListener('scroll', hideTooltip);
+}
+
+function maybeHideTooltip() {
     if (!tooltipInstance.popper.matches(':hover')) {
-        tooltipInstance.hide();
-        window.removeEventListener('scroll', hideTooltip);
+        hideTooltip();
     }
 }
 
@@ -88,7 +92,7 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
                 // If the tip container is empty, the tooltip has been dismissed
                 // hide the tooltip
                 if (!tipEl || !tipContainerEl) {
-                    hideTooltip();
+                    maybeHideTooltip();
                 } else {
                     // Look for channels
                     const userChannels = readUserChannels(svgEl);
