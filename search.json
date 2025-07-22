@@ -170,7 +170,7 @@
     "href": "reference/inspect_viz.view.html#scores",
     "title": "inspect_viz.view.beta",
     "section": "Scores",
-    "text": "Scores\n\nscores_by_task\nBar plot for comparing eval scores.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_by_task(\n    data: Data,\n    x: str = X_DEFAULT,\n    fx: str = FX_DEFAULT,\n    y: str = Y_DEFAULT,\n    y_stderr: str = \"score_headline_stderr\",\n    y_ci: bool | float = 0.95,\n    y_label: str | None | NotGiven = NOT_GIVEN,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “model”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny str\n\nName of field for y axis (defaults to “score_headline_value”).\n\ny_stderr str\n\nName of field for stderr (defaults to “score_headline_metric”).\n\ny_ci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.\n\ny_label str | None | NotGiven\n\nY axis label (pass None for no label).\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].\n\n\n\n\nscores_timeline\nEval scores by model, organization, and release date.\n\nSource\n\ndef scores_timeline(\n    data: Data,\n    organizations: list[str] | None = None,\n    ci: float | bool = 0.95,\n    x_label: str = \"Release Date\",\n    y_label: str = \"Score\",\n    eval_label: str = \"Eval\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nData with the following fields:\n\nmodel: Model name (e.g. “gpt-4o”)\norganization: Organization that created the model (e.g. “OpenAI”)\nrelease_date: Date of model release.\neval: Name of eval (e.g. “SWE-bench Verified”)\nscorer: Scorer used (e.g. “choice”).\nscore: Benchmark score (scaled 0-1).\nstderr: Standard error.\nlog_viewer: Optional. URL to view evaluation log.\n\n\norganizations list[str] | None\n\nList of organizations to include (in order of desired presentation).\n\nci float | bool\n\nConfidence interval (defaults to 0.95, pass False for no confidence intervals)\n\nx_label str\n\nx-axis label\n\ny_label str\n\ny-axis label\n\neval_label str\n\nEval select label.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the x_domain is set to “fixed”, the y_domain is set to [0,1.0], color_label is set to “Organizations”, and color_domain is set to organizations.\n\n\n\n\nscores_with_baseline\nBar plot for comparing the scores of different models on a single evaluation.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_with_baseline(\n    data: Data,\n    *,\n    x: str = X_DEFAULT,\n    y: str = Y_DEFAULT,\n    width: float | None = None,\n    height: float | None = None,\n    baseline: int | float | Baseline | list[Baseline] | None = None,\n    sort: Literal[\"asc\", \"desc\"] | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    fill: str | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “score_headline_value”).\n\ny str\n\nName of field for x axis (defaults to “model”)\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\nbaseline int | float | Baseline | list[Baseline] | None\n\nBaseline value or values to draw on the plot. This can be a single value, a Baseline dictionary, or a list of Baseline dictionaries. If None, no baseline is drawn.\n\nsort Literal['asc', 'desc'] | None\n\nSort order for the bars (sorts using the ‘x’ value). Can be “asc” or “desc”. Defaults to “asc”.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\nfill str | None\n\nThe fill color for the bars. Defaults to “#416AD0”. Pass any valid css color value (hex, rgb, named colors, etc.).\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].\n\n\n\n\nscores_heatmap\nCreates a heatmap plot of success rate of eval data.\n\nSource\n\ndef scores_heatmap(\n    data: Data,\n    x: str = X_DEFAULT,\n    y: str = Y_DEFAULT,\n    fill: str = FILL_DEFAULT,\n    cell: CellOptions | None = None,\n    tip: bool = True,\n    ascending: bool = True,\n    height: float | None = None,\n    width: float | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    legend: LegendOptions | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table.\n\nx str\n\nName of column to use for columns.\n\ny str\n\nName of column to use for rows.\n\nfill str\n\nName of the column to use as values to determine cell color.\n\ncell CellOptions | None\n\nOptions for the cell marks.\n\ntip bool\n\nWhether to show a tooltip with the value when hovering over a cell (defaults to True).\n\nascending bool\n\nSort order for the x and y axes. Defaults to True.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio).\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\ny-axis label (defaults to None).\n\nlegend LegendOptions | None\n\nOptions for the legend. Pass None to disable the legend.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes",
+    "text": "Scores\n\nscores_by_task\nBar plot for comparing eval scores.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_by_task(\n    data: Data,\n    x: str = \"model_display_name\",\n    fx: str = \"task_name\",\n    y: str = \"score_headline_value\",\n    y_stderr: str = \"score_headline_stderr\",\n    y_ci: bool | float = 0.95,\n    y_label: str | None | NotGiven = NOT_GIVEN,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “model_display_name”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny str\n\nName of field for y axis (defaults to “score_headline_value”).\n\ny_stderr str\n\nName of field for stderr (defaults to “score_headline_metric”).\n\ny_ci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.\n\ny_label str | None | NotGiven\n\nY axis label (pass None for no label).\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].\n\n\n\n\nscores_timeline\nEval scores by model, organization, and release date.\n\nSource\n\ndef scores_timeline(\n    data: Data,\n    organizations: list[str] | None = None,\n    ci: float | bool = 0.95,\n    x_label: str = \"Release Date\",\n    y_label: str = \"Score\",\n    eval_label: str = \"Eval\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nData with the following fields:\n\nmodel: Model name (e.g. “gpt-4o”)\norganization: Organization that created the model (e.g. “OpenAI”)\nrelease_date: Date of model release.\neval: Name of eval (e.g. “SWE-bench Verified”)\nscorer: Scorer used (e.g. “choice”).\nscore: Benchmark score (scaled 0-1).\nstderr: Standard error.\nlog_viewer: Optional. URL to view evaluation log.\n\n\norganizations list[str] | None\n\nList of organizations to include (in order of desired presentation).\n\nci float | bool\n\nConfidence interval (defaults to 0.95, pass False for no confidence intervals)\n\nx_label str\n\nx-axis label\n\ny_label str\n\ny-axis label\n\neval_label str\n\nEval select label.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the x_domain is set to “fixed”, the y_domain is set to [0,1.0], color_label is set to “Organizations”, and color_domain is set to organizations.\n\n\n\n\nscores_with_baseline\nBar plot for comparing the scores of different models on a single evaluation.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_with_baseline(\n    data: Data,\n    *,\n    x: str = \"score_headline_value\",\n    y: str = \"model_display_name\",\n    width: float | None = None,\n    height: float | None = None,\n    baseline: int | float | Baseline | list[Baseline] | None = None,\n    sort: Literal[\"asc\", \"desc\"] | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    fill: str | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “score_headline_value”).\n\ny str\n\nName of field for x axis (defaults to “model_display_name”)\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\nbaseline int | float | Baseline | list[Baseline] | None\n\nBaseline value or values to draw on the plot. This can be a single value, a Baseline dictionary, or a list of Baseline dictionaries. If None, no baseline is drawn.\n\nsort Literal['asc', 'desc'] | None\n\nSort order for the bars (sorts using the ‘x’ value). Can be “asc” or “desc”. Defaults to “asc”.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\nfill str | None\n\nThe fill color for the bars. Defaults to “#416AD0”. Pass any valid css color value (hex, rgb, named colors, etc.).\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].\n\n\n\n\nscores_heatmap\nCreates a heatmap plot of success rate of eval data.\n\nSource\n\ndef scores_heatmap(\n    data: Data,\n    x: str = \"task_name\",\n    y: str = \"model_display_name\",\n    fill: str = \"score_headline_value\",\n    cell: CellOptions | None = None,\n    tip: bool = True,\n    ascending: bool = True,\n    height: float | None = None,\n    width: float | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    legend: Legend | Literal[False] | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table.\n\nx str\n\nName of column to use for columns.\n\ny str\n\nName of column to use for rows.\n\nfill str\n\nName of the column to use as values to determine cell color.\n\ncell CellOptions | None\n\nOptions for the cell marks.\n\ntip bool\n\nWhether to show a tooltip with the value when hovering over a cell (defaults to True).\n\nascending bool\n\nSort order for the x and y axes. Defaults to True.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio).\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\ny-axis label (defaults to None).\n\nlegend Legend | Literal[False] | None\n\nOptions for the legend. Pass None to disable the legend.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes",
     "crumbs": [
       "Reference",
       "Python API",
@@ -194,7 +194,7 @@
     "href": "reference/inspect_viz.view.html#types",
     "title": "inspect_viz.view.beta",
     "section": "Types",
-    "text": "Types\n\nBaseline\nA baseline is a reference line that can be used to highlight important thresholds (for example, expert human performance).\n\nSource\n\nclass Baseline(TypedDict)\n\nAttributes\n\nlabel str\n\nThe display text that appears alongside the baseline line.\n\nvalue int | float\n\nThe numeric value where the baseline will be positioned on the chart’s scale.\n\ncolor NotRequired[str | None]\n\nThe color of the baseline line and label. Can be any valid CSS color value (hex, rgb, named colors, etc.). If None, defaults to black.\n\nwidth NotRequired[int | float | None]\n\nThe thickness of the baseline line in pixels. Defaults to 1.\n\ndasharray NotRequired[str | None]\n\nSVG dash pattern for the line (e.g., “5,5” for dashed line, “2,3,5,3” for dash-dot pattern). Defaults to “2,4” (a dashed line).\n\nposition NotRequired[Literal['top', 'bottom'] | None]\n\nControls where the label text appears relative to the baseline line. “top” places the label above the line, “bottom” places it below. Defaults to the “top” position.\n\n\n\n\n\nLegendOptions\nLegend options.\n\nSource\n\nclass LegendOptions(TypedDict, total=False)\n\nAttributes\n\nlabel str | None\n\nThe label for the legend. If None, no label is shown.\n\nlocation Literal['bottom', 'left', 'right', 'top']\n\nThe location of the legend relative to the plot. Defaults to “bottom”.\n\nwidth float\n\nThe width of the legend in pixels. Defaults to 370.\n\nheight float | None\n\nThe height of the legend in pixels. Defaults to None, which means the height is determined by the content.\n\nmargin_left float | None\n\nLeft margin in pixels. Defaults to None.\n\nmargin_right float | None\n\nRight margin in pixels. Defaults to None.\n\nmargin_top float | None\n\nTop margin in pixels. Defaults to None.\n\nmargin_bottom float | None\n\nBottom margin in pixels. Defaults to None.\n\ntick_size float | None\n\nSize of the ticks in pixels. Defaults to None, which means no ticks are shown.\n\n\n\n\n\nCellOptions\nCell options for the heatmap.\n\nSource\n\nclass CellOptions(TypedDict, total=False)\n\nAttributes\n\ninset float | None\n\nInset for the cell marks. Defaults to 1 pixel.\n\ntext str | None\n\nText color for the cell marks. Defaults to “white”. Set to None to disable text.",
+    "text": "Types\n\nBaseline\nA baseline is a reference line that can be used to highlight important thresholds (for example, expert human performance).\n\nSource\n\nclass Baseline(TypedDict)\n\nAttributes\n\nlabel str\n\nThe display text that appears alongside the baseline line.\n\nvalue int | float\n\nThe numeric value where the baseline will be positioned on the chart’s scale.\n\ncolor NotRequired[str | None]\n\nThe color of the baseline line and label. Can be any valid CSS color value (hex, rgb, named colors, etc.). If None, defaults to black.\n\nwidth NotRequired[int | float | None]\n\nThe thickness of the baseline line in pixels. Defaults to 1.\n\ndasharray NotRequired[str | None]\n\nSVG dash pattern for the line (e.g., “5,5” for dashed line, “2,3,5,3” for dash-dot pattern). Defaults to “2,4” (a dashed line).\n\nposition NotRequired[Literal['top', 'bottom'] | None]\n\nControls where the label text appears relative to the baseline line. “top” places the label above the line, “bottom” places it below. Defaults to the “top” position.\n\n\n\n\n\nCellOptions\nCell options for the heatmap.\n\nSource\n\nclass CellOptions(TypedDict, total=False)\n\nAttributes\n\ninset float | None\n\nInset for the cell marks. Defaults to 1 pixel.\n\ntext str | None\n\nText color for the cell marks. Defaults to “white”. Set to None to disable text.",
     "crumbs": [
       "Reference",
       "Python API",
@@ -274,117 +274,159 @@
     ]
   },
   {
-    "objectID": "view-scores-timeline.html",
-    "href": "view-scores-timeline.html",
-    "title": "Scores Timeline",
+    "objectID": "view-scores-by-factor.html",
+    "href": "view-scores-by-factor.html",
+    "title": "Scores by Factor",
     "section": "",
-    "text": "The scores_timeline() function plots eval scores by model, organization, and release date.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_timeline\n\nevals = Data.from_file(\"benchmarks.parquet\")\nscores_timeline(evals)",
+    "text": "The scores_by_factor() function renders a bar plot for comparing eval scores by model and a boolean factor (e.g. non-reasoning vs. reasoning, no hint vs. hint, etc.).\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_factor\n\nevals = Data.from_file(\"evals-hint.parquet\")\nscores_by_factor(evals, \"task_arg_hint\", (\"No hint\", \"Hint\"))",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Scores Timeline"
+      "Scores by Factor"
     ]
   },
   {
-    "objectID": "view-scores-timeline.html#overview",
-    "href": "view-scores-timeline.html#overview",
-    "title": "Scores Timeline",
+    "objectID": "view-scores-by-factor.html#overview",
+    "href": "view-scores-by-factor.html#overview",
+    "title": "Scores by Factor",
     "section": "",
-    "text": "The scores_timeline() function plots eval scores by model, organization, and release date.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_timeline\n\nevals = Data.from_file(\"benchmarks.parquet\")\nscores_timeline(evals)",
+    "text": "The scores_by_factor() function renders a bar plot for comparing eval scores by model and a boolean factor (e.g. non-reasoning vs. reasoning, no hint vs. hint, etc.).\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_factor\n\nevals = Data.from_file(\"evals-hint.parquet\")\nscores_by_factor(evals, \"task_arg_hint\", (\"No hint\", \"Hint\"))",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Scores Timeline"
+      "Scores by Factor"
     ]
   },
   {
-    "objectID": "view-scores-timeline.html#data-preparation",
-    "href": "view-scores-timeline.html#data-preparation",
-    "title": "Scores Timeline",
+    "objectID": "view-scores-by-factor.html#data-preparation",
+    "href": "view-scores-by-factor.html#data-preparation",
+    "title": "Scores by Factor",
     "section": "Data Preparation",
-    "text": "Data Preparation\nData frames plotted with scores_timeline() should have the following fields:\n\nmodel: Model name (e.g. “gpt-4o”)\norganization: Organization that created the model (e.g. “OpenAI”)\nrelease_date: Date of model release.\neval: Name of eval (e.g. “SWE-bench Verified”)\nscorer: Scorer used (e.g. “choice”).\nscore: Benchmark score (scaled 0-1).\nstderr: Standard error.\nlog_viewer: Optional. URL to view evaluation log.",
+    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by reading logs into a data frame with evals_df() and then amending the data frame with log viewer links and additional model information:\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    log_viewer(\"eval\", \n        {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n    model_info()\n)\ndf.to_parquet(\"evals-hint.parquet\")\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer and model_info).\nYou should also ensure that your evals data frame has a boolean field corresponding to the factor you are splitting on (in the example above this is “task_arg_hint”).",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Scores Timeline"
+      "Scores by Factor"
     ]
   },
   {
-    "objectID": "view-scores-timeline.html#function-reference",
-    "href": "view-scores-timeline.html#function-reference",
-    "title": "Scores Timeline",
+    "objectID": "view-scores-by-factor.html#function-reference",
+    "href": "view-scores-by-factor.html#function-reference",
+    "title": "Scores by Factor",
     "section": "Function Reference",
-    "text": "Function Reference\nEval scores by model, organization, and release date.\n\nSource\n\ndef scores_timeline(\n    data: Data,\n    organizations: list[str] | None = None,\n    ci: float | bool = 0.95,\n    x_label: str = \"Release Date\",\n    y_label: str = \"Score\",\n    eval_label: str = \"Eval\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nData with the following fields:\n\nmodel: Model name (e.g. “gpt-4o”)\norganization: Organization that created the model (e.g. “OpenAI”)\nrelease_date: Date of model release.\neval: Name of eval (e.g. “SWE-bench Verified”)\nscorer: Scorer used (e.g. “choice”).\nscore: Benchmark score (scaled 0-1).\nstderr: Standard error.\nlog_viewer: Optional. URL to view evaluation log.\n\n\norganizations list[str] | None\n\nList of organizations to include (in order of desired presentation).\n\nci float | bool\n\nConfidence interval (defaults to 0.95, pass False for no confidence intervals)\n\nx_label str\n\nx-axis label\n\ny_label str\n\ny-axis label\n\neval_label str\n\nEval select label.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the x_domain is set to “fixed”, the y_domain is set to [0,1.0], color_label is set to “Organizations”, and color_domain is set to organizations.",
+    "text": "Function Reference\nSummarize eval scores with a factor of variation (e.g ‘No hint’ vs. ‘Hint’).\n\nSource\n\ndef scores_by_factor(\n    data: Data,\n    fx: str,\n    fx_labels: tuple[str, str],\n    x: str = \"score_headline_value\",\n    x_stderr: str = \"score_headline_stderr\",\n    x_label: str = \"Score\",\n    y: str = \"model\",\n    y_label: str = \"Model\",\n    ci: bool | float = 0.95,\n    color: str | tuple[str, str] = \"#3266ae\",\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nfx str\n\nField with factor of variation (should be of type boolean).\n\nfx_labels tuple[str, str]\n\nTuple of labels for factor of variation. False value should be first, e.g. (\"No hint\", \"Hint\").\n\nx str\n\nName of field for x (scoring) axis (defaults to “score_headline_value”).\n\nx_stderr str\n\nName of field for scoring stderr (defaults to “score_headline_stderr”).\n\nx_label str\n\nLabel for x-axis (defaults to “Score”).\n\ny str\n\nName of field for y axis (defaults to “model”).\n\ny_label str\n\nLable for y axis (defaults to “Model”).\n\nci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.)\n\ncolor str | tuple[str, str]\n\nHex color value (or tuple of two values). If one value is provided the second is computed by lightening the main color.\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. Default to 65 pixels for each item on the “y” axis.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Scores Timeline"
+      "Scores by Factor"
     ]
   },
   {
-    "objectID": "view-scores-timeline.html#implementation",
-    "href": "view-scores-timeline.html#implementation",
-    "title": "Scores Timeline",
+    "objectID": "view-scores-by-factor.html#implementation",
+    "href": "view-scores-by-factor.html#implementation",
+    "title": "Scores by Factor",
     "section": "Implementation",
-    "text": "Implementation\nThe Scores Timeline example demonstrates how this view was implemented using lower level plotting components.",
+    "text": "Implementation\nThe Scores by Factor example demonstrates how this view was implemented using lower level plotting components.",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Scores Timeline"
+      "Scores by Factor"
     ]
   },
   {
-    "objectID": "examples/index.html",
-    "href": "examples/index.html",
-    "title": "Inspect Viz Examples",
+    "objectID": "view-scores-heatmap.html",
+    "href": "view-scores-heatmap.html",
+    "title": "Scores Heatmap",
     "section": "",
-    "text": "These examples demonstrate various plotting and interactivity features. If you are just beginning to use Inspect Viz you review the Getting Started article before exploring these examples.",
+    "text": "The scores_heatmap()function renders a heatmap for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_heatmap\n\nevals = Data.from_file(\"evals.parquet\")\nscores_heatmap(evals, height=200, legend=False)",
     "crumbs": [
-      "Examples"
+      "Getting Started",
+      "Views",
+      "Scores Heatmap"
     ]
   },
   {
-    "objectID": "examples/index.html#inspect",
-    "href": "examples/index.html#inspect",
-    "title": "Inspect Viz Examples",
-    "section": "Inspect",
-    "text": "Inspect\nThese examples demonstrates creating visualisations from Inspect log files (leveraging the functions in inspect_ai.analysis module for creation of data frames from logs).\n\n\n\n\n\n\n\nScores by Task\nBar plot summarizing eval scores by model and task.\n\n\nScores Timeline\nEval scores for various models, with release date on the x-axis.\n\n\nScores Heatmap\nHeatmap with values for comparing scores across model and task.\n\n\nScores with Baseline\nVisualise model scores on a single evaluation, with one or more baselines.\n\n\nTool Calls\nVisualise tool usage over a series of turns.",
-    "crumbs": [
-      "Examples"
-    ]
-  },
-  {
-    "objectID": "examples/index.html#general",
-    "href": "examples/index.html#general",
-    "title": "Inspect Viz Examples",
-    "section": "General",
-    "text": "General\nThese examples demonstrate general plotting techniques using a variety of other examples datasets.\n\n\n\n\n\n\n\nPenguins Explorer\nDot plots, tables, color and symbol channels, filtering inputs.\n\n\nBias Parameter\nArea plots; slider inputs; channel expressions.\n\n\nSeattle Weather\nDot plots; bar plots; color and radius channels; x-interval selections, interactive legend.\n\n\nAthletes (Regression)\nDot plots; regression lines; tables, filtering inputs, xy selections.\n\n\nAthletes (Error Bars)\nError bars; text annotations; params, slider inputs.",
-    "crumbs": [
-      "Examples"
-    ]
-  },
-  {
-    "objectID": "examples/general/athletes-regression/index.html",
-    "href": "examples/general/athletes-regression/index.html",
-    "title": "Athletes (Regression)",
+    "objectID": "view-scores-heatmap.html#overview",
+    "href": "view-scores-heatmap.html#overview",
+    "title": "Scores Heatmap",
     "section": "",
-    "text": "Use the drop downs to filter by sport or sex. Select a range on the plot to filter the table and see the regression lines for the selected range. Hover over the table to highlight the corresponding point on the plot.\n\n\n\nCode\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.input import search, select\nfrom inspect_viz.interactor import Brush, interval_xy\nfrom inspect_viz.layout import hconcat, vconcat\nfrom inspect_viz.mark import TextStyles, dot, regression_y, text\nfrom inspect_viz.plot import plot\nfrom inspect_viz.table import column, table\n\nathletes = Data.from_file(\"athletes.parquet\")\n\ncategory = Selection.intersect()\nquery = Selection.intersect(include=category)\nhover = Selection.intersect(empty=True)\n\nvconcat(\n    hconcat(\n        select(athletes, label=\"Sport\", column=\"sport\", target=category),\n        select(athletes, label=\"Sex\", column=\"sex\", target=category),\n    ),\n    plot(\n        text(\n            text=[\"Olympic Athletes\"],\n            frame_anchor=\"top\",\n            styles=TextStyles(font_size=14),\n            dy=-20\n        ),\n        dot(\n            athletes,\n            filter_by=query,\n            x=\"weight\",\n            y=\"height\",\n            fill=\"sex\",\n            r=2,\n            opacity=0.1,\n        ),\n        regression_y(athletes, filter_by=query, x=\"weight\", y=\"height\", stroke=\"sex\"),\n        interval_xy(target=query, brush=Brush(fill_opacity=0, stroke=\"black\")),\n        dot(\n            athletes,\n            filter_by=hover,\n            x=\"weight\",\n            y=\"height\",\n            fill=\"sex\",\n            stroke=\"currentColor\",\n            stroke_width=1,\n            r=3\n        ),\n        xy_domain=\"fixed\",\n        r_domain=\"fixed\",\n        color_domain=\"fixed\"\n    ),\n    table(\n        athletes, \n        filter_by=query, \n        target=hover, \n        columns=[\n            column(\"name\", width=200), \n            \"sex\", \n            \"height\", \n            \"weight\", \n            \"sport\"\n        ],\n    )\n)",
+    "text": "The scores_heatmap()function renders a heatmap for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_heatmap\n\nevals = Data.from_file(\"evals.parquet\")\nscores_heatmap(evals, height=200, legend=False)",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores Heatmap"
+    ]
+  },
+  {
+    "objectID": "view-scores-heatmap.html#data-preparation",
+    "href": "view-scores-heatmap.html#data-preparation",
+    "title": "Scores Heatmap",
+    "section": "Data Preparation",
+    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by reading logs into a data frame with evals_df() and then amending the data frame with log viewer links and additional model information:\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    log_viewer(\"eval\", \n        {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n    model_info()\n)\ndf.to_parquet(\"evals.parquet\")\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer and model_info).",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores Heatmap"
+    ]
+  },
+  {
+    "objectID": "view-scores-heatmap.html#function-reference",
+    "href": "view-scores-heatmap.html#function-reference",
+    "title": "Scores Heatmap",
+    "section": "Function Reference",
+    "text": "Function Reference\nCreates a heatmap plot of success rate of eval data.\n\nSource\n\ndef scores_heatmap(\n    data: Data,\n    x: str = \"task_name\",\n    y: str = \"model_display_name\",\n    fill: str = \"score_headline_value\",\n    cell: CellOptions | None = None,\n    tip: bool = True,\n    ascending: bool = True,\n    height: float | None = None,\n    width: float | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    legend: Legend | Literal[False] | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table.\n\nx str\n\nName of column to use for columns.\n\ny str\n\nName of column to use for rows.\n\nfill str\n\nName of the column to use as values to determine cell color.\n\ncell CellOptions | None\n\nOptions for the cell marks.\n\ntip bool\n\nWhether to show a tooltip with the value when hovering over a cell (defaults to True).\n\nascending bool\n\nSort order for the x and y axes. Defaults to True.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio).\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\ny-axis label (defaults to None).\n\nlegend Legend | Literal[False] | None\n\nOptions for the legend. Pass None to disable the legend.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores Heatmap"
+    ]
+  },
+  {
+    "objectID": "view-scores-heatmap.html#implementation",
+    "href": "view-scores-heatmap.html#implementation",
+    "title": "Scores Heatmap",
+    "section": "Implementation",
+    "text": "Implementation\nThe Scores Heatmap example demonstrates how this view was implemented using lower level plotting components.",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores Heatmap"
+    ]
+  },
+  {
+    "objectID": "examples/general/seattle-weather/index.html",
+    "href": "examples/general/seattle-weather/index.html",
+    "title": "Seattle Weather",
+    "section": "",
+    "text": "Select a horizontal range on the dot pot to filter the contents of the bar plot. Click the legend or the bar plot to filter by weather conditions.\n\n\n\nCode\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.interactor import Brush, highlight, interval_x, toggle_y\nfrom inspect_viz.plot import legend, plot, plot_defaults\nfrom inspect_viz.mark import bar_x, dot\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.transform import count, date_month_day\n\n# data\nseattle = Data.from_file(\"seattle-weather.parquet\")\n\n# plot defaults for domain and range\nweather = [\"sun\", \"fog\", \"drizzle\", \"rain\", \"snow\"]\nplot_defaults(\n    color_domain=weather,\n    color_range=[\"#e7ba52\", \"#a7a7a7\", \"#aec7e8\", \"#1f77b4\", \"#9467bd\"]\n)\n\n# selections (scatter x-range and bar/legend click)\nrange = Selection(\"intersect\")\nclick = Selection(\"single\")\n\nvconcat(\n    plot(\n        dot(\n            data=seattle,\n            filter_by=click,\n            x=date_month_day(\"date\"),\n            y=\"temp_max\",\n            fill=\"weather\",\n            fill_opacity=0.7,\n            r=\"precipitation\",\n        ),\n        interval_x(target=range, brush=Brush(fill=\"none\", stroke=\"#888\")),\n        highlight(by=range, fill=\"#ccc\", fill_opacity=0.2),\n        legend=legend(\"color\", target=click),\n        xy_domain=\"fixed\",\n        x_tick_format=\"%b\",\n        r_domain=\"fixed\",\n        r_range=[2, 10]\n    ),\n    plot(\n        bar_x(seattle, x=count(), y=\"weather\", fill=\"#ccc\", fill_opacity=0.2),\n        bar_x(seattle, filter_by=range, x=count(), y=\"weather\", fill=\"weather\"),\n        toggle_y(target=click),\n        highlight(by=click),\n        x_domain=\"fixed\",\n        y_domain=weather,\n        y_label=None,\n        height=200\n    )\n)",
     "crumbs": [
       "Examples",
       "General",
-      "Athletes (Regression)"
+      "Seattle Weather"
     ]
   },
   {
-    "objectID": "examples/general/athletes-errorbars/index.html",
-    "href": "examples/general/athletes-errorbars/index.html",
-    "title": "Athletes (Error Bars)",
+    "objectID": "examples/general/bias-parameter/index.html",
+    "href": "examples/general/bias-parameter/index.html",
+    "title": "Bias Parameter",
     "section": "",
-    "text": "Confidence intervals of Olympic athlete heights, in meters. Data are batched into groups of 10 samples per sport. Use the samples slider to see how the intervals update as the sample size increases (as in online aggregation). For each sport, the numbers on the right show the maximum number of athletes in the full dataset.\n\n\n\nCode\n\nimport pandas as pd\nimport numpy as np\n\nfrom inspect_viz import Data, Param, Selection\nfrom inspect_viz.mark import error_bar_x, text\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.transform import count\nfrom inspect_viz.input import slider\nfrom inspect_viz.layout import hconcat, vconcat, vspace\n\n# prepare data (create batch column so we can target various numbers of samples)\ndf = pd.read_parquet(\"athletes.parquet\")\ndf = df[df['height'].notna()]\ndf['row_num'] = df.groupby('sport').cumcount() + 1\ndf['batch'] = 10 * np.ceil(df['row_num'] / 10).astype(int)\ndf = df.drop('row_num', axis=1)\ndf = df.reset_index(drop=True)\n\nathletes = Data.from_dataframe(df)\n\nci = Param(0.95)\nquery = Selection.single()\n\nvconcat(\n    hconcat(\n        slider(\n            athletes, label=\"Samples\", select=\"interval\", target=query, \n            column=\"batch\", step=10, value=(0,20)\n        ),\n        slider(\n            label=\"Conf.\", target=ci, \n            min=0.5, max=0.999, value=0.95, step=0.001\n        )\n    ),\n    plot(\n        error_bar_x(\n            athletes, filter_by=query, ci=ci, \n            x=\"height\", y=\"sport\", stroke=\"sex\", stroke_width=1,\n            marker=\"tick\", sort={ \"y\": \"-x\"}\n        ),\n        text(\n            athletes, text=count(), y=\"sport\", dx=25,\n            frame_anchor=\"right\", font_size=8, fill=\"#999\"\n        ),\n        legend=legend(\"color\", location=\"bottom\"),\n        x_domain=[1.5,2.1],\n        y_domain=\"fixed\",\n        y_grid=True,\n        y_label=None,\n        margin_top=0,\n        margin_left=105\n    )\n)",
+    "text": "Use the slider to create bias offsets for the y-axis.\n\n\n\nCode\n\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import area_y\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import sql\n\nrandom_walk = Data.from_file(\"random-walk.parquet\")\nbias = Param(100)\n\nvconcat(\n    slider(label=\"Bias\", target=bias, min=0, max=1000, step=1),\n    plot(area_y(random_walk, x=\"t\", y=sql(f\"v + {bias}\"), fill=\"steelblue\"))\n)",
     "crumbs": [
       "Examples",
       "General",
-      "Athletes (Error Bars)"
+      "Bias Parameter"
+    ]
+  },
+  {
+    "objectID": "examples/general/penguins/index.html",
+    "href": "examples/general/penguins/index.html",
+    "title": "Penguins Explorer",
+    "section": "",
+    "text": "Use the species drop down to see only points for a particular species. Use the x and y drop downs to explore differnet variables.\n\n\n\nCode\n\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import hconcat, vconcat\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\n\naxes = [\"body_mass\", \"flipper_length\", \"bill_depth\", \"bill_length\"]\nx_axis = Param(\"body_mass\")\ny_axis = Param(\"flipper_length\")\n\nvconcat(\n    hconcat(\n        select(penguins, label=\"Species\", column=\"species\"),\n        select(label=\"X\", options=axes, target=x_axis),\n        select(label=\"Y\", options=axes, target=y_axis)\n    ),\n    plot(\n        dot(penguins, x=x_axis, y=y_axis, stroke=\"species\", symbol=\"species\"),\n        grid=True,\n        x_label=\"Body mass (g) →\",\n        y_label=\"↑ Flipper length (mm)\",\n        legend=\"symbol\",\n    ),\n    table(penguins)\n)",
+    "crumbs": [
+      "Examples",
+      "General",
+      "Penguins Explorer"
     ]
   },
   {
@@ -416,7 +458,7 @@
     "href": "examples/inspect/scores-by-task/index.html",
     "title": "Scores by Task",
     "section": "",
-    "text": "This example illustrates the code behind the scores_by_task() pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import bar_y, TipOptions\nfrom inspect_viz.transform import sql\n\nevals = Data.from_file(\"evals.parquet\")\n\nplot(\n    bar_y( \n        evals, \n        x=\"model\", \n1        fx=\"task_name\",\n        y=\"score_headline_value\",\n2        channels= { \"Log Viewer\": \"log_viewer\" },\n        fill=\"model\",\n        tip=True\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n3    x_label=None, fx_label=None, x_ticks=[],\n4    y_label=\"score\", y_domain=[0, 1.0],\n    color_label=\"Model\"\n)\n\n\n\n1\n\nFacet the x-axis (i.e. create multiple groups of bars) by task name.\n\n2\n\nAdd a channel with links to the Inspect log files (links appear in the tooltip).\n\n3\n\nWe don’t need an explicit “model” or “task_name” label as they are obvious from context. We also don’t need ticks b/c the fill color and legend provide this.\n\n4\n\nEnsure that y-axis shows the full range of scores (by default it caps at the maximum).\n\n\n\n\n\n\n\n\nConfidence Interval\nHere we add a confidence interval for each reported score by adding a rule_x() mark. Note that we compute the confidence interval range dynamically using a sql() transform:\n\n\n\nCode\n\nfrom inspect_viz.mark import rule_x\nfrom inspect_viz.transform import sql, ci_bounds\n\n1# confidence interval bounds\nci_lower, ci_upper = ci_bounds(\n    0.95, \n    score=\"score_headline_value\", \n    stderr=\"score_headline_stderr\"\n)\n\nplot(\n    bar_y( \n        evals, x=\"model\", fx=\"task_name\", \n        y=\"score_headline_value\",\n        channels= { \"Log Viewer\": \"log_viewer\" },\n        fill=\"model\",\n        tip=True\n    ),\n2    rule_x(\n        evals,\n        x=\"model\",\n        fx=\"task_name\",\n        y1=ci_lower,\n        y2=ci_upper,\n        stroke=\"black\",\n        marker=\"tick-x\",\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n    x_label=None, fx_label=None, x_ticks=[],\n    y_label=\"score\", y_domain=[0, 1.0],\n    color_label=\"Model\"\n)\n\n\n\n1\n\nUse the ci_bounds() bounds function to create transforms that we will pass for y1 and y2.\n\n2\n\nDraw the confidence interval using a rule_x() mark.",
+    "text": "This example illustrates the code behind the scores_by_task() pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.mark import bar_y, TipOptions, text, TextStyles\nfrom inspect_viz.transform import sql\n\nevals = Data.from_file(\"evals.parquet\")\n\nplot(\n    text(\n        text=[\"Plot Title\"],\n        frame_anchor=\"top\",\n        facet=\"super\",\n        styles=TextStyles(\n            font_size=16\n        ),\n        dy=-40\n    ),\n    bar_y( \n        evals, \n        x=\"model\", \n1        fx=\"task_name\",\n        y=\"score_headline_value\",\n2        channels= { \"Log Viewer\": \"log_viewer\" },\n        fill=\"model\",\n        tip=True\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n3    x_label=None, fx_label=None, x_ticks=[],\n4    y_label=\"score\", y_domain=[0, 1.0],\n    color_label=\"Model\",\n    margin_top=40\n)\n\n\n\n1\n\nFacet the x-axis (i.e. create multiple groups of bars) by task name.\n\n2\n\nAdd a channel with links to the Inspect log files (links appear in the tooltip).\n\n3\n\nWe don’t need an explicit “model” or “task_name” label as they are obvious from context. We also don’t need ticks b/c the fill color and legend provide this.\n\n4\n\nEnsure that y-axis shows the full range of scores (by default it caps at the maximum).\n\n\n\n\n\n\n\n\nConfidence Interval\nHere we add a confidence interval for each reported score by adding a rule_x() mark. Note that we compute the confidence interval range dynamically using a sql() transform:\n\n\n\nCode\n\nfrom inspect_viz.mark import rule_x\nfrom inspect_viz.transform import sql, ci_bounds\n\n1# confidence interval bounds\nci_lower, ci_upper = ci_bounds(\n    0.95, \n    score=\"score_headline_value\", \n    stderr=\"score_headline_stderr\"\n)\n\nplot(\n    bar_y( \n        evals, x=\"model\", fx=\"task_name\", \n        y=\"score_headline_value\",\n        channels= { \"Log Viewer\": \"log_viewer\" },\n        fill=\"model\",\n        tip=True\n    ),\n2    rule_x(\n        evals,\n        x=\"model\",\n        fx=\"task_name\",\n        y1=ci_lower,\n        y2=ci_upper,\n        stroke=\"black\",\n        marker=\"tick-x\",\n    ),\n    legend=legend(\"color\", location=\"bottom\"),\n    x_label=None, fx_label=None, x_ticks=[],\n    y_label=\"score\", y_domain=[0, 1.0],\n    color_label=\"Model\"\n)\n\n\n\n1\n\nUse the ci_bounds() bounds function to create transforms that we will pass for y1 and y2.\n\n2\n\nDraw the confidence interval using a rule_x() mark.",
     "crumbs": [
       "Examples",
       "Inspect",
@@ -728,7 +770,7 @@
     "href": "views.html",
     "title": "Views",
     "section": "",
-    "text": "Note\n\n\n\nView functions are currently in beta and are exported from the inspect_ai.view.beta module. The beta module will be preserved after final release so that code written against it now will continue to work after the beta.\n\n\nInspect Viz Views are pre-built plots that work with data created by the Inspect log data frame reading functions.\n\n\n\n\n\n\n\nView\nDescription\n\n\n\n\nscores_by_task()\nBar plot for comparing eval scores (with confidence intervals) across models and tasks.\n\n\nscores_timeline()\nScatter plot with eval scores by model, organization, and release date. Filterable by evaluation and organization.\n\n\nscores_heatmap()\nHeatmap with values for comparing scores across model and task.\n\n\nscores_with_baseline()\nBar plot for comparing model scores on a single eval, with one or more baselines overlaid.\n\n\ntool_calls()\nHeat map visualising tool calls over evaluation turns.",
+    "text": "Note\n\n\n\nView functions are currently in beta and are exported from the inspect_ai.view.beta module. The beta module will be preserved after final release so that code written against it now will continue to work after the beta.\n\n\nInspect Viz Views are pre-built plots that work with data created by the Inspect log data frame reading functions.\n\n\n\n\n\n\n\nView\nDescription\n\n\n\n\nscores_by_task()\nBar plot for comparing eval scores (with confidence intervals) across models and tasks.\n\n\nscores_by_factor()\nBar bar plot for comparing eval scores by model and a boolean factor (e.g. no hint vs. hint).\n\n\nscores_timeline()\nScatter plot with eval scores by model, organization, and release date. Filterable by evaluation and organization.\n\n\nscores_heatmap()\nHeatmap with values for comparing scores across model and task.\n\n\nscores_with_baseline()\nBar plot for comparing model scores on a single eval, with one or more baselines overlaid.\n\n\ntool_calls()\nHeat map visualising tool calls over evaluation turns.",
     "crumbs": [
       "Getting Started",
       "Views"
@@ -942,7 +984,7 @@
     "href": "view-scores-by-task.html#data-preparation",
     "title": "Scores by Task",
     "section": "Data Preparation",
-    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by reading logs into a data frame with evals_df() and then amending the data frame with log viewer links:\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"})\n)\ndf.to_parquet(\"evals.parquet\")\nNote that the log viewer links are optional (the plot will render without links if they are not specified).",
+    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by reading logs into a data frame with evals_df() and then amending the data frame with log viewer links and additional model information:\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    log_viewer(\"eval\", \n        {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n    model_info()\n)\ndf.to_parquet(\"evals.parquet\")\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer and model_info).",
     "crumbs": [
       "Getting Started",
       "Views",
@@ -954,7 +996,7 @@
     "href": "view-scores-by-task.html#function-reference",
     "title": "Scores by Task",
     "section": "Function Reference",
-    "text": "Function Reference\nBar plot for comparing eval scores.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_by_task(\n    data: Data,\n    x: str = X_DEFAULT,\n    fx: str = FX_DEFAULT,\n    y: str = Y_DEFAULT,\n    y_stderr: str = \"score_headline_stderr\",\n    y_ci: bool | float = 0.95,\n    y_label: str | None | NotGiven = NOT_GIVEN,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “model”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny str\n\nName of field for y axis (defaults to “score_headline_value”).\n\ny_stderr str\n\nName of field for stderr (defaults to “score_headline_metric”).\n\ny_ci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.\n\ny_label str | None | NotGiven\n\nY axis label (pass None for no label).\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].",
+    "text": "Function Reference\nBar plot for comparing eval scores.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_by_task(\n    data: Data,\n    x: str = \"model_display_name\",\n    fx: str = \"task_name\",\n    y: str = \"score_headline_value\",\n    y_stderr: str = \"score_headline_stderr\",\n    y_ci: bool | float = 0.95,\n    y_label: str | None | NotGiven = NOT_GIVEN,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “model_display_name”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny str\n\nName of field for y axis (defaults to “score_headline_value”).\n\ny_stderr str\n\nName of field for stderr (defaults to “score_headline_metric”).\n\ny_ci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.\n\ny_label str | None | NotGiven\n\nY axis label (pass None for no label).\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].",
     "crumbs": [
       "Getting Started",
       "Views",
@@ -1060,7 +1102,7 @@
     "href": "index.html#views",
     "title": "Inspect Viz",
     "section": "Views",
-    "text": "Views\nInspect Viz Views are pre-built plots that work with data created by the Inspect log data frame reading functions. For example, the tool_calls() view enables you to visualize tool calls by sample:\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import tool_calls\n\ntools = Data.from_file(\"cybench_tools.parquet\")\ntool_calls(tools)\n\n\n\n\nAvailable views include:\n\n\n\n\n\n\n\nView\nDescription\n\n\n\n\nscores_by_task()\nBar plot for comparing eval scores (with confidence intervals) across models and tasks.\n\n\nscores_timeline()\nScatter plot with eval scores by model, organization, and release date. Filterable by evaluation and organization.\n\n\nscores_heatmap()\nHeatmap with values for comparing scores across model and task.\n\n\nscores_with_baseline()\nBar plot for comparing model scores on a single eval, with one or more baselines overlaid.\n\n\ntool_calls()\nHeat map visualising tool calls over evaluation turns.",
+    "text": "Views\nInspect Viz Views are pre-built plots that work with data created by the Inspect log data frame reading functions. For example, the scores_by_factor() view enables you to compare scores across models and a boolean factor:\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_factor\n\nevals = Data.from_file(\"evals-hint.parquet\")\nscores_by_factor(evals, \"task_arg_hint\", (\"No hint\", \"Hint\"))\n\n\n\n\nThe tool_calls() view enables you to visualize tool calls by sample:\n\nfrom inspect_viz.view.beta import tool_calls\n\ntools = Data.from_file(\"cybench_tools.parquet\")\ntool_calls(tools)\n\n\n\n\nAvailable views include:\n\n\n\n\n\n\n\nView\nDescription\n\n\n\n\nscores_by_task()\nBar plot for comparing eval scores (with confidence intervals) across models and tasks.\n\n\nscores_by_factor()\nBar bar plot for comparing eval scores by model and a boolean factor (e.g. no hint vs. hint).\n\n\nscores_timeline()\nScatter plot with eval scores by model, organization, and release date. Filterable by evaluation and organization.\n\n\nscores_heatmap()\nHeatmap with values for comparing scores across model and task.\n\n\nscores_with_baseline()\nBar plot for comparing model scores on a single eval, with one or more baselines overlaid.\n\n\ntool_calls()\nHeat map visualising tool calls over evaluation turns.",
     "crumbs": [
       "Getting Started",
       "Welcome"
@@ -1296,99 +1338,129 @@
     ]
   },
   {
-    "objectID": "examples/general/penguins/index.html",
-    "href": "examples/general/penguins/index.html",
-    "title": "Penguins Explorer",
+    "objectID": "examples/inspect/scores-by-factor/index.html",
+    "href": "examples/inspect/scores-by-factor/index.html",
+    "title": "Scores by Factor",
     "section": "",
-    "text": "Use the species drop down to see only points for a particular species. Use the x and y drop downs to explore differnet variables.\n\n\n\nCode\n\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import hconcat, vconcat\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\n\naxes = [\"body_mass\", \"flipper_length\", \"bill_depth\", \"bill_length\"]\nx_axis = Param(\"body_mass\")\ny_axis = Param(\"flipper_length\")\n\nvconcat(\n    hconcat(\n        select(penguins, label=\"Species\", column=\"species\"),\n        select(label=\"X\", options=axes, target=x_axis),\n        select(label=\"Y\", options=axes, target=y_axis)\n    ),\n    plot(\n        dot(penguins, x=x_axis, y=y_axis, stroke=\"species\", symbol=\"species\"),\n        grid=True,\n        x_label=\"Body mass (g) →\",\n        y_label=\"↑ Flipper length (mm)\",\n        legend=\"symbol\",\n    ),\n    table(penguins)\n)",
+    "text": "This example illustrates the code behind the scores_by_factor() pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.mark import frame, rule_y\nfrom inspect_viz.plot import legend, plot\nfrom inspect_viz.transform import ci_bounds, sql\n\nevals = Data.from_file(\"evals.csv\")\n\n# factor colors/labels\n1fx_colors = [\"#3266ae\", \"#a6c0e5\"]\nfx_labels = [\"No hint\", \"Hint\"]\n\n# confidence interval tranforms\nci_lower, ci_upper = ci_bounds(\n    0.95, \n    score=\"score_headline_value\", \n    stderr=\"score_headline_stderr\"\n)\n\n# compute plot height (65 pixels per model)\n2height = 65 * len(evals.column_unique(\"model\"))\n\nplot(\n3    frame(\"left\", inset_top=5, inset_bottom=5),\n    rule_y(\n        evals,\n        x=\"score_headline_value\",\n        y=\"task_arg_hint\",\n        fy=\"model\",\n4        sort={\"fy\": \"-x\"},\n        stroke=sql(f\"IF(NOT task_arg_hint, '{fx_labels[0]}', '{fx_labels[1]}')\"), \n        stroke_width=3,\n        stroke_linecap=\"round\",\n        marker_end=\"circle\",\n        tip=True,\n        channels={\n            \"Model\": \"model\", \n            \"Hint\": \"task_arg_hint\",\n            \"Score\": \"score_headline_value\", \n            \"Stderr\": \"score_headline_stderr\"\n        },\n    ),\n    rule_y(\n        evals,\n5        x1=ci_lower,\n        x2=ci_upper,\n        y=\"task_arg_hint\",\n        fy=\"model\",\n        stroke=f\"{fx_colors[0]}20\",\n        stroke_width=15,\n    ),\n6    legend=legend(\"color\", target=evals.selection),\n    x_label=\"Score\",\n7    y_label=None,\n    y_ticks=[],\n    y_tick_size=0,\n    fy_label=None,\n    fy_axis=\"left\",\n8    color_domain=fx_labels,\n    color_range=fx_colors,\n    margin_top=0,\n9    margin_left=100,\n    height=height\n)\n\n\n\n1\n\nFactors need to define a dark/light color and labels for the their False and True states.\n\n2\n\nCompute plot height based on number of unique models.\n\n3\n\nSets off each model with their own horizonal axis line.\n\n4\n\nOrder models on y axis from highest to lowest score.\n\n5\n\nConfidence interval using specified stderr column.\n\n6\n\nClickable legend to filter view by factor value.\n\n7\n\nY-axis labels and ticks already covered by factor and frame().\n\n8\n\nMap legend and colors map to factor.\n\n9\n\nLeave room for model names.",
     "crumbs": [
       "Examples",
-      "General",
-      "Penguins Explorer"
+      "Inspect",
+      "Scores by Factor"
     ]
   },
   {
-    "objectID": "examples/general/bias-parameter/index.html",
-    "href": "examples/general/bias-parameter/index.html",
-    "title": "Bias Parameter",
+    "objectID": "examples/general/athletes-errorbars/index.html",
+    "href": "examples/general/athletes-errorbars/index.html",
+    "title": "Athletes (Error Bars)",
     "section": "",
-    "text": "Use the slider to create bias offsets for the y-axis.\n\n\n\nCode\n\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import area_y\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import sql\n\nrandom_walk = Data.from_file(\"random-walk.parquet\")\nbias = Param(100)\n\nvconcat(\n    slider(label=\"Bias\", target=bias, min=0, max=1000, step=1),\n    plot(area_y(random_walk, x=\"t\", y=sql(f\"v + {bias}\"), fill=\"steelblue\"))\n)",
+    "text": "Confidence intervals of Olympic athlete heights, in meters. Data are batched into groups of 10 samples per sport. Use the samples slider to see how the intervals update as the sample size increases (as in online aggregation). For each sport, the numbers on the right show the maximum number of athletes in the full dataset.\n\n\n\nCode\n\nimport pandas as pd\nimport numpy as np\n\nfrom inspect_viz import Data, Param, Selection\nfrom inspect_viz.mark import error_bar_x, text\nfrom inspect_viz.plot import plot, legend\nfrom inspect_viz.transform import count\nfrom inspect_viz.input import slider\nfrom inspect_viz.layout import hconcat, vconcat, vspace\n\n# prepare data (create batch column so we can target various numbers of samples)\ndf = pd.read_parquet(\"athletes.parquet\")\ndf = df[df['height'].notna()]\ndf['row_num'] = df.groupby('sport').cumcount() + 1\ndf['batch'] = 10 * np.ceil(df['row_num'] / 10).astype(int)\ndf = df.drop('row_num', axis=1)\ndf = df.reset_index(drop=True)\n\nathletes = Data.from_dataframe(df)\n\nci = Param(0.95)\nquery = Selection.single()\n\nvconcat(\n    hconcat(\n        slider(\n            athletes, label=\"Samples\", select=\"interval\", target=query, \n            column=\"batch\", step=10, value=(0,20)\n        ),\n        slider(\n            label=\"Conf.\", target=ci, \n            min=0.5, max=0.999, value=0.95, step=0.001\n        )\n    ),\n    plot(\n        error_bar_x(\n            athletes, filter_by=query, ci=ci, \n            x=\"height\", y=\"sport\", stroke=\"sex\", stroke_width=1,\n            marker=\"tick\", sort={ \"y\": \"-x\"}\n        ),\n        text(\n            athletes, text=count(), y=\"sport\", dx=25,\n            frame_anchor=\"right\", font_size=8, fill=\"#999\"\n        ),\n        legend=legend(\"color\", location=\"bottom\"),\n        x_domain=[1.5,2.1],\n        y_domain=\"fixed\",\n        y_grid=True,\n        y_label=None,\n        margin_top=0,\n        margin_left=105\n    )\n)",
     "crumbs": [
       "Examples",
       "General",
-      "Bias Parameter"
+      "Athletes (Error Bars)"
     ]
   },
   {
-    "objectID": "examples/general/seattle-weather/index.html",
-    "href": "examples/general/seattle-weather/index.html",
-    "title": "Seattle Weather",
+    "objectID": "examples/general/athletes-regression/index.html",
+    "href": "examples/general/athletes-regression/index.html",
+    "title": "Athletes (Regression)",
     "section": "",
-    "text": "Select a horizontal range on the dot pot to filter the contents of the bar plot. Click the legend or the bar plot to filter by weather conditions.\n\n\n\nCode\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.interactor import Brush, highlight, interval_x, toggle_y\nfrom inspect_viz.plot import legend, plot, plot_defaults\nfrom inspect_viz.mark import bar_x, dot\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.transform import count, date_month_day\n\n# data\nseattle = Data.from_file(\"seattle-weather.parquet\")\n\n# plot defaults for domain and range\nweather = [\"sun\", \"fog\", \"drizzle\", \"rain\", \"snow\"]\nplot_defaults(\n    color_domain=weather,\n    color_range=[\"#e7ba52\", \"#a7a7a7\", \"#aec7e8\", \"#1f77b4\", \"#9467bd\"]\n)\n\n# selections (scatter x-range and bar/legend click)\nrange = Selection(\"intersect\")\nclick = Selection(\"single\")\n\nvconcat(\n    plot(\n        dot(\n            data=seattle,\n            filter_by=click,\n            x=date_month_day(\"date\"),\n            y=\"temp_max\",\n            fill=\"weather\",\n            fill_opacity=0.7,\n            r=\"precipitation\",\n        ),\n        interval_x(target=range, brush=Brush(fill=\"none\", stroke=\"#888\")),\n        highlight(by=range, fill=\"#ccc\", fill_opacity=0.2),\n        legend=legend(\"color\", target=click),\n        xy_domain=\"fixed\",\n        x_tick_format=\"%b\",\n        r_domain=\"fixed\",\n        r_range=[2, 10]\n    ),\n    plot(\n        bar_x(seattle, x=count(), y=\"weather\", fill=\"#ccc\", fill_opacity=0.2),\n        bar_x(seattle, filter_by=range, x=count(), y=\"weather\", fill=\"weather\"),\n        toggle_y(target=click),\n        highlight(by=click),\n        x_domain=\"fixed\",\n        y_domain=weather,\n        y_label=None,\n        height=200\n    )\n)",
+    "text": "Use the drop downs to filter by sport or sex. Select a range on the plot to filter the table and see the regression lines for the selected range. Hover over the table to highlight the corresponding point on the plot.\n\n\n\nCode\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.input import search, select\nfrom inspect_viz.interactor import Brush, interval_xy\nfrom inspect_viz.layout import hconcat, vconcat\nfrom inspect_viz.mark import TextStyles, dot, regression_y, text\nfrom inspect_viz.plot import plot\nfrom inspect_viz.table import column, table\n\nathletes = Data.from_file(\"athletes.parquet\")\n\ncategory = Selection.intersect()\nquery = Selection.intersect(include=category)\nhover = Selection.intersect(empty=True)\n\nvconcat(\n    hconcat(\n        select(athletes, label=\"Sport\", column=\"sport\", target=category),\n        select(athletes, label=\"Sex\", column=\"sex\", target=category),\n    ),\n    plot(\n        text(\n            text=[\"Olympic Athletes\"],\n            frame_anchor=\"top\",\n            styles=TextStyles(font_size=14),\n            dy=-20\n        ),\n        dot(\n            athletes,\n            filter_by=query,\n            x=\"weight\",\n            y=\"height\",\n            fill=\"sex\",\n            r=2,\n            opacity=0.1,\n        ),\n        regression_y(athletes, filter_by=query, x=\"weight\", y=\"height\", stroke=\"sex\"),\n        interval_xy(target=query, brush=Brush(fill_opacity=0, stroke=\"black\")),\n        dot(\n            athletes,\n            filter_by=hover,\n            x=\"weight\",\n            y=\"height\",\n            fill=\"sex\",\n            stroke=\"currentColor\",\n            stroke_width=1,\n            r=3\n        ),\n        xy_domain=\"fixed\",\n        r_domain=\"fixed\",\n        color_domain=\"fixed\"\n    ),\n    table(\n        athletes, \n        filter_by=query, \n        target=hover, \n        columns=[\n            column(\"name\", width=200), \n            \"sex\", \n            \"height\", \n            \"weight\", \n            \"sport\"\n        ],\n    )\n)",
     "crumbs": [
       "Examples",
       "General",
-      "Seattle Weather"
+      "Athletes (Regression)"
     ]
   },
   {
-    "objectID": "view-scores-heatmap.html",
-    "href": "view-scores-heatmap.html",
-    "title": "Scores Heatmap",
+    "objectID": "examples/index.html",
+    "href": "examples/index.html",
+    "title": "Inspect Viz Examples",
     "section": "",
-    "text": "The scores_heatmap()function renders a heatmap for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_heatmap\n\nevals = Data.from_file(\"evals.parquet\")\nscores_heatmap(evals, height=200)",
+    "text": "These examples demonstrate various plotting and interactivity features. If you are just beginning to use Inspect Viz you review the Getting Started article before exploring these examples.",
+    "crumbs": [
+      "Examples"
+    ]
+  },
+  {
+    "objectID": "examples/index.html#inspect",
+    "href": "examples/index.html#inspect",
+    "title": "Inspect Viz Examples",
+    "section": "Inspect",
+    "text": "Inspect\nThese examples demonstrates creating visualisations from Inspect log files (leveraging the functions in inspect_ai.analysis module for creation of data frames from logs).\n\n\n\n\n\n\n\nScores by Task\nBar plot summarizing eval scores by model and task.\n\n\nScores by Factor\nBar plot for comparing eval scores by model and a boolean factor (e.g. no hint vs. hint).\n\n\nScores Timeline\nEval scores for various models, with release date on the x-axis.\n\n\nScores Heatmap\nHeatmap with values for comparing scores across model and task.\n\n\nScores with Baseline\nVisualise model scores on a single evaluation, with one or more baselines.\n\n\nTool Calls\nVisualise tool usage over a series of turns.",
+    "crumbs": [
+      "Examples"
+    ]
+  },
+  {
+    "objectID": "examples/index.html#general",
+    "href": "examples/index.html#general",
+    "title": "Inspect Viz Examples",
+    "section": "General",
+    "text": "General\nThese examples demonstrate general plotting techniques using a variety of other examples datasets.\n\n\n\n\n\n\n\nPenguins Explorer\nDot plots, tables, color and symbol channels, filtering inputs.\n\n\nBias Parameter\nArea plots; slider inputs; channel expressions.\n\n\nSeattle Weather\nDot plots; bar plots; color and radius channels; x-interval selections, interactive legend.\n\n\nAthletes (Regression)\nDot plots; regression lines; tables, filtering inputs, xy selections.\n\n\nAthletes (Error Bars)\nError bars; text annotations; params, slider inputs.",
+    "crumbs": [
+      "Examples"
+    ]
+  },
+  {
+    "objectID": "view-scores-timeline.html",
+    "href": "view-scores-timeline.html",
+    "title": "Scores Timeline",
+    "section": "",
+    "text": "The scores_timeline() function plots eval scores by model, organization, and release date.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_timeline\n\nevals = Data.from_file(\"benchmarks.parquet\")\nscores_timeline(evals)",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Scores Heatmap"
+      "Scores Timeline"
     ]
   },
   {
-    "objectID": "view-scores-heatmap.html#overview",
-    "href": "view-scores-heatmap.html#overview",
-    "title": "Scores Heatmap",
+    "objectID": "view-scores-timeline.html#overview",
+    "href": "view-scores-timeline.html#overview",
+    "title": "Scores Timeline",
     "section": "",
-    "text": "The scores_heatmap()function renders a heatmap for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_heatmap\n\nevals = Data.from_file(\"evals.parquet\")\nscores_heatmap(evals, height=200)",
+    "text": "The scores_timeline() function plots eval scores by model, organization, and release date.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_timeline\n\nevals = Data.from_file(\"benchmarks.parquet\")\nscores_timeline(evals)",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Scores Heatmap"
+      "Scores Timeline"
     ]
   },
   {
-    "objectID": "view-scores-heatmap.html#data-preparation",
-    "href": "view-scores-heatmap.html#data-preparation",
-    "title": "Scores Heatmap",
+    "objectID": "view-scores-timeline.html#data-preparation",
+    "href": "view-scores-timeline.html#data-preparation",
+    "title": "Scores Timeline",
     "section": "Data Preparation",
-    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by reading logs into a data frame with evals_df() and then amending the data frame with log viewer links:\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"})\n)\ndf.to_parquet(\"evals.parquet\")\nNote that the log viewer links are optional (the plot will render without links if they are not specified).",
+    "text": "Data Preparation\nData frames plotted with scores_timeline() should have the following fields:\n\nmodel: Model name (e.g. “gpt-4o”)\norganization: Organization that created the model (e.g. “OpenAI”)\nrelease_date: Date of model release.\neval: Name of eval (e.g. “SWE-bench Verified”)\nscorer: Scorer used (e.g. “choice”).\nscore: Benchmark score (scaled 0-1).\nstderr: Standard error.\nlog_viewer: Optional. URL to view evaluation log.",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Scores Heatmap"
+      "Scores Timeline"
     ]
   },
   {
-    "objectID": "view-scores-heatmap.html#function-reference",
-    "href": "view-scores-heatmap.html#function-reference",
-    "title": "Scores Heatmap",
+    "objectID": "view-scores-timeline.html#function-reference",
+    "href": "view-scores-timeline.html#function-reference",
+    "title": "Scores Timeline",
     "section": "Function Reference",
-    "text": "Function Reference\nCreates a heatmap plot of success rate of eval data.\n\nSource\n\ndef scores_heatmap(\n    data: Data,\n    x: str = X_DEFAULT,\n    y: str = Y_DEFAULT,\n    fill: str = FILL_DEFAULT,\n    cell: CellOptions | None = None,\n    tip: bool = True,\n    ascending: bool = True,\n    height: float | None = None,\n    width: float | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    legend: LegendOptions | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table.\n\nx str\n\nName of column to use for columns.\n\ny str\n\nName of column to use for rows.\n\nfill str\n\nName of the column to use as values to determine cell color.\n\ncell CellOptions | None\n\nOptions for the cell marks.\n\ntip bool\n\nWhether to show a tooltip with the value when hovering over a cell (defaults to True).\n\nascending bool\n\nSort order for the x and y axes. Defaults to True.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio).\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\ny-axis label (defaults to None).\n\nlegend LegendOptions | None\n\nOptions for the legend. Pass None to disable the legend.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes",
+    "text": "Function Reference\nEval scores by model, organization, and release date.\n\nSource\n\ndef scores_timeline(\n    data: Data,\n    organizations: list[str] | None = None,\n    ci: float | bool = 0.95,\n    x_label: str = \"Release Date\",\n    y_label: str = \"Score\",\n    eval_label: str = \"Eval\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nData with the following fields:\n\nmodel: Model name (e.g. “gpt-4o”)\norganization: Organization that created the model (e.g. “OpenAI”)\nrelease_date: Date of model release.\neval: Name of eval (e.g. “SWE-bench Verified”)\nscorer: Scorer used (e.g. “choice”).\nscore: Benchmark score (scaled 0-1).\nstderr: Standard error.\nlog_viewer: Optional. URL to view evaluation log.\n\n\norganizations list[str] | None\n\nList of organizations to include (in order of desired presentation).\n\nci float | bool\n\nConfidence interval (defaults to 0.95, pass False for no confidence intervals)\n\nx_label str\n\nx-axis label\n\ny_label str\n\ny-axis label\n\neval_label str\n\nEval select label.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the x_domain is set to “fixed”, the y_domain is set to [0,1.0], color_label is set to “Organizations”, and color_domain is set to organizations.",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Scores Heatmap"
+      "Scores Timeline"
     ]
   },
   {
-    "objectID": "view-scores-heatmap.html#implementation",
-    "href": "view-scores-heatmap.html#implementation",
-    "title": "Scores Heatmap",
+    "objectID": "view-scores-timeline.html#implementation",
+    "href": "view-scores-timeline.html#implementation",
+    "title": "Scores Timeline",
     "section": "Implementation",
-    "text": "Implementation\nThe Scores Heatmap example demonstrates how this view was implemented using lower level plotting components.",
+    "text": "Implementation\nThe Scores Timeline example demonstrates how this view was implemented using lower level plotting components.",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Scores Heatmap"
+      "Scores Timeline"
     ]
   },
   {
@@ -1420,7 +1492,7 @@
     "href": "view-scores-with-baseline.html#data-preparation",
     "title": "Scores with Baseline",
     "section": "Data Preparation",
-    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by reading logs into a data frame with evals_df() and then amending the data frame with log viewer links:\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"})\n)\ndf.to_parquet(\"agi-lsat-ar.parquet\")\nNote that the log viewer links are optional (the plot will render without links if they are not specified).",
+    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by reading logs into a data frame with evals_df() and then amending the data frame with log viewer links and additional model information:\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    log_viewer(\"eval\", \n        {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n    model_info()\n)\ndf.to_parquet(\"agi-lsat-ar.parquet\")\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer and model_info).",
     "crumbs": [
       "Getting Started",
       "Views",
@@ -1432,7 +1504,7 @@
     "href": "view-scores-with-baseline.html#function-reference",
     "title": "Scores with Baseline",
     "section": "Function Reference",
-    "text": "Function Reference\nBar plot for comparing the scores of different models on a single evaluation.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_with_baseline(\n    data: Data,\n    *,\n    x: str = X_DEFAULT,\n    y: str = Y_DEFAULT,\n    width: float | None = None,\n    height: float | None = None,\n    baseline: int | float | Baseline | list[Baseline] | None = None,\n    sort: Literal[\"asc\", \"desc\"] | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    fill: str | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “score_headline_value”).\n\ny str\n\nName of field for x axis (defaults to “model”)\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\nbaseline int | float | Baseline | list[Baseline] | None\n\nBaseline value or values to draw on the plot. This can be a single value, a Baseline dictionary, or a list of Baseline dictionaries. If None, no baseline is drawn.\n\nsort Literal['asc', 'desc'] | None\n\nSort order for the bars (sorts using the ‘x’ value). Can be “asc” or “desc”. Defaults to “asc”.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\nfill str | None\n\nThe fill color for the bars. Defaults to “#416AD0”. Pass any valid css color value (hex, rgb, named colors, etc.).\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].",
+    "text": "Function Reference\nBar plot for comparing the scores of different models on a single evaluation.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_with_baseline(\n    data: Data,\n    *,\n    x: str = \"score_headline_value\",\n    y: str = \"model_display_name\",\n    width: float | None = None,\n    height: float | None = None,\n    baseline: int | float | Baseline | list[Baseline] | None = None,\n    sort: Literal[\"asc\", \"desc\"] | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    fill: str | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “score_headline_value”).\n\ny str\n\nName of field for x axis (defaults to “model_display_name”)\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\nbaseline int | float | Baseline | list[Baseline] | None\n\nBaseline value or values to draw on the plot. This can be a single value, a Baseline dictionary, or a list of Baseline dictionaries. If None, no baseline is drawn.\n\nsort Literal['asc', 'desc'] | None\n\nSort order for the bars (sorts using the ‘x’ value). Can be “asc” or “desc”. Defaults to “asc”.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\nfill str | None\n\nThe fill color for the bars. Defaults to “#416AD0”. Pass any valid css color value (hex, rgb, named colors, etc.).\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].",
     "crumbs": [
       "Getting Started",
       "Views",

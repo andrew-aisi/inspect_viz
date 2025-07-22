@@ -14,7 +14,7 @@
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/reference/inspect_viz.view.html</loc>
-    <lastmod>2025-07-17T17:30:40.932Z</lastmod>
+    <lastmod>2025-07-22T19:10:32.593Z</lastmod>
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/reference/inspect_viz.input.html</loc>
@@ -29,20 +29,24 @@
     <lastmod>2025-07-10T13:46:31.206Z</lastmod>
   </url>
   <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/view-scores-timeline.html</loc>
-    <lastmod>2025-07-17T17:03:26.820Z</lastmod>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/view-scores-by-factor.html</loc>
+    <lastmod>2025-07-22T19:10:36.419Z</lastmod>
   </url>
   <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/index.html</loc>
-    <lastmod>2025-07-17T19:11:45.620Z</lastmod>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/view-scores-heatmap.html</loc>
+    <lastmod>2025-07-22T19:10:32.594Z</lastmod>
   </url>
   <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/general/athletes-regression/index.html</loc>
-    <lastmod>2025-07-11T18:44:32.183Z</lastmod>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/general/seattle-weather/index.html</loc>
+    <lastmod>2025-07-14T13:49:26.330Z</lastmod>
   </url>
   <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/general/athletes-errorbars/index.html</loc>
-    <lastmod>2025-07-12T13:14:50.957Z</lastmod>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/general/bias-parameter/index.html</loc>
+    <lastmod>2025-07-11T18:41:47.536Z</lastmod>
+  </url>
+  <url>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/general/penguins/index.html</loc>
+    <lastmod>2025-07-11T18:37:39.613Z</lastmod>
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-with-baseline/index.html</loc>
@@ -54,7 +58,7 @@
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-by-task/index.html</loc>
-    <lastmod>2025-07-19T12:34:29.911Z</lastmod>
+    <lastmod>2025-07-22T19:10:36.418Z</lastmod>
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/publishing-websites.html</loc>
@@ -90,7 +94,7 @@
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/view-scores-by-task.html</loc>
-    <lastmod>2025-07-19T12:28:00.317Z</lastmod>
+    <lastmod>2025-07-19T12:39:21.889Z</lastmod>
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/components-selections.html</loc>
@@ -98,7 +102,7 @@
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/index.html</loc>
-    <lastmod>2025-07-18T12:00:24.820Z</lastmod>
+    <lastmod>2025-07-22T19:10:36.419Z</lastmod>
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/components-inputs.html</loc>
@@ -113,20 +117,24 @@
     <lastmod>2025-07-19T12:34:28.248Z</lastmod>
   </url>
   <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/general/penguins/index.html</loc>
-    <lastmod>2025-07-11T18:37:39.613Z</lastmod>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-by-factor/index.html</loc>
+    <lastmod>2025-07-22T19:10:36.418Z</lastmod>
   </url>
   <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/general/bias-parameter/index.html</loc>
-    <lastmod>2025-07-11T18:41:47.536Z</lastmod>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/general/athletes-errorbars/index.html</loc>
+    <lastmod>2025-07-12T13:14:50.957Z</lastmod>
   </url>
   <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/general/seattle-weather/index.html</loc>
-    <lastmod>2025-07-14T13:49:26.330Z</lastmod>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/general/athletes-regression/index.html</loc>
+    <lastmod>2025-07-11T18:44:32.183Z</lastmod>
   </url>
   <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/view-scores-heatmap.html</loc>
-    <lastmod>2025-07-19T12:25:04.171Z</lastmod>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/index.html</loc>
+    <lastmod>2025-07-22T19:10:36.418Z</lastmod>
+  </url>
+  <url>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/view-scores-timeline.html</loc>
+    <lastmod>2025-07-17T17:03:26.820Z</lastmod>
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/view-scores-with-baseline.html</loc>
