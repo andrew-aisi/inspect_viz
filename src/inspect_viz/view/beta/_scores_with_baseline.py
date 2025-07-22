@@ -37,7 +37,7 @@ def scores_with_baseline(
     data: Data,
     *,
     x: str = "score_headline_value",
-    y: str = "model",
+    y: str = "model_display_name",
     width: float | None = None,
     height: float | None = None,
     baseline: int | float | Baseline | list[Baseline] | None = None,
@@ -54,7 +54,7 @@ def scores_with_baseline(
     Args:
        data: Evals data table. This is typically created using a data frame read with the inspect `evals_df()` function.
        x: Name of field for x axis (defaults to "score_headline_value").
-       y: Name of field for x axis (defaults to "model")
+       y: Name of field for x axis (defaults to "model_display_name")
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        baseline: Baseline value or values to draw on the plot. This can be a single value, a Baseline dictionary, or a list of Baseline dictionaries. If None, no baseline is drawn.
@@ -64,6 +64,15 @@ def scores_with_baseline(
        fill: The fill color for the bars. Defaults to "#416AD0". Pass any valid css color value (hex, rgb, named colors, etc.).
        **attributes: Additional `PlotAttributes`. By default, the `y_inset_top` and `margin_bottom` are set to 10 pixels and `x_ticks` is set to `[]`.
     """
+    # Resolve the y column
+    margin_left = None
+    if y == "model_display_name":
+        margin_left = 120
+        if "model_display_name" not in data.columns:
+            # fallback to using the raw model string
+            y = "model"
+            margin_left = 210
+
     # Validate that there is only a single evaluation
     tasks = data.column_unique("task_name")
     if len(tasks) > 1:
@@ -99,7 +108,7 @@ def scores_with_baseline(
     # Resolve default values
     defaultAttributes = PlotAttributes(
         x_domain=x_domain,
-        margin_left=210,
+        margin_left=margin_left,
         margin_top=top_margin,
         margin_bottom=bottom_margin,
         color_domain=[1],
