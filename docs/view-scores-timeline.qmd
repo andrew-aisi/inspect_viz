@@ -12,7 +12,7 @@ datafile: "benchmarks.parquet"
 
 ## Overview
 
-The `scores_timeline()` function plots eval scores by model, organization, and release date.
+The `scores_timeline()` function plots eval scores by model, organization, and release date:
 
 ```{python}
 from inspect_viz import Data
@@ -22,6 +22,9 @@ evals = Data.from_file("benchmarks.parquet")
 scores_timeline(evals)
 ```
 
+::: {style="padding-top: 20px;"}
+The benchmark data used for this plot was sourced from [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard).
+:::
 
 ## Data Preparation
 

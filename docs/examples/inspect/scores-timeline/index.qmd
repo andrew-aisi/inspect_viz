@@ -1,6 +1,6 @@
 ---
 title: "Scores Timeline"
-subtitle: "Data: [evals.parquet](evals.parquet)"
+subtitle: "Data: [benchmarks.parquet](benchmarks.parquet)"
 resources:
    - import.py
 ---
@@ -19,41 +19,45 @@ from inspect_viz.table import table
 from inspect_viz.transform import ci_bounds
 
 # read data
-evals = Data.from_file("evals.parquet") # <1>
+evals = Data.from_file("benchmarks.parquet") # <1>
 
 # transforms to compute ci bounds from score and stderr columns
-ci_lower, ci_upper = ci_bounds(0.95, score="score", stderr="stderr") # <2>
+ci_lower, ci_upper = ci_bounds( # <2>
+    0.95, 
+    score="score_headline_value", 
+    stderr="score_headline_stderr"
+) # <2>
 
 vconcat(
     # select benchmark
-    select(evals, label="Eval: ", column="eval", value="GPQA Diamond", width=425),
+    select(evals, label="Eval: ", column="task_name", value="GPQA Diamond", width=425),
     
     # filter models by organization(s)
-    checkbox_group(evals, column="organization"),
+    checkbox_group(evals, column="model_organization_name"),
     
     # dot plot w/ error bars
     vspace(15),
     plot(
         dot(
             evals,
-            x="release_date",
-            y="score",
+            x="model_release_date",
+            y="score_headline_value",
             r=3,
-            fill="organization",
+            fill="model_organization_name",
             channels= {  # <3>
-                "Model": "model", 
-                "Scorer": "scorer", 
-                "Stderr": "stderr",
+                "Model": "model_display_name", 
+                "Scorer": "score_headline_name", 
+                "Stderr": "score_headline_stderr",
                 "Log Viewer": "log_viewer"
             } # <3>
         ),
         rule_x( 
             evals,
-            x="release_date",
-            y="score",
+            x="model_release_date",
+            y="score_headline_value",
             y1=ci_lower,
             y2=ci_upper,
-            stroke="organization",
+            stroke="model_organization_name",
             stroke_opacity=0.4, # <4>
             marker="tick-x",
         ), 
@@ -68,7 +72,7 @@ vconcat(
 )
 ```
 
-1. Benchmark data sourced from [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard) and prepared with [import.py](import.py).
+1. Benchmark data sourced from [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard).
 
 2. Create transforms used to compute the confidence intervals for each point.
 
