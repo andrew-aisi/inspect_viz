@@ -25,16 +25,8 @@ def scores_timeline(
     """Eval scores by model, organization, and release date.
 
     Args:
-       data: Data with the following fields:
+       data: Data read using `evals_df()` and amended with model metadata using the `model_info()` prepare operation (see [Data Preparation](https://inspect.aisi.org.uk/dataframe.html#data-preparation) for details).
 
-          - `model`: Model name (e.g. "gpt-4o")
-          - `organization`: Organization that created the model (e.g. "OpenAI")
-          - `release_date`: Date of model release.
-          - `eval`: Name of eval (e.g. "SWE-bench Verified")
-          - `scorer`: Scorer used (e.g. "choice").
-          - `score`: Benchmark score (scaled 0-1).
-          - `stderr`: Standard error.
-          - `log_viewer`: Optional. URL to view evaluation log.
        organizations: List of organizations to include (in order of desired presentation).
        ci: Confidence interval (defaults to 0.95, pass `False` for no confidence intervals)
        x_label: x-axis label

@@ -114,7 +114,7 @@ def scores_heatmap(
     channels: dict[str, str] = {}
     if x == "task_name":
         channels["Task"] = x
-    if y == "model":
+    if y == "model" or y == "model_display_name":
         channels["Model"] = y
     if fill == "score_headline_value":
         channels["Score"] = fill

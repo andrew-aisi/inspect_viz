@@ -48,7 +48,7 @@ def scores_by_task(
     channels: dict[str, str] = {}
     if fx == "task_name":
         channels["Task"] = fx
-    if x == "model":
+    if x == "model" or "model_display_name":
         channels["Model"] = x
     if y == "score_headline_value":
         channels["Score"] = y

@@ -117,7 +117,7 @@ def scores_with_baseline(
 
     # channels
     channels: dict[str, str] = {}
-    if y == "model" and y_label is None:
+    if (y == "model" or y == "model_display_name") and y_label is None:
         channels["Model"] = y
     if x == "score_headline_value" and x_label is None:
         channels["Score"] = x

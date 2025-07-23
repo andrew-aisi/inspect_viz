@@ -7,6 +7,7 @@ filters:
      path: reference/filter/filter.py
    - at: pre-ast
      path: reference/filter/post.lua
+datafile: "benchmarks.parquet"
 ---
 
 ## Overview
@@ -26,8 +27,7 @@ scores_timeline(evals)
 
 {{< include _data_preparation.md >}}
 
-Since this view depends upon the presence of columns (such as `model_release_date`), data must be prepared with `model_info()`.
-
+Notet that this view depends upon the presence of columns added by [`model_info()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#model_info) (such as `model_release_date`) so must be prepared as shown above.
 
 ## Function Reference {reference="scores_timeline"}
 
