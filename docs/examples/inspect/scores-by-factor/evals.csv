@@ -1,4 +1,4 @@
-model,score_headline_value,score_headline_stderr,task_arg_hint
+model_display_name,score_headline_value,score_headline_stderr,task_arg_hint
 Claude Sonnet 3.7,0.250,0.020,False
 Claude Sonnet 3.7,0.230,0.015,True
 Gemini Pro 2.5,0.150,0.023,False

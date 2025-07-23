@@ -27,7 +27,7 @@ ci_lower, ci_upper = ci_bounds(
 )
 
 # compute plot height (65 pixels per model)
-height = 65 * len(evals.column_unique("model")) # <2>
+height = 65 * len(evals.column_unique("model_display_name")) # <2>
 
 plot(
     frame("left", inset_top=5, inset_bottom=5),  # <3>
@@ -35,7 +35,7 @@ plot(
         evals,
         x="score_headline_value",
         y="task_arg_hint",
-        fy="model",
+        fy="model_display_name",
         sort={"fy": "-x"}, # <4>
         stroke=sql(f"IF(NOT task_arg_hint, '{fx_labels[0]}', '{fx_labels[1]}')"), 
         stroke_width=3,
@@ -43,7 +43,7 @@ plot(
         marker_end="circle",
         tip=True,
         channels={
-            "Model": "model", 
+            "Model": "model_display_name", 
             "Hint": "task_arg_hint",
             "Score": "score_headline_value", 
             "Stderr": "score_headline_stderr"
@@ -54,7 +54,7 @@ plot(
         x1=ci_lower,  # <5>
         x2=ci_upper,  # <5>
         y="task_arg_hint",
-        fy="model",
+        fy="model_display_name",
         stroke=f"{fx_colors[0]}20",
         stroke_width=15,
     ),
