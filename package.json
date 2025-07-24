@@ -17,6 +17,7 @@
 		"@uwdata/mosaic-sql": "^0.16.2",
 		"@uwdata/vgplot": "^0.16.2",
 		"ag-grid-community": "^33.3.2",
+		"d3-force": "^3.0.0",
 		"d3-format": "^3.1.0",
 		"d3-time-format": "^4.1.0",
 		"esbuild": "^0.25.1",

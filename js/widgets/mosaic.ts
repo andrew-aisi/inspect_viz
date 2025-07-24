@@ -16,6 +16,7 @@ import { errorInfo, errorAsHTML, displayRenderError } from '../util/errors';
 import { isNotebook } from '../util/platform';
 import { TableOptions } from '../inputs/table';
 import { replaceTooltipImpl as installPlotTooltips } from '../plot/tooltips';
+import { installTextCollisionHandler } from '../plot/text-collision';
 
 interface MosaicProps {
     tables: Record<string, string>;
@@ -63,6 +64,10 @@ async function render({ model, el }: RenderProps<MosaicProps>) {
             // For plots, replace the tooltip implementation with
             // our own implementation
             installPlotTooltips(specEl);
+
+            // For plots, install the text collision handler which
+            // will adjust text labels to avoid collisions
+            installTextCollisionHandler(specEl);
 
             await displayUnhandledErrors(ctx, el);
         } catch (e: unknown) {
