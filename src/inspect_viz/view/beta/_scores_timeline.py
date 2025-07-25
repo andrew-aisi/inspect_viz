@@ -7,6 +7,7 @@ from inspect_viz.layout._concat import vconcat
 from inspect_viz.layout._space import vspace
 from inspect_viz.mark._dot import dot
 from inspect_viz.mark._rule import rule_x
+from inspect_viz.mark._text import text
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._legend import legend
 from inspect_viz.plot._plot import plot
@@ -81,6 +82,22 @@ def scores_timeline(
             channels=channels,
         )
     ]
+
+    # add frontier label
+    if "frontier" in data.columns:
+        components.append(
+            text(
+                data,
+                text="model_display_name",
+                x="model_release_date",
+                y="score_headline_value",
+                line_anchor="middle",
+                frame_anchor="right",
+                filter="frontier",
+                dx=-4,
+                fill="model_organization_name",
+            )
+        )
 
     # add ci if requested
     if ci is not False:
