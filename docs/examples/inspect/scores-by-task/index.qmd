@@ -52,7 +52,7 @@ plot(
 
 #### Confidence Interval
 
-Here we add a confidence interval for each reported score by adding a `rule_x()` mark. Note that we compute the confidence interval range dynamically using a `sql()` transform:
+Here we add a confidence interval for each reported score by adding a `rule_x()` mark. Note that we derive the confidence interval transforms using the `ci_bounds()` function.
 
 ```{python}
 #| filename: Code
