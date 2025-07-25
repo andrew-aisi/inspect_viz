@@ -5,6 +5,7 @@ from inspect_viz.mark import cell, text
 from inspect_viz.mark._types import TextStyles
 from inspect_viz.plot import legend, plot
 from inspect_viz.plot._attributes import PlotAttributes
+from inspect_viz.transform._aggregate import first
 
 
 def tool_calls(
@@ -67,7 +68,7 @@ def tool_calls(
         cell(data, x=x, y=y, fill=tool),
         text(
             data,
-            text=limit,
+            text=first(limit),
             y=y,
             frame_anchor="right",
             styles=TextStyles(
