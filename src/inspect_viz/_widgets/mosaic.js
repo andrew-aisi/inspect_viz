@@ -1761,6 +1761,13 @@ var isLinkableUrl = (value) => {
   return isUrl(value) && value.startsWith("http");
 };
 
+// js/plot/plot.ts
+var readMarks = (plotEl) => {
+  const value = plotEl.value;
+  const marks = value.marks || [];
+  return marks;
+};
+
 // js/plot/tooltips.ts
 var HIDDEN_USER_CHANNEL = "_user_channels";
 var replaceTooltipImpl = (specEl) => {
@@ -2006,8 +2013,7 @@ function distillTooltips(parsed, userKeys) {
 function readUserChannels(svgEl) {
   const plotEl = svgEl.parentElement;
   if (plotEl) {
-    const value = plotEl.value;
-    const marks = value.marks || [];
+    const marks = readMarks(plotEl);
     for (const mark of marks) {
       const markChannels = mark.channels || [];
       const markChannelNames = markChannels.map((c) => c.channel);
@@ -2136,7 +2142,7 @@ var configurePlotObservers = (specEl) => {
   childSvgEls.forEach((svgEl) => {
     if (svgEl && !configuredPlots.has(svgEl)) {
       const options = readTextOptions(svgEl);
-      if (options.enableTextCollision) {
+      if (options.shiftOverlappingText) {
         configurePlotObserver(svgEl);
         configuredPlots.add(svgEl);
       }
@@ -2234,27 +2240,21 @@ var readTextOptions = (svgEl) => {
   const textOptions = {};
   const plotEl = svgEl.parentElement;
   if (plotEl) {
-    const value = plotEl.value;
-    const marks = value.marks || [];
+    const marks = readMarks(plotEl);
     const textMarks = marks.filter((mark) => mark.type === "text");
     for (const mark of textMarks) {
-      if (mark.channels) {
-        console.log({ mark });
-        const shiftTextEnabled = mark.channels.some(
-          (c) => {
-            if (c.channel === "_shift_overlapping_text") {
-              const val = c.value;
-              if (Array.isArray(val)) {
-                return val.includes(true);
-              }
-            }
-            return false;
+      const shiftTextEnabled = mark.channels?.some((c) => {
+        if (c.channel === "_shift_overlapping_text") {
+          const val = c.value;
+          if (Array.isArray(val)) {
+            return val.includes(true);
           }
-        );
-        if (shiftTextEnabled) {
-          textOptions.enableTextCollision = true;
-          break;
         }
+        return false;
+      });
+      if (shiftTextEnabled) {
+        textOptions.shiftOverlappingText = true;
+        break;
       }
     }
   }

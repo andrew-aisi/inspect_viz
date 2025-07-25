@@ -1,6 +1,7 @@
 import svgPathParser from 'https://cdn.jsdelivr.net/npm/svg-path-parser@1.1.0/+esm';
 import tippy, { Placement } from 'https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm';
 import { isLinkableUrl } from '../util/url';
+import { readMarks } from './plot';
 
 const HIDDEN_USER_CHANNEL = '_user_channels';
 
@@ -347,11 +348,7 @@ function distillTooltips(parsed: ParsedTooltip, userKeys: string[]) {
 function readUserChannels(svgEl: SVGSVGElement) {
     const plotEl = svgEl.parentElement;
     if (plotEl) {
-        // Read the value from the plot element
-        const value = (plotEl as any).value;
-
-        // Read the marks
-        const marks = value.marks || [];
+        const marks = readMarks(plotEl);
         for (const mark of marks) {
             const markChannels = mark.channels || [];
             const markChannelNames = markChannels.map((c: any) => c.channel);
@@ -365,7 +362,6 @@ function readUserChannels(svgEl: SVGSVGElement) {
                 const userChannelsValue = userChannels?.value;
                 if (userChannelsValue) {
                     const parsedChannels = JSON.parse(userChannelsValue) as Record<string, string>;
-
                     return parsedChannels;
                 }
             }

@@ -1,4 +1,5 @@
 import * as d3 from 'https://cdn.jsdelivr.net/npm/d3-force@3.0.0/+esm';
+import { readMarks } from './plot';
 
 interface TextLabelNode {
     element: SVGTextElement;
@@ -31,7 +32,7 @@ const configurePlotObservers = (specEl: HTMLElement) => {
     childSvgEls.forEach(svgEl => {
         if (svgEl && !configuredPlots.has(svgEl)) {
             const options = readTextOptions(svgEl);
-            if (options.enableTextCollision) {
+            if (options.shiftOverlappingText) {
                 configurePlotObserver(svgEl as HTMLElement);
                 configuredPlots.add(svgEl);
             }
@@ -166,7 +167,7 @@ function rectangularVerticalCollisionForce() {
 }
 
 interface TextOptions {
-    enableTextCollision?: boolean;
+    shiftOverlappingText?: boolean;
 }
 
 const readTextOptions = (svgEl: Element): TextOptions => {
@@ -175,29 +176,23 @@ const readTextOptions = (svgEl: Element): TextOptions => {
     const plotEl = svgEl.parentElement;
     if (plotEl) {
         // Read the value from the plot element
-        const value = (plotEl as any).value;
-        const marks = value.marks || [];
-
-        const textMarks = marks.filter((mark: { type: string }) => mark.type === 'text');
+        const marks = readMarks(plotEl);
+        const textMarks = marks.filter(mark => mark.type === 'text');
 
         for (const mark of textMarks) {
-            if (mark.channels) {
-                const shiftTextEnabled = mark.channels.some(
-                    (c: { channel: string; value: any }) => {
-                        if (c.channel === '_shift_overlapping_text') {
-                            const val = c.value;
-                            if (Array.isArray(val)) {
-                                return val.includes(true);
-                            }
-                        }
-                        return false;
+            const shiftTextEnabled = mark.channels?.some(c => {
+                if (c.channel === '_shift_overlapping_text') {
+                    const val = c.value;
+                    if (Array.isArray(val)) {
+                        return val.includes(true);
                     }
-                );
-                if (shiftTextEnabled) {
-                    // Enable text collision for this mark
-                    textOptions.enableTextCollision = true;
-                    break;
                 }
+                return false;
+            });
+            if (shiftTextEnabled) {
+                // Enable text collision for this mark
+                textOptions.shiftOverlappingText = true;
+                break;
             }
         }
     }
