@@ -1,4 +1,4 @@
-from typing import Any, Unpack, cast
+from typing import Unpack
 
 from inspect_viz import Component, Data
 from inspect_viz._util.channels import resolve_log_viewer_channel
@@ -99,7 +99,7 @@ def scores_timeline(
                 filter="frontier",
                 dx=-4,
                 fill="model_organization_name",
-                channels={TEXT_CHANNEL_OPTIONS: cast(Any, [ENABLE_TEXT_COLLISION])},
+                shift_overlapping_text=True,
             )
         )
 

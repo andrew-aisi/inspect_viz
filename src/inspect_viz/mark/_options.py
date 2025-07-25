@@ -203,6 +203,9 @@ class MarkOptions(TypedDict, total=False):
     target: str | Param
     """A constant string specifying the target window (_e.g. *_blank*) for clickable links; used in conjunction with the **href** option (<https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/target>)."""
 
+    shift_overlapping_text: bool | Param
+    """Whether to shift overlapping text marks to avoid collisions; defaults to `False`. If `True`, text marks will be shifted to avoid collisions with other text marks, but not with other marks. """
+
 
 TipPointer: TypeAlias = Literal["x", "y", "xy"]
 """The pointer mode for the tip; corresponds to pointerX, pointerY, and pointer."""

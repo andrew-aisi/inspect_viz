@@ -182,10 +182,18 @@ const readTextOptions = (svgEl: Element): TextOptions => {
 
         for (const mark of textMarks) {
             if (mark.channels) {
-                const options = mark.channels.find(
-                    (c: { channel: string }) => c.channel === '_text_channel_options'
+                const shiftTextEnabled = mark.channels.some(
+                    (c: { channel: string; value: any }) => {
+                        if (c.channel === '_shift_overlapping_text') {
+                            const val = c.value;
+                            if (Array.isArray(val)) {
+                                return val.includes(true);
+                            }
+                        }
+                        return false;
+                    }
                 );
-                if (options && options.value.includes('enable_text_collision')) {
+                if (shiftTextEnabled) {
                     // Enable text collision for this mark
                     textOptions.enableTextCollision = true;
                     break;

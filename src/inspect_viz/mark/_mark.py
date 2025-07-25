@@ -9,6 +9,7 @@ from .._core.component import Component
 from .._util.marshall import snake_to_camel
 
 HIDDEN_USER_CHANNEL = "_user_channels"
+HIDDEN_SHIFT_TEXT = "_shift_overlapping_text"
 
 
 class Mark(Component):
@@ -40,7 +41,19 @@ class Mark(Component):
             channels_json = json.dumps(options.get("channels", {}))
 
             # Note - even though the types indicate a string must be passed through, a list will actually go through with a simple static value
-            options["channels"][HIDDEN_USER_CHANNEL] = cast(Any, [channels_json])
+            resolved_options["channels"] = resolved_options.get("channels", {})
+            resolved_options["channels"][HIDDEN_USER_CHANNEL] = cast(
+                Any, [channels_json]
+            )
+
+        # if shift_overlapping_text is set, add a hidden channel
+        # to indicate that text should be shifted
+        if "shift_overlapping_text" in options:
+            resolved_options["channels"] = resolved_options.get("channels", {})
+            resolved_options["channels"][HIDDEN_SHIFT_TEXT] = cast(
+                Any, [options["shift_overlapping_text"]]
+            )
+            resolved_options.pop("shiftOverlappingText", None)
 
         super().__init__({"mark": type} | config | resolved_options)
 

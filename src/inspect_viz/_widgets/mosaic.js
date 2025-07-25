@@ -2239,10 +2239,19 @@ var readTextOptions = (svgEl) => {
     const textMarks = marks.filter((mark) => mark.type === "text");
     for (const mark of textMarks) {
       if (mark.channels) {
-        const options = mark.channels.find(
-          (c) => c.channel === "_text_channel_options"
+        console.log({ mark });
+        const shiftTextEnabled = mark.channels.some(
+          (c) => {
+            if (c.channel === "_shift_overlapping_text") {
+              const val = c.value;
+              if (Array.isArray(val)) {
+                return val.includes(true);
+              }
+            }
+            return false;
+          }
         );
-        if (options && options.value.includes("enable_text_collision")) {
+        if (shiftTextEnabled) {
           textOptions.enableTextCollision = true;
           break;
         }
