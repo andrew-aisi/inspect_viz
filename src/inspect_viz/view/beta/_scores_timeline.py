@@ -1,4 +1,4 @@
-from typing import Unpack
+from typing import Any, Unpack, cast
 
 from inspect_viz import Component, Data
 from inspect_viz._util.channels import resolve_log_viewer_channel
@@ -12,6 +12,9 @@ from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._legend import legend
 from inspect_viz.plot._plot import plot
 from inspect_viz.transform import ci_bounds
+
+TEXT_CHANNEL_OPTIONS = "_text_channel_options"
+ENABLE_TEXT_COLLISION = "enable_text_collision"
 
 
 def scores_timeline(
@@ -96,6 +99,7 @@ def scores_timeline(
                 filter="frontier",
                 dx=-4,
                 fill="model_organization_name",
+                channels={TEXT_CHANNEL_OPTIONS: cast(Any, [ENABLE_TEXT_COLLISION])},
             )
         )
 

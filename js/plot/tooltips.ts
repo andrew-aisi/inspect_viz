@@ -324,6 +324,11 @@ function distillTooltips(parsed: ParsedTooltip, userKeys: string[]) {
             return false;
         }
 
+        // Next show any internal channels
+        if (row.key.startsWith('_')) {
+            return false;
+        }
+
         // Include all user keys
         if (userKeys.includes(row.key)) {
             return true;

@@ -30,9 +30,11 @@ const configurePlotObservers = (specEl: HTMLElement) => {
     const childSvgEls = specEl.querySelectorAll('div.plot svg');
     childSvgEls.forEach(svgEl => {
         if (svgEl && !configuredPlots.has(svgEl)) {
-            configurePlotObserver(svgEl as HTMLElement);
-            configuredPlots.add(svgEl);
-            return;
+            const options = readTextOptions(svgEl);
+            if (options.enableTextCollision) {
+                configurePlotObserver(svgEl as HTMLElement);
+                configuredPlots.add(svgEl);
+            }
         }
     });
 };
@@ -48,6 +50,11 @@ const configurePlotObserver = (plotElement: HTMLElement) => {
 
 function processCollidingText(plotElement: HTMLElement) {
     const textElements = plotElement.querySelectorAll('g[aria-label="text"] text');
+
+    // No text elements to process
+    if (textElements.length === 0) {
+        return;
+    }
 
     // Convert to array and add initial positions
     const nodes: TextLabelNode[] = Array.from(textElements).map(el => {
@@ -157,3 +164,34 @@ function rectangularVerticalCollisionForce() {
 
     return force;
 }
+
+interface TextOptions {
+    enableTextCollision?: boolean;
+}
+
+const readTextOptions = (svgEl: Element): TextOptions => {
+    const textOptions: TextOptions = {};
+    // Check the parent element for marks
+    const plotEl = svgEl.parentElement;
+    if (plotEl) {
+        // Read the value from the plot element
+        const value = (plotEl as any).value;
+        const marks = value.marks || [];
+
+        const textMarks = marks.filter((mark: { type: string }) => mark.type === 'text');
+
+        for (const mark of textMarks) {
+            if (mark.channels) {
+                const options = mark.channels.find(
+                    (c: { channel: string }) => c.channel === '_text_channel_options'
+                );
+                if (options && options.value.includes('enable_text_collision')) {
+                    // Enable text collision for this mark
+                    textOptions.enableTextCollision = true;
+                    break;
+                }
+            }
+        }
+    }
+    return textOptions;
+};

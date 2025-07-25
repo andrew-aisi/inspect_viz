@@ -1990,6 +1990,9 @@ function distillTooltips(parsed, userKeys) {
     if (row.key === HIDDEN_USER_CHANNEL) {
       return false;
     }
+    if (row.key.startsWith("_")) {
+      return false;
+    }
     if (userKeys.includes(row.key)) {
       return true;
     }
@@ -2132,9 +2135,11 @@ var configurePlotObservers = (specEl) => {
   const childSvgEls = specEl.querySelectorAll("div.plot svg");
   childSvgEls.forEach((svgEl) => {
     if (svgEl && !configuredPlots.has(svgEl)) {
-      configurePlotObserver(svgEl);
-      configuredPlots.add(svgEl);
-      return;
+      const options = readTextOptions(svgEl);
+      if (options.enableTextCollision) {
+        configurePlotObserver(svgEl);
+        configuredPlots.add(svgEl);
+      }
     }
   });
 };
@@ -2147,6 +2152,9 @@ var configurePlotObserver = (plotElement) => {
 };
 function processCollidingText(plotElement) {
   const textElements = plotElement.querySelectorAll('g[aria-label="text"] text');
+  if (textElements.length === 0) {
+    return;
+  }
   const nodes = Array.from(textElements).map((el) => {
     const textEl = el;
     const screenRect = textEl.getBoundingClientRect();
@@ -2222,6 +2230,27 @@ function rectangularVerticalCollisionForce() {
   };
   return force;
 }
+var readTextOptions = (svgEl) => {
+  const textOptions = {};
+  const plotEl = svgEl.parentElement;
+  if (plotEl) {
+    const value = plotEl.value;
+    const marks = value.marks || [];
+    const textMarks = marks.filter((mark) => mark.type === "text");
+    for (const mark of textMarks) {
+      if (mark.channels) {
+        const options = mark.channels.find(
+          (c) => c.channel === "_text_channel_options"
+        );
+        if (options && options.value.includes("enable_text_collision")) {
+          textOptions.enableTextCollision = true;
+          break;
+        }
+      }
+    }
+  }
+  return textOptions;
+};
 
 // js/widgets/mosaic.ts
 async function render({ model, el }) {
