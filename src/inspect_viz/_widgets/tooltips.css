@@ -49,6 +49,7 @@
   background-color: var(--bs-body-bg, #ffffff);
   color: var(--bs-body-color, #000000);
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.9));
+  min-width: 200px;
 }
 
 .tippy-box[data-theme~='inspect'] .tippy-content {
