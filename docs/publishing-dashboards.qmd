@@ -75,6 +75,15 @@ table(penguins)
 
 3. Row sections to denote additional rows in the dashboard layout.
 
+## Notebook Execution
+
+When using Inspect Viz with Quarto Websites you should always add the following configuration to your `_quarto.yml` to specify that notebooks should be fully executed when rendered:
+
+```{.yaml filename="_quarto.yml"}
+execute: 
+  enabled: true
+```
+
 ## Learning More
 
 - See the [Quarto Dashboards](https://quarto.org/docs/dashboards/) documentation for additional details on creating dashboards.

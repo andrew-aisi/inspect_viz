@@ -61,6 +61,15 @@ Here is what the page looks like when rendered on the website (it's a screenshot
 
 ![](bias-parameter.png){.border}
 
+### Notebook Execution
+
+When using Inspect Viz with Quarto Websites you should always add the following configuration to your `_quarto.yml` to specify that notebooks should be fully executed when rendered:
+
+```{.yaml filename="_quarto.yml"}
+execute: 
+  enabled: true
+```
+
 ### Learning More
 
 The website was created with Quarto and includes many live Inspect Viz plots and tables. The source code for the [Examples](https://github.com/meridianlabs-ai/inspect_viz/tree/main/docs/examples) section is a good place to start to understand the basics.
