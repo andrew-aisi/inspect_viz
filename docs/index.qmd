@@ -18,7 +18,7 @@ plot_defaults(
 
 Welcome to Inspect Viz, a data visualisation library for [Inspect AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. 
 
-Here's an Inspect Viz plot that compares benchmarks scores over time for various providers^[The original data used for the scores timeline plot was published by the [Epoch AI Benchmarking Hub](https://epoch.ai/data/ai-benchmarking-dashboard)]:
+Here's an Inspect Viz plot that compares benchmarks scores over time for various providers^[This plot was inspired by and includes data from the [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard) Benchmarking Hub]:
 
 ```{python}
 #| echo: false

@@ -12,7 +12,7 @@ datafile: "benchmarks.parquet"
 
 ## Overview
 
-The `scores_timeline()` function plots eval scores by model, organization, and release date:
+The `scores_timeline()` function plots eval scores by model, organization, and release date^[This plot was inspired by and includes data from the [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard) Benchmarking Hub]:
 
 ```{python}
 from inspect_viz import Data
@@ -22,15 +22,30 @@ evals = Data.from_file("benchmarks.parquet")
 scores_timeline(evals)
 ```
 
-::: {style="padding-top: 20px;"}
-The benchmark data used for this plot was sourced from [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard).
-:::
 
 ## Data Preparation
 
-{{< include _data_preparation.md >}}
+Above we read the data for the plot from a parquet file. This file was in turn created by:
 
-Notet that this view depends upon the presence of columns added by [`model_info()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#model_info) (such as `model_release_date`) so must be prepared as shown above.
+1. Reading logs into a data frame with [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df).
+
+2. Using the [`prepare()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#prepare) function to add [`model_info()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#model_info), [`frontier()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#frontier) and [`log_viewer()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#model_info) columns to the data frame.
+
+```python
+from inspect_ai.analysis.beta import (
+    evals_df, frontier, log_viewer, model_into, prepare
+)
+
+df = evals_df("logs")
+df = prepare(df, 
+    model_info(),
+    frontier(),
+    log_viewer("eval", {"logs": "https://samples.meridianlabs.ai/"}),
+)
+df.to_parquet("{{< meta datafile>}}")
+```
+
+
 
 ## Function Reference {reference="scores_timeline"}
 
