@@ -9,6 +9,8 @@ from .._core.param import Param
 from ..interactor._interactors import Interactor
 from ..layout._concat import hconcat, vconcat
 from ..mark._mark import Mark
+from ..mark._title import Title
+from ..mark._title import title as title_mark
 from ._attributes import PlotAttributes, plot_attributes_mosaic
 from ._legend import Legend
 from ._legend import legend as create_legend
@@ -16,6 +18,7 @@ from ._legend import legend as create_legend
 
 def plot(
     *plot: Mark | Interactor | Legend | Sequence[Mark | Interactor | Legend],
+    title: str | Title | None = None,
     x_label: str | Param | None | NotGiven = NOT_GIVEN,
     fx_label: str | Param | None | NotGiven = NOT_GIVEN,
     y_label: str | Param | None | NotGiven = NOT_GIVEN,
@@ -30,6 +33,7 @@ def plot(
 
     Args:
         *plot: Plot elements (marks, interactors, legends)
+        title: Title for plot (`str` or mark created with the `title()` function).
         x_label: A textual label to show on the axis or legend; if null, show no label.
             By default the scale label is inferred from channel definitions, possibly with
             an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value. Pass
@@ -50,10 +54,19 @@ def plot(
     # resolve items
     items: list[Mark | Interactor | Legend] = []
     for item in plot:
+        if isinstance(item, Title):
+            title = title or item
         if isinstance(item, (Mark, Interactor, Legend)):
             items.append(item)
         else:  # it's a sequence
             items.extend(item)
+
+    # prepend title if provided
+    title = title_mark(title) if isinstance(title, str) else title
+    if title is not None:
+        items.insert(0, title)
+        if "margin" not in attributes and "margin_top" not in attributes:
+            attributes["margin_top"] = title.margin_top
 
     # create plot
     components = [m.config for m in items]

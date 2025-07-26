@@ -216,19 +216,18 @@ plot(
 
 ## Titles
 
-Plot titles can be added using a `text()` mark. For example, here we add a title at the top of the frame:
+Plot titles can be added using the `title` option. For example, here we add a title at the top of the frame:
 
 ```{python}
-from inspect_viz.mark import TextStyles, text
-
 plot(
-    text(text=["Olympic Athletes"], frame_anchor="top", 
-         styles=TextStyles(font_size=16), dy=-20),
     dot(athletes, x="weight", y="height", fill="sex", opacity=0.1),
     regression_y(athletes, x="weight", y="height", stroke="sex"),
+    title="Olympic Athletes",
     legend="color"
 )
 ```
+
+Note that to customize title offset, font size, weight, or family, call the `title()` function rather than passing a plain string.
 
 {{< include _data.md >}}
 
