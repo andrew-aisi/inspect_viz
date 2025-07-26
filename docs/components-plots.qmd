@@ -227,7 +227,19 @@ plot(
 )
 ```
 
-Note that to customize title offset, font size, weight, or family, call the `title()` function rather than passing a plain string.
+If you have facet labels on the top of the x-axis, you may need to provide some additional `top_margin` for the `title` so that it is placed above the facet labels. Use the `title()` function to customize this:
+
+```python
+from inspect_viz.mark import title
+
+plot(
+    ...
+    title=title("Olympic Athletes", margin_top=40),
+    ...
+)
+```
+
+You can also customize the font size, weight, and family using the `title()` function.
 
 {{< include _data.md >}}
 
