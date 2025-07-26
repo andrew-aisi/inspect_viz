@@ -21,7 +21,7 @@ class Title(Mark):
 
 def title(
     title: str,
-    margin_top: int = 5,
+    margin_top: int = 10,
     font_size: float | None = 16,
     font_family: str | None = None,
     font_weight: float | None = None,
@@ -32,7 +32,7 @@ def title(
 
     Args:
        title: Title text.
-       margin_top: Top margin fot title (defaults to 5 pixels). You may need to increase this if there are facet labels on the x-axis that the title needs to be placed above.
+       margin_top: Top margin fot title (defaults to 10 pixels). You may need to increase this if there are facet labels on the x-axis that the title needs to be placed above.
        font_size: The font size in pixels (defaults to 14)
        font_family: The font-family (defaults to the plot's font family, which is typically *system-ui*")
        font_weight: The font weight (defaults to the plot's font weight, which is typically 400."
