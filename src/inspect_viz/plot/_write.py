@@ -90,7 +90,7 @@ def write_html(
 
 def write_png(
     file: str | Path, component: Component, scale: int = 2, padding: int = 8
-) -> None:
+) -> tuple[int, int] | None:
     """Export a plot or table to a PNG.
 
     Args:
@@ -98,16 +98,19 @@ def write_png(
        component: Component to export.
        scale: Device scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)
        padding: Padding (in pixels) around plot.
+
+    Returns:
+       Tuple with (width, height) of image or `None` if the images was not written.
     """
     if current_async_backend() == "trio":
         raise RuntimeError("Use write_png_async() when running under trio")
 
-    run_coroutine(write_png_async(file, component, scale, padding))
+    return run_coroutine(write_png_async(file, component, scale, padding))
 
 
 async def write_png_async(
     file: str | Path, component: Component, scale: int = 2, padding: int = 8
-) -> None:
+) -> tuple[int, int] | None:
     """Export a plot or table to a PNG.
 
     Args:
@@ -115,6 +118,9 @@ async def write_png_async(
        component: Component to export.
        scale: Device scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)
        padding: Padding (in pixels) around plot.
+
+    Returns:
+       Tuple with (width, height) of image or `None` if the images was not written.
     """
     with tempfile.NamedTemporaryFile("w", suffix=".html") as temp_file:
         # write the component as HTML
@@ -126,7 +132,7 @@ async def write_png_async(
 
             # browser can be None if playwright wasn't installed yet
             if not isinstance(b, Browser):
-                return
+                return None
 
             # create and load page
             ctx = await b.new_context(device_scale_factor=scale)
@@ -150,7 +156,7 @@ async def write_png_async(
                 scale="device",
                 style="body { background-color: " + background_color + "; }",
             )
-            _crop_image(file, padding, scale, background_color)
+            return _crop_image(file, padding, scale, background_color)
 
 
 @asynccontextmanager
@@ -198,7 +204,9 @@ def _install() -> None:
     subprocess.run(["playwright", "install", "chromium"], check=True)
 
 
-def _crop_image(file: str | Path, pad: int, scale: int, background_color: str) -> None:
+def _crop_image(
+    file: str | Path, pad: int, scale: int, background_color: str
+) -> tuple[int, int]:
     # open image
     img = Image.open(file)
 
@@ -215,5 +223,7 @@ def _crop_image(file: str | Path, pad: int, scale: int, background_color: str) -
         img_cropped = ImageOps.expand(img_cropped, border=pad * scale, fill=img_fill)
         img.close()
         img_cropped.save(file, dpi=(scale * 72, scale * 72))
+        return img_cropped.size
     else:
         img.close()
+        return img.size

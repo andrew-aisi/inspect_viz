@@ -1,4 +1,5 @@
 import base64
+import tempfile
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Literal, cast
@@ -105,6 +106,20 @@ class Component(AnyWidget):
     def _repr_mimebundle_(
         self, **kwargs: Any
     ) -> tuple[dict[str, Any], dict[str, Any]] | None:
+        from inspect_viz.plot._write import write_png
+
+        with tempfile.NamedTemporaryFile(suffix=".png") as image_file:
+            size = write_png(image_file.name, self)
+            if size:
+                with open(image_file.name, "rb") as f:
+                    image_data = f.read()
+                b64_data = base64.b64encode(image_data).decode("ascii")
+                data = {"image/png": b64_data}
+                metadata = {"image/png": {"width": size[0] / 2, "height": size[1] / 2}}
+                return data, metadata
+            else:
+                return None
+
         return self._mimebundle(collect=running_in_quarto(), **kwargs)
 
     def _mimebundle(
