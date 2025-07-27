@@ -19,13 +19,13 @@ from inspect_viz.transform import ci_bounds
 
 def scores_timeline(
     data: Data,
+    task_name: str = "task_display_name",
     model_name: str = "model_display_name",
     model_organization: str = "model_organization_name",
     model_release_date: str = "model_release_date",
     score_name: str = "score_headline_name",
     score_value: str = "score_headline_value",
     score_stderr: str = "score_headline_stderr",
-    task_name: str = "task_name",
     organizations: list[str] | None = None,
     organizations_filter: bool = True,
     ci: float | bool = 0.95,
@@ -42,13 +42,13 @@ def scores_timeline(
 
     Args:
        data: Data read using `evals_df()` and amended with model metadata using the `model_info()` prepare operation (see [Data Preparation](https://inspect.aisi.org.uk/dataframe.html#data-preparation) for details).
+       task_name: Column for task name (defaults to "task_display_name").
        model_name: Column for model name (defaults to "model_display_name").
        model_organization: Column for model organization (defaults to "model_organization_name").
        model_release_date: Column for model release date (defaults to "model_release_date").
        score_name: Column for scorer name (defaults to "score_headline_name").
        score_value: Column for score value (defaults to "score_headline_value").
        score_stderr: Column for score stderr (defaults to "score_headline_stderr")
-       task_name: Column for task name (defaults to "task_name").
        organizations: List of organizations to include (in order of desired presentation).
        organizations_filter: Provide UI to filter plot by organization(s).
        ci: Confidence interval (defaults to 0.95, pass `False` for no confidence intervals)
@@ -61,6 +61,10 @@ def scores_timeline(
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        **attributes: Additional `PlotAttributes`. By default, the `x_domain` is set to "fixed", the `y_domain` is set to `[0,1.0]`, `color_label` is set to "Organizations", and `color_domain` is set to `organizations`.
     """
+    # fallback to task_name if required
+    if task_name == "task_display_name" and task_name not in data.columns:
+        task_name = "task_name"
+
     # validate the required fields
     for field in [
         model_name,

@@ -31,7 +31,7 @@ class CellOptions(TypedDict, total=False):
 
 def scores_heatmap(
     data: Data,
-    x: str = "task_name",
+    x: str = "task_display_name",
     y: str = "model_display_name",
     fill: str = "score_headline_value",
     cell: CellOptions | None = None,
@@ -66,6 +66,10 @@ def scores_heatmap(
        y_label: y-axis label (defaults to None).
        **attributes: Additional `PlotAttributes
     """
+    # resolve x
+    if x == "task_display_name" and x not in data.columns:
+        x = "task_name"
+
     # Resolve the y column to average
     margin_left = None
     if y == "model_display_name":
@@ -132,7 +136,7 @@ def scores_heatmap(
 
     # channels
     channels: dict[str, str] = {}
-    if x == "task_name":
+    if x == "task_name" or x == "task_display_name":
         channels["Task"] = x
     if y == "model" or y == "model_display_name":
         channels["Model"] = y

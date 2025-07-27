@@ -17,7 +17,7 @@ from inspect_viz.transform import sql
 def scores_by_task(
     data: Data,
     x: str = "model_display_name",
-    fx: str = "task_name",
+    fx: str = "task_display_name",
     y: str = "score_headline_value",
     y_stderr: str = "score_headline_stderr",
     y_ci: bool | float = 0.95,
@@ -30,12 +30,12 @@ def scores_by_task(
 ) -> Component:
     """Bar plot for comparing eval scores.
 
-    Summarize eval scores using a bar plot. By default, scores (`y`) are plotted by "task_name" (`fx`) and "model" (`x`). By default, confidence intervals are also plotted (disable this with `y_ci=False`).
+    Summarize eval scores using a bar plot. By default, scores (`y`) are plotted by "task_display_name" (`fx`) and "model_display_name" (`x`). By default, confidence intervals are also plotted (disable this with `y_ci=False`).
 
     Args:
        data: Evals data table. This is typically created using a data frame read with the inspect `evals_df()` function.
        x: Name of field for x axis (defaults to "model_display_name")
-       fx: Name of field for x facet (defaults to "task_name")
+       fx: Name of field for x facet (defaults to "task_display_name")
        y: Name of field for y axis (defaults to "score_headline_value").
        y_stderr: Name of field for stderr (defaults to "score_headline_metric").
        y_ci: Confidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.
@@ -51,6 +51,11 @@ def scores_by_task(
         # fallback to using the raw model string
         x = "model"
 
+    # resolve the fx
+    if fx == "task_display_name" and "task_display_name" not in data.columns:
+        # fallback to using the raw task name string
+        fx = "task_name"
+
     # resolve the title
     if isinstance(title, str):
         title = title_mark(title, margin_top=40)
@@ -62,9 +67,9 @@ def scores_by_task(
 
     # establish channels
     channels: dict[str, str] = {}
-    if fx == "task_name":
+    if fx == "task_name" or fx == "task_display_name":
         channels["Task"] = fx
-    if x == "model" or "model_display_name":
+    if x == "model" or x == "model_display_name":
         channels["Model"] = x
     if y == "score_headline_value":
         channels["Score"] = y

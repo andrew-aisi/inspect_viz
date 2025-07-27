@@ -53,7 +53,7 @@ def scores_with_baseline(
 ) -> Component:
     """Bar plot for comparing the scores of different models on a single evaluation.
 
-    Summarize eval scores using a bar plot. By default, scores (`y`) are plotted by "task_name" (`fx`) and "model" (`x`). By default, confidence intervals are also plotted (disable this with `y_ci=False`).
+    Summarize eval scores using a bar plot. By default, scores (`y`) are plotted by "model_display_name" (`y`). By default, confidence intervals are also plotted (disable this with `y_ci=False`).
 
     Args:
        data: Evals data table. This is typically created using a data frame read with the inspect `evals_df()` function.
