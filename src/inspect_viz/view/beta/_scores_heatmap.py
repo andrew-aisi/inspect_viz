@@ -1,4 +1,5 @@
 from typing import TypedDict, Unpack
+
 from typing_extensions import Literal
 
 from inspect_viz._core.component import Component
