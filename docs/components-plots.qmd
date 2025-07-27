@@ -216,19 +216,30 @@ plot(
 
 ## Titles
 
-Plot titles can be added using a `text()` mark. For example, here we add a title at the top of the frame:
+Plot titles can be added using the `title` option. For example, here we add a title at the top of the frame:
 
 ```{python}
-from inspect_viz.mark import TextStyles, text
-
 plot(
-    text(text=["Olympic Athletes"], frame_anchor="top", 
-         styles=TextStyles(font_size=16), dy=-20),
     dot(athletes, x="weight", y="height", fill="sex", opacity=0.1),
     regression_y(athletes, x="weight", y="height", stroke="sex"),
+    title="Olympic Athletes",
     legend="color"
 )
 ```
+
+If you have facet labels on the top of the x-axis, you may need to provide some additional `top_margin` for the `title` so that it is placed above the facet labels. Use the `title()` function to customize this:
+
+```python
+from inspect_viz.mark import title
+
+plot(
+    ...
+    title=title("Olympic Athletes", margin_top=40),
+    ...
+)
+```
+
+You can also customize the font size, weight, and family using the `title()` function.
 
 {{< include _data.md >}}
 

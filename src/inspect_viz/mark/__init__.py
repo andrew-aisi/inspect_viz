@@ -33,6 +33,7 @@ from ._regression import regression_y
 from ._rule import rule_x, rule_y
 from ._text import text, text_x, text_y
 from ._tick import tick_x, tick_y
+from ._title import Title, title
 from ._types import (
     Curve,
     FrameAnchor,
@@ -49,6 +50,7 @@ from ._waffle import waffle_x, waffle_y
 __all__ = [
     "Mark",
     "MarkOptions",
+    "Title",
     "ChannelName",
     "Channel",
     "ChannelIntervalSpec",
@@ -123,6 +125,7 @@ __all__ = [
     "text_y",
     "tick_x",
     "tick_y",
+    "title",
     "vector",
     "vector_x",
     "vector_y",

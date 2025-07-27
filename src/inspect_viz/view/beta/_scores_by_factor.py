@@ -4,6 +4,7 @@ from inspect_viz import Component, Data, Param
 from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.color import lighten_color_hsl
 from inspect_viz.mark import frame, rule_y
+from inspect_viz.mark._mark import Mark
 from inspect_viz.plot import PlotAttributes, legend, plot
 from inspect_viz.transform import ci_bounds, sql
 
@@ -19,6 +20,7 @@ def scores_by_factor(
     y_label: str = "Model",
     ci: bool | float = 0.95,
     color: str | tuple[str, str] = "#3266ae",
+    title: str | Mark | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
     **attributes: Unpack[PlotAttributes],
@@ -36,6 +38,7 @@ def scores_by_factor(
        y_label: Lable for y axis (defaults to "Model").
        ci: Confidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.)
        color: Hex color value (or tuple of two values). If one value is provided the second is computed by lightening the main color.
+       title: Title for plot (`str` or mark created with the `title()` function).
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. Default to 65 pixels for each item on the "y" axis.
        **attributes: Additional `PlotAttributes
@@ -110,6 +113,7 @@ def scores_by_factor(
         x_label=x_label,
         y_label=None,
         fy_label=None,
+        title=title,
         width=width,
         height=height,
         **attributes,

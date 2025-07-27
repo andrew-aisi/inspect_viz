@@ -9,6 +9,8 @@ from .._core.param import Param
 from ..interactor._interactors import Interactor
 from ..layout._concat import hconcat, vconcat
 from ..mark._mark import Mark
+from ..mark._title import Title
+from ..mark._title import title as title_mark
 from ._attributes import PlotAttributes, plot_attributes_mosaic
 from ._legend import Legend
 from ._legend import legend as create_legend
@@ -20,6 +22,7 @@ def plot(
     fx_label: str | Param | None | NotGiven = NOT_GIVEN,
     y_label: str | Param | None | NotGiven = NOT_GIVEN,
     fy_label: str | Param | None | NotGiven = NOT_GIVEN,
+    title: str | Title | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
     name: str | None = None,
@@ -40,6 +43,7 @@ def plot(
             an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value. Pass
             `None` for no y_label.
         fy_label:  A textual label to show on the axis or legend; if `None`, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.
+        title: Title for plot (`str` or mark created with the `title()` function).
         width: The outer width of the plot in pixels, including margins. Defaults to 700.
         height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
         name: A unique name for the plot. The name is used by standalone legend
@@ -50,10 +54,19 @@ def plot(
     # resolve items
     items: list[Mark | Interactor | Legend] = []
     for item in plot:
+        if isinstance(item, Title):
+            title = title or item
         if isinstance(item, (Mark, Interactor, Legend)):
             items.append(item)
         else:  # it's a sequence
             items.extend(item)
+
+    # prepend title if provided
+    title = title_mark(title) if isinstance(title, str) else title
+    if title is not None:
+        items.insert(0, title)
+        if "margin" not in attributes and "margin_top" not in attributes:
+            attributes["margin_top"] = title.margin_top
 
     # create plot
     components = [m.config for m in items]

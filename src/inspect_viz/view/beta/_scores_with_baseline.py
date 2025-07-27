@@ -7,6 +7,7 @@ from inspect_viz._util.notgiven import NotGiven
 from inspect_viz.mark._bar import bar_x
 from inspect_viz.mark._rule import rule_x
 from inspect_viz.mark._text import text
+from inspect_viz.mark._title import Title
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._plot import plot
 
@@ -38,13 +39,14 @@ def scores_with_baseline(
     *,
     x: str = "score_headline_value",
     y: str = "model_display_name",
-    width: float | None = None,
-    height: float | None = None,
     baseline: int | float | Baseline | list[Baseline] | None = None,
     sort: Literal["asc", "desc"] | None = None,
     x_label: str | None | NotGiven = None,
     y_label: str | None | NotGiven = None,
     fill: str | None = None,
+    title: str | Title | None = None,
+    width: float | None = None,
+    height: float | None = None,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """Bar plot for comparing the scores of different models on a single evaluation.
@@ -55,13 +57,14 @@ def scores_with_baseline(
        data: Evals data table. This is typically created using a data frame read with the inspect `evals_df()` function.
        x: Name of field for x axis (defaults to "score_headline_value").
        y: Name of field for x axis (defaults to "model_display_name")
-       width: The outer width of the plot in pixels, including margins. Defaults to 700.
-       height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        baseline: Baseline value or values to draw on the plot. This can be a single value, a Baseline dictionary, or a list of Baseline dictionaries. If None, no baseline is drawn.
        sort: Sort order for the bars (sorts using the 'x' value). Can be "asc" or "desc". Defaults to "asc".
        x_label: x-axis label (defaults to None).
        y_label: x-axis label (defaults to None).
        fill: The fill color for the bars. Defaults to "#416AD0". Pass any valid css color value (hex, rgb, named colors, etc.).
+       title: Title for plot (`str` or mark created with the `title()` function)
+       width: The outer width of the plot in pixels, including margins. Defaults to 700.
+       height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        **attributes: Additional `PlotAttributes`. By default, the `y_inset_top` and `margin_bottom` are set to 10 pixels and `x_ticks` is set to `[]`.
     """
     # Resolve the y column
@@ -137,6 +140,7 @@ def scores_with_baseline(
         *baseline_marks(resolved_baselines),
         y_label=y_label,
         x_label=x_label,
+        title=title,
         height=height,
         width=width,
         **attributes,
