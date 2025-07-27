@@ -170,7 +170,7 @@
     "href": "reference/inspect_viz.view.html#scores",
     "title": "inspect_viz.view.beta",
     "section": "Scores",
-    "text": "Scores\n\nscores_by_task\nBar plot for comparing eval scores.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_by_task(\n    data: Data,\n    x: str = \"model_display_name\",\n    fx: str = \"task_name\",\n    y: str = \"score_headline_value\",\n    y_stderr: str = \"score_headline_stderr\",\n    y_ci: bool | float = 0.95,\n    y_label: str | None | NotGiven = NOT_GIVEN,\n    title: str | Title | None = None,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “model_display_name”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny str\n\nName of field for y axis (defaults to “score_headline_value”).\n\ny_stderr str\n\nName of field for stderr (defaults to “score_headline_metric”).\n\ny_ci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.\n\ny_label str | None | NotGiven\n\nY axis label (pass None for no label).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function).\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the margin_bottom are is set to 10 pixels and x_ticks is set to [].\n\n\n\n\nscores_by_factor\nSummarize eval scores with a factor of variation (e.g ‘No hint’ vs. ‘Hint’).\n\nSource\n\ndef scores_by_factor(\n    data: Data,\n    fx: str,\n    fx_labels: tuple[str, str],\n    x: str = \"score_headline_value\",\n    x_stderr: str = \"score_headline_stderr\",\n    x_label: str = \"Score\",\n    y: str = \"model\",\n    y_label: str = \"Model\",\n    ci: bool | float = 0.95,\n    color: str | tuple[str, str] = \"#3266ae\",\n    title: str | Mark | None = None,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nfx str\n\nField with factor of variation (should be of type boolean).\n\nfx_labels tuple[str, str]\n\nTuple of labels for factor of variation. False value should be first, e.g. (\"No hint\", \"Hint\").\n\nx str\n\nName of field for x (scoring) axis (defaults to “score_headline_value”).\n\nx_stderr str\n\nName of field for scoring stderr (defaults to “score_headline_stderr”).\n\nx_label str\n\nLabel for x-axis (defaults to “Score”).\n\ny str\n\nName of field for y axis (defaults to “model”).\n\ny_label str\n\nLable for y axis (defaults to “Model”).\n\nci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.)\n\ncolor str | tuple[str, str]\n\nHex color value (or tuple of two values). If one value is provided the second is computed by lightening the main color.\n\ntitle str | Mark | None\n\nTitle for plot (str or mark created with the title() function).\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. Default to 65 pixels for each item on the “y” axis.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes\n\n\n\n\nscores_timeline\nEval scores by model, organization, and release date.\n\nSource\n\ndef scores_timeline(\n    data: Data,\n    organizations: list[str] | None = None,\n    ci: float | bool = 0.95,\n    x_label: str = \"Release Date\",\n    y_label: str = \"Score\",\n    eval_label: str = \"Eval\",\n    title: str | Title | None = None,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nData read using evals_df() and amended with model metadata using the model_info() prepare operation (see Data Preparation for details).\n\norganizations list[str] | None\n\nList of organizations to include (in order of desired presentation).\n\nci float | bool\n\nConfidence interval (defaults to 0.95, pass False for no confidence intervals)\n\nx_label str\n\nx-axis label\n\ny_label str\n\ny-axis label\n\neval_label str\n\nEval select label.\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function).\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the x_domain is set to “fixed”, the y_domain is set to [0,1.0], color_label is set to “Organizations”, and color_domain is set to organizations.\n\n\n\n\nscores_with_baseline\nBar plot for comparing the scores of different models on a single evaluation.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_with_baseline(\n    data: Data,\n    *,\n    x: str = \"score_headline_value\",\n    y: str = \"model_display_name\",\n    baseline: int | float | Baseline | list[Baseline] | None = None,\n    sort: Literal[\"asc\", \"desc\"] | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    fill: str | None = None,\n    title: str | Title | None = None,\n    width: float | None = None,\n    height: float | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “score_headline_value”).\n\ny str\n\nName of field for x axis (defaults to “model_display_name”)\n\nbaseline int | float | Baseline | list[Baseline] | None\n\nBaseline value or values to draw on the plot. This can be a single value, a Baseline dictionary, or a list of Baseline dictionaries. If None, no baseline is drawn.\n\nsort Literal['asc', 'desc'] | None\n\nSort order for the bars (sorts using the ‘x’ value). Can be “asc” or “desc”. Defaults to “asc”.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\nfill str | None\n\nThe fill color for the bars. Defaults to “#416AD0”. Pass any valid css color value (hex, rgb, named colors, etc.).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].\n\n\n\n\nscores_heatmap\nCreates a heatmap plot of success rate of eval data.\n\nSource\n\ndef scores_heatmap(\n    data: Data,\n    x: str = \"task_name\",\n    y: str = \"model_display_name\",\n    fill: str = \"score_headline_value\",\n    cell: CellOptions | None = None,\n    tip: bool = True,\n    title: str | Title | None = None,\n    height: float | None = None,\n    width: float | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    legend: Legend | Literal[False] | None = None,\n    sort: Literal[\"ascending\", \"descending\"] | SortOrder | None = \"ascending\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table.\n\nx str\n\nName of column to use for columns.\n\ny str\n\nName of column to use for rows.\n\nfill str\n\nName of the column to use as values to determine cell color.\n\ncell CellOptions | None\n\nOptions for the cell marks.\n\ntip bool\n\nWhether to show a tooltip with the value when hovering over a cell (defaults to True).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio).\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\ny-axis label (defaults to None).\n\nlegend Legend | Literal[False] | None\n\nOptions for the legend. Pass None to disable the legend.\n\nsort Literal['ascending', 'descending'] | SortOrder | None\n\nSort order for the x and y axes. If ascending, the highest values will be sorted to the top right. If descending, the highest values will appear in the bottom left. If None, no sorting is applied. If a SortOrder is provided, it will be used to sort the x and y axes.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes",
+    "text": "Scores\n\nscores_by_task\nBar plot for comparing eval scores.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_display_name” (fx) and “model_display_name” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_by_task(\n    data: Data,\n    x: str = \"model_display_name\",\n    fx: str = \"task_display_name\",\n    y: str = \"score_headline_value\",\n    y_stderr: str = \"score_headline_stderr\",\n    y_ci: bool | float = 0.95,\n    y_label: str | None | NotGiven = NOT_GIVEN,\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “model_display_name”)\n\nfx str\n\nName of field for x facet (defaults to “task_display_name”)\n\ny str\n\nName of field for y axis (defaults to “score_headline_value”).\n\ny_stderr str\n\nName of field for stderr (defaults to “score_headline_metric”).\n\ny_ci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.\n\ny_label str | None | NotGiven\n\nY axis label (pass None for no label).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function).\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the margin_bottom are is set to 10 pixels and x_ticks is set to [].\n\n\n\n\nscores_by_factor\nSummarize eval scores with a factor of variation (e.g ‘No hint’ vs. ‘Hint’).\n\nSource\n\ndef scores_by_factor(\n    data: Data,\n    fx: str,\n    fx_labels: tuple[str, str],\n    x: str = \"score_headline_value\",\n    x_stderr: str = \"score_headline_stderr\",\n    x_label: str = \"Score\",\n    y: str = \"model\",\n    y_label: str = \"Model\",\n    ci: bool | float = 0.95,\n    color: str | tuple[str, str] = \"#3266ae\",\n    title: str | Mark | None = None,\n    marks: Mark | list[Mark] | None = None,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nfx str\n\nField with factor of variation (should be of type boolean).\n\nfx_labels tuple[str, str]\n\nTuple of labels for factor of variation. False value should be first, e.g. (\"No hint\", \"Hint\").\n\nx str\n\nName of field for x (scoring) axis (defaults to “score_headline_value”).\n\nx_stderr str\n\nName of field for scoring stderr (defaults to “score_headline_stderr”).\n\nx_label str\n\nLabel for x-axis (defaults to “Score”).\n\ny str\n\nName of field for y axis (defaults to “model”).\n\ny_label str\n\nLable for y axis (defaults to “Model”).\n\nci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.)\n\ncolor str | tuple[str, str]\n\nHex color value (or tuple of two values). If one value is provided the second is computed by lightening the main color.\n\ntitle str | Mark | None\n\nTitle for plot (str or mark created with the title() function).\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. Default to 65 pixels for each item on the “y” axis.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes\n\n\n\n\nscores_timeline\nEval scores by model, organization, and release date.\n\nSource\n\ndef scores_timeline(\n    data: Data,\n    task_name: str = \"task_display_name\",\n    model_name: str = \"model_display_name\",\n    model_organization: str = \"model_organization_name\",\n    model_release_date: str = \"model_release_date\",\n    score_name: str = \"score_headline_name\",\n    score_value: str = \"score_headline_value\",\n    score_stderr: str = \"score_headline_stderr\",\n    organizations: list[str] | None = None,\n    organizations_filter: bool = True,\n    ci: float | bool = 0.95,\n    time_label: str = \"Release Date\",\n    score_label: str = \"Score\",\n    eval_label: str = \"Eval\",\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nData read using evals_df() and amended with model metadata using the model_info() prepare operation (see Data Preparation for details).\n\ntask_name str\n\nColumn for task name (defaults to “task_display_name”).\n\nmodel_name str\n\nColumn for model name (defaults to “model_display_name”).\n\nmodel_organization str\n\nColumn for model organization (defaults to “model_organization_name”).\n\nmodel_release_date str\n\nColumn for model release date (defaults to “model_release_date”).\n\nscore_name str\n\nColumn for scorer name (defaults to “score_headline_name”).\n\nscore_value str\n\nColumn for score value (defaults to “score_headline_value”).\n\nscore_stderr str\n\nColumn for score stderr (defaults to “score_headline_stderr”)\n\norganizations list[str] | None\n\nList of organizations to include (in order of desired presentation).\n\norganizations_filter bool\n\nProvide UI to filter plot by organization(s).\n\nci float | bool\n\nConfidence interval (defaults to 0.95, pass False for no confidence intervals)\n\ntime_label str\n\nLabel for time (x-axis).\n\nscore_label str\n\nLabel for score (y-axis).\n\neval_label str\n\nLabel for eval select input.\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function).\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the x_domain is set to “fixed”, the y_domain is set to [0,1.0], color_label is set to “Organizations”, and color_domain is set to organizations.\n\n\n\n\nscores_with_baseline\nBar plot for comparing the scores of different models on a single evaluation.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “model_display_name” (y). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_with_baseline(\n    data: Data,\n    *,\n    x: str = \"score_headline_value\",\n    y: str = \"model_display_name\",\n    baseline: int | float | Baseline | list[Baseline] | None = None,\n    sort: Literal[\"asc\", \"desc\"] | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    fill: str | None = None,\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    width: float | None = None,\n    height: float | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “score_headline_value”).\n\ny str\n\nName of field for x axis (defaults to “model_display_name”)\n\nbaseline int | float | Baseline | list[Baseline] | None\n\nBaseline value or values to draw on the plot. This can be a single value, a Baseline dictionary, or a list of Baseline dictionaries. If None, no baseline is drawn.\n\nsort Literal['asc', 'desc'] | None\n\nSort order for the bars (sorts using the ‘x’ value). Can be “asc” or “desc”. Defaults to “asc”.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\nfill str | None\n\nThe fill color for the bars. Defaults to “#416AD0”. Pass any valid css color value (hex, rgb, named colors, etc.).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].\n\n\n\n\nscores_heatmap\nCreates a heatmap plot of success rate of eval data.\n\nSource\n\ndef scores_heatmap(\n    data: Data,\n    x: str = \"task_display_name\",\n    y: str = \"model_display_name\",\n    fill: str = \"score_headline_value\",\n    cell: CellOptions | None = None,\n    tip: bool = True,\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    height: float | None = None,\n    width: float | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    legend: Legend | Literal[False] | None = None,\n    sort: Literal[\"ascending\", \"descending\"] | SortOrder | None = \"ascending\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table.\n\nx str\n\nName of column to use for columns.\n\ny str\n\nName of column to use for rows.\n\nfill str\n\nName of the column to use as values to determine cell color.\n\ncell CellOptions | None\n\nOptions for the cell marks.\n\ntip bool\n\nWhether to show a tooltip with the value when hovering over a cell (defaults to True).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio).\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\ny-axis label (defaults to None).\n\nlegend Legend | Literal[False] | None\n\nOptions for the legend. Pass None to disable the legend.\n\nsort Literal['ascending', 'descending'] | SortOrder | None\n\nSort order for the x and y axes. If ascending, the highest values will be sorted to the top right. If descending, the highest values will appear in the bottom left. If None, no sorting is applied. If a SortOrder is provided, it will be used to sort the x and y axes.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes",
     "crumbs": [
       "Reference",
       "Python API",
@@ -182,7 +182,7 @@
     "href": "reference/inspect_viz.view.html#tools",
     "title": "inspect_viz.view.beta",
     "section": "Tools",
-    "text": "Tools\n\ntool_calls\nHeat map visualising tool calls over evaluation turns.\n\nSource\n\ndef tool_calls(\n    data: Data,\n    x: str = \"order\",\n    y: str = \"id\",\n    tool: str = \"tool_call_function\",\n    limit: str = \"limit\",\n    tools: list[str] | None = None,\n    x_label: str | None = \"Message\",\n    y_label: str | None = \"Sample\",\n    title: str | Title | None = None,\n    width: float | None = None,\n    height: float | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nMessages data table. This is typically created using a data frame read with the inspect messages_df() function.\n\nx str\n\nName of field for x axis (defaults to “order”)\n\ny str\n\nName of field for y axis (defaults to “id”).\n\ntool str\n\nName of field with tool name (defaults to “tool_call_function”)\n\nlimit str\n\nName of field with sample limit (defaults to “limit”).\n\ntools list[str] | None\n\nTools to include in plot (and order to include them). Defaults to all tools found in data.\n\nx_label str | None\n\nx-axis label (defaults to “Message”).\n\ny_label str | None\n\ny-axis label (defaults to “Sample”).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the margin_top is set to 0, margin_left to 20, margin_right to 100, color_label is “Tool”, y_ticks is empty, and x_ticks and color_domain are calculated from data.",
+    "text": "Tools\n\ntool_calls\nHeat map visualising tool calls over evaluation turns.\n\nSource\n\ndef tool_calls(\n    data: Data,\n    x: str = \"order\",\n    y: str = \"id\",\n    tool: str = \"tool_call_function\",\n    limit: str = \"limit\",\n    tools: list[str] | None = None,\n    x_label: str | None = \"Message\",\n    y_label: str | None = \"Sample\",\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    width: float | None = None,\n    height: float | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nMessages data table. This is typically created using a data frame read with the inspect messages_df() function.\n\nx str\n\nName of field for x axis (defaults to “order”)\n\ny str\n\nName of field for y axis (defaults to “id”).\n\ntool str\n\nName of field with tool name (defaults to “tool_call_function”)\n\nlimit str\n\nName of field with sample limit (defaults to “limit”).\n\ntools list[str] | None\n\nTools to include in plot (and order to include them). Defaults to all tools found in data.\n\nx_label str | None\n\nx-axis label (defaults to “Message”).\n\ny_label str | None\n\ny-axis label (defaults to “Sample”).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the margin_top is set to 0, margin_left to 20, margin_right to 100, color_label is “Tool”, y_ticks is empty, and x_ticks and color_domain are calculated from data.",
     "crumbs": [
       "Reference",
       "Python API",
@@ -302,7 +302,7 @@
     "href": "view-scores-by-factor.html#data-preparation",
     "title": "Scores by Factor",
     "section": "Data Preparation",
-    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"evals-hint.parquet\")\nYou should also ensure that your evals data frame has a boolean field corresponding to the factor you are splitting on (in the example above this is “task_arg_hint”).",
+    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"evals-hint.parquet\")\nYou can additionanlly use the task_info() operation to map lower-level task names to task display names (e.g. “gpqa_diamond” -&gt; “GPQA Diamond”).\nYou should also ensure that your evals data frame has a boolean field corresponding to the factor you are splitting on (in the example above this is “task_arg_hint”).",
     "crumbs": [
       "Getting Started",
       "Views",
@@ -314,7 +314,7 @@
     "href": "view-scores-by-factor.html#function-reference",
     "title": "Scores by Factor",
     "section": "Function Reference",
-    "text": "Function Reference\nSummarize eval scores with a factor of variation (e.g ‘No hint’ vs. ‘Hint’).\n\nSource\n\ndef scores_by_factor(\n    data: Data,\n    fx: str,\n    fx_labels: tuple[str, str],\n    x: str = \"score_headline_value\",\n    x_stderr: str = \"score_headline_stderr\",\n    x_label: str = \"Score\",\n    y: str = \"model\",\n    y_label: str = \"Model\",\n    ci: bool | float = 0.95,\n    color: str | tuple[str, str] = \"#3266ae\",\n    title: str | Mark | None = None,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nfx str\n\nField with factor of variation (should be of type boolean).\n\nfx_labels tuple[str, str]\n\nTuple of labels for factor of variation. False value should be first, e.g. (\"No hint\", \"Hint\").\n\nx str\n\nName of field for x (scoring) axis (defaults to “score_headline_value”).\n\nx_stderr str\n\nName of field for scoring stderr (defaults to “score_headline_stderr”).\n\nx_label str\n\nLabel for x-axis (defaults to “Score”).\n\ny str\n\nName of field for y axis (defaults to “model”).\n\ny_label str\n\nLable for y axis (defaults to “Model”).\n\nci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.)\n\ncolor str | tuple[str, str]\n\nHex color value (or tuple of two values). If one value is provided the second is computed by lightening the main color.\n\ntitle str | Mark | None\n\nTitle for plot (str or mark created with the title() function).\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. Default to 65 pixels for each item on the “y” axis.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes",
+    "text": "Function Reference\nSummarize eval scores with a factor of variation (e.g ‘No hint’ vs. ‘Hint’).\n\nSource\n\ndef scores_by_factor(\n    data: Data,\n    fx: str,\n    fx_labels: tuple[str, str],\n    x: str = \"score_headline_value\",\n    x_stderr: str = \"score_headline_stderr\",\n    x_label: str = \"Score\",\n    y: str = \"model\",\n    y_label: str = \"Model\",\n    ci: bool | float = 0.95,\n    color: str | tuple[str, str] = \"#3266ae\",\n    title: str | Mark | None = None,\n    marks: Mark | list[Mark] | None = None,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nfx str\n\nField with factor of variation (should be of type boolean).\n\nfx_labels tuple[str, str]\n\nTuple of labels for factor of variation. False value should be first, e.g. (\"No hint\", \"Hint\").\n\nx str\n\nName of field for x (scoring) axis (defaults to “score_headline_value”).\n\nx_stderr str\n\nName of field for scoring stderr (defaults to “score_headline_stderr”).\n\nx_label str\n\nLabel for x-axis (defaults to “Score”).\n\ny str\n\nName of field for y axis (defaults to “model”).\n\ny_label str\n\nLable for y axis (defaults to “Model”).\n\nci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.)\n\ncolor str | tuple[str, str]\n\nHex color value (or tuple of two values). If one value is provided the second is computed by lightening the main color.\n\ntitle str | Mark | None\n\nTitle for plot (str or mark created with the title() function).\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. Default to 65 pixels for each item on the “y” axis.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes",
     "crumbs": [
       "Getting Started",
       "Views",
@@ -362,7 +362,7 @@
     "href": "view-scores-heatmap.html#data-preparation",
     "title": "Scores Heatmap",
     "section": "Data Preparation",
-    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"evals.parquet\")\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer() and model_info()).",
+    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"evals.parquet\")\nYou can additionanlly use the task_info() operation to map lower-level task names to task display names (e.g. “gpqa_diamond” -&gt; “GPQA Diamond”).\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer() and model_info()).",
     "crumbs": [
       "Getting Started",
       "Views",
@@ -374,7 +374,7 @@
     "href": "view-scores-heatmap.html#function-reference",
     "title": "Scores Heatmap",
     "section": "Function Reference",
-    "text": "Function Reference\nCreates a heatmap plot of success rate of eval data.\n\nSource\n\ndef scores_heatmap(\n    data: Data,\n    x: str = \"task_name\",\n    y: str = \"model_display_name\",\n    fill: str = \"score_headline_value\",\n    cell: CellOptions | None = None,\n    tip: bool = True,\n    title: str | Title | None = None,\n    height: float | None = None,\n    width: float | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    legend: Legend | Literal[False] | None = None,\n    sort: Literal[\"ascending\", \"descending\"] | SortOrder | None = \"ascending\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table.\n\nx str\n\nName of column to use for columns.\n\ny str\n\nName of column to use for rows.\n\nfill str\n\nName of the column to use as values to determine cell color.\n\ncell CellOptions | None\n\nOptions for the cell marks.\n\ntip bool\n\nWhether to show a tooltip with the value when hovering over a cell (defaults to True).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio).\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\ny-axis label (defaults to None).\n\nlegend Legend | Literal[False] | None\n\nOptions for the legend. Pass None to disable the legend.\n\nsort Literal['ascending', 'descending'] | SortOrder | None\n\nSort order for the x and y axes. If ascending, the highest values will be sorted to the top right. If descending, the highest values will appear in the bottom left. If None, no sorting is applied. If a SortOrder is provided, it will be used to sort the x and y axes.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes",
+    "text": "Function Reference\nCreates a heatmap plot of success rate of eval data.\n\nSource\n\ndef scores_heatmap(\n    data: Data,\n    x: str = \"task_display_name\",\n    y: str = \"model_display_name\",\n    fill: str = \"score_headline_value\",\n    cell: CellOptions | None = None,\n    tip: bool = True,\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    height: float | None = None,\n    width: float | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    legend: Legend | Literal[False] | None = None,\n    sort: Literal[\"ascending\", \"descending\"] | SortOrder | None = \"ascending\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table.\n\nx str\n\nName of column to use for columns.\n\ny str\n\nName of column to use for rows.\n\nfill str\n\nName of the column to use as values to determine cell color.\n\ncell CellOptions | None\n\nOptions for the cell marks.\n\ntip bool\n\nWhether to show a tooltip with the value when hovering over a cell (defaults to True).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio).\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\ny-axis label (defaults to None).\n\nlegend Legend | Literal[False] | None\n\nOptions for the legend. Pass None to disable the legend.\n\nsort Literal['ascending', 'descending'] | SortOrder | None\n\nSort order for the x and y axes. If ascending, the highest values will be sorted to the top right. If descending, the highest values will appear in the bottom left. If None, no sorting is applied. If a SortOrder is provided, it will be used to sort the x and y axes.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes",
     "crumbs": [
       "Getting Started",
       "Views",
@@ -658,193 +658,111 @@
     ]
   },
   {
-    "objectID": "publishing-dashboards.html",
-    "href": "publishing-dashboards.html",
-    "title": "Dashboards",
+    "objectID": "publishing-output-format.html",
+    "href": "publishing-output-format.html",
+    "title": "Output Format",
     "section": "",
-    "text": "Quarto Dashboards are a special type of Quarto website optimized for publishing easily navigable sets of plots and tables. Features of Quarto Dashboards include:\n\nMany flexible ways to layout components (row or column based, tabsets, multiple pages, etc.) including responsive layout for mobile devices.\nA variety of ways to present inputs for interactivity including toolbars, sidebars, and card-level inputs.\nDozens of available themes including the ability to create your own themes.",
+    "text": "By default, content generated by Inspect Viz is rendered as Jupyter Widgets that use JavaScript to provide various interactive features (tooltips, filtering, brushing, etc.). While this is the recommended way to publish Inspect Viz content, you can also choose to render content as static PNG images.\nYou might want do this if you are creating an Office or PDF document or want your plots to be available even when disconnected from the Internet. Note however that rendering plots as PNG images does take longer than the native JavaScript output format, and that interactive features are not available in this mode.",
     "crumbs": [
       "Getting Started",
       "Publishing",
-      "Dashboards"
+      "Output Format"
     ]
   },
   {
-    "objectID": "publishing-dashboards.html#overview",
-    "href": "publishing-dashboards.html#overview",
-    "title": "Dashboards",
+    "objectID": "publishing-output-format.html#overview",
+    "href": "publishing-output-format.html#overview",
+    "title": "Output Format",
     "section": "",
-    "text": "Quarto Dashboards are a special type of Quarto website optimized for publishing easily navigable sets of plots and tables. Features of Quarto Dashboards include:\n\nMany flexible ways to layout components (row or column based, tabsets, multiple pages, etc.) including responsive layout for mobile devices.\nA variety of ways to present inputs for interactivity including toolbars, sidebars, and card-level inputs.\nDozens of available themes including the ability to create your own themes.",
+    "text": "By default, content generated by Inspect Viz is rendered as Jupyter Widgets that use JavaScript to provide various interactive features (tooltips, filtering, brushing, etc.). While this is the recommended way to publish Inspect Viz content, you can also choose to render content as static PNG images.\nYou might want do this if you are creating an Office or PDF document or want your plots to be available even when disconnected from the Internet. Note however that rendering plots as PNG images does take longer than the native JavaScript output format, and that interactive features are not available in this mode.",
     "crumbs": [
       "Getting Started",
       "Publishing",
-      "Dashboards"
+      "Output Format"
     ]
   },
   {
-    "objectID": "publishing-dashboards.html#example",
-    "href": "publishing-dashboards.html#example",
-    "title": "Dashboards",
-    "section": "Example",
-    "text": "Example\nHere is the Penguin Explorer example from this repository re-written as a dashboard (this is a live dashboard embedded as an iframe):\n\nBelow is the source code for this dashboard. You’ll notice that this looks quite similar to the code for any other Quarto document, but level-two headings (##) have been added to denote a toolbar and dashboard rows (additional headings could be used to create columns and tabsets).\n---\ntitle: \"Penguins Explorer\"\n1format: dashboard\n---\n\n```{python}\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import select\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\naxes = [\"body_mass\", \"flipper_length\", \"bill_depth\", \"bill_length\"]\nx_axis = Param(\"body_mass\")\ny_axis = Param(\"flipper_length\")\n```\n\n2## Row {.toolbar}\n\n```{python}\nselect(penguins, label=\"Species\", column=\"species\")\nselect(label=\"X\", options=axes, target=x_axis)\nselect(label=\"Y\", options=axes, target=y_axis)\n```\n\n3## Row\n\n```{python}\nplot(\n    dot(penguins, x=x_axis, y=y_axis, stroke=\"species\", symbol=\"species\"),\n    grid=True,\n    x_label=\"Body mass (g) →\",\n    y_label=\"↑ Flipper length (mm)\",\n    legend=\"symbol\",\n)\n```\n\n## Row\n\n```{python}\ntable(penguins)\n```\n\n1\n\nformat: dashboard indicates this is a dashbaord not an ordinary HTML page.\n\n2\n\nToolbar for grouping inputs.\n\n3\n\nRow sections to denote additional rows in the dashboard layout.",
+    "objectID": "publishing-output-format.html#prerequisites",
+    "href": "publishing-output-format.html#prerequisites",
+    "title": "Output Format",
+    "section": "Prerequisites",
+    "text": "Prerequisites\nTo create PNG output with Inspect Viz, first install the playwright Python package, which enables taking screenshots of web graphics using an embedded version of the Chromium web browser. You can do this as follows:\npip install playwright\nplaywright install",
     "crumbs": [
       "Getting Started",
       "Publishing",
-      "Dashboards"
+      "Output Format"
     ]
   },
   {
-    "objectID": "publishing-dashboards.html#notebook-execution",
-    "href": "publishing-dashboards.html#notebook-execution",
-    "title": "Dashboards",
-    "section": "Notebook Execution",
-    "text": "Notebook Execution\nWhen using Inspect Viz with Quarto Websites you should always add the following configuration to your _quarto.yml to specify that notebooks should be fully executed when rendered:\n\n\n_quarto.yml\n\nexecute: \n  enabled: true",
+    "objectID": "publishing-output-format.html#output-format",
+    "href": "publishing-output-format.html#output-format",
+    "title": "Output Format",
+    "section": "Output Format",
+    "text": "Output Format\nUse the global output_format option to specify that you’d like to generate content in PNG format. For example, the plot below is rendered as a static PNG graphic:\n\nfrom inspect_viz import Data, options\nfrom inspect_viz.view.beta import scores_by_factor\n\n1# set 'png' as default output format\noptions.output_format = \"png\"\n\n# render plot\nevals = Data.from_file(\"evals-hint.parquet\")\nscores_by_factor(evals, \"task_arg_hint\", (\"No hint\", \"Hint\"))\n\n\n1\n\nSet the global options.output_format option to render all plots as static PNG images.\n\n\n\n\n\n\n\n\n\n\n\nYou can also do this for a single plot or set of plots using options_context():\nfrom inspect_viz import options_context\n\nwith options_context(output_format=\"png\"):\n    # plot code here",
     "crumbs": [
       "Getting Started",
       "Publishing",
-      "Dashboards"
+      "Output Format"
     ]
   },
   {
-    "objectID": "publishing-dashboards.html#learning-more",
-    "href": "publishing-dashboards.html#learning-more",
-    "title": "Dashboards",
-    "section": "Learning More",
-    "text": "Learning More\n\nSee the Quarto Dashboards documentation for additional details on creating dashboards.\nSee the Dashboard Examples to get an idea for the sorts of layouts and themes that are available and to see the source code for a variety of dashboard types.",
-    "crumbs": [
-      "Getting Started",
-      "Publishing",
-      "Dashboards"
-    ]
-  },
-  {
-    "objectID": "view-tool-calls.html",
-    "href": "view-tool-calls.html",
-    "title": "Tool Calls",
+    "objectID": "view-scores-by-task.html",
+    "href": "view-scores-by-task.html",
+    "title": "Scores by Task",
     "section": "",
-    "text": "The tool_calls() function creates a heat map visualising tool calls over evaluation turns.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import tool_calls\n\ntools = Data.from_file(\"cybench_tools.parquet\")\ntool_calls(tools)",
+    "text": "The scores_by_task() function renders a bar plot for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_task\n\nevals = Data.from_file(\"evals.parquet\")\nscores_by_task(evals)",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Tool Calls"
+      "Scores by Task"
     ]
   },
   {
-    "objectID": "view-tool-calls.html#overview",
-    "href": "view-tool-calls.html#overview",
-    "title": "Tool Calls",
+    "objectID": "view-scores-by-task.html#overview",
+    "href": "view-scores-by-task.html#overview",
+    "title": "Scores by Task",
     "section": "",
-    "text": "The tool_calls() function creates a heat map visualising tool calls over evaluation turns.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import tool_calls\n\ntools = Data.from_file(\"cybench_tools.parquet\")\ntool_calls(tools)",
+    "text": "The scores_by_task() function renders a bar plot for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_task\n\nevals = Data.from_file(\"evals.parquet\")\nscores_by_task(evals)",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Tool Calls"
+      "Scores by Task"
     ]
   },
   {
-    "objectID": "view-tool-calls.html#data-preparation",
-    "href": "view-tool-calls.html#data-preparation",
-    "title": "Tool Calls",
+    "objectID": "view-scores-by-task.html#data-preparation",
+    "href": "view-scores-by-task.html#data-preparation",
+    "title": "Scores by Task",
     "section": "Data Preparation",
-    "text": "Data Preparation\nTo create the plot we read a raw messages data frame from an eval log using the messages_df() function, then filter down to just the fields we require for visualization:\n\nfrom inspect_ai.analysis.beta import messages_df, MessageColumns, SampleSummary\n\n# read messages from log\nlog = \"&lt;path-to-log&gt;.eval\"\ndf = messages_df(log, columns=SampleSummary + MessageColumns)\n\n# trim columns\ndf = df[[\n    \"eval_id\",\n    \"id\",\n    \"order\",\n    \"tool_call_function\",\n    \"limit\"\n]]\n\n# write to parquet\ndf.to_parquet(\"cybench_tools.parquet\")\n\nNote that the trimming of columns is particularly important because Inspect Viz embeds datasets directly in the web pages that host them (so we want to minimize their size for page load performance and bandwidth usage).",
+    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"evals.parquet\")\nYou can additionanlly use the task_info() operation to map lower-level task names to task display names (e.g. “gpqa_diamond” -&gt; “GPQA Diamond”).\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer() and model_info()).",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Tool Calls"
+      "Scores by Task"
     ]
   },
   {
-    "objectID": "view-tool-calls.html#function-reference",
-    "href": "view-tool-calls.html#function-reference",
-    "title": "Tool Calls",
+    "objectID": "view-scores-by-task.html#function-reference",
+    "href": "view-scores-by-task.html#function-reference",
+    "title": "Scores by Task",
     "section": "Function Reference",
-    "text": "Function Reference\nHeat map visualising tool calls over evaluation turns.\n\nSource\n\ndef tool_calls(\n    data: Data,\n    x: str = \"order\",\n    y: str = \"id\",\n    tool: str = \"tool_call_function\",\n    limit: str = \"limit\",\n    tools: list[str] | None = None,\n    x_label: str | None = \"Message\",\n    y_label: str | None = \"Sample\",\n    title: str | Title | None = None,\n    width: float | None = None,\n    height: float | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nMessages data table. This is typically created using a data frame read with the inspect messages_df() function.\n\nx str\n\nName of field for x axis (defaults to “order”)\n\ny str\n\nName of field for y axis (defaults to “id”).\n\ntool str\n\nName of field with tool name (defaults to “tool_call_function”)\n\nlimit str\n\nName of field with sample limit (defaults to “limit”).\n\ntools list[str] | None\n\nTools to include in plot (and order to include them). Defaults to all tools found in data.\n\nx_label str | None\n\nx-axis label (defaults to “Message”).\n\ny_label str | None\n\ny-axis label (defaults to “Sample”).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the margin_top is set to 0, margin_left to 20, margin_right to 100, color_label is “Tool”, y_ticks is empty, and x_ticks and color_domain are calculated from data.",
+    "text": "Function Reference\nBar plot for comparing eval scores.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_display_name” (fx) and “model_display_name” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_by_task(\n    data: Data,\n    x: str = \"model_display_name\",\n    fx: str = \"task_display_name\",\n    y: str = \"score_headline_value\",\n    y_stderr: str = \"score_headline_stderr\",\n    y_ci: bool | float = 0.95,\n    y_label: str | None | NotGiven = NOT_GIVEN,\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “model_display_name”)\n\nfx str\n\nName of field for x facet (defaults to “task_display_name”)\n\ny str\n\nName of field for y axis (defaults to “score_headline_value”).\n\ny_stderr str\n\nName of field for stderr (defaults to “score_headline_metric”).\n\ny_ci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.\n\ny_label str | None | NotGiven\n\nY axis label (pass None for no label).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function).\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the margin_bottom are is set to 10 pixels and x_ticks is set to [].",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Tool Calls"
+      "Scores by Task"
     ]
   },
   {
-    "objectID": "view-tool-calls.html#implementation",
-    "href": "view-tool-calls.html#implementation",
-    "title": "Tool Calls",
+    "objectID": "view-scores-by-task.html#implementation",
+    "href": "view-scores-by-task.html#implementation",
+    "title": "Scores by Task",
     "section": "Implementation",
-    "text": "Implementation\nThe Tool Calls example demonstrates how this view was implemented using lower level plotting components.",
+    "text": "Implementation\nThe Scores by Task example demonstrates how this view was implemented using lower level plotting components.",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Tool Calls"
-    ]
-  },
-  {
-    "objectID": "views.html",
-    "href": "views.html",
-    "title": "Views",
-    "section": "",
-    "text": "Note\n\n\n\nView functions are currently in beta and are exported from the inspect_ai.view.beta module. The beta module will be preserved after final release so that code written against it now will continue to work after the beta.\n\n\nInspect Viz Views are pre-built plots that work with data created by the Inspect log data frame reading functions.\n\n\n\n\n\n\n\nView\nDescription\n\n\n\n\nscores_by_task()\nBar plot for comparing eval scores (with confidence intervals) across models and tasks.\n\n\nscores_by_factor()\nBar bar plot for comparing eval scores by model and a boolean factor (e.g. no hint vs. hint).\n\n\nscores_timeline()\nScatter plot with eval scores by model, organization, and release date. Filterable by evaluation and organization.\n\n\nscores_heatmap()\nHeatmap with values for comparing scores across model and task.\n\n\nscores_with_baseline()\nBar plot for comparing model scores on a single eval, with one or more baselines overlaid.\n\n\ntool_calls()\nHeat map visualising tool calls over evaluation turns.",
-    "crumbs": [
-      "Getting Started",
-      "Views"
-    ]
-  },
-  {
-    "objectID": "publishing.html",
-    "href": "publishing.html",
-    "title": "Publishing",
-    "section": "",
-    "text": "There are several ways to publish Inspect Viz content, ranging from PNG images suitable for embedding in documents all the way up to notebooks, websites, and dashboards.\n\n\n\nPlots\nPublish single plots as PNG images or HTML snippets.\n\n\nNotebooks\nPublish collections of plots and tables as a notebook.\n\n\nWebsites\nEmbed plots and tables in a larger website.\n\n\nDashboards\nCreate a dashboard to provide easy navigation of collections of plots.",
-    "crumbs": [
-      "Getting Started",
-      "Publishing"
-    ]
-  },
-  {
-    "objectID": "publishing-plots.html",
-    "href": "publishing-plots.html",
-    "title": "Plots",
-    "section": "",
-    "text": "There are several ways to publish plots created with Inspect Viz:\n\nUse the write_png() function to create an image for use in a document or presentation.\nUse the write_html() function to create a standalone HTML file.\nCreate and share a Jupyter notebook with the plot.\nEmbed the plot in a website or dashboard.\n\nThis article will cover the first two options for sharing standalone plots—the Notebooks, Websites, and Dashboards articles will cover the other possibilities.",
-    "crumbs": [
-      "Getting Started",
-      "Publishing",
-      "Plots"
-    ]
-  },
-  {
-    "objectID": "publishing-plots.html#overview",
-    "href": "publishing-plots.html#overview",
-    "title": "Plots",
-    "section": "",
-    "text": "There are several ways to publish plots created with Inspect Viz:\n\nUse the write_png() function to create an image for use in a document or presentation.\nUse the write_html() function to create a standalone HTML file.\nCreate and share a Jupyter notebook with the plot.\nEmbed the plot in a website or dashboard.\n\nThis article will cover the first two options for sharing standalone plots—the Notebooks, Websites, and Dashboards articles will cover the other possibilities.",
-    "crumbs": [
-      "Getting Started",
-      "Publishing",
-      "Plots"
-    ]
-  },
-  {
-    "objectID": "publishing-plots.html#plot-as-image",
-    "href": "publishing-plots.html#plot-as-image",
-    "title": "Plots",
-    "section": "Plot as Image",
-    "text": "Plot as Image\nUse the write_png() function to save a PNG version of any plot.\n\n\n\n\n\n\nNote\n\n\n\nThe write_png() function requires that you install the playwright Python package, which enables taking screenshots of web graphics using an embedded version of the Chromium web browser. You can do this as follows:\npip install playwright\nplaywright install\n\n\nTo create a plot and export it as a PNG:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_png\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_png(\"penguins.png\", pl)\nHere is the plot that was written (note that since this plot is a static PNG file rather than a JavaScript widget it does not have tooltips):\n\n\nPlot Size\nYou can control the size of the image written by specifying the width and height directly in the call to plot(). For example:\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True,\n    width=900,\n    height=400\n)\n\n\nExport Options\nThere are a couple of other options that can be used when exporting plots to PNG:\n\n\n\n\n\n\n\nOption\nDescription\n\n\n\n\nscale\nDevice scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)\n\n\npadding\nPadding (in pixels) to add around exported plot. Defaults to 8 pixels.",
-    "crumbs": [
-      "Getting Started",
-      "Publishing",
-      "Plots"
-    ]
-  },
-  {
-    "objectID": "publishing-plots.html#plot-as-html",
-    "href": "publishing-plots.html#plot-as-html",
-    "title": "Plots",
-    "section": "Plot as HTML",
-    "text": "Plot as HTML\nYou can also create an HTML version of a plot using the write_html() function. For example:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_html\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_html(\"penguins.html\", pl)\nUnlike with write_png(), the exported HTML plot retains all interactive features (tooltips, filters, etc.). In some cases you might therefore also include inputs with your plot. For example:\npl = vconcat(\n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"\n   )\n)\n\nwrite_html(\"penguins.html\", pl)",
-    "crumbs": [
-      "Getting Started",
-      "Publishing",
-      "Plots"
+      "Scores by Task"
     ]
   },
   {
@@ -992,63 +910,193 @@
     ]
   },
   {
-    "objectID": "view-scores-by-task.html",
-    "href": "view-scores-by-task.html",
-    "title": "Scores by Task",
+    "objectID": "publishing-plots.html",
+    "href": "publishing-plots.html",
+    "title": "Plots",
     "section": "",
-    "text": "The scores_by_task() function renders a bar plot for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_task\n\nevals = Data.from_file(\"evals.parquet\")\nscores_by_task(evals)",
+    "text": "There are several ways to publish plots created with Inspect Viz:\n\nUse the write_png() function to create an image for use in a document or presentation.\nUse the write_html() function to create a standalone HTML file.\nCreate and share a Jupyter notebook with the plot.\nEmbed the plot in a website or dashboard.\n\nThis article will cover the first two options for sharing standalone plots—the Notebooks, Websites, and Dashboards articles will cover the other possibilities.",
     "crumbs": [
       "Getting Started",
-      "Views",
-      "Scores by Task"
+      "Publishing",
+      "Plots"
     ]
   },
   {
-    "objectID": "view-scores-by-task.html#overview",
-    "href": "view-scores-by-task.html#overview",
-    "title": "Scores by Task",
+    "objectID": "publishing-plots.html#overview",
+    "href": "publishing-plots.html#overview",
+    "title": "Plots",
     "section": "",
-    "text": "The scores_by_task() function renders a bar plot for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_task\n\nevals = Data.from_file(\"evals.parquet\")\nscores_by_task(evals)",
+    "text": "There are several ways to publish plots created with Inspect Viz:\n\nUse the write_png() function to create an image for use in a document or presentation.\nUse the write_html() function to create a standalone HTML file.\nCreate and share a Jupyter notebook with the plot.\nEmbed the plot in a website or dashboard.\n\nThis article will cover the first two options for sharing standalone plots—the Notebooks, Websites, and Dashboards articles will cover the other possibilities.",
     "crumbs": [
       "Getting Started",
-      "Views",
-      "Scores by Task"
+      "Publishing",
+      "Plots"
     ]
   },
   {
-    "objectID": "view-scores-by-task.html#data-preparation",
-    "href": "view-scores-by-task.html#data-preparation",
-    "title": "Scores by Task",
+    "objectID": "publishing-plots.html#plot-as-image",
+    "href": "publishing-plots.html#plot-as-image",
+    "title": "Plots",
+    "section": "Plot as Image",
+    "text": "Plot as Image\nUse the write_png() function to save a PNG version of any plot.\n\n\n\n\n\n\nNote\n\n\n\nThe write_png() function requires that you install the playwright Python package, which enables taking screenshots of web graphics using an embedded version of the Chromium web browser. You can do this as follows:\npip install playwright\nplaywright install\n\n\nTo create a plot and export it as a PNG:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_png\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_png(\"penguins.png\", pl)\nHere is the plot that was written (note that since this plot is a static PNG file rather than a JavaScript widget it does not have tooltips):\n\n\nPlot Size\nYou can control the size of the image written by specifying the width and height directly in the call to plot(). For example:\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True,\n    width=900,\n    height=400\n)\n\n\nExport Options\nThere are a couple of other options that can be used when exporting plots to PNG:\n\n\n\n\n\n\n\nOption\nDescription\n\n\n\n\nscale\nDevice scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)\n\n\npadding\nPadding (in pixels) to add around exported plot. Defaults to 8 pixels.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing-plots.html#plot-as-html",
+    "href": "publishing-plots.html#plot-as-html",
+    "title": "Plots",
+    "section": "Plot as HTML",
+    "text": "Plot as HTML\nYou can also create an HTML version of a plot using the write_html() function. For example:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_html\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_html(\"penguins.html\", pl)\nUnlike with write_png(), the exported HTML plot retains all interactive features (tooltips, filters, etc.). In some cases you might therefore also include inputs with your plot. For example:\npl = vconcat(\n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"\n   )\n)\n\nwrite_html(\"penguins.html\", pl)",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Plots"
+    ]
+  },
+  {
+    "objectID": "publishing.html",
+    "href": "publishing.html",
+    "title": "Publishing",
+    "section": "",
+    "text": "There are several ways to publish Inspect Viz content, ranging from PNG images suitable for embedding in documents all the way up to notebooks, websites, and dashboards.\n\n\n\nPlots\nPublish single plots as PNG images or HTML snippets.\n\n\nOutput Format\nConfigure the default output format for plots (e.g. to render all plots as PNG images).\n\n\nNotebooks\nPublish collections of plots and tables as a notebook.\n\n\nWebsites\nEmbed plots and tables in a larger website.\n\n\nDashboards\nCreate a dashboard to provide easy navigation of collections of plots.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing"
+    ]
+  },
+  {
+    "objectID": "views.html",
+    "href": "views.html",
+    "title": "Views",
+    "section": "",
+    "text": "Note\n\n\n\nView functions are currently in beta and are exported from the inspect_ai.view.beta module. The beta module will be preserved after final release so that code written against it now will continue to work after the beta.\n\n\nInspect Viz Views are pre-built plots that work with data created by the Inspect log data frame reading functions.\n\n\n\n\n\n\n\nView\nDescription\n\n\n\n\nscores_by_task()\nBar plot for comparing eval scores (with confidence intervals) across models and tasks.\n\n\nscores_by_factor()\nBar bar plot for comparing eval scores by model and a boolean factor (e.g. no hint vs. hint).\n\n\nscores_timeline()\nScatter plot with eval scores by model, organization, and release date. Filterable by evaluation and organization.\n\n\nscores_heatmap()\nHeatmap with values for comparing scores across model and task.\n\n\nscores_with_baseline()\nBar plot for comparing model scores on a single eval, with one or more baselines overlaid.\n\n\ntool_calls()\nHeat map visualising tool calls over evaluation turns.",
+    "crumbs": [
+      "Getting Started",
+      "Views"
+    ]
+  },
+  {
+    "objectID": "view-tool-calls.html",
+    "href": "view-tool-calls.html",
+    "title": "Tool Calls",
+    "section": "",
+    "text": "The tool_calls() function creates a heat map visualising tool calls over evaluation turns.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import tool_calls\n\ntools = Data.from_file(\"cybench_tools.parquet\")\ntool_calls(tools)",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Tool Calls"
+    ]
+  },
+  {
+    "objectID": "view-tool-calls.html#overview",
+    "href": "view-tool-calls.html#overview",
+    "title": "Tool Calls",
+    "section": "",
+    "text": "The tool_calls() function creates a heat map visualising tool calls over evaluation turns.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import tool_calls\n\ntools = Data.from_file(\"cybench_tools.parquet\")\ntool_calls(tools)",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Tool Calls"
+    ]
+  },
+  {
+    "objectID": "view-tool-calls.html#data-preparation",
+    "href": "view-tool-calls.html#data-preparation",
+    "title": "Tool Calls",
     "section": "Data Preparation",
-    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"evals.parquet\")\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer() and model_info()).",
+    "text": "Data Preparation\nTo create the plot we read a raw messages data frame from an eval log using the messages_df() function, then filter down to just the fields we require for visualization:\n\nfrom inspect_ai.analysis.beta import messages_df, MessageColumns, SampleSummary\n\n# read messages from log\nlog = \"&lt;path-to-log&gt;.eval\"\ndf = messages_df(log, columns=SampleSummary + MessageColumns)\n\n# trim columns\ndf = df[[\n    \"eval_id\",\n    \"id\",\n    \"order\",\n    \"tool_call_function\",\n    \"limit\"\n]]\n\n# write to parquet\ndf.to_parquet(\"cybench_tools.parquet\")\n\nNote that the trimming of columns is particularly important because Inspect Viz embeds datasets directly in the web pages that host them (so we want to minimize their size for page load performance and bandwidth usage).",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Scores by Task"
+      "Tool Calls"
     ]
   },
   {
-    "objectID": "view-scores-by-task.html#function-reference",
-    "href": "view-scores-by-task.html#function-reference",
-    "title": "Scores by Task",
+    "objectID": "view-tool-calls.html#function-reference",
+    "href": "view-tool-calls.html#function-reference",
+    "title": "Tool Calls",
     "section": "Function Reference",
-    "text": "Function Reference\nBar plot for comparing eval scores.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_by_task(\n    data: Data,\n    x: str = \"model_display_name\",\n    fx: str = \"task_name\",\n    y: str = \"score_headline_value\",\n    y_stderr: str = \"score_headline_stderr\",\n    y_ci: bool | float = 0.95,\n    y_label: str | None | NotGiven = NOT_GIVEN,\n    title: str | Title | None = None,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “model_display_name”)\n\nfx str\n\nName of field for x facet (defaults to “task_name”)\n\ny str\n\nName of field for y axis (defaults to “score_headline_value”).\n\ny_stderr str\n\nName of field for stderr (defaults to “score_headline_metric”).\n\ny_ci bool | float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.\n\ny_label str | None | NotGiven\n\nY axis label (pass None for no label).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function).\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the margin_bottom are is set to 10 pixels and x_ticks is set to [].",
+    "text": "Function Reference\nHeat map visualising tool calls over evaluation turns.\n\nSource\n\ndef tool_calls(\n    data: Data,\n    x: str = \"order\",\n    y: str = \"id\",\n    tool: str = \"tool_call_function\",\n    limit: str = \"limit\",\n    tools: list[str] | None = None,\n    x_label: str | None = \"Message\",\n    y_label: str | None = \"Sample\",\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    width: float | None = None,\n    height: float | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nMessages data table. This is typically created using a data frame read with the inspect messages_df() function.\n\nx str\n\nName of field for x axis (defaults to “order”)\n\ny str\n\nName of field for y axis (defaults to “id”).\n\ntool str\n\nName of field with tool name (defaults to “tool_call_function”)\n\nlimit str\n\nName of field with sample limit (defaults to “limit”).\n\ntools list[str] | None\n\nTools to include in plot (and order to include them). Defaults to all tools found in data.\n\nx_label str | None\n\nx-axis label (defaults to “Message”).\n\ny_label str | None\n\ny-axis label (defaults to “Sample”).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the margin_top is set to 0, margin_left to 20, margin_right to 100, color_label is “Tool”, y_ticks is empty, and x_ticks and color_domain are calculated from data.",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Scores by Task"
+      "Tool Calls"
     ]
   },
   {
-    "objectID": "view-scores-by-task.html#implementation",
-    "href": "view-scores-by-task.html#implementation",
-    "title": "Scores by Task",
+    "objectID": "view-tool-calls.html#implementation",
+    "href": "view-tool-calls.html#implementation",
+    "title": "Tool Calls",
     "section": "Implementation",
-    "text": "Implementation\nThe Scores by Task example demonstrates how this view was implemented using lower level plotting components.",
+    "text": "Implementation\nThe Tool Calls example demonstrates how this view was implemented using lower level plotting components.",
     "crumbs": [
       "Getting Started",
       "Views",
-      "Scores by Task"
+      "Tool Calls"
+    ]
+  },
+  {
+    "objectID": "publishing-dashboards.html",
+    "href": "publishing-dashboards.html",
+    "title": "Dashboards",
+    "section": "",
+    "text": "Quarto Dashboards are a special type of Quarto website optimized for publishing easily navigable sets of plots and tables. Features of Quarto Dashboards include:\n\nMany flexible ways to layout components (row or column based, tabsets, multiple pages, etc.) including responsive layout for mobile devices.\nA variety of ways to present inputs for interactivity including toolbars, sidebars, and card-level inputs.\nDozens of available themes including the ability to create your own themes.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Dashboards"
+    ]
+  },
+  {
+    "objectID": "publishing-dashboards.html#overview",
+    "href": "publishing-dashboards.html#overview",
+    "title": "Dashboards",
+    "section": "",
+    "text": "Quarto Dashboards are a special type of Quarto website optimized for publishing easily navigable sets of plots and tables. Features of Quarto Dashboards include:\n\nMany flexible ways to layout components (row or column based, tabsets, multiple pages, etc.) including responsive layout for mobile devices.\nA variety of ways to present inputs for interactivity including toolbars, sidebars, and card-level inputs.\nDozens of available themes including the ability to create your own themes.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Dashboards"
+    ]
+  },
+  {
+    "objectID": "publishing-dashboards.html#example",
+    "href": "publishing-dashboards.html#example",
+    "title": "Dashboards",
+    "section": "Example",
+    "text": "Example\nHere is the Penguin Explorer example from this repository re-written as a dashboard (this is a live dashboard embedded as an iframe):\n\nBelow is the source code for this dashboard. You’ll notice that this looks quite similar to the code for any other Quarto document, but level-two headings (##) have been added to denote a toolbar and dashboard rows (additional headings could be used to create columns and tabsets).\n---\ntitle: \"Penguins Explorer\"\n1format: dashboard\n---\n\n```{python}\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import select\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\naxes = [\"body_mass\", \"flipper_length\", \"bill_depth\", \"bill_length\"]\nx_axis = Param(\"body_mass\")\ny_axis = Param(\"flipper_length\")\n```\n\n2## Row {.toolbar}\n\n```{python}\nselect(penguins, label=\"Species\", column=\"species\")\nselect(label=\"X\", options=axes, target=x_axis)\nselect(label=\"Y\", options=axes, target=y_axis)\n```\n\n3## Row\n\n```{python}\nplot(\n    dot(penguins, x=x_axis, y=y_axis, stroke=\"species\", symbol=\"species\"),\n    grid=True,\n    x_label=\"Body mass (g) →\",\n    y_label=\"↑ Flipper length (mm)\",\n    legend=\"symbol\",\n)\n```\n\n## Row\n\n```{python}\ntable(penguins)\n```\n\n1\n\nformat: dashboard indicates this is a dashbaord not an ordinary HTML page.\n\n2\n\nToolbar for grouping inputs.\n\n3\n\nRow sections to denote additional rows in the dashboard layout.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Dashboards"
+    ]
+  },
+  {
+    "objectID": "publishing-dashboards.html#notebook-execution",
+    "href": "publishing-dashboards.html#notebook-execution",
+    "title": "Dashboards",
+    "section": "Notebook Execution",
+    "text": "Notebook Execution\nWhen using Inspect Viz with Quarto Websites you should always add the following configuration to your _quarto.yml to specify that notebooks should be fully executed when rendered:\n\n\n_quarto.yml\n\nexecute: \n  enabled: true",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Dashboards"
+    ]
+  },
+  {
+    "objectID": "publishing-dashboards.html#learning-more",
+    "href": "publishing-dashboards.html#learning-more",
+    "title": "Dashboards",
+    "section": "Learning More",
+    "text": "Learning More\n\nSee the Quarto Dashboards documentation for additional details on creating dashboards.\nSee the Dashboard Examples to get an idea for the sorts of layouts and themes that are available and to see the source code for a variety of dashboard types.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Dashboards"
     ]
   },
   {
@@ -1200,6 +1248,17 @@
     ]
   },
   {
+    "objectID": "index.html#data",
+    "href": "index.html#data",
+    "title": "Inspect Viz",
+    "section": "Data",
+    "text": "Data\nIn the examples above we made Data available by reading from a parquet file. We can also read data from any Python Data Frame (e.g. Pandas, Polars, PyArrow, etc.). For example:\nimport pandas as pd\nfrom inspect_viz import Data\n\n# read directly from file\npenguins = Data.from_file(\"penguins.parquet\")\n\n# read from Pandas DF (i.e. to preprocess first)\ndf = pd.read_parquet(\"penguins.parquet\")\npenguins = Data.from_dataframe(df)\nYou might wonder why is there a special Data class in Inspect Viz rather than using data frames directly? This is because Inpsect Viz is an interactive system where data can be dynamically filtered and transformed as part of plotting—the Data therefore needs to be sent to the web browser rather than remaining only in the Python session. This has a couple of important implications:\n\nData transformations should be done using standard Python Data Frame operations prior to reading into Data for Inspect Viz.\nSince Data is embedded in the web page, you will want to filter it down to only the columns required for plotting (as you don’t want the additional columns making the web page larger than is necessary).\n\n\nData Selections\nOne other important thing to understand is that Data has a built in selection which is used in filtering operations on the client. This means that if you want your inputs and plots to stay synchoronized, you should pass the same Data instance to all of them (i.e. import into Data once and then share that reference). For example:\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\n# we import penguins once and then pass it to select() and dot()\npenguins = Data.from_file(\"penguins.parquet\")\n\nvconcat( \n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"  \n   )\n)",
+    "crumbs": [
+      "Getting Started",
+      "Welcome"
+    ]
+  },
+  {
     "objectID": "index.html#params",
     "href": "index.html#params",
     "title": "Inspect Viz",
@@ -1216,17 +1275,6 @@
     "title": "Inspect Viz",
     "section": "Selections",
     "text": "Selections\nAbove in Filtering we began exploring dataset selections. Inputs are one way to set selections, but you can also set selections through direct interaction with plots.\nFor example, below we stack two plots vertically, the dot() plot from above along with a bar_x() plot that counts the sex column. We then add an interval_x() interactor that enables us to filter the dataset using selections on the dot plot.\nThere are a number of new things introduced here, click on the numbers near the right margin for additional explanation.\n\nfrom inspect_viz import Selection\nfrom inspect_viz.interactor import Brush, interval_x\n\n1range = Selection.intersect()\n\nvconcat(\n   plot(\n      dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n      regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n      interval_x(\n2         target=range,\n3         brush=Brush(fill=\"none\", stroke=\"#888\")\n      ),\n      legend=\"color\"\n   ),\n   plot(\n      bar_x(\n4         athletes, filter_by=range,\n         x=count(), y=\"sex\", fill=\"sex\"\n      ), \n      y_label=None,\n      height=150,\n5      x_domain=\"fixed\"\n   )\n)\n\n\n1\n\nA Selection is a means of filtering datasets based on interactions. Here we use an “intersect” selection for application of a simple filter from dot plot to bar plot.\n\n2\n\nThe range selection is set via the interval_x() interactor (which enables using the mouse to select an x-range).\n\n3\n\nThe Brush defines the color of the interactor (in this case #888, a medium-gray).\n\n4\n\nThe range selection is consumed using the filter_by parameter.\n\n5\n\nWe set the x_domain for the bar plot to “fixed” so that the scale doesn’t change as the dataset is filtered.\n\n\n\n\n\n\n\nTry using the mouse to brush over regions on the dot plot—the bar plot will update accordingly.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#data",
-    "href": "index.html#data",
-    "title": "Inspect Viz",
-    "section": "Data",
-    "text": "Data\nIn the examples above we made Data available by reading from a parquet file. We can also read data from any Python Data Frame (e.g. Pandas, Polars, PyArrow, etc.). For example:\nimport pandas as pd\nfrom inspect_viz import Data\n\n# read directly from file\npenguins = Data.from_file(\"penguins.parquet\")\n\n# read from Pandas DF (i.e. to preprocess first)\ndf = pd.read_parquet(\"penguins.parquet\")\npenguins = Data.from_dataframe(df)\nYou might wonder why is there a special Data class in Inspect Viz rather than using data frames directly? This is because Inpsect Viz is an interactive system where data can be dynamically filtered and transformed as part of plotting—the Data therefore needs to be sent to the web browser rather than remaining only in the Python session. This has a couple of important implications:\n\nData transformations should be done using standard Python Data Frame operations prior to reading into Data for Inspect Viz.\nSince Data is embedded in the web page, you will want to filter it down to only the columns required for plotting (as you don’t want the additional columns making the web page larger than is necessary).\n\n\nData Selections\nOne other important thing to understand is that Data has a built in selection which is used in filtering operations on the client. This means that if you want your inputs and plots to stay synchoronized, you should pass the same Data instance to all of them (i.e. import into Data once and then share that reference). For example:\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\n# we import penguins once and then pass it to select() and dot()\npenguins = Data.from_file(\"penguins.parquet\")\n\nvconcat( \n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"  \n   )\n)",
     "crumbs": [
       "Getting Started",
       "Welcome"
@@ -1476,11 +1524,23 @@
     ]
   },
   {
+    "objectID": "view-scores-timeline.html#filtering",
+    "href": "view-scores-timeline.html#filtering",
+    "title": "Scores Timeline",
+    "section": "Filtering",
+    "text": "Filtering\nA select() input for tasks is automatically provided if more than one task exists in the data. A checkbox_group() is automatically provided for organizations if more than one organization exists (you can disable this with organizations_filter=False).\nWhen multiple organizations exist, clicking on the legend for an organization will filter the plot by that organization.",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores Timeline"
+    ]
+  },
+  {
     "objectID": "view-scores-timeline.html#function-reference",
     "href": "view-scores-timeline.html#function-reference",
     "title": "Scores Timeline",
     "section": "Function Reference",
-    "text": "Function Reference\nEval scores by model, organization, and release date.\n\nSource\n\ndef scores_timeline(\n    data: Data,\n    organizations: list[str] | None = None,\n    ci: float | bool = 0.95,\n    x_label: str = \"Release Date\",\n    y_label: str = \"Score\",\n    eval_label: str = \"Eval\",\n    title: str | Title | None = None,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nData read using evals_df() and amended with model metadata using the model_info() prepare operation (see Data Preparation for details).\n\norganizations list[str] | None\n\nList of organizations to include (in order of desired presentation).\n\nci float | bool\n\nConfidence interval (defaults to 0.95, pass False for no confidence intervals)\n\nx_label str\n\nx-axis label\n\ny_label str\n\ny-axis label\n\neval_label str\n\nEval select label.\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function).\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the x_domain is set to “fixed”, the y_domain is set to [0,1.0], color_label is set to “Organizations”, and color_domain is set to organizations.",
+    "text": "Function Reference\nEval scores by model, organization, and release date.\n\nSource\n\ndef scores_timeline(\n    data: Data,\n    task_name: str = \"task_display_name\",\n    model_name: str = \"model_display_name\",\n    model_organization: str = \"model_organization_name\",\n    model_release_date: str = \"model_release_date\",\n    score_name: str = \"score_headline_name\",\n    score_value: str = \"score_headline_value\",\n    score_stderr: str = \"score_headline_stderr\",\n    organizations: list[str] | None = None,\n    organizations_filter: bool = True,\n    ci: float | bool = 0.95,\n    time_label: str = \"Release Date\",\n    score_label: str = \"Score\",\n    eval_label: str = \"Eval\",\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    width: float | Param | None = None,\n    height: float | Param | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nData read using evals_df() and amended with model metadata using the model_info() prepare operation (see Data Preparation for details).\n\ntask_name str\n\nColumn for task name (defaults to “task_display_name”).\n\nmodel_name str\n\nColumn for model name (defaults to “model_display_name”).\n\nmodel_organization str\n\nColumn for model organization (defaults to “model_organization_name”).\n\nmodel_release_date str\n\nColumn for model release date (defaults to “model_release_date”).\n\nscore_name str\n\nColumn for scorer name (defaults to “score_headline_name”).\n\nscore_value str\n\nColumn for score value (defaults to “score_headline_value”).\n\nscore_stderr str\n\nColumn for score stderr (defaults to “score_headline_stderr”)\n\norganizations list[str] | None\n\nList of organizations to include (in order of desired presentation).\n\norganizations_filter bool\n\nProvide UI to filter plot by organization(s).\n\nci float | bool\n\nConfidence interval (defaults to 0.95, pass False for no confidence intervals)\n\ntime_label str\n\nLabel for time (x-axis).\n\nscore_label str\n\nLabel for score (y-axis).\n\neval_label str\n\nLabel for eval select input.\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function).\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nwidth float | Param | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | Param | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the x_domain is set to “fixed”, the y_domain is set to [0,1.0], color_label is set to “Organizations”, and color_domain is set to organizations.",
     "crumbs": [
       "Getting Started",
       "Views",
@@ -1540,7 +1600,7 @@
     "href": "view-scores-with-baseline.html#data-preparation",
     "title": "Scores with Baseline",
     "section": "Data Preparation",
-    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"agi-lsat-ar.parquet\")\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer() and model_info()).",
+    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"agi-lsat-ar.parquet\")\nYou can additionanlly use the task_info() operation to map lower-level task names to task display names (e.g. “gpqa_diamond” -&gt; “GPQA Diamond”).\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer() and model_info()).",
     "crumbs": [
       "Getting Started",
       "Views",
@@ -1552,7 +1612,7 @@
     "href": "view-scores-with-baseline.html#function-reference",
     "title": "Scores with Baseline",
     "section": "Function Reference",
-    "text": "Function Reference\nBar plot for comparing the scores of different models on a single evaluation.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “task_name” (fx) and “model” (x). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_with_baseline(\n    data: Data,\n    *,\n    x: str = \"score_headline_value\",\n    y: str = \"model_display_name\",\n    baseline: int | float | Baseline | list[Baseline] | None = None,\n    sort: Literal[\"asc\", \"desc\"] | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    fill: str | None = None,\n    title: str | Title | None = None,\n    width: float | None = None,\n    height: float | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “score_headline_value”).\n\ny str\n\nName of field for x axis (defaults to “model_display_name”)\n\nbaseline int | float | Baseline | list[Baseline] | None\n\nBaseline value or values to draw on the plot. This can be a single value, a Baseline dictionary, or a list of Baseline dictionaries. If None, no baseline is drawn.\n\nsort Literal['asc', 'desc'] | None\n\nSort order for the bars (sorts using the ‘x’ value). Can be “asc” or “desc”. Defaults to “asc”.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\nfill str | None\n\nThe fill color for the bars. Defaults to “#416AD0”. Pass any valid css color value (hex, rgb, named colors, etc.).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].",
+    "text": "Function Reference\nBar plot for comparing the scores of different models on a single evaluation.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “model_display_name” (y). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_with_baseline(\n    data: Data,\n    *,\n    x: str = \"score_headline_value\",\n    y: str = \"model_display_name\",\n    baseline: int | float | Baseline | list[Baseline] | None = None,\n    sort: Literal[\"asc\", \"desc\"] | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    fill: str | None = None,\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    width: float | None = None,\n    height: float | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nx str\n\nName of field for x axis (defaults to “score_headline_value”).\n\ny str\n\nName of field for x axis (defaults to “model_display_name”)\n\nbaseline int | float | Baseline | list[Baseline] | None\n\nBaseline value or values to draw on the plot. This can be a single value, a Baseline dictionary, or a list of Baseline dictionaries. If None, no baseline is drawn.\n\nsort Literal['asc', 'desc'] | None\n\nSort order for the bars (sorts using the ‘x’ value). Can be “asc” or “desc”. Defaults to “asc”.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\nfill str | None\n\nThe fill color for the bars. Defaults to “#416AD0”. Pass any valid css color value (hex, rgb, named colors, etc.).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].",
     "crumbs": [
       "Getting Started",
       "Views",
@@ -1672,7 +1732,7 @@
     "href": "reference/inspect_viz.plot.html#export",
     "title": "inspect_viz.plot",
     "section": "Export",
-    "text": "Export\n\nto_html\nGenreate an HTML snippet for a plot or other component.\n\nSource\n\ndef to_html(component: Component, dependencies: bool = True) -&gt; str\n\ncomponent Component\n\nCompontent to export.\n\ndependencies bool\n\nInclude JavaScript dependencies required for Jupyter widget rendering. Dependencies should only be included once per web-page, so if you already have them on a page you might want to disable including them when generating HTML.\n\n\n\n\nwrite_html\nWrite an HTML file for a plot or other component.\n\nSource\n\ndef write_html(\n    file: str | Path, component: Component, dependencies: bool = True\n) -&gt; None\n\nfile str | Path\n\nTarget filename.\n\ncomponent Component\n\nCompontent to export.\n\ndependencies bool\n\nInclude JavaScript dependencies required for Jupyter widget rendering. Dependencies should only be included once per web-page, so if you already have them on a page you might want to disable including them when generating HTML.\n\n\n\n\nwrite_png\nExport a plot or table to a PNG.\n\nSource\n\ndef write_png(\n    file: str | Path, component: Component, scale: int = 2, padding: int = 8\n) -&gt; None\n\nfile str | Path\n\nTarget filename.\n\ncomponent Component\n\nComponent to export.\n\nscale int\n\nDevice scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)\n\npadding int\n\nPadding (in pixels) around plot.",
+    "text": "Export\n\nto_html\nGenreate an HTML snippet for a plot or other component.\n\nSource\n\ndef to_html(component: Component, dependencies: bool = True) -&gt; str\n\ncomponent Component\n\nCompontent to export.\n\ndependencies bool\n\nInclude JavaScript dependencies required for Jupyter widget rendering. Dependencies should only be included once per web-page, so if you already have them on a page you might want to disable including them when generating HTML.\n\n\n\n\nwrite_html\nWrite an HTML file for a plot or other component.\n\nSource\n\ndef write_html(\n    file: str | Path, component: Component, dependencies: bool = True\n) -&gt; None\n\nfile str | Path\n\nTarget filename.\n\ncomponent Component\n\nCompontent to export.\n\ndependencies bool\n\nInclude JavaScript dependencies required for Jupyter widget rendering. Dependencies should only be included once per web-page, so if you already have them on a page you might want to disable including them when generating HTML.\n\n\n\n\nwrite_png\nExport a plot or table to a PNG.\n\nSource\n\ndef write_png(\n    file: str | Path | None, component: Component, scale: int = 2, padding: int = 8\n) -&gt; tuple[bytes, int, int] | tuple[int, int] | None\n\nfile str | Path | None\n\nTarget filename (pass None to return the image as bytes)\n\ncomponent Component\n\nComponent to export.\n\nscale int\n\nDevice scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)\n\npadding int\n\nPadding (in pixels) around plot.",
     "crumbs": [
       "Reference",
       "Python API",
@@ -1804,7 +1864,40 @@
     "href": "reference/inspect_viz.html",
     "title": "inspect_viz",
     "section": "",
-    "text": "Data\nData source for visualizations.\nData sources can be created from any standard Python data frame (e.g. Pandas, Polars, etc.) or from a path pointing to a data file in a standard format (e.g. csv, parquet, etc.)\n\nSource\n\nclass Data\n\nAttributes\n\ncolumns list[str]\n\nColumn names for data source.\n\n\n\n\nMethods\n\nfrom_dataframe\n\nCreate Data from a standard Python data frame (e.g. Pandas, Polars, PyArrow, etc.).\n\nSource\n\n@classmethod\ndef from_dataframe(cls, df: IntoDataFrame) -&gt; \"Data\"\n\ndf IntoDataFrame\n\nData frame to read.\n\n\n\nfrom_file\n\nCreate Data from a data file (e.g. csv, parquet, feather, etc.).\n\nSource\n\n@classmethod\ndef from_file(cls, file: str | PathLike[str]) -&gt; \"Data\"\n\nfile str | PathLike[str]\n\nFile to read data from. Supported formats include csv, json, xslx, parquet, feather, sas7bdat, dta, and fwf.\n\n\n\n\n\n\n\nComponent\nData visualization component (input, plot, mark, table, layout, etc.).\nVisualization components are Jupyter widgets that can be used in any notebook or Jupyter based publishing system.\nSee the documentation on inputs, plots, marks, and interactors for details on available components.\n\nSource\n\nclass Component(AnyWidget)\n\n\nSelection\nSelection that can be filtered by inputs and other selections.\nSelection types include:\n\nSelection.intersect() for intersecting clauses (logical “and”)\nSelection.union() for unionone clauses (logical “or”)\nSelection.single() for a single clause only\nSelection.crossfilter() for a cross-filtered intersection\n\n\nSource\n\nclass Selection(str)\n\nMethods\n\nintersect\n\nCreate a new Selection instance with an intersect (conjunction) resolution strategy.\n\nSource\n\n@classmethod\ndef intersect(\n    cls,\n    cross: bool = False,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\ncross bool\n\nBoolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\nunion\n\nCreate a new Selection instance with a union (disjunction) resolution strategy.\n\nSource\n\n@classmethod\ndef union(\n    cls,\n    cross: bool = False,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\ncross bool\n\nBoolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\nsingle\n\nCreate a new Selection instance with a singular resolution strategy that keeps only the most recent selection clause.\n\nSource\n\n@classmethod\ndef single(\n    cls,\n    cross: bool = False,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\ncross bool\n\nBoolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\ncrossfilter\n\nCreate a new Selection instance with a cross-filtered intersect resolution strategy.\n\nSource\n\n@classmethod\ndef crossfilter(\n    cls,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\n\n\n\n\nParam\nParameter that can be bound from inputs.\n\nSource\n\nclass Param(str)\n\nAttributes\n\nid str\n\nUnique id (automatically generated).\n\ndefault ParamValue\n\nDefault value.\n\n\n\n\n\nParamValue\nType alias for parameter values (scalar or sequence of scalars).\n\nSource\n\nParamValue: TypeAlias = (\n    int | float | bool | str | datetime | Sequence[int | float | bool | str]\n)",
+    "text": "Data source for visualizations.\nData sources can be created from any standard Python data frame (e.g. Pandas, Polars, etc.) or from a path pointing to a data file in a standard format (e.g. csv, parquet, etc.)\n\nSource\n\nclass Data\n\n\n\ncolumns list[str]\n\nColumn names for data source.\n\n\n\n\n\n\nfrom_dataframe\n\nCreate Data from a standard Python data frame (e.g. Pandas, Polars, PyArrow, etc.).\n\nSource\n\n@classmethod\ndef from_dataframe(cls, df: IntoDataFrame) -&gt; \"Data\"\n\ndf IntoDataFrame\n\nData frame to read.\n\n\n\nfrom_file\n\nCreate Data from a data file (e.g. csv, parquet, feather, etc.).\n\nSource\n\n@classmethod\ndef from_file(cls, file: str | PathLike[str]) -&gt; \"Data\"\n\nfile str | PathLike[str]\n\nFile to read data from. Supported formats include csv, json, xslx, parquet, feather, sas7bdat, dta, and fwf.\n\n\n\n\n\n\n\n\nData visualization component (input, plot, mark, table, layout, etc.).\nVisualization components are Jupyter widgets that can be used in any notebook or Jupyter based publishing system.\nSee the documentation on inputs, plots, marks, and interactors for details on available components.\n\nSource\n\nclass Component(AnyWidget)",
+    "crumbs": [
+      "Reference",
+      "Python API"
+    ]
+  },
+  {
+    "objectID": "reference/inspect_viz.html#core",
+    "href": "reference/inspect_viz.html#core",
+    "title": "inspect_viz",
+    "section": "",
+    "text": "Data source for visualizations.\nData sources can be created from any standard Python data frame (e.g. Pandas, Polars, etc.) or from a path pointing to a data file in a standard format (e.g. csv, parquet, etc.)\n\nSource\n\nclass Data\n\n\n\ncolumns list[str]\n\nColumn names for data source.\n\n\n\n\n\n\nfrom_dataframe\n\nCreate Data from a standard Python data frame (e.g. Pandas, Polars, PyArrow, etc.).\n\nSource\n\n@classmethod\ndef from_dataframe(cls, df: IntoDataFrame) -&gt; \"Data\"\n\ndf IntoDataFrame\n\nData frame to read.\n\n\n\nfrom_file\n\nCreate Data from a data file (e.g. csv, parquet, feather, etc.).\n\nSource\n\n@classmethod\ndef from_file(cls, file: str | PathLike[str]) -&gt; \"Data\"\n\nfile str | PathLike[str]\n\nFile to read data from. Supported formats include csv, json, xslx, parquet, feather, sas7bdat, dta, and fwf.\n\n\n\n\n\n\n\n\nData visualization component (input, plot, mark, table, layout, etc.).\nVisualization components are Jupyter widgets that can be used in any notebook or Jupyter based publishing system.\nSee the documentation on inputs, plots, marks, and interactors for details on available components.\n\nSource\n\nclass Component(AnyWidget)",
+    "crumbs": [
+      "Reference",
+      "Python API"
+    ]
+  },
+  {
+    "objectID": "reference/inspect_viz.html#params",
+    "href": "reference/inspect_viz.html#params",
+    "title": "inspect_viz",
+    "section": "Params",
+    "text": "Params\n\nSelection\nSelection that can be filtered by inputs and other selections.\nSelection types include:\n\nSelection.intersect() for intersecting clauses (logical “and”)\nSelection.union() for unionone clauses (logical “or”)\nSelection.single() for a single clause only\nSelection.crossfilter() for a cross-filtered intersection\n\n\nSource\n\nclass Selection(str)\n\nMethods\n\nintersect\n\nCreate a new Selection instance with an intersect (conjunction) resolution strategy.\n\nSource\n\n@classmethod\ndef intersect(\n    cls,\n    cross: bool = False,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\ncross bool\n\nBoolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\nunion\n\nCreate a new Selection instance with a union (disjunction) resolution strategy.\n\nSource\n\n@classmethod\ndef union(\n    cls,\n    cross: bool = False,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\ncross bool\n\nBoolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\nsingle\n\nCreate a new Selection instance with a singular resolution strategy that keeps only the most recent selection clause.\n\nSource\n\n@classmethod\ndef single(\n    cls,\n    cross: bool = False,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\ncross bool\n\nBoolean flag indicating cross-filtered resolution. If true, selection clauses will not be applied to the clients they are associated with.\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\ncrossfilter\n\nCreate a new Selection instance with a cross-filtered intersect resolution strategy.\n\nSource\n\n@classmethod\ndef crossfilter(\n    cls,\n    empty: bool = False,\n    include: Union[\"Selection\", list[\"Selection\"]] | None = None,\n) -&gt; \"Selection\"\n\nempty bool\n\nBoolean flag indicating if a lack of clauses should correspond to an empty selection with no records. This setting determines the default selection state.\n\ninclude Union[Selection, list[Selection]] | None\n\nUpstream selections whose clauses should be included as part of the new selection. Any clauses published to upstream selections will be relayed to the new selection.\n\n\n\n\n\n\n\nParam\nParameter that can be bound from inputs.\n\nSource\n\nclass Param(str)\n\nAttributes\n\nid str\n\nUnique id (automatically generated).\n\ndefault ParamValue\n\nDefault value.\n\n\n\n\n\nParamValue\nType alias for parameter values (scalar or sequence of scalars).\n\nSource\n\nParamValue: TypeAlias = (\n    int | float | bool | str | datetime | Sequence[int | float | bool | str]\n)",
+    "crumbs": [
+      "Reference",
+      "Python API"
+    ]
+  },
+  {
+    "objectID": "reference/inspect_viz.html#options",
+    "href": "reference/inspect_viz.html#options",
+    "title": "inspect_viz",
+    "section": "Options",
+    "text": "Options\n\noptions\nInspect Viz global options.\n\nSource\n\noptions: Options = Options(output_format=\"js\")\n\n\noptions_context\nContext manager for temporarily overriding global options.\n\nSource\n\n@contextmanager\ndef options_context(**kwargs: Unpack[OptionsArgs]) -&gt; Iterator[None]\n\n**kwargs Unpack[OptionsArgs]\n\nOptions to override within the context.\n\n\n\n\nOptions\nInspect Viz global options.\n\nSource\n\nclass Options(SimpleNamespace)\n\nAttributes\n\noutput_format Literal['js', 'png']\n\nOutput format for components.\nDefaults to “js”, which supports interactive plots and tables. Specify “png” to write static PNG content instead (interactive features will be disabled in this case).",
     "crumbs": [
       "Reference",
       "Python API"
