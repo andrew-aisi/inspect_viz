@@ -1,6 +1,7 @@
 import svgPathParser from 'https://cdn.jsdelivr.net/npm/svg-path-parser@1.1.0/+esm';
 import tippy, { Placement } from 'https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/+esm';
 import { isLinkableUrl } from '../util/url';
+import { readMarks } from './plot';
 
 const HIDDEN_USER_CHANNEL = '_user_channels';
 
@@ -35,9 +36,13 @@ const configureSpecSvgTooltips = (specEl: HTMLElement) => {
 let tooltipInstance: any | undefined = undefined;
 
 function hideTooltip() {
+    tooltipInstance.hide();
+    window.removeEventListener('scroll', hideTooltip);
+}
+
+function maybeHideTooltip() {
     if (!tooltipInstance.popper.matches(':hover')) {
-        tooltipInstance.hide();
-        window.removeEventListener('scroll', hideTooltip);
+        hideTooltip();
     }
 }
 
@@ -88,7 +93,7 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
                 // If the tip container is empty, the tooltip has been dismissed
                 // hide the tooltip
                 if (!tipEl || !tipContainerEl) {
-                    hideTooltip();
+                    maybeHideTooltip();
                 } else {
                     // Look for channels
                     const userChannels = readUserChannels(svgEl);
@@ -320,6 +325,11 @@ function distillTooltips(parsed: ParsedTooltip, userKeys: string[]) {
             return false;
         }
 
+        // Next show any internal channels
+        if (row.key.startsWith('_')) {
+            return false;
+        }
+
         // Include all user keys
         if (userKeys.includes(row.key)) {
             return true;
@@ -338,11 +348,7 @@ function distillTooltips(parsed: ParsedTooltip, userKeys: string[]) {
 function readUserChannels(svgEl: SVGSVGElement) {
     const plotEl = svgEl.parentElement;
     if (plotEl) {
-        // Read the value from the plot element
-        const value = (plotEl as any).value;
-
-        // Read the marks
-        const marks = value.marks || [];
+        const marks = readMarks(plotEl);
         for (const mark of marks) {
             const markChannels = mark.channels || [];
             const markChannelNames = markChannels.map((c: any) => c.channel);
@@ -356,7 +362,6 @@ function readUserChannels(svgEl: SVGSVGElement) {
                 const userChannelsValue = userChannels?.value;
                 if (userChannelsValue) {
                     const parsedChannels = JSON.parse(userChannelsValue) as Record<string, string>;
-
                     return parsedChannels;
                 }
             }

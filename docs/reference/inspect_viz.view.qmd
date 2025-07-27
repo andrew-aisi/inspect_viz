@@ -9,6 +9,7 @@ View functions are currently in beta and are exported from the **inspect_ai.view
 ## Scores
 
 ### scores_by_task
+### scores_by_factor
 ### scores_timeline
 ### scores_with_baseline
 ### scores_heatmap

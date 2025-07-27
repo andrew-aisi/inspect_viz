@@ -27,6 +27,8 @@ scores_heatmap(evals, height=200, legend=False)
 
 {{< include _data_preparation.md >}}
 
+{{< include _data_preparation_optional.md >}}
+
 
 ## Function Reference {reference="scores_heatmap"}
 

@@ -62,6 +62,7 @@ title: inspect_viz.mark
 
 ## Decoration
 
+### title
 ### frame
 ### axis_x
 ### axis_y
@@ -89,6 +90,7 @@ title: inspect_viz.mark
 
 ### Mark
 ### MarkOptions
+### Title
 ### Channel
 ### ChannelSpec
 ### ChannelIntervalSpec

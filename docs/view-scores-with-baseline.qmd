@@ -27,6 +27,8 @@ scores_with_baseline(evals, baseline=0.697)
 
 {{< include _data_preparation.md >}}
 
+{{< include _data_preparation_optional.md >}}
+
 
 ## Function Reference {reference="scores_with_baseline"}
 

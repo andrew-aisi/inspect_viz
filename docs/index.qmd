@@ -18,7 +18,7 @@ plot_defaults(
 
 Welcome to Inspect Viz, a data visualisation library for [Inspect AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. 
 
-Here's an Inspect Viz plot that compares benchmarks scores over time for various providers^[The original data used for the scores timeline plot was published by the [Epoch AI Benchmarking Hub](https://epoch.ai/data/ai-benchmarking-dashboard)]:
+Here's an Inspect Viz plot created with the [`scores_timeline()`](view-scores-timeline.qmd) function that compares benchmarks scores over time^[This plot was inspired by and includes data from the [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard) Benchmarking Hub]:
 
 ```{python}
 #| echo: false
@@ -31,7 +31,6 @@ scores_timeline(evals)
 ```
 
 Use the filters to switch benchmarks and restrict to models from various organization(s). Hover over the points to get additional details on them or view the underlying Inspect log for the evals.
-
 
 #### Getting Started
 
@@ -46,10 +45,19 @@ You can author visualisations in any [Jupyter Notebook](https://jupyter.org/) th
 
 ## Views
 
-Inspect Viz [Views](views.qmd) are pre-built plots that work with data created by the Inspect log [data frame](https://inspect.aisi.org.uk/dataframe.html) reading functions. For example, the `tool_calls()` view enables you to visualize tool calls by sample:
+Inspect Viz [Views](views.qmd) are pre-built plots that work with data created by the Inspect log [data frame](https://inspect.aisi.org.uk/dataframe.html) reading functions. For example, the [`scores_by_factor()`](view-scores-by-factor.qmd) view enables you to compare scores across models and a boolean factor:
 
 ```{python}
 from inspect_viz import Data
+from inspect_viz.view.beta import scores_by_factor
+
+evals = Data.from_file("evals-hint.parquet")
+scores_by_factor(evals, "task_arg_hint", ("No hint", "Hint"))
+```
+
+The [`tool_calls()`](view-tool-calls.qmd) view enables you to visualize tool calls by sample:
+
+```{python}
 from inspect_viz.view.beta import tool_calls
 
 tools = Data.from_file("cybench_tools.parquet")
@@ -66,7 +74,7 @@ While pre-built views are useful, you also may want to create your own custom pl
 
 ### Dot Plot
 
-Here is an example of a simple dot plot using the [Palmer Penquins](https://huggingface.co/datasets/SIH/palmer-penguins) dataset:
+Here is an example of a simple dot plot using the [Palmer Penguins](https://huggingface.co/datasets/SIH/palmer-penguins) dataset:
 
 
 ```{python}
@@ -195,6 +203,8 @@ Note that we set the `opacity` of the dot mark to 0.1 to help mitigate oversatur
 
 Marks can also be used to draw lines, arrows, text, or images on a plot.
 
+{{< include _data.md >}}
+
 ## Params
 
 As illustrated above, inputs can be used to filter dataset selections. Inputs can also be used to set `Param` values that make various aspects of plots dynamic. For example, here is a density plot of flight delays which uses a `slider()` input to vary the amount of smooth ing by setting the kernel bandwidth:
@@ -277,8 +287,6 @@ vconcat(
 5.  We set the `x_domain` for the bar plot to "fixed" so that the scale doesn't change as the dataset is filtered.
 
 Try using the mouse to brush over regions on the dot plot---the bar plot will update accordingly.
-
-{{< include _data.md >}}
 
 ## Crossfilter
 

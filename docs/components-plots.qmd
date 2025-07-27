@@ -176,6 +176,25 @@ plot(
 
 ![](tooltip-channels.png){.border}
 
+## SQL
+
+You can use the `sql()` transform function to dynamically compute the values of channels within plots. For example, here we dynamically add a `bias` parameter to a column:
+
+```python
+from inspect_viz.plot import plot
+from inspect_viz.mark import area_y
+from inspect_viz.tranform import sql
+
+plot(
+    area_y(data, x="t", y=sql(f"v + {bias}"))
+)
+```
+
+Any valid SQL expression can be used. For example, here we use an `IF` expression to set the stroke color based on a column value:
+
+```python
+stroke=sql(f"IF(task_arg_hint, 'blue', 'red')")
+```
 
 ## Colors
 
@@ -197,21 +216,46 @@ plot(
 
 ## Titles
 
-Plot titles can be added using a `text()` mark. For example, here we add a title at the top of the frame:
+Plot titles can be added using the `title` option. For example, here we add a title at the top of the frame:
 
 ```{python}
-from inspect_viz.mark import TextStyles, text
-
 plot(
-    text(text=["Olympic Athletes"], frame_anchor="top", 
-         styles=TextStyles(font_size=16), dy=-20),
     dot(athletes, x="weight", y="height", fill="sex", opacity=0.1),
     regression_y(athletes, x="weight", y="height", stroke="sex"),
+    title="Olympic Athletes",
     legend="color"
 )
 ```
 
+If you have facet labels on the top of the x-axis, you may need to provide some additional `top_margin` for the `title` so that it is placed above the facet labels. Use the `title()` function to customize this:
+
+```python
+from inspect_viz.mark import title
+
+plot(
+    ...
+    title=title("Olympic Athletes", margin_top=40),
+    ...
+)
+```
+
+You can also customize the font size, weight, and family using the `title()` function.
+
 {{< include _data.md >}}
+
+## Margins
+
+Since the text included in axes lables is dynamic, you will often need to adjust the plot margins to ensure that the text fits properly within the plot. Use the `margin_top`, `margin_left`, `margin_right`, and `margin_bottom` options to do this. Note that there are also `facet_margin_top`, `facet_margin_left`, etc. options available.
+
+For example, here we set a `margin_left` of 100 pixels to ensure that potentially long model names have room to display:
+
+```python
+plot(
+    data,
+    bar_y(...),
+    margin_left=100
+)
+```
 
 ## Attributes
 

@@ -10,7 +10,7 @@ This example illustrates the code behind the [`scores_by_task()`](../../../view-
 
 from inspect_viz import Data
 from inspect_viz.plot import plot, legend
-from inspect_viz.mark import bar_y, TipOptions
+from inspect_viz.mark import bar_y, TipOptions, text, title
 from inspect_viz.transform import sql
 
 evals = Data.from_file("evals.parquet")
@@ -25,6 +25,7 @@ plot(
         fill="model",
         tip=True
     ),
+    title=title("Plot Title", margin_top=40),
     legend=legend("color", location="bottom"),
     x_label=None, fx_label=None, x_ticks=[],  # <3> 
     y_label="score", y_domain=[0, 1.0], # <4>
@@ -42,7 +43,7 @@ plot(
 
 #### Confidence Interval
 
-Here we add a confidence interval for each reported score by adding a `rule_x()` mark. Note that we compute the confidence interval range dynamically using a `sql()` transform:
+Here we add a confidence interval for each reported score by adding a `rule_x()` mark. Note that we derive the confidence interval transforms using the `ci_bounds()` function.
 
 ```{python}
 #| filename: Code

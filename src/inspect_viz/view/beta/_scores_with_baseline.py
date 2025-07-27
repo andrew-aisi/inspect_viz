@@ -5,8 +5,10 @@ from inspect_viz._core.data import Data
 from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.notgiven import NotGiven
 from inspect_viz.mark._bar import bar_x
+from inspect_viz.mark._mark import Mark
 from inspect_viz.mark._rule import rule_x
 from inspect_viz.mark._text import text
+from inspect_viz.mark._title import Title
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._plot import plot
 
@@ -37,33 +39,46 @@ def scores_with_baseline(
     data: Data,
     *,
     x: str = "score_headline_value",
-    y: str = "model",
-    width: float | None = None,
-    height: float | None = None,
+    y: str = "model_display_name",
     baseline: int | float | Baseline | list[Baseline] | None = None,
     sort: Literal["asc", "desc"] | None = None,
     x_label: str | None | NotGiven = None,
     y_label: str | None | NotGiven = None,
     fill: str | None = None,
+    title: str | Title | None = None,
+    marks: Mark | list[Mark] | None = None,
+    width: float | None = None,
+    height: float | None = None,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """Bar plot for comparing the scores of different models on a single evaluation.
 
-    Summarize eval scores using a bar plot. By default, scores (`y`) are plotted by "task_name" (`fx`) and "model" (`x`). By default, confidence intervals are also plotted (disable this with `y_ci=False`).
+    Summarize eval scores using a bar plot. By default, scores (`y`) are plotted by "model_display_name" (`y`). By default, confidence intervals are also plotted (disable this with `y_ci=False`).
 
     Args:
        data: Evals data table. This is typically created using a data frame read with the inspect `evals_df()` function.
        x: Name of field for x axis (defaults to "score_headline_value").
-       y: Name of field for x axis (defaults to "model")
-       width: The outer width of the plot in pixels, including margins. Defaults to 700.
-       height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
+       y: Name of field for x axis (defaults to "model_display_name")
        baseline: Baseline value or values to draw on the plot. This can be a single value, a Baseline dictionary, or a list of Baseline dictionaries. If None, no baseline is drawn.
        sort: Sort order for the bars (sorts using the 'x' value). Can be "asc" or "desc". Defaults to "asc".
        x_label: x-axis label (defaults to None).
        y_label: x-axis label (defaults to None).
        fill: The fill color for the bars. Defaults to "#416AD0". Pass any valid css color value (hex, rgb, named colors, etc.).
+       title: Title for plot (`str` or mark created with the `title()` function)
+       marks: Additional marks to include in the plot.
+       width: The outer width of the plot in pixels, including margins. Defaults to 700.
+       height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        **attributes: Additional `PlotAttributes`. By default, the `y_inset_top` and `margin_bottom` are set to 10 pixels and `x_ticks` is set to `[]`.
     """
+    # Resolve the y column
+    margin_left = None
+    if y == "model_display_name":
+        margin_left = 120
+        if "model_display_name" not in data.columns:
+            # fallback to using the raw model string
+            y = "model"
+            margin_left = 210
+
     # Validate that there is only a single evaluation
     tasks = data.column_unique("task_name")
     if len(tasks) > 1:
@@ -71,6 +86,11 @@ def scores_with_baseline(
             "scores_with_baseline can only be used with a single evaluation. "
             f"Found {len(tasks)} tasks: {', '.join(tasks)}."
         )
+
+    # resolve marks
+    marks = (
+        marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
+    )
 
     # Normalize baseline to a list if it isn't already
     resolved_baselines = resolve_baseline(baseline)
@@ -99,7 +119,7 @@ def scores_with_baseline(
     # Resolve default values
     defaultAttributes = PlotAttributes(
         x_domain=x_domain,
-        margin_left=210,
+        margin_left=margin_left,
         margin_top=top_margin,
         margin_bottom=bottom_margin,
         color_domain=[1],
@@ -108,7 +128,7 @@ def scores_with_baseline(
 
     # channels
     channels: dict[str, str] = {}
-    if y == "model" and y_label is None:
+    if (y == "model" or y == "model_display_name") and y_label is None:
         channels["Model"] = y
     if x == "score_headline_value" and x_label is None:
         channels["Score"] = x
@@ -126,8 +146,10 @@ def scores_with_baseline(
             fill=fill or "#416AD0",
         ),
         *baseline_marks(resolved_baselines),
+        *marks,
         y_label=y_label,
         x_label=x_label,
+        title=title,
         height=height,
         width=width,
         **attributes,

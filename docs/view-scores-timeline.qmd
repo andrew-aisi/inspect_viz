@@ -7,11 +7,12 @@ filters:
      path: reference/filter/filter.py
    - at: pre-ast
      path: reference/filter/post.lua
+datafile: "benchmarks.parquet"
 ---
 
 ## Overview
 
-The `scores_timeline()` function plots eval scores by model, organization, and release date.
+The `scores_timeline()` function plots eval scores by model, organization, and release date^[This plot was inspired by and includes data from the [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard) Benchmarking Hub]:
 
 ```{python}
 from inspect_viz import Data
@@ -24,17 +25,31 @@ scores_timeline(evals)
 
 ## Data Preparation
 
-Data frames plotted with `scores_timeline()` should have the following fields:
+Above we read the data for the plot from a parquet file. This file was in turn created by:
 
-- `model`: Model name (e.g. "gpt-4o")
-- `organization`: Organization that created the model (e.g. "OpenAI")
-- `release_date`: Date of model release.
-- `eval`: Name of eval (e.g. "SWE-bench Verified")
-- `scorer`: Scorer used (e.g. "choice").
-- `score`: Benchmark score (scaled 0-1).
-- `stderr`: Standard error.
-- `log_viewer`: Optional. URL to view evaluation log.
+1. Reading logs into a data frame with [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df).
 
+2. Using the [`prepare()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#prepare) function to add [`model_info()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#model_info), [`frontier()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#frontier) and [`log_viewer()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#model_info) columns to the data frame.
+
+```python
+from inspect_ai.analysis.beta import (
+    evals_df, frontier, log_viewer, model_into, prepare
+)
+
+df = evals_df("logs")
+df = prepare(df, 
+    model_info(),
+    frontier(),
+    log_viewer("eval", {"logs": "https://samples.meridianlabs.ai/"}),
+)
+df.to_parquet("{{< meta datafile>}}")
+```
+
+## Filtering
+
+A `select()` input for tasks is automatically provided if more than one task exists in the `data`. A `checkbox_group()` is automatically provided for organizations if more than one organization exists (you can disable this with `organizations_filter=False`).
+
+When multiple organizations exist, clicking on the legend for an organization will filter the plot by that organization.
 
 ## Function Reference {reference="scores_timeline"}
 

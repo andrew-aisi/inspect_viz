@@ -27,6 +27,8 @@ scores_by_task(evals)
 
 {{< include _data_preparation.md >}}
 
+{{< include _data_preparation_optional.md >}}
+
 
 ## Function Reference {reference="scores_by_task"}
 
