@@ -1,6 +1,6 @@
 # ruff: noqa: F401
 
-from ._options import Options, options, with_options
+from ._options import Options, options, options_context
 from .component import Component
 from .data import Data
 from .param import Param, ParamValue
@@ -14,5 +14,5 @@ __all__ = [
     "Component",
     "Options",
     "options",
-    "with_options",
+    "options_context",
 ]

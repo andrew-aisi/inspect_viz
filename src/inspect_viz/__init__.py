@@ -6,7 +6,7 @@ from ._core import (
     ParamValue,
     Selection,
     options,
-    with_options,
+    options_context,
 )
 
 try:
@@ -22,6 +22,6 @@ __all__ = [
     "Selection",
     "Component",
     "options",
-    "with_options",
+    "options_context",
     "Options",
 ]

@@ -26,7 +26,7 @@ options: Options = Options(output_format="js")
 
 
 @contextmanager
-def with_options(**kwargs: Unpack[OptionsArgs]) -> Iterator[None]:
+def options_context(**kwargs: Unpack[OptionsArgs]) -> Iterator[None]:
     """Context manager for temporarily overriding global options.
 
     Args:

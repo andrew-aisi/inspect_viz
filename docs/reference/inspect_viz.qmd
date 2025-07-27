@@ -16,6 +16,6 @@ title: inspect_viz
 ## Options
 
 ### options
-### with_options
-### options
+### options_context
+### Options
 

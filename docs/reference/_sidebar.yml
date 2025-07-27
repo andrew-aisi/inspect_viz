@@ -21,6 +21,12 @@ website:
           href: reference/inspect_viz.qmd#param
         - text: ParamValue
           href: reference/inspect_viz.qmd#paramvalue
+        - text: options
+          href: reference/inspect_viz.qmd#options
+        - text: options_context
+          href: reference/inspect_viz.qmd#options_context
+        - text: Options
+          href: reference/inspect_viz.qmd#options
       - section: inspect_viz.view
         href: reference/inspect_viz.view.qmd
         contents:

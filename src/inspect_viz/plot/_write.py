@@ -184,7 +184,7 @@ async def write_png_async(
             img = _crop_image(image_bytes, padding, scale, background_color)
             size = img.size
             if file:
-                img.save(file, dpi=(scale * 72, scale * 72))
+                img.save(file, dpi=(scale * 96, scale * 96))
                 img.close()
                 return size
             else:
