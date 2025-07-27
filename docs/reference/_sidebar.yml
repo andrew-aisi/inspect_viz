@@ -26,6 +26,8 @@ website:
         contents:
         - text: scores_by_task
           href: reference/inspect_viz.view.qmd#scores_by_task
+        - text: scores_by_factor
+          href: reference/inspect_viz.view.qmd#scores_by_factor
         - text: scores_timeline
           href: reference/inspect_viz.view.qmd#scores_timeline
         - text: scores_with_baseline
