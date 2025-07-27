@@ -67,10 +67,10 @@ website:
              href: publishing.qmd
              contents:
                - href: publishing-plots.qmd
-               - href: publishing-output-format.qmd
                - href: publishing-notebooks.qmd
                - href: publishing-websites.qmd
                - href: publishing-dashboards.qmd
+               - href: publishing-png-output.qmd
       - title: Examples
         contents:
           - href: examples/index.qmd
