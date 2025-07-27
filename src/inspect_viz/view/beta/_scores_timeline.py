@@ -1,6 +1,7 @@
 from typing import Unpack
 
 from inspect_viz import Component, Data
+from inspect_viz._core.param import Param
 from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz.input import checkbox_group, select
 from inspect_viz.layout._concat import vconcat
@@ -8,6 +9,7 @@ from inspect_viz.layout._space import vspace
 from inspect_viz.mark._dot import dot
 from inspect_viz.mark._rule import rule_x
 from inspect_viz.mark._text import text
+from inspect_viz.mark._title import Title
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._legend import legend
 from inspect_viz.plot._plot import plot
@@ -24,18 +26,23 @@ def scores_timeline(
     x_label: str = "Release Date",
     y_label: str = "Score",
     eval_label: str = "Eval",
+    title: str | Title | None = None,
+    width: float | Param | None = None,
+    height: float | Param | None = None,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """Eval scores by model, organization, and release date.
 
     Args:
        data: Data read using `evals_df()` and amended with model metadata using the `model_info()` prepare operation (see [Data Preparation](https://inspect.aisi.org.uk/dataframe.html#data-preparation) for details).
-
        organizations: List of organizations to include (in order of desired presentation).
        ci: Confidence interval (defaults to 0.95, pass `False` for no confidence intervals)
        x_label: x-axis label
        y_label: y-axis label
        eval_label: Eval select label.
+       title: Title for plot (`str` or mark created with the `title()` function).
+       width: The outer width of the plot in pixels, including margins. Defaults to 700.
+       height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        **attributes: Additional `PlotAttributes`. By default, the `x_domain` is set to "fixed", the `y_domain` is set to `[0,1.0]`, `color_label` is set to "Organizations", and `color_domain` is set to `organizations`.
     """
     # validate the required fields
@@ -126,6 +133,7 @@ def scores_timeline(
     defaults: PlotAttributes = {
         "x_domain": "fixed",
         "y_domain": [0, 1.0],
+        "y_inset_top": 10,
         "color_label": "Organizations",
         "color_domain": organizations or "fixed",
     }
@@ -137,8 +145,11 @@ def scores_timeline(
         legend=legend("color", target=data.selection),
         x_label=x_label,
         y_label=y_label,
+        title=title,
+        width=width,
+        height=height,
         **attributes,
     )
 
     # compose view
-    return vconcat(benchmark_select, org_checkboxes, vspace(15), pl)
+    return vconcat(benchmark_select, org_checkboxes, vspace(), pl)

@@ -18,11 +18,11 @@ from ._legend import legend as create_legend
 
 def plot(
     *plot: Mark | Interactor | Legend | Sequence[Mark | Interactor | Legend],
-    title: str | Title | None = None,
     x_label: str | Param | None | NotGiven = NOT_GIVEN,
     fx_label: str | Param | None | NotGiven = NOT_GIVEN,
     y_label: str | Param | None | NotGiven = NOT_GIVEN,
     fy_label: str | Param | None | NotGiven = NOT_GIVEN,
+    title: str | Title | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
     name: str | None = None,
@@ -33,7 +33,6 @@ def plot(
 
     Args:
         *plot: Plot elements (marks, interactors, legends)
-        title: Title for plot (`str` or mark created with the `title()` function).
         x_label: A textual label to show on the axis or legend; if null, show no label.
             By default the scale label is inferred from channel definitions, possibly with
             an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value. Pass
@@ -44,6 +43,7 @@ def plot(
             an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value. Pass
             `None` for no y_label.
         fy_label:  A textual label to show on the axis or legend; if `None`, show no label. By default the scale label is inferred from channel definitions, possibly with an arrow (↑, →, ↓, or ←) to indicate the direction of increasing value.
+        title: Title for plot (`str` or mark created with the `title()` function).
         width: The outer width of the plot in pixels, including margins. Defaults to 700.
         height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
         name: A unique name for the plot. The name is used by standalone legend

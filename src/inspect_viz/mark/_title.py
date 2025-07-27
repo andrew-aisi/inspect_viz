@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, cast
 
 from ._mark import Mark
 from ._text import text_styles_config
@@ -9,7 +9,6 @@ class Title(Mark):
     """Plot title mark."""
 
     def __init__(self, title: str, margin_top: int, styles: TextStyles) -> None:
-        self.margin_top = margin_top
         config: dict[str, Any] = dict(
             text=[title],
             dy=-margin_top,
@@ -18,10 +17,18 @@ class Title(Mark):
 
         super().__init__("text", config, {"facet": "super"})
 
+    @property
+    def margin_top(self) -> int:
+        return -(cast(int, self.config.get("dy", 0)))
+
+    @margin_top.setter
+    def margin_top(self, margin_top: int) -> None:
+        self.config["dy"] = -margin_top
+
 
 def title(
     title: str,
-    margin_top: int = 10,
+    margin_top: int = 15,
     font_size: float | None = 16,
     font_family: str | None = None,
     font_weight: float | None = None,

@@ -9,6 +9,8 @@ from inspect_viz._util.notgiven import NotGiven
 from inspect_viz.mark import cell as cell_mark
 from inspect_viz.mark._channel import SortOrder
 from inspect_viz.mark._text import text
+from inspect_viz.mark._title import Title
+from inspect_viz.mark._title import title as title_mark
 from inspect_viz.plot import plot
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._legend import Legend
@@ -33,6 +35,7 @@ def scores_heatmap(
     fill: str = "score_headline_value",
     cell: CellOptions | None = None,
     tip: bool = True,
+    title: str | Title | None = None,
     height: float | None = None,
     width: float | None = None,
     x_label: str | None | NotGiven = None,
@@ -53,6 +56,7 @@ def scores_heatmap(
        sort: Sort order for the x and y axes. If ascending, the highest values will be sorted to the top right. If descending, the highest values will appear in the bottom left. If None, no sorting is applied. If a SortOrder is provided, it will be used to sort the x and y axes.
        tip: Whether to show a tooltip with the value when hovering over a cell (defaults to True).
        legend: Options for the legend. Pass None to disable the legend.
+       title: Title for plot (`str` or mark created with the `title()` function)
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio)).
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        x_label: x-axis label (defaults to None).
@@ -67,6 +71,10 @@ def scores_heatmap(
             # fallback to using the raw model string
             y = "model"
             margin_left = 220
+
+    # resolve title
+    if isinstance(title, str):
+        title = title_mark(title, margin_top=20)
 
     # Compute the color domain
     min_value = data.column_min(fill)
@@ -156,6 +164,7 @@ def scores_heatmap(
             if legend
             else None
         ),
+        title=title,
         width=width,
         height=height,
         x_label=x_label,

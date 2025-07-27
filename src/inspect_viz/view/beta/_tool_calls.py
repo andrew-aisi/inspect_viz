@@ -2,6 +2,7 @@ from typing import Unpack
 
 from inspect_viz import Component, Data
 from inspect_viz.mark import cell, text
+from inspect_viz.mark._title import Title
 from inspect_viz.mark._types import TextStyles
 from inspect_viz.plot import legend, plot
 from inspect_viz.plot._attributes import PlotAttributes
@@ -17,6 +18,7 @@ def tool_calls(
     tools: list[str] | None = None,
     x_label: str | None = "Message",
     y_label: str | None = "Sample",
+    title: str | Title | None = None,
     width: float | None = None,
     height: float | None = None,
     **attributes: Unpack[PlotAttributes],
@@ -32,6 +34,7 @@ def tool_calls(
        tools: Tools to include in plot (and order to include them). Defaults to all tools found in `data`.
        x_label: x-axis label (defaults to "Message").
        y_label: y-axis label (defaults to "Sample").
+       title: Title for plot (`str` or mark created with the `title()` function)
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        **attributes: Additional `PlotAttributes`. By default, the `margin_top` is set to 0, `margin_left` to 20, `margin_right` to 100, `color_label` is "Tool", `y_ticks` is empty,  and `x_ticks` and `color_domain` are calculated from `data`.
@@ -54,7 +57,7 @@ def tool_calls(
 
     # attribute defaults
     defaults = PlotAttributes(
-        margin_top=0,
+        margin_top=None if title else 0,
         margin_left=20,
         margin_right=100,
         x_ticks=x_ticks,
@@ -77,6 +80,7 @@ def tool_calls(
             ),
             dx=50,
         ),
+        title=title,
         width=width,
         height=height,
         legend=legend("color", location="right"),
