@@ -1,5 +1,4 @@
 import base64
-import tempfile
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Literal, cast
@@ -12,6 +11,7 @@ from pydantic_core import to_json, to_jsonable_python
 from .._util.constants import WIDGETS_DIR
 from .._util.marshall import dict_remove_none
 from .._util.platform import running_in_colab, running_in_quarto
+from ._options import options
 from .data import Data
 from .param import Param as VizParam
 from .selection import Selection as VizSelection
@@ -106,21 +106,26 @@ class Component(AnyWidget):
     def _repr_mimebundle_(
         self, **kwargs: Any
     ) -> tuple[dict[str, Any], dict[str, Any]] | None:
-        from inspect_viz.plot._write import write_png
+        # if we are configured for png output then do that
+        if options.output_format == "png":
+            from inspect_viz.plot._write import write_png
 
-        with tempfile.NamedTemporaryFile(suffix=".png") as image_file:
-            size = write_png(image_file.name, self)
-            if size:
-                with open(image_file.name, "rb") as f:
-                    image_data = f.read()
-                b64_data = base64.b64encode(image_data).decode("ascii")
+            SCALE = 2
+            result = write_png(None, self, scale=SCALE)
+            if result is not None:
+                image_bytes, width, height = result
+                b64_data = base64.b64encode(image_bytes).decode("ascii")
                 data = {"image/png": b64_data}
-                metadata = {"image/png": {"width": size[0] / 2, "height": size[1] / 2}}
+                metadata = {
+                    "image/png": {"width": width / SCALE, "height": height / SCALE}
+                }
                 return data, metadata
             else:
                 return None
 
-        return self._mimebundle(collect=running_in_quarto(), **kwargs)
+        # standard js output
+        else:
+            return self._mimebundle(collect=running_in_quarto(), **kwargs)
 
     def _mimebundle(
         self, *, collect: bool, **kwargs: Any

@@ -1,4 +1,13 @@
-from ._core import Component, Data, Param, ParamValue, Selection
+from ._core import (
+    Component,
+    Data,
+    Options,
+    Param,
+    ParamValue,
+    Selection,
+    options,
+    with_options,
+)
 
 try:
     from ._version import __version__
@@ -12,4 +21,7 @@ __all__ = [
     "ParamValue",
     "Selection",
     "Component",
+    "options",
+    "with_options",
+    "Options",
 ]
