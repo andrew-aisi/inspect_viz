@@ -2,6 +2,7 @@ from typing import Unpack
 
 from inspect_viz import Component, Data
 from inspect_viz.mark import cell, text
+from inspect_viz.mark._mark import Mark
 from inspect_viz.mark._title import Title
 from inspect_viz.mark._types import TextStyles
 from inspect_viz.plot import legend, plot
@@ -19,6 +20,7 @@ def tool_calls(
     x_label: str | None = "Message",
     y_label: str | None = "Sample",
     title: str | Title | None = None,
+    marks: Mark | list[Mark] | None = None,
     width: float | None = None,
     height: float | None = None,
     **attributes: Unpack[PlotAttributes],
@@ -35,6 +37,7 @@ def tool_calls(
        x_label: x-axis label (defaults to "Message").
        y_label: y-axis label (defaults to "Sample").
        title: Title for plot (`str` or mark created with the `title()` function)
+       marks: Additional marks to include in the plot.
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        **attributes: Additional `PlotAttributes`. By default, the `margin_top` is set to 0, `margin_left` to 20, `margin_right` to 100, `color_label` is "Tool", `y_ticks` is empty,  and `x_ticks` and `color_domain` are calculated from `data`.
@@ -54,6 +57,11 @@ def tool_calls(
             break
         else:
             boundary = boundary * 2
+
+    # resolve marks
+    marks = (
+        marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
+    )
 
     # attribute defaults
     defaults = PlotAttributes(
@@ -80,6 +88,7 @@ def tool_calls(
             ),
             dx=50,
         ),
+        *marks,
         title=title,
         width=width,
         height=height,

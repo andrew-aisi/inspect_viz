@@ -7,6 +7,7 @@ from inspect_viz.input import checkbox_group, select
 from inspect_viz.layout._concat import vconcat
 from inspect_viz.layout._space import vspace
 from inspect_viz.mark._dot import dot
+from inspect_viz.mark._mark import Mark
 from inspect_viz.mark._rule import rule_x
 from inspect_viz.mark._text import text
 from inspect_viz.mark._title import Title
@@ -32,6 +33,7 @@ def scores_timeline(
     score_label: str = "Score",
     eval_label: str = "Eval",
     title: str | Title | None = None,
+    marks: Mark | list[Mark] | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
     **attributes: Unpack[PlotAttributes],
@@ -54,6 +56,7 @@ def scores_timeline(
        score_label: Label for score (y-axis).
        eval_label: Label for eval select input.
        title: Title for plot (`str` or mark created with the `title()` function).
+       marks: Additional marks to include in the plot.
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        **attributes: Additional `PlotAttributes`. By default, the `x_domain` is set to "fixed", the `y_domain` is set to `[0,1.0]`, `color_label` is set to "Organizations", and `color_domain` is set to `organizations`.
@@ -70,6 +73,11 @@ def scores_timeline(
     ]:
         if field not in data.columns:
             raise ValueError(f"Field '{field}' not provided in passed 'data'.")
+
+    # resolve marks
+    marks = (
+        marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
+    )
 
     # count unique tasks and organizations
     num_tasks = len(data.column_unique(task_name))
@@ -158,6 +166,9 @@ def scores_timeline(
         "color_domain": organizations or "fixed",
     }
     attributes = defaults | attributes
+
+    # add custom marks
+    components.extend(marks)
 
     # resolve legend
     if num_organizations > 1:

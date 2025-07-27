@@ -8,6 +8,7 @@ from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.notgiven import NotGiven
 from inspect_viz.mark import cell as cell_mark
 from inspect_viz.mark._channel import SortOrder
+from inspect_viz.mark._mark import Mark
 from inspect_viz.mark._text import text
 from inspect_viz.mark._title import Title
 from inspect_viz.mark._title import title as title_mark
@@ -36,6 +37,7 @@ def scores_heatmap(
     cell: CellOptions | None = None,
     tip: bool = True,
     title: str | Title | None = None,
+    marks: Mark | list[Mark] | None = None,
     height: float | None = None,
     width: float | None = None,
     x_label: str | None | NotGiven = None,
@@ -57,6 +59,7 @@ def scores_heatmap(
        tip: Whether to show a tooltip with the value when hovering over a cell (defaults to True).
        legend: Options for the legend. Pass None to disable the legend.
        title: Title for plot (`str` or mark created with the `title()` function)
+       marks: Additional marks to include in the plot.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio)).
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        x_label: x-axis label (defaults to None).
@@ -75,6 +78,11 @@ def scores_heatmap(
     # resolve title
     if isinstance(title, str):
         title = title_mark(title, margin_top=20)
+
+    # resolve marks
+    marks = (
+        marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
+    )
 
     # Compute the color domain
     min_value = data.column_min(fill)
@@ -118,6 +126,9 @@ def scores_heatmap(
                 styles={"font_weight": 600},
             )
         )
+
+    # add custom marks
+    components.extend(marks)
 
     # channels
     channels: dict[str, str] = {}

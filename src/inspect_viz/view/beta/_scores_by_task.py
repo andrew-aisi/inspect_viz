@@ -6,6 +6,7 @@ from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.notgiven import NOT_GIVEN, NotGiven
 from inspect_viz._util.stats import z_score
 from inspect_viz.mark import bar_y, rule_x
+from inspect_viz.mark._mark import Mark
 from inspect_viz.mark._title import Title
 from inspect_viz.mark._title import title as title_mark
 from inspect_viz.plot import legend, plot
@@ -22,6 +23,7 @@ def scores_by_task(
     y_ci: bool | float = 0.95,
     y_label: str | None | NotGiven = NOT_GIVEN,
     title: str | Title | None = None,
+    marks: Mark | list[Mark] | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
     **attributes: Unpack[PlotAttributes],
@@ -39,6 +41,7 @@ def scores_by_task(
        y_ci: Confidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.
        y_label: Y axis label (pass None for no label).
        title: Title for plot (`str` or mark created with the `title()` function).
+       marks: Additional marks to include in the plot.
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        **attributes: Additional `PlotAttributes`. By default, the `margin_bottom` are is set to 10 pixels and `x_ticks` is set to `[]`.
@@ -51,6 +54,11 @@ def scores_by_task(
     # resolve the title
     if isinstance(title, str):
         title = title_mark(title, margin_top=40)
+
+    # resolve marks
+    marks = (
+        marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
+    )
 
     # establish channels
     channels: dict[str, str] = {}
@@ -87,6 +95,9 @@ def scores_by_task(
         "x_ticks": [],
     }
     attributes = defaults | attributes
+
+    # add custom marks
+    components.extend(marks)
 
     # render plot
     return plot(

@@ -5,6 +5,7 @@ from inspect_viz._core.data import Data
 from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.notgiven import NotGiven
 from inspect_viz.mark._bar import bar_x
+from inspect_viz.mark._mark import Mark
 from inspect_viz.mark._rule import rule_x
 from inspect_viz.mark._text import text
 from inspect_viz.mark._title import Title
@@ -45,6 +46,7 @@ def scores_with_baseline(
     y_label: str | None | NotGiven = None,
     fill: str | None = None,
     title: str | Title | None = None,
+    marks: Mark | list[Mark] | None = None,
     width: float | None = None,
     height: float | None = None,
     **attributes: Unpack[PlotAttributes],
@@ -63,6 +65,7 @@ def scores_with_baseline(
        y_label: x-axis label (defaults to None).
        fill: The fill color for the bars. Defaults to "#416AD0". Pass any valid css color value (hex, rgb, named colors, etc.).
        title: Title for plot (`str` or mark created with the `title()` function)
+       marks: Additional marks to include in the plot.
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        **attributes: Additional `PlotAttributes`. By default, the `y_inset_top` and `margin_bottom` are set to 10 pixels and `x_ticks` is set to `[]`.
@@ -83,6 +86,11 @@ def scores_with_baseline(
             "scores_with_baseline can only be used with a single evaluation. "
             f"Found {len(tasks)} tasks: {', '.join(tasks)}."
         )
+
+    # resolve marks
+    marks = (
+        marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
+    )
 
     # Normalize baseline to a list if it isn't already
     resolved_baselines = resolve_baseline(baseline)
@@ -138,6 +146,7 @@ def scores_with_baseline(
             fill=fill or "#416AD0",
         ),
         *baseline_marks(resolved_baselines),
+        *marks,
         y_label=y_label,
         x_label=x_label,
         title=title,

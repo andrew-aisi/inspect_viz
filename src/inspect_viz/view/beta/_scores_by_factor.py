@@ -21,6 +21,7 @@ def scores_by_factor(
     ci: bool | float = 0.95,
     color: str | tuple[str, str] = "#3266ae",
     title: str | Mark | None = None,
+    marks: Mark | list[Mark] | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
     **attributes: Unpack[PlotAttributes],
@@ -39,6 +40,7 @@ def scores_by_factor(
        ci: Confidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.)
        color: Hex color value (or tuple of two values). If one value is provided the second is computed by lightening the main color.
        title: Title for plot (`str` or mark created with the `title()` function).
+       marks: Additional marks to include in the plot.
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. Default to 65 pixels for each item on the "y" axis.
        **attributes: Additional `PlotAttributes
@@ -54,6 +56,11 @@ def scores_by_factor(
     # validate that we have labels
     if not isinstance(fx_labels, tuple) or len(fx_labels) != 2:
         raise ValueError("fx_labels must be a tuple of 2 strings.")
+
+    # resolve marks
+    marks = (
+        marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
+    )
 
     # default attributes
     defaults = PlotAttributes(
@@ -106,6 +113,9 @@ def scores_by_factor(
                 stroke_width=15,
             ),
         )
+
+    # add custom marks
+    components.extend(marks)
 
     return plot(
         *components,
