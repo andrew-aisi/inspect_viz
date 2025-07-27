@@ -203,6 +203,8 @@ Note that we set the `opacity` of the dot mark to 0.1 to help mitigate oversatur
 
 Marks can also be used to draw lines, arrows, text, or images on a plot.
 
+{{< include _data.md >}}
+
 ## Params
 
 As illustrated above, inputs can be used to filter dataset selections. Inputs can also be used to set `Param` values that make various aspects of plots dynamic. For example, here is a density plot of flight delays which uses a `slider()` input to vary the amount of smooth ing by setting the kernel bandwidth:
@@ -285,8 +287,6 @@ vconcat(
 5.  We set the `x_domain` for the bar plot to "fixed" so that the scale doesn't change as the dataset is filtered.
 
 Try using the mouse to brush over regions on the dot plot---the bar plot will update accordingly.
-
-{{< include _data.md >}}
 
 ## Crossfilter
 
