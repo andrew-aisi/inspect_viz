@@ -45,7 +45,11 @@ df = prepare(df,
 df.to_parquet("{{< meta datafile>}}")
 ```
 
+## Filtering
 
+A `select()` input for tasks is automatically provided if more than one task exists in the `data`. A `checkbox_group()` is automatically provided for organizations if more than one organization exists (you can disable this with `organizations_filter=False`).
+
+When multiple organizations exist, clicking on the legend for an organization will filter the plot by that organization.
 
 ## Function Reference {reference="scores_timeline"}
 
