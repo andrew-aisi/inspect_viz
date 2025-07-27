@@ -168,6 +168,8 @@ website:
           href: reference/inspect_viz.mark.qmd#hull
         - text: dense_line
           href: reference/inspect_viz.mark.qmd#dense_line
+        - text: title
+          href: reference/inspect_viz.mark.qmd#title
         - text: frame
           href: reference/inspect_viz.mark.qmd#frame
         - text: axis_x
@@ -210,6 +212,8 @@ website:
           href: reference/inspect_viz.mark.qmd#mark
         - text: MarkOptions
           href: reference/inspect_viz.mark.qmd#markoptions
+        - text: Title
+          href: reference/inspect_viz.mark.qmd#title
         - text: Channel
           href: reference/inspect_viz.mark.qmd#channel
         - text: ChannelSpec

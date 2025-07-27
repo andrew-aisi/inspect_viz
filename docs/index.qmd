@@ -18,7 +18,7 @@ plot_defaults(
 
 Welcome to Inspect Viz, a data visualisation library for [Inspect AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools for high quality interactive visualisations from Inspect evaluations. 
 
-Here's an Inspect Viz plot that compares benchmarks scores over time for various providers^[This plot was inspired by and includes data from the [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard) Benchmarking Hub]:
+Here's an Inspect Viz plot created with the [`scores_timeline()`](view-scores-timeline.qmd) function that compares benchmarks scores over time^[This plot was inspired by and includes data from the [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard) Benchmarking Hub]:
 
 ```{python}
 #| echo: false
@@ -45,7 +45,7 @@ You can author visualisations in any [Jupyter Notebook](https://jupyter.org/) th
 
 ## Views
 
-Inspect Viz [Views](views.qmd) are pre-built plots that work with data created by the Inspect log [data frame](https://inspect.aisi.org.uk/dataframe.html) reading functions. For example, the `scores_by_factor()` view enables you to compare scores across models and a boolean factor:
+Inspect Viz [Views](views.qmd) are pre-built plots that work with data created by the Inspect log [data frame](https://inspect.aisi.org.uk/dataframe.html) reading functions. For example, the [`scores_by_factor()`](view-scores-by-factor.qmd) view enables you to compare scores across models and a boolean factor:
 
 ```{python}
 from inspect_viz import Data
@@ -55,7 +55,7 @@ evals = Data.from_file("evals-hint.parquet")
 scores_by_factor(evals, "task_arg_hint", ("No hint", "Hint"))
 ```
 
-The `tool_calls()` view enables you to visualize tool calls by sample:
+The [`tool_calls()`](view-tool-calls.qmd) view enables you to visualize tool calls by sample:
 
 ```{python}
 from inspect_viz.view.beta import tool_calls
