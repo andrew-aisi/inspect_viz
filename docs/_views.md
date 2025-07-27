@@ -5,5 +5,4 @@
 | [`scores_heatmap()`](view-scores-heatmap.qmd) |  Heatmap with values for comparing scores across model and task. |
 | [`scores_with_baseline()`](view-scores-with-baseline.qmd) | Bar plot for comparing model scores on a single eval, with one or more baselines overlaid. |
 | [`tool_calls()`](view-tool-calls.qmd) | Heat map visualising tool calls over evaluation turns. |
-
-
+| [`scores_by_limit()`](view-scores-by-limit.qmd) | Line plot showing success rate by token limit. |
