@@ -5,7 +5,6 @@ from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.color import lighten_color_hsl
 from inspect_viz.mark import frame, rule_y
 from inspect_viz.mark._mark import Mark
-from inspect_viz.mark._title import Title
 from inspect_viz.plot import PlotAttributes, legend, plot
 from inspect_viz.transform import ci_bounds, sql
 
