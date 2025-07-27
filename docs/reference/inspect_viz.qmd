@@ -2,8 +2,20 @@
 title: inspect_viz
 ---
 
+## Core
+
 ### Data
 ### Component
+
+## Params
+
 ### Selection
 ### Param
 ### ParamValue
+
+## Options
+
+### options
+### options_context
+### Options
+

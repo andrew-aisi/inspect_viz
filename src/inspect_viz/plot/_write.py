@@ -3,6 +3,7 @@ import subprocess
 import sys
 import tempfile
 from contextlib import asynccontextmanager
+from io import BytesIO
 from pathlib import Path
 from textwrap import dedent
 from typing import Any, AsyncIterator
@@ -10,6 +11,7 @@ from typing import Any, AsyncIterator
 import ipywidgets  # type: ignore
 from ipywidgets.embed import embed_data, escape_script  # type: ignore
 from PIL import Image, ImageChops, ImageOps
+from typing_extensions import overload
 
 from inspect_viz._util._async import current_async_backend, run_coroutine
 
@@ -88,33 +90,63 @@ def write_html(
         f.write(to_html(component, dependencies))
 
 
+@overload
+def write_png(
+    file: None, component: Component, scale: int = 2, padding: int = 8
+) -> tuple[bytes, int, int] | None: ...
+
+
+@overload
 def write_png(
     file: str | Path, component: Component, scale: int = 2, padding: int = 8
-) -> None:
+) -> tuple[int, int] | None: ...
+
+
+def write_png(
+    file: str | Path | None, component: Component, scale: int = 2, padding: int = 8
+) -> tuple[bytes, int, int] | tuple[int, int] | None:
     """Export a plot or table to a PNG.
 
     Args:
-       file: Target filename.
+       file: Target filename (pass `None` to return the image as bytes)
        component: Component to export.
        scale: Device scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)
        padding: Padding (in pixels) around plot.
+
+    Returns:
+       Tuple with (width, height) of image or (bytes,width,height) of image if no `file` was passed. Returns `None` if no image was saved.
     """
     if current_async_backend() == "trio":
         raise RuntimeError("Use write_png_async() when running under trio")
 
-    run_coroutine(write_png_async(file, component, scale, padding))
+    return run_coroutine(write_png_async(file, component, scale, padding))
+
+
+@overload
+async def write_png_async(
+    file: None, component: Component, scale: int = 2, padding: int = 8
+) -> tuple[bytes, int, int] | None: ...
+
+
+@overload
+async def write_png_async(
+    file: str | Path, component: Component, scale: int = 2, padding: int = 8
+) -> tuple[int, int] | None: ...
 
 
 async def write_png_async(
-    file: str | Path, component: Component, scale: int = 2, padding: int = 8
-) -> None:
+    file: str | Path | None, component: Component, scale: int = 2, padding: int = 8
+) -> tuple[bytes, int, int] | tuple[int, int] | None:
     """Export a plot or table to a PNG.
 
     Args:
-       file: Target filename.
+       file: Target filename (pass `None` to return the image as bytes)
        component: Component to export.
        scale: Device scale to capture plot at. Use 2 (the default) for retina quality images suitable for high resolution displays or print output)
        padding: Padding (in pixels) around plot.
+
+    Returns:
+       Tuple with (width, height) of image or (bytes,width,height) of image if no `file` was passed. Returns `None` if no image was saved.
     """
     with tempfile.NamedTemporaryFile("w", suffix=".html") as temp_file:
         # write the component as HTML
@@ -126,7 +158,7 @@ async def write_png_async(
 
             # browser can be None if playwright wasn't installed yet
             if not isinstance(b, Browser):
-                return
+                return None
 
             # create and load page
             ctx = await b.new_context(device_scale_factor=scale)
@@ -145,12 +177,21 @@ async def write_png_async(
 
             # take screenshot and crop image
             background_color = "white"
-            await page.screenshot(
-                path=file,
+            image_bytes = await page.screenshot(
                 scale="device",
                 style="body { background-color: " + background_color + "; }",
             )
-            _crop_image(file, padding, scale, background_color)
+            img = _crop_image(image_bytes, padding, scale, background_color)
+            size = img.size
+            if file:
+                img.save(file, dpi=(scale * 96, scale * 96))
+                img.close()
+                return size
+            else:
+                image_buffer = BytesIO()
+                img.save(image_buffer, format="PNG")
+                img.close()
+                return (image_buffer.getvalue(), size[0], size[1])
 
 
 @asynccontextmanager
@@ -198,9 +239,11 @@ def _install() -> None:
     subprocess.run(["playwright", "install", "chromium"], check=True)
 
 
-def _crop_image(file: str | Path, pad: int, scale: int, background_color: str) -> None:
+def _crop_image(
+    image_bytes: bytes, pad: int, scale: int, background_color: str
+) -> Image.Image:
     # open image
-    img = Image.open(file)
+    img = Image.open(BytesIO(image_bytes))
 
     # build an image filled with the background colour of the top-left pixel
     bg = Image.new(img.mode, img.size, background_color)
@@ -214,6 +257,7 @@ def _crop_image(file: str | Path, pad: int, scale: int, background_color: str) -
         img_fill = img.getpixel((0, 0))
         img_cropped = ImageOps.expand(img_cropped, border=pad * scale, fill=img_fill)
         img.close()
-        img_cropped.save(file, dpi=(scale * 72, scale * 72))
-    else:
-        img.close()
+        img = img_cropped
+
+    # return image
+    return img

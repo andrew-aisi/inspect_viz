@@ -11,6 +11,7 @@ from pydantic_core import to_json, to_jsonable_python
 from .._util.constants import WIDGETS_DIR
 from .._util.marshall import dict_remove_none
 from .._util.platform import running_in_colab, running_in_quarto
+from ._options import options
 from .data import Data
 from .param import Param as VizParam
 from .selection import Selection as VizSelection
@@ -105,7 +106,26 @@ class Component(AnyWidget):
     def _repr_mimebundle_(
         self, **kwargs: Any
     ) -> tuple[dict[str, Any], dict[str, Any]] | None:
-        return self._mimebundle(collect=running_in_quarto(), **kwargs)
+        # if we are configured for png output then do that
+        if options.output_format == "png":
+            from inspect_viz.plot._write import write_png
+
+            SCALE = 2
+            result = write_png(None, self, scale=SCALE)
+            if result is not None:
+                image_bytes, width, height = result
+                b64_data = base64.b64encode(image_bytes).decode("ascii")
+                data = {"image/png": b64_data}
+                metadata = {
+                    "image/png": {"width": width / SCALE, "height": height / SCALE}
+                }
+                return data, metadata
+            else:
+                return None
+
+        # standard js output
+        else:
+            return self._mimebundle(collect=running_in_quarto(), **kwargs)
 
     def _mimebundle(
         self, *, collect: bool, **kwargs: Any
