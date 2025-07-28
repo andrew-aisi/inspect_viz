@@ -93,7 +93,10 @@ def scores_with_baseline(
             f"Found {len(tasks)} tasks: {', '.join(tasks)}."
         )
 
+    # compute default height
     if height is None:
+        height = 65 * len(data.column_unique(y))
+
     # resolve marks
     marks = (
         marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
