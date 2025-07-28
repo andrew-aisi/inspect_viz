@@ -5,6 +5,14 @@ def running_in_quarto() -> bool:
     return "QUARTO_FIG_WIDTH" in os.environ.keys()
 
 
+def quarto_pdf() -> bool:
+    if running_in_quarto():
+        format = os.environ.get("QUARTO_FIG_FORMAT", "")
+        return format == "pdf"
+    else:
+        return False
+
+
 def running_in_colab() -> bool:
     try:
         import google.colab  # type: ignore # noqa: F401

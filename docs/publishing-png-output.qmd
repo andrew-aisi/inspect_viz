@@ -52,5 +52,9 @@ with options_context(output_format="png"):
     # plot code here
 ```
 
+Note that when rendering a PDF document with Quarto, the output format is automatically set to "png" (as PDFs can't ever include interactive JavaScript content).
+
+
+
 
 
