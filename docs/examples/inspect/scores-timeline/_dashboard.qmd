@@ -1,0 +1,56 @@
+---
+title: "Score Timeline"
+format: dashboard
+---
+
+```{python}
+from inspect_viz import Data, Param
+from inspect_viz.input import select
+from inspect_viz.mark import dot
+from inspect_viz.plot import plot
+from inspect_viz.table import table, column
+from inspect_viz.view.beta import scores_timeline
+from inspect_viz.input import checkbox_group, select
+
+
+evals = Data.from_file("benchmarks.parquet")
+```
+
+## {.sidebar}
+
+```{python}
+select(
+    evals,
+    column="task_name",
+    value="auto",
+    label="Eval"
+)
+```
+
+```{python}
+checkbox_group(evals, column="model_organization_name", label="Organization")
+```
+
+## Column
+
+### Row {height=65%}
+
+```{python}
+scores_timeline(evals, organizations_filter=False, task_filter=False)
+```
+
+### Row {height=35%}
+
+```{python}
+table(evals, 
+    columns=[
+        column("frontier", label="Frontier", width=90),
+        column("model_organization_name", label="Organization"),
+        column("model_display_name", label="Model"),
+        column("model_release_date", label="Release Date"),
+        column("score_headline_value", label="Score", width=100),
+        column("score_headline_stderr", label="StdErr", width=100),
+        ]
+    )
+```
+
