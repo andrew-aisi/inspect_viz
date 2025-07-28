@@ -1790,8 +1790,12 @@ var configureSpecSvgTooltips = (specEl) => {
 };
 var tooltipInstance = void 0;
 function hideTooltip() {
-  tooltipInstance.hide();
-  window.removeEventListener("scroll", hideTooltip);
+  try {
+    tooltipInstance.hide();
+  } catch {
+  } finally {
+    window.removeEventListener("scroll", hideTooltip);
+  }
 }
 function maybeHideTooltip() {
   if (!tooltipInstance.popper.matches(":hover")) {
@@ -1799,8 +1803,11 @@ function maybeHideTooltip() {
   }
 }
 function showTooltip() {
-  tooltipInstance.show();
-  window.addEventListener("scroll", hideTooltip, { once: true });
+  try {
+    tooltipInstance.show();
+    window.addEventListener("scroll", hideTooltip, { once: true });
+  } catch {
+  }
 }
 var setupTooltipObserver = (svgEl, specEl) => {
   if (!tooltipInstance) {

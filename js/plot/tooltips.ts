@@ -36,8 +36,13 @@ const configureSpecSvgTooltips = (specEl: HTMLElement) => {
 let tooltipInstance: any | undefined = undefined;
 
 function hideTooltip() {
-    tooltipInstance.hide();
-    window.removeEventListener('scroll', hideTooltip);
+    try {
+        tooltipInstance.hide();
+    } catch {
+        // Sometimes tippy throws a null ref related to this. No idea why.
+    } finally {
+        window.removeEventListener('scroll', hideTooltip);
+    }
 }
 
 function maybeHideTooltip() {
@@ -47,8 +52,12 @@ function maybeHideTooltip() {
 }
 
 function showTooltip() {
-    tooltipInstance.show();
-    window.addEventListener('scroll', hideTooltip, { once: true });
+    try {
+        tooltipInstance.show();
+        window.addEventListener('scroll', hideTooltip, { once: true });
+    } catch {
+        // Soemtimes tippy throws a null ref related to this. No idea why.
+    }
 }
 
 const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
