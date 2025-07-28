@@ -2,8 +2,12 @@ from typing import Literal, NotRequired, TypedDict, Unpack, cast
 
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
+from inspect_viz._core.param import Param
+from inspect_viz._core.selection import Selection
 from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.notgiven import NotGiven
+from inspect_viz.interactor import highlight, toggle_y
+from inspect_viz.interactor._interactors import Interactor
 from inspect_viz.mark._bar import bar_x
 from inspect_viz.mark._mark import Mark
 from inspect_viz.mark._rule import rule_x
@@ -49,6 +53,7 @@ def scores_with_baseline(
     marks: Mark | list[Mark] | None = None,
     width: float | None = None,
     height: float | None = None,
+    target: Param | Selection | None = None,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """Bar plot for comparing the scores of different models on a single evaluation.
@@ -68,6 +73,7 @@ def scores_with_baseline(
        marks: Additional marks to include in the plot.
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
+       target: A `Param` or `Selection` that clicking on bars should update. For a `Param`, the selected value is set to be the new param value. For a `Selection`, a predicate of the form column IN (values) will be added to the selection.
        **attributes: Additional `PlotAttributes`. By default, the `y_inset_top` and `margin_bottom` are set to 10 pixels and `x_ticks` is set to `[]`.
     """
     # Resolve the y column
@@ -134,6 +140,12 @@ def scores_with_baseline(
         channels["Score"] = x
     resolve_log_viewer_channel(data, channels)
 
+    # interactors
+    interactors: list[Interactor] = []
+    # if target is not None:
+    #     interactors.append(highlight(by=target))
+    #     interactors.append(toggle_y(target=target))
+
     # The plots
     return plot(
         bar_x(
@@ -145,6 +157,7 @@ def scores_with_baseline(
             channels=channels,
             fill=fill or "#416AD0",
         ),
+        *interactors,
         *baseline_marks(resolved_baselines),
         *marks,
         y_label=y_label,
