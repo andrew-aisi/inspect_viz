@@ -10,7 +10,7 @@ from pydantic_core import to_json, to_jsonable_python
 
 from .._util.constants import WIDGETS_DIR
 from .._util.marshall import dict_remove_none
-from .._util.platform import quarto_pdf, running_in_colab, running_in_quarto
+from .._util.platform import quarto_png, running_in_colab, running_in_quarto
 from ._options import options
 from .data import Data
 from .param import Param as VizParam
@@ -108,7 +108,7 @@ class Component(AnyWidget):
     ) -> tuple[dict[str, Any], dict[str, Any]] | None:
         # if we are configured for png output then do that
         if options.output_format == "png" or (
-            options.output_format == "auto" and quarto_pdf()
+            options.output_format == "auto" and quarto_png()
         ):
             from inspect_viz.plot._write import write_png
 

@@ -5,10 +5,13 @@ def running_in_quarto() -> bool:
     return "QUARTO_FIG_WIDTH" in os.environ.keys()
 
 
-def quarto_pdf() -> bool:
+def quarto_png() -> bool:
     if running_in_quarto():
-        format = os.environ.get("QUARTO_FIG_FORMAT", "")
-        return format == "pdf"
+        format = os.environ.get("QUARTO_OUTPUT_BASE_FORMAT", "")
+        if format:
+            return format not in ["html", "html4", "html5", "dashboard"]
+        else:
+            return os.environ.get("QUARTO_FIG_FORMAT", "") in ["pdf", "svg"]
     else:
         return False
 

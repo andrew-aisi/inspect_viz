@@ -3,6 +3,7 @@ from typing import Any, Literal, Sequence, Unpack
 from shortuuid import uuid
 
 from inspect_viz._util.notgiven import NOT_GIVEN, NotGiven
+from inspect_viz._util.platform import quarto_fig_size
 
 from .._core import Component
 from .._core.param import Param
@@ -82,12 +83,17 @@ def plot(
         config["fyLabel"] = fy_label
 
     # plot width and height (use quarto default if not specified)
+    quarto_size = quarto_fig_size()
     if width is not None:
         config["width"] = width
+    elif quarto_size:
+        config["width"] = quarto_size[0]
     else:
         config["width"] = 700
     if height is not None:
         config["height"] = height
+    elif quarto_size:
+        config["height"] = quarto_size[1]
     else:
         config["height"] = config["width"] / 1.618
 
