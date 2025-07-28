@@ -47,14 +47,15 @@ scores_timeline(evals, filters=False)
 ### Row {height=40%}
 
 ```{python}
-table(evals, 
+table(
+    evals, 
     columns=[
         column("model_organization_name", label="Organization"),
         column("model_display_name", label="Model"),
         column("model_release_date", label="Release Date"),
         column("score_headline_value", label="Score", width=100),
         column("score_headline_stderr", label="StdErr", width=100),
-        ]
-    )
+    ]
+)
 ```
 

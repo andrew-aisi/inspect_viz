@@ -15,18 +15,18 @@ page-layout: full
 
 ## Example
 
-Here is the [Penguin Explorer](examples/general/penguins/index.qmd) example from this repository re-written as a dashboard (this is a live dashboard embedded as an iframe):
+Here is the [Scores Timeline](examples/inspect/scores-timeline/index.qmd) example from this repository re-written as a dashboard (this is a live dashboard embedded as an iframe):
 
 ```{=html}
-<iframe src="https://jja.quarto.pub/penguins-explorer/" style="width: 100%; height: 800px;" class="border column-body-outset-right"></iframe>
+<iframe src="https://jja.quarto.pub/capabilities-timeline/" style="width: 100%; height: 800px;" class="border column-body-outset-right"></iframe>
 ```
 
 Below is the source code for this dashboard. You'll notice that this looks quite similar to the code for any other Quarto document, but level-two headings (`##`) have been added to denote a toolbar and dashboard rows (additional headings could be used to create columns and tabsets). 
 
 ````python
 ---
-title: "Penguins Explorer"
-format: dashboard # <1>
+title: "Capabilities Timeline"
+format: dashboard
 ---
 
 ```{{python}}
@@ -34,46 +34,57 @@ from inspect_viz import Data, Param
 from inspect_viz.input import select
 from inspect_viz.mark import dot
 from inspect_viz.plot import plot
-from inspect_viz.table import table
+from inspect_viz.table import table, column
+from inspect_viz.view.beta import scores_timeline
+from inspect_viz.input import checkbox_group, select
 
-penguins = Data.from_file("penguins.parquet")
-axes = ["body_mass", "flipper_length", "bill_depth", "bill_length"]
-x_axis = Param("body_mass")
-y_axis = Param("flipper_length")
+evals = Data.from_file("benchmarks.parquet")
 ```
 
-## Row {.toolbar} # <2>
- # <2>
-```{{python}} # <2>
-select(penguins, label="Species", column="species") # <2>
-select(label="X", options=axes, target=x_axis) # <2>
-select(label="Y", options=axes, target=y_axis) # <2>
-``` # <2>
-
-## Row # <3>
+## {.sidebar}
 
 ```{{python}}
-plot(
-    dot(penguins, x=x_axis, y=y_axis, stroke="species", symbol="species"),
-    grid=True,
-    x_label="Body mass (g) →",
-    y_label="↑ Flipper length (mm)",
-    legend="symbol",
+select(
+    evals,
+    column="task_name",
+    value="auto",
+    label="Benchmark"
 )
-``` # <3>
 
-## Row
+checkbox_group(
+    evals, 
+    column="model_organization_name", 
+    label="Organization"
+)
+```
+
+***
+
+Benchmark data from the Epoch AI [Benchmarking Hub](https://epoch.ai/data/ai-benchmarking-dashboard).
+
+## Column
+
+### Row {height=60%}
 
 ```{{python}}
-table(penguins)
+scores_timeline(evals, filters=False)
+```
+
+### Row {height=40%}
+
+```{{python}}
+table(
+    evals, 
+    columns=[
+        column("model_organization_name", label="Organization"),
+        column("model_display_name", label="Model"),
+        column("model_release_date", label="Release Date"),
+        column("score_headline_value", label="Score", width=100),
+        column("score_headline_stderr", label="StdErr", width=100),
+    ]
+)
 ```
 ````
-
-1. `format: dashboard` indicates this is a dashbaord not an ordinary HTML page.
-
-2. Toolbar for grouping inputs.
-
-3. Row sections to denote additional rows in the dashboard layout.
 
 ## Notebook Execution
 

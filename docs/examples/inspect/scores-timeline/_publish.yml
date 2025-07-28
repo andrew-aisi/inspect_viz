@@ -1,0 +1,4 @@
+- source: _dashboard.qmd
+  quarto-pub:
+    - id: 7f028df9-8a9f-4e67-ae48-1375c818b4f2
+      url: https://jja.quarto.pub/capabilities-timeline
