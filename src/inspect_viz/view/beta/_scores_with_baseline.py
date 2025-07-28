@@ -93,6 +93,7 @@ def scores_with_baseline(
             f"Found {len(tasks)} tasks: {', '.join(tasks)}."
         )
 
+    if height is None:
     # resolve marks
     marks = (
         marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
