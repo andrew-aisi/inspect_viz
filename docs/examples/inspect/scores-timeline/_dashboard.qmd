@@ -1,5 +1,5 @@
 ---
-title: "Score Timeline"
+title: "Capabilities Timeline"
 format: dashboard
 ---
 
@@ -12,7 +12,6 @@ from inspect_viz.table import table, column
 from inspect_viz.view.beta import scores_timeline
 from inspect_viz.input import checkbox_group, select
 
-
 evals = Data.from_file("benchmarks.parquet")
 ```
 
@@ -23,28 +22,33 @@ select(
     evals,
     column="task_name",
     value="auto",
-    label="Eval"
+    label="Benchmark"
+)
+
+checkbox_group(
+    evals, 
+    column="model_organization_name", 
+    label="Organization"
 )
 ```
 
-```{python}
-checkbox_group(evals, column="model_organization_name", label="Organization")
-```
+***
+
+Benchmark data from the Epoch AI [Benchmarking Hub](https://epoch.ai/data/ai-benchmarking-dashboard).
 
 ## Column
 
-### Row {height=65%}
+### Row {height=60%}
 
 ```{python}
-scores_timeline(evals, organizations_filter=False, task_filter=False)
+scores_timeline(evals, filters=False)
 ```
 
-### Row {height=35%}
+### Row {height=40%}
 
 ```{python}
 table(evals, 
     columns=[
-        column("frontier", label="Frontier", width=90),
         column("model_organization_name", label="Organization"),
         column("model_display_name", label="Model"),
         column("model_release_date", label="Release Date"),
