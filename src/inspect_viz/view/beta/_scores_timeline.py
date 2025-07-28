@@ -1,4 +1,4 @@
-from typing import Unpack
+from typing import Literal, Unpack
 
 from inspect_viz import Component, Data
 from inspect_viz._core.param import Param
@@ -27,8 +27,7 @@ def scores_timeline(
     score_value: str = "score_headline_value",
     score_stderr: str = "score_headline_stderr",
     organizations: list[str] | None = None,
-    organizations_filter: bool = True,
-    task_filter: bool = True,
+    filters: bool | list[Literal["task", "organization"]] = True,
     ci: float | bool = 0.95,
     time_label: str = "Release Date",
     score_label: str = "Score",
@@ -51,8 +50,7 @@ def scores_timeline(
        score_value: Column for score value (defaults to "score_headline_value").
        score_stderr: Column for score stderr (defaults to "score_headline_stderr")
        organizations: List of organizations to include (in order of desired presentation).
-       organizations_filter: Provide UI to filter plot by organization(s).
-       task_filter: Provide UI to filter plot by task(s).
+       filters: Provide UI to filter plot by task and organization(s).
        ci: Confidence interval (defaults to 0.95, pass `False` for no confidence intervals)
        time_label: Label for time (x-axis).
        score_label: Label for score (y-axis).
@@ -90,6 +88,7 @@ def scores_timeline(
     num_organizations = len(data.column_unique(model_organization))
 
     # build inputs
+    task_filter = filters if isinstance(filters, bool) else "task" in filters
     inputs: list[Component] = []
     if num_tasks > 1 and task_filter:
         inputs.append(
@@ -101,6 +100,9 @@ def scores_timeline(
                 width=370,
             )
         )
+    organizations_filter = (
+        filters if isinstance(filters, bool) else "organization" in filters
+    )
     if num_organizations > 1 and organizations_filter:
         inputs.append(
             checkbox_group(data, column=model_organization, options=organizations)
@@ -170,6 +172,7 @@ def scores_timeline(
         "y_inset_top": 10,
         "color_label": "Organizations",
         "color_domain": organizations or "fixed",
+        "grid": True,
     }
     attributes = defaults | attributes
 
@@ -194,5 +197,8 @@ def scores_timeline(
         **attributes,
     )
 
-    # compose view
-    return vconcat(*inputs, vspace(), pl)
+    # layout
+    if len(inputs) > 0:
+        return vconcat(*inputs, vspace(), pl)
+    else:
+        return pl
