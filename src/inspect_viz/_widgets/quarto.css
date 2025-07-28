@@ -89,6 +89,7 @@
 }
 
 .card-body .mosaic-widget .inspect-viz-table {
+    margin-top: 0;
     height: 100%;
 }
 
