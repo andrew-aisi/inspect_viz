@@ -28,6 +28,7 @@ def scores_timeline(
     score_stderr: str = "score_headline_stderr",
     organizations: list[str] | None = None,
     organizations_filter: bool = True,
+    task_filter: bool = True,
     ci: float | bool = 0.95,
     time_label: str = "Release Date",
     score_label: str = "Score",
@@ -51,6 +52,7 @@ def scores_timeline(
        score_stderr: Column for score stderr (defaults to "score_headline_stderr")
        organizations: List of organizations to include (in order of desired presentation).
        organizations_filter: Provide UI to filter plot by organization(s).
+       task_filter: Provide UI to filter plot by task(s).
        ci: Confidence interval (defaults to 0.95, pass `False` for no confidence intervals)
        time_label: Label for time (x-axis).
        score_label: Label for score (y-axis).
@@ -89,7 +91,7 @@ def scores_timeline(
 
     # build inputs
     inputs: list[Component] = []
-    if num_tasks > 1:
+    if num_tasks > 1 and task_filter:
         inputs.append(
             select(
                 data,
