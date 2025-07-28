@@ -34,6 +34,27 @@ const configureSpecSvgTooltips = (specEl: HTMLElement) => {
 };
 
 let tooltipInstance: any | undefined = undefined;
+let tooltipSpecEl: HTMLElement | undefined = undefined;
+
+function initializeTooltip(specEl: HTMLElement) {
+    // Initialize tippy for this spec element if not already done.
+    if (!tooltipInstance || tooltipSpecEl !== specEl) {
+        // Destroy the old tooltip instance if it exists
+        if (tooltipInstance) {
+            tooltipInstance.destroy();
+        }
+
+        // recreate the tooltip instance for the specEl
+        tooltipInstance = tippy(specEl, {
+            trigger: 'manual',
+            theme: 'inspect',
+            interactive: true,
+        });
+
+        // Note which specEl we're tracking
+        tooltipSpecEl = specEl;
+    }
+}
 
 function hideTooltip() {
     try {
@@ -62,13 +83,7 @@ function showTooltip() {
 
 const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
     // Initialize tippy for this spec element if not already done.
-    if (!tooltipInstance) {
-        tooltipInstance = tippy(specEl, {
-            trigger: 'manual',
-            theme: 'inspect',
-            interactive: true,
-        });
-    }
+    initializeTooltip(specEl);
 
     // Watch the SVG for childList mutations and inspect the tip element
     // whenever it changes.

@@ -1789,6 +1789,20 @@ var configureSpecSvgTooltips = (specEl) => {
   });
 };
 var tooltipInstance = void 0;
+var tooltipSpecEl = void 0;
+function initializeTooltip(specEl) {
+  if (!tooltipInstance || tooltipSpecEl !== specEl) {
+    if (tooltipInstance) {
+      tooltipInstance.destroy();
+    }
+    tooltipInstance = tippy(specEl, {
+      trigger: "manual",
+      theme: "inspect",
+      interactive: true
+    });
+    tooltipSpecEl = specEl;
+  }
+}
 function hideTooltip() {
   try {
     tooltipInstance.hide();
@@ -1810,13 +1824,7 @@ function showTooltip() {
   }
 }
 var setupTooltipObserver = (svgEl, specEl) => {
-  if (!tooltipInstance) {
-    tooltipInstance = tippy(specEl, {
-      trigger: "manual",
-      theme: "inspect",
-      interactive: true
-    });
-  }
+  initializeTooltip(specEl);
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === "childList") {
