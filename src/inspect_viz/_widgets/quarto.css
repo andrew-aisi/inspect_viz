@@ -12,8 +12,10 @@
 
 .toolbar .mosaic-widget,
 .panel-input .mosaic-widget,
+.card-toolbar .mosaic-widget,
 .toolbar .mosaic-widget label,
-.panel-input .mosaic-widget label {
+.panel-input .mosaic-widget label,
+.card-toolbar .mosaic-widget label {
     margin-top: 0;
     margin-bottom: 0;
 }
