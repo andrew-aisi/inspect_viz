@@ -1477,7 +1477,7 @@ Note
 <p>Bar plot for comparing eval scores.</p>
 <p>Summarize eval scores using a bar plot. By default, scores (<code>y</code>) are plotted by “task_display_name” (<code>fx</code>) and “model_display_name” (<code>x</code>). By default, confidence intervals are also plotted (disable this with <code>y_ci=False</code>).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/2f71c77bd660aeeac0df175a8562a5b4f79c6553/src/inspect_viz/view/beta/_scores_by_task.py#L17">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cecc2712cc5f399366baa9cc87125898725a99ca/src/inspect_viz/view/beta/_scores_by_task.py#L17">Source</a>
 </div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_by_task(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1548,7 +1548,7 @@ Note
 <h3 class="anchored" data-anchor-id="scores_by_factor">scores_by_factor</h3>
 <p>Summarize eval scores with a factor of variation (e.g ‘No hint’ vs.&nbsp;‘Hint’).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/2f71c77bd660aeeac0df175a8562a5b4f79c6553/src/inspect_viz/view/beta/_scores_by_factor.py#L12">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cecc2712cc5f399366baa9cc87125898725a99ca/src/inspect_viz/view/beta/_scores_by_factor.py#L12">Source</a>
 </div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_by_factor(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1634,7 +1634,7 @@ Note
 <h3 class="anchored" data-anchor-id="scores_timeline">scores_timeline</h3>
 <p>Eval scores by model, organization, and release date.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/2f71c77bd660aeeac0df175a8562a5b4f79c6553/src/inspect_viz/view/beta/_scores_timeline.py#L20">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cecc2712cc5f399366baa9cc87125898725a99ca/src/inspect_viz/view/beta/_scores_timeline.py#L20">Source</a>
 </div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_timeline(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1646,7 +1646,7 @@ Note
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    score_value: <span class="bu">str</span> <span class="op">=</span> <span class="st">"score_headline_value"</span>,</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    score_stderr: <span class="bu">str</span> <span class="op">=</span> <span class="st">"score_headline_stderr"</span>,</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    organizations: <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    organizations_filter: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    filters: <span class="bu">bool</span> <span class="op">|</span> <span class="bu">list</span>[Literal[<span class="st">"task"</span>, <span class="st">"organization"</span>]] <span class="op">=</span> <span class="va">True</span>,</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    ci: <span class="bu">float</span> <span class="op">|</span> <span class="bu">bool</span> <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    time_label: <span class="bu">str</span> <span class="op">=</span> <span class="st">"Release Date"</span>,</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    score_label: <span class="bu">str</span> <span class="op">=</span> <span class="st">"Score"</span>,</span>
@@ -1694,9 +1694,9 @@ Note
 <dd>
 <p>List of organizations to include (in order of desired presentation).</p>
 </dd>
-<dt><code class="ref-definition">organizations_filter</code> <span class="element-type"><span class="element-type-name">bool</span></span></dt>
+<dt><code class="ref-definition">filters</code> <span class="element-type"><span class="element-type-name">bool</span> | list[<span class="element-type-name">Literal</span>['task', 'organization']]</span></dt>
 <dd>
-<p>Provide UI to filter plot by organization(s).</p>
+<p>Provide UI to filter plot by task and organization(s).</p>
 </dd>
 <dt><code class="ref-definition">ci</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name">bool</span></span></dt>
 <dd>
@@ -1741,7 +1741,7 @@ Note
 <p>Bar plot for comparing the scores of different models on a single evaluation.</p>
 <p>Summarize eval scores using a bar plot. By default, scores (<code>y</code>) are plotted by “model_display_name” (<code>y</code>). By default, confidence intervals are also plotted (disable this with <code>y_ci=False</code>).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/2f71c77bd660aeeac0df175a8562a5b4f79c6553/src/inspect_viz/view/beta/_scores_with_baseline.py#L38">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cecc2712cc5f399366baa9cc87125898725a99ca/src/inspect_viz/view/beta/_scores_with_baseline.py#L38">Source</a>
 </div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_with_baseline(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1818,7 +1818,7 @@ Note
 <h3 class="anchored" data-anchor-id="scores_heatmap">scores_heatmap</h3>
 <p>Creates a heatmap plot of success rate of eval data.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/2f71c77bd660aeeac0df175a8562a5b4f79c6553/src/inspect_viz/view/beta/_scores_heatmap.py#L32">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cecc2712cc5f399366baa9cc87125898725a99ca/src/inspect_viz/view/beta/_scores_heatmap.py#L32">Source</a>
 </div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_heatmap(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1907,7 +1907,7 @@ Note
 <h3 class="anchored" data-anchor-id="tool_calls">tool_calls</h3>
 <p>Heat map visualising tool calls over evaluation turns.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/2f71c77bd660aeeac0df175a8562a5b4f79c6553/src/inspect_viz/view/beta/_tool_calls.py#L13">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cecc2712cc5f399366baa9cc87125898725a99ca/src/inspect_viz/view/beta/_tool_calls.py#L13">Source</a>
 </div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tool_calls(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1986,7 +1986,7 @@ Note
 <h3 class="anchored" data-anchor-id="baseline">Baseline</h3>
 <p>A baseline is a reference line that can be used to highlight important thresholds (for example, expert human performance).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/2f71c77bd660aeeac0df175a8562a5b4f79c6553/src/inspect_viz/view/beta/_scores_with_baseline.py#L16">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cecc2712cc5f399366baa9cc87125898725a99ca/src/inspect_viz/view/beta/_scores_with_baseline.py#L16">Source</a>
 </div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Baseline(TypedDict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section class="level4">
@@ -2023,7 +2023,7 @@ Note
 <h3 class="anchored" data-anchor-id="celloptions">CellOptions</h3>
 <p>Cell options for the heatmap.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/2f71c77bd660aeeac0df175a8562a5b4f79c6553/src/inspect_viz/view/beta/_scores_heatmap.py#L22">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/cecc2712cc5f399366baa9cc87125898725a99ca/src/inspect_viz/view/beta/_scores_heatmap.py#L22">Source</a>
 </div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CellOptions(TypedDict, total<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section class="level4">
