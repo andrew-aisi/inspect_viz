@@ -1,6 +1,7 @@
 from typing import Unpack
 
 from inspect_viz import Component, Data
+from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz.mark import cell, text
 from inspect_viz.mark._mark import Mark
 from inspect_viz.mark._title import Title
@@ -75,8 +76,16 @@ def tool_calls(
     )
     attributes = defaults | attributes
 
+    # configure channels
+    channels: dict[str, str] = {
+        "Message": x,
+        "Sample": y,
+        "Tool": tool,
+    }
+    resolve_log_viewer_channel(data, channels)
+
     return plot(
-        cell(data, x=x, y=y, fill=tool),
+        cell(data, x=x, y=y, fill=tool, channels=channels),
         text(
             data,
             text=first(limit),
