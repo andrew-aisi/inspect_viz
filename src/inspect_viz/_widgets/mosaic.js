@@ -990,13 +990,15 @@ var Table = class extends Input {
     const disableClientSort = (_valueA, _valueB) => {
       return 0;
     };
+    const filter = filterable ? filterForColumnType(type) : void 0;
     const colDef = {
       field: column_name,
       headerName: column2.label || column_name,
       headerClass: headerClasses(headerAlignment),
       cellStyle: { textAlign: align },
       comparator: column2.type !== "literal" ? disableClientSort : void 0,
-      filter: !filterable ? false : filterForColumnType(type),
+      filter: filter?.filter,
+      filterParams: filter?.filterParams,
       flex,
       sortable,
       resizable,
@@ -1145,15 +1147,24 @@ var filterForColumnType = (type) => {
     case "integer":
     case "float":
     case "decimal":
-      return "agNumberColumnFilter";
+      return { filter: "agNumberColumnFilter" };
     case "date":
     case "datetime":
     case "timestamp":
-      return "agDateColumnFilter";
+      return { filter: "agDateColumnFilter" };
     case "boolean":
-      return "agTextColumnFilter";
+      return {
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["equals"],
+          textMatcher: ({ filterText, value }) => {
+            const stringValue = String(value);
+            return stringValue === filterText;
+          }
+        }
+      };
     default:
-      return "agTextColumnFilter";
+      return { filter: "agTextColumnFilter" };
   }
 };
 var formatterForType = (type, formatStr) => {

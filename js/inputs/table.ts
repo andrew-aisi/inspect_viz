@@ -634,6 +634,9 @@ export class Table extends Input {
             return 0;
         };
 
+        // Resolve the filter model for the column
+        const filter = filterable ? filterForColumnType(type) : undefined;
+
         // Position the filter below the header
         const colDef: ColDef = {
             field: column_name,
@@ -641,7 +644,8 @@ export class Table extends Input {
             headerClass: headerClasses(headerAlignment),
             cellStyle: { textAlign: align },
             comparator: column.type !== 'literal' ? disableClientSort : undefined,
-            filter: !filterable ? false : filterForColumnType(type),
+            filter: filter?.filter,
+            filterParams: filter?.filterParams,
             flex,
             sortable,
             resizable,
@@ -818,22 +822,37 @@ const resolveRowSelection = (options: TableOptions): RowSelectionOptions<any, an
     }
 };
 
-const filterForColumnType = (type: string): string => {
+interface FilterModel {
+    filter: string;
+    filterParams?: Record<string, unknown>;
+}
+
+const filterForColumnType = (type: string): FilterModel => {
     // Select the proper filter type based on the column type
     switch (type) {
         case 'number':
         case 'integer':
         case 'float':
         case 'decimal':
-            return 'agNumberColumnFilter';
+            return { filter: 'agNumberColumnFilter' };
         case 'date':
         case 'datetime':
         case 'timestamp':
-            return 'agDateColumnFilter';
+            return { filter: 'agDateColumnFilter' };
         case 'boolean':
-            return 'agTextColumnFilter';
+            return {
+                filter: 'agTextColumnFilter',
+                filterParams: {
+                    filterOptions: ['equals'],
+                    textMatcher: ({ filterText, value }) => {
+                        // Convert boolean to string for comparison
+                        const stringValue = String(value);
+                        return stringValue === filterText;
+                    },
+                },
+            };
         default:
-            return 'agTextColumnFilter';
+            return { filter: 'agTextColumnFilter' };
     }
 };
 
