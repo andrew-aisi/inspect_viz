@@ -1775,7 +1775,7 @@ var isLinkableUrl = (value) => {
 // js/plot/plot.ts
 var readMarks = (plotEl) => {
   const value = plotEl.value;
-  const marks = value.marks || [];
+  const marks = value ? value.marks || [] : [];
   return marks;
 };
 

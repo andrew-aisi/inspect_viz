@@ -2,6 +2,7 @@ from ._area import area, area_x, area_y
 from ._arrow import arrow
 from ._axis import axis_fx, axis_fy, axis_x, axis_y
 from ._bar import bar_x, bar_y
+from ._baseline import baseline
 from ._cell import cell, cell_x, cell_y
 from ._channel import (
     Channel,
@@ -77,6 +78,7 @@ __all__ = [
     "axis_y",
     "bar_x",
     "bar_y",
+    "baseline",
     "cell",
     "cell_x",
     "cell_y",

@@ -1,14 +1,18 @@
 from typing import Literal, NotRequired, TypedDict, cast
 
+from inspect_viz._core.data import Data
 from inspect_viz._core.param import Param
+from inspect_viz.mark._channel import Channel
 from inspect_viz.mark._mark import Mark
 from inspect_viz.mark._rule import rule_x, rule_y
 from inspect_viz.mark._text import text
 from inspect_viz.mark._types import FrameAnchor, LineAnchor
+from inspect_viz.transform._sql import sql
+from inspect_viz.transform._transform import Transform
 
 
 def baseline(
-    value: int | float,
+    value: Channel,
     *,
     orientation: Literal["x", "y"] = "x",
     label: str | None = None,
@@ -17,13 +21,15 @@ def baseline(
     color: str | None = "#000000",
     width: int | float | None = 1,
     dasharray: str | float | Param = "2,4",
+    data: Data | None = None,
+    filter: Transform | None = None,
 ) -> list[Mark]:
     """Create a plot baseline mark.
 
     Adds a title at the top of the plot frame.
 
     Args:
-       value: The numeric value where the baseline will be positioned on the chart's scale.
+       value: The channel where the baseline will be positioned on the chart's scale.
        orientation: The orientation on which the value for the baseline will be drawn. Defaults to "y" for vertical baselines.
        label: The display text that appears alongside the baseline line.
        label_position: Controls where the label text appears relative to the baseline line. "top" places the label above the line, "bottom" places it below. Defaults to the "top" position.
@@ -31,6 +37,8 @@ def baseline(
        color: The color of the baseline line and label. Can be any valid CSS color value (hex, rgb, named colors, etc.). If None, defaults to black.
        width: The thickness of the baseline line in pixels. Defaults to 1.
        dasharray: SVG dash pattern for the line (e.g., "5,5" for dashed line, "2,3,5,3" for dash-dot pattern). Defaults to "2,4" (a dashed line).
+       data: The data source for the baseline mark. If None, the baseline will not be bound to any data.
+       filter: A Transform to filter the data used for the baseline. If None, no filtering is applied.
     """
     """Generate baseline marks from a list of Baseline dictionaries."""
     # Prepare the baseline marks
@@ -39,17 +47,21 @@ def baseline(
     # resolve the baseline itself
     baseline_line = (
         rule_x(
+            data,
             x=value,
             stroke=color,
             stroke_dasharray=dasharray,
             stroke_width=width,
+            filter=filter,
         )
         if orientation == "x"
         else rule_y(
+            data,
             y=value,
             stroke=color,
             stroke_dasharray=dasharray,
             stroke_width=width,
+            filter=filter,
         )
     )
     components.append(baseline_line)
@@ -65,6 +77,7 @@ def baseline(
 
         # create the label text mark
         baseline_label = text(
+            data,
             x=value if orientation == "x" else None,
             y=value if orientation == "y" else None,
             frame_anchor=anchor["frame"],
@@ -74,6 +87,7 @@ def baseline(
             text=[label],
             fill=color,
             rotate=anchor.get("rotate", 0),
+            filter=filter,
         )
 
         components.append(baseline_label)

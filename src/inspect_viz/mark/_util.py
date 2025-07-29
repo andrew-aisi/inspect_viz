@@ -21,3 +21,19 @@ def column_param(
 
 def tip_mark(type: str, config: dict[str, JsonValue], options: MarkOptions) -> Mark:
     return Mark(type, config, options, {"tip": True})
+
+
+def flatten_marks(marks: Mark | list[Mark] | list[list[Mark]] | None) -> list[Mark]:
+    if marks is None:
+        return []
+    if isinstance(marks, Mark):
+        return [marks]
+
+    # Handle list case
+    result = []
+    for item in marks:
+        if isinstance(item, Mark):
+            result.append(item)
+        elif isinstance(item, list):
+            result.extend(item)
+    return result

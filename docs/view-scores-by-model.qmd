@@ -1,0 +1,39 @@
+---
+title: "Scores By Model"
+reference: "inspect_viz.view.beta"
+filters: 
+   - at: pre-ast
+     type: json
+     path: reference/filter/filter.py
+   - at: pre-ast
+     path: reference/filter/post.lua
+datafile: "agi-lsat-ar.parquet"
+---
+
+## Overview
+
+The `scores_by_model()` function creates a horizontal bar plot for comparing the scores of different models on a single evaluation, with one or more baselines overlaid as vertical lines.
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.view.beta import scores_by_model
+from inspect_viz.mark import baseline
+
+evals = Data.from_file("agi-lsat-ar.parquet")
+scores_by_model(evals, marks=[baseline(0.697)])
+```
+
+
+## Data Preparation
+
+{{< include _data_preparation.md >}}
+
+{{< include _data_preparation_optional.md >}}
+
+
+## Function Reference {reference="scores_by_model"}
+
+## Implementation
+
+The [Scores with Baseline](examples/inspect/scores-by-model/index.qmd) example demonstrates how this view was implemented using lower level plotting components.
+

@@ -82,10 +82,10 @@ The built-in [Views](views.qmd) already support the `log_viewer` column, so link
 
 ```{python}
 from inspect_viz import Data
-from inspect_viz.view.beta import scores_with_baseline
+from inspect_viz.view.beta import scores_by_model
 
 evals = Data.from_file("agi-lsat-ar.parquet")
-scores_with_baseline(evals)
+scores_by_model(evals)
 ```
 
 If you mouse over the bars you will see a log viewer link which you can click to navigate to the log.

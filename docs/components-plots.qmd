@@ -290,3 +290,37 @@ The `name` directive gives a `plot` a unique name. A standalone legend can refer
 Legends also act as interactors, taking a bound `Selection` as a `target` parameter. For example, discrete legends use the logic of the `toggle` interactor to enable point selections. Two-way binding is supported for Selections using *single* resolution, enabling legends and other interactors to share state.
 
 See the docs on [Toggle](components-selections.qmd#toggle) interactors for an example of an interactive legend.
+
+## Baselines 
+
+Baselines can be added by passing baselines to `marks` option. For example, here we add a baseline with the median weight from the athletes data:
+
+```{python}
+from inspect_viz.mark import baseline
+from inspect_viz.transform import median, sql
+plot(
+    dot(athletes, x="weight", y="height", fill="sex", opacity=0.1),
+    baseline(70),
+    regression_y(athletes, x="weight", y="height", stroke="sex"),
+    legend="color"
+)
+```
+
+If you have a simple static baseline, you may simply provide the value, along with other options to customize the label, position, and other attributes of the baseline:
+
+```python
+from inspect_viz.mark import title
+
+plot(
+    ...
+    baseline(
+        median("weight"), 
+        data=athletes, 
+        label="Median", 
+        label_position="middle", 
+        color="red"),
+    ...
+)
+```
+
+By default, baselines are drawn using the x-axis values. To draw a baseline using the y-axis values, pass `orientation="y"` to the baseline function.

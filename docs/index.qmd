@@ -139,7 +139,7 @@ You can sort and filter tables by column, use a scrolling or paginated display, 
 
 ## Links
 
-Inspect Viz supports creating direct links from visualizations to published Inspect log transcripts. Links can be made at the eval level, or to individual samples, messages, or events. For example, this plot produced with `scores_with_baseline()` includes a link to the underlying logs in its tooltips:
+Inspect Viz supports creating direct links from visualizations to published Inspect log transcripts. Links can be made at the eval level, or to individual samples, messages, or events. For example, this plot produced with `scores_by_model()` includes a link to the underlying logs in its tooltips:
 
 ```{python}
 #| include: false
@@ -147,8 +147,8 @@ evals = Data.from_file("agi-lsat-ar.parquet")
 ```
 
 ```{python}
-from inspect_viz.view.beta import scores_with_baseline
-scores_with_baseline(evals, baseline=0.91)
+from inspect_viz.view.beta import scores_by_model
+scores_by_model(evals) # baseline=0.91
 ```
 
 The pre-built [Views](views.qmd) all support linking when a `log_viewer` column is available in the dataset. To learn more about ammending datasets with viewer URLs as well as adding linking support to your own plots see the article on [Links](components-links.qmd).
