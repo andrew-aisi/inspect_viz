@@ -14,6 +14,7 @@ The plot visualizes tool usage over a series of turns in a Cybench evaluation. W
 from inspect_viz import Data
 from inspect_viz.plot import plot, legend
 from inspect_viz.mark import cell, text
+from inspect_viz.transform import first
 
 # read data (see 'Data Preparation' below)
 data = Data.from_file("cybench_tools.parquet") # <1>
@@ -30,7 +31,7 @@ plot(
     
     text( # <3>
         data, 
-        text="limit", 
+        text=first("limit"), 
         y="id",
         frame_anchor="right", 
         font_size=8, 
