@@ -420,7 +420,7 @@
     "href": "examples/index.html#inspect",
     "title": "Inspect Viz Examples",
     "section": "Inspect",
-    "text": "Inspect\nThese examples demonstrates creating visualisations from Inspect log files (leveraging the functions in inspect_ai.analysis module for creation of data frames from logs).\n\n\n\n\n\n\n\nScores by Task\nBar plot summarizing eval scores by model and task.\n\n\nScores by Factor\nBar plot for comparing eval scores by model and a boolean factor (e.g. no hint vs. hint).\n\n\nScores Timeline\nEval scores for various models, with release date on the x-axis.\n\n\nScores Heatmap\nHeatmap with values for comparing scores across model and task.\n\n\nScores with Baseline\nVisualise model scores on a single evaluation, with one or more baselines.\n\n\nTool Calls\nVisualise tool usage over a series of turns.",
+    "text": "Inspect\nThese examples demonstrates creating visualisations from Inspect log files (leveraging the functions in inspect_ai.analysis module for creation of data frames from logs).\n\n\n\n\n\n\n\nScores by Task\nBar plot summarizing eval scores by model and task.\n\n\nScores by Factor\nBar plot for comparing eval scores by model and a boolean factor (e.g. no hint vs. hint).\n\n\nScores Timeline\nEval scores for various models, with release date on the x-axis.\n\n\nScores Heatmap\nHeatmap with values for comparing scores across model and task.\n\n\nScores by Model\nVisualise model scores on a single evaluation, with one or more baselines.\n\n\nTool Calls\nVisualise tool usage over a series of turns.",
     "crumbs": [
       "Examples"
     ]
