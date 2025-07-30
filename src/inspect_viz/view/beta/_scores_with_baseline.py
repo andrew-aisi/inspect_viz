@@ -1,13 +1,12 @@
-from typing import Literal, NotRequired, TypedDict, Unpack, cast
+from typing import Literal, NotRequired, TypedDict, Unpack
 
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
 from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.notgiven import NotGiven
 from inspect_viz.mark._bar import bar_x
+from inspect_viz.mark._baseline import baseline
 from inspect_viz.mark._mark import Mark
-from inspect_viz.mark._rule import rule_x
-from inspect_viz.mark._text import text
 from inspect_viz.mark._title import Title
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._plot import plot
@@ -31,7 +30,7 @@ class Baseline(TypedDict):
     dasharray: NotRequired[str | None]
     """SVG dash pattern for the line (e.g., "5,5" for dashed line, "2,3,5,3" for dash-dot pattern). Defaults to "2,4" (a dashed line)."""
 
-    position: NotRequired[Literal["top", "bottom"] | None]
+    position: NotRequired[Literal["start", "middle", "end"] | None]
     """Controls where the label text appears relative to the baseline line. "top" places the label above the line, "bottom" places it below. Defaults to the "top" position."""
 
 
@@ -99,18 +98,6 @@ def scores_with_baseline(
     # Normalize baseline to a list if it isn't already
     resolved_baselines = resolve_baseline(baseline)
 
-    # apply margins based upon the baselines
-    top_margin = (
-        30
-        if any(baseline.get("position") != "bottom" for baseline in resolved_baselines)
-        else None
-    )
-    bottom_margin = (
-        30
-        if any(baseline.get("position") == "bottom" for baseline in resolved_baselines)
-        else None
-    )
-
     # compute the x_domain, setting it to 0 to 1 if the values are all
     # within that range
     max_score = data.column_max(x)
@@ -124,8 +111,6 @@ def scores_with_baseline(
     defaultAttributes = PlotAttributes(
         x_domain=x_domain,
         margin_left=margin_left,
-        margin_top=top_margin,
-        margin_bottom=bottom_margin,
         color_domain=[1],
     )
     attributes = defaultAttributes | attributes
@@ -180,42 +165,20 @@ def resolve_baseline(
         return []
 
 
-def baseline_marks(baselines: list[Baseline]) -> list[Component]:
+def baseline_marks(baselines: list[Baseline]) -> list[Mark]:
     """Generate baseline marks from a list of Baseline dictionaries."""
     # Prepare the baseline marks
-    components = []
-    for baseline in baselines:
-        baseline_value = [baseline["value"]]
-        baseline_text: list[str] = [str(baseline["label"])]
-        baseline_color = baseline.get("color") or "#000000"
-        baseline_width = baseline.get("width") or 1
-        baseline_dasharray = baseline.get("dasharray") or "2,4"
-
-        frame_anchor = cast(
-            Literal["top", "bottom"],
-            "top" if baseline.get("position") != "bottom" else "bottom",
+    components: list[Mark] = []
+    for b in baselines:
+        components.extend(
+            baseline(
+                orientation="x",
+                value=b["value"],
+                label=b["label"],
+                label_position=b.get("position") or "end",
+                color=b.get("color", "#000000"),
+                width=b.get("width", 1),
+                dasharray=b.get("dasharray") or "2,4",
+            )
         )
-        line_anchor = cast(
-            Literal["top", "bottom"],
-            "bottom" if baseline.get("position") != "bottom" else "top",
-        )
-        dy = -3 if baseline.get("position") != "bottom" else 3
-
-        line = rule_x(
-            x=baseline_value,
-            stroke=baseline_color,
-            stroke_dasharray=baseline_dasharray,
-            stroke_width=baseline_width,
-        )
-
-        label = text(
-            x=baseline_value,
-            frame_anchor=frame_anchor,
-            line_anchor=line_anchor,
-            dy=dy,
-            text=baseline_text,
-            fill=baseline_color,
-        )
-        components.append(line)
-        components.append(label)
     return components

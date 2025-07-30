@@ -70,8 +70,8 @@ def rule_x(
 
 
 def rule_y(
-    data: Data,
-    y: ChannelSpec | Param,
+    data: Data | None = None,
+    y: ChannelSpec | Param | None = None,
     x: ChannelIntervalSpec | Param | None = None,
     x1: ChannelSpec | Param | None = None,
     x2: ChannelSpec | Param | None = None,
@@ -109,7 +109,7 @@ def rule_y(
     """
     config: dict[str, Any] = dict_remove_none(
         dict(
-            data=data._plot_from(filter_by),
+            data=data._plot_from(filter_by) if data else None,
             y=column_param(data, y),
             x=column_param(data, x),
             x1=column_param(data, x1),
