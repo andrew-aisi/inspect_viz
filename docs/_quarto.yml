@@ -49,11 +49,10 @@ website:
              text: Views
              contents:
                - href: view-scores-by-task.qmd
+               - href: view-scores-by-model.qmd
                - href: view-scores-by-factor.qmd
                - href: view-scores-timeline.qmd
-               - href: view-scores-heatmap.qmd
-               - href: view-scores-with-baseline.qmd
-                 text: "Scores Baseline"
+               - href: view-scores-heatmap.qmq
                - href: view-tool-calls.qmd
            - text: Components
              contents:
@@ -78,11 +77,10 @@ website:
           - section: Inspect
             contents:
               - href: examples/inspect/scores-by-task/index.qmd
+              - href: examples/inspect/scores-by-model/index.qmd
               - href: examples/inspect/scores-by-factor/index.qmd
               - href: examples/inspect/scores-timeline/index.qmd
               - href: examples/inspect/scores-heatmap/index.qmd
-              - href: examples/inspect/scores-with-baseline/index.qmd
-                text: "Scores w/ Baseline"
               - href: examples/inspect/tool-calls/index.qmd
           - section: General
             contents:

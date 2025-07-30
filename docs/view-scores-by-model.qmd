@@ -1,5 +1,5 @@
 ---
-title: "Scores By Model"
+title: "Scores by Model"
 reference: "inspect_viz.view.beta"
 filters: 
    - at: pre-ast
@@ -35,5 +35,5 @@ scores_by_model(evals, marks=[baseline(0.697)])
 
 ## Implementation
 
-The [Scores with Baseline](examples/inspect/scores-by-model/index.qmd) example demonstrates how this view was implemented using lower level plotting components.
+The [Scores by Model](examples/inspect/scores-by-model/index.qmd) example demonstrates how this view was implemented using lower level plotting components.
 
