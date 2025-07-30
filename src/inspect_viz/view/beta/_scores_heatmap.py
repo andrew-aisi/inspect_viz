@@ -42,7 +42,7 @@ def scores_heatmap(
     width: float | None = None,
     x_label: str | None | NotGiven = None,
     y_label: str | None | NotGiven = None,
-    legend: Legend | Literal[False] | None = None,
+    legend: Legend | bool | None = None,
     sort: Literal["ascending", "descending"] | SortOrder | None = "ascending",
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
@@ -174,7 +174,7 @@ def scores_heatmap(
                 margin_left=222,
                 width=370,
             )
-            if legend is None
+            if legend is None or legend is True
             else legend
             if legend
             else None
