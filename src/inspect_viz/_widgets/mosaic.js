@@ -1860,7 +1860,7 @@ var setupTooltipObserver = (svgEl, specEl) => {
           maybeHideTooltip();
         } else {
           const userChannels = readUserChannels(svgEl);
-          const userKeys = Object.keys(userChannels || {});
+          const userKeys = userChannels ? Object.keys(userChannels) : void 0;
           const parsed = parseSVGTooltip(tipContainerEl, tipEl);
           const tooltips = distillTooltips(parsed, userKeys);
           const svgPoint = svgEl.createSVGPoint();
@@ -2016,6 +2016,9 @@ var parseSVGTooltip = (tipContainerEl, tipEl) => {
   return result;
 };
 function distillTooltips(parsed, userKeys) {
+  if (!userKeys) {
+    return parsed.values;
+  }
   const userValues = parsed.values.filter((row) => {
     return userKeys.includes(row.key);
   }).map((row) => row.value);
@@ -2032,7 +2035,7 @@ function distillTooltips(parsed, userKeys) {
     if (userValues.includes(row.value)) {
       return false;
     }
-    return true;
+    return false;
   });
   return filteredRows;
 }

@@ -121,7 +121,7 @@ const setupTooltipObserver = (svgEl: SVGSVGElement, specEl: HTMLElement) => {
                 } else {
                     // Look for channels
                     const userChannels = readUserChannels(svgEl);
-                    const userKeys = Object.keys(userChannels || {});
+                    const userKeys = userChannels ? Object.keys(userChannels) : undefined;
 
                     // Find the tip container and parse it to determine how the tooltips
                     // are configured and what is being displayed.
@@ -336,7 +336,14 @@ const parseSVGTooltip = (tipContainerEl: SVGElement, tipEl: SVGGElement): Parsed
     return result;
 };
 
-function distillTooltips(parsed: ParsedTooltip, userKeys: string[]) {
+function distillTooltips(parsed: ParsedTooltip, userKeys?: string[]) {
+    // There is no user customization, pass through
+    if (!userKeys) {
+        return parsed.values;
+    }
+
+    // There are user values, only show what
+    // is explicitly included
     const userValues = parsed.values
         .filter(row => {
             return userKeys.includes(row.key);
@@ -364,7 +371,7 @@ function distillTooltips(parsed: ParsedTooltip, userKeys: string[]) {
             return false;
         }
 
-        return true;
+        return false;
     });
     return filteredRows;
 }
