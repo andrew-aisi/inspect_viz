@@ -348,37 +348,62 @@
   {
     "objectID": "view-scores-by-model.html",
     "href": "view-scores-by-model.html",
-    "title": "Scores By Model",
+    "title": "Scores by Model",
     "section": "",
-    "text": "The scores_by_model() function creates a horizontal bar plot for comparing the scores of different models on a single evaluation, with one or more baselines overlaid as vertical lines.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_model\nfrom inspect_viz.mark import baseline\n\nevals = Data.from_file(\"agi-lsat-ar.parquet\")\nscores_by_model(evals, marks=[baseline(0.697)])"
+    "text": "The scores_by_model() function creates a horizontal bar plot for comparing the scores of different models on a single evaluation, with one or more baselines overlaid as vertical lines.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_model\nfrom inspect_viz.mark import baseline\n\nevals = Data.from_file(\"agi-lsat-ar.parquet\")\nscores_by_model(evals, marks=[baseline(0.697)])",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores by Model"
+    ]
   },
   {
     "objectID": "view-scores-by-model.html#overview",
     "href": "view-scores-by-model.html#overview",
-    "title": "Scores By Model",
+    "title": "Scores by Model",
     "section": "",
-    "text": "The scores_by_model() function creates a horizontal bar plot for comparing the scores of different models on a single evaluation, with one or more baselines overlaid as vertical lines.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_model\nfrom inspect_viz.mark import baseline\n\nevals = Data.from_file(\"agi-lsat-ar.parquet\")\nscores_by_model(evals, marks=[baseline(0.697)])"
+    "text": "The scores_by_model() function creates a horizontal bar plot for comparing the scores of different models on a single evaluation, with one or more baselines overlaid as vertical lines.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_model\nfrom inspect_viz.mark import baseline\n\nevals = Data.from_file(\"agi-lsat-ar.parquet\")\nscores_by_model(evals, marks=[baseline(0.697)])",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores by Model"
+    ]
   },
   {
     "objectID": "view-scores-by-model.html#data-preparation",
     "href": "view-scores-by-model.html#data-preparation",
-    "title": "Scores By Model",
+    "title": "Scores by Model",
     "section": "Data Preparation",
-    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"agi-lsat-ar.parquet\")\nYou can additionanlly use the task_info() operation to map lower-level task names to task display names (e.g. “gpqa_diamond” -&gt; “GPQA Diamond”).\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer() and model_info())."
+    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"agi-lsat-ar.parquet\")\nYou can additionanlly use the task_info() operation to map lower-level task names to task display names (e.g. “gpqa_diamond” -&gt; “GPQA Diamond”).\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer() and model_info()).",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores by Model"
+    ]
   },
   {
     "objectID": "view-scores-by-model.html#function-reference",
     "href": "view-scores-by-model.html#function-reference",
-    "title": "Scores By Model",
+    "title": "Scores by Model",
     "section": "Function Reference",
-    "text": "Function Reference\nBar plot for comparing the scores of different models on a single evaluation.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “model_display_name” (y). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_by_model(\n    data: Data,\n    *,\n    model_name: str = \"model_display_name\",\n    score_value: str = \"score_headline_value\",\n    score_stderr: str = \"score_headline_stderr\",\n    ci: float = 0.95,\n    sort: Literal[\"asc\", \"desc\"] | None = None,\n    score_label: str | None | NotGiven = None,\n    model_label: str | None | NotGiven = None,\n    color: str | None = None,\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | list[list[Mark]] | None = None,\n    width: float | None = None,\n    height: float | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nmodel_name str\n\nColumn containing the model name (defaults to “model_display_name”)\n\nscore_value str\n\nColumn containing the score value (defaults to “score_headline_value”).\n\nscore_stderr str\n\nColumn containing the score standard error (defaults to “score_headline_stderr”).\n\nci float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.\n\nsort Literal['asc', 'desc'] | None\n\nSort order for the bars (sorts using the ‘x’ value). Can be “asc” or “desc”. Defaults to “asc”.\n\nscore_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\nmodel_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ncolor str | None\n\nThe color for the bars. Defaults to “#416AD0”. Pass any valid hex color value.\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nmarks Mark | list[Mark] | list[list[Mark]] | None\n\nAdditional marks to include in the plot.\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to []."
+    "text": "Function Reference\nBar plot for comparing the scores of different models on a single evaluation.\nSummarize eval scores using a bar plot. By default, scores (y) are plotted by “model_display_name” (y). By default, confidence intervals are also plotted (disable this with y_ci=False).\n\nSource\n\ndef scores_by_model(\n    data: Data,\n    *,\n    model_name: str = \"model_display_name\",\n    score_value: str = \"score_headline_value\",\n    score_stderr: str = \"score_headline_stderr\",\n    ci: float = 0.95,\n    sort: Literal[\"asc\", \"desc\"] | None = None,\n    score_label: str | None | NotGiven = None,\n    model_label: str | None | NotGiven = None,\n    color: str | None = None,\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | list[list[Mark]] | None = None,\n    width: float | None = None,\n    height: float | None = None,\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table. This is typically created using a data frame read with the inspect evals_df() function.\n\nmodel_name str\n\nColumn containing the model name (defaults to “model_display_name”)\n\nscore_value str\n\nColumn containing the score value (defaults to “score_headline_value”).\n\nscore_stderr str\n\nColumn containing the score standard error (defaults to “score_headline_stderr”).\n\nci float\n\nConfidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.\n\nsort Literal['asc', 'desc'] | None\n\nSort order for the bars (sorts using the ‘x’ value). Can be “asc” or “desc”. Defaults to “asc”.\n\nscore_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\nmodel_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ncolor str | None\n\nThe color for the bars. Defaults to “#416AD0”. Pass any valid hex color value.\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nmarks Mark | list[Mark] | list[list[Mark]] | None\n\nAdditional marks to include in the plot.\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio)\n\n**attributes Unpack[PlotAttributes]\n\nAdditional PlotAttributes. By default, the y_inset_top and margin_bottom are set to 10 pixels and x_ticks is set to [].",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores by Model"
+    ]
   },
   {
     "objectID": "view-scores-by-model.html#implementation",
     "href": "view-scores-by-model.html#implementation",
-    "title": "Scores By Model",
+    "title": "Scores by Model",
     "section": "Implementation",
-    "text": "Implementation\nThe Scores with Baseline example demonstrates how this view was implemented using lower level plotting components."
+    "text": "Implementation\nThe Scores by Model example demonstrates how this view was implemented using lower level plotting components.",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores by Model"
+    ]
   },
   {
     "objectID": "examples/index.html",
@@ -435,15 +460,15 @@
     ]
   },
   {
-    "objectID": "examples/inspect/scores-by-factor/index.html",
-    "href": "examples/inspect/scores-by-factor/index.html",
-    "title": "Scores by Factor",
+    "objectID": "examples/inspect/scores-by-model/index.html",
+    "href": "examples/inspect/scores-by-model/index.html",
+    "title": "Scores by Model",
     "section": "",
-    "text": "This example illustrates the code behind the scores_by_factor() pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.mark import frame, rule_y\nfrom inspect_viz.plot import legend, plot\nfrom inspect_viz.transform import ci_bounds, sql\n\nevals = Data.from_file(\"evals.csv\")\n\n# factor colors/labels\n1fx_colors = [\"#3266ae\", \"#a6c0e5\"]\nfx_labels = [\"No hint\", \"Hint\"]\n\n# confidence interval tranforms\nci_lower, ci_upper = ci_bounds(\n    0.95, \n    score=\"score_headline_value\", \n    stderr=\"score_headline_stderr\"\n)\n\n# compute plot height (65 pixels per model)\n2height = 65 * len(evals.column_unique(\"model_display_name\"))\n\nplot(\n3    frame(\"left\", inset_top=5, inset_bottom=5),\n    rule_y(\n        evals,\n        x=\"score_headline_value\",\n        y=\"task_arg_hint\",\n        fy=\"model_display_name\",\n4        sort={\"fy\": \"-x\"},\n        stroke=sql(f\"IF(NOT task_arg_hint, '{fx_labels[0]}', '{fx_labels[1]}')\"), \n        stroke_width=3,\n        stroke_linecap=\"round\",\n        marker_end=\"circle\",\n        tip=True,\n        channels={\n            \"Model\": \"model_display_name\", \n            \"Hint\": \"task_arg_hint\",\n            \"Score\": \"score_headline_value\", \n            \"Stderr\": \"score_headline_stderr\"\n        },\n    ),\n    rule_y(\n        evals,\n5        x1=ci_lower,\n        x2=ci_upper,\n        y=\"task_arg_hint\",\n        fy=\"model_display_name\",\n        stroke=f\"{fx_colors[0]}20\",\n        stroke_width=15,\n    ),\n6    legend=legend(\"color\", target=evals.selection),\n    x_label=\"Score\",\n7    y_label=None,\n    y_ticks=[],\n    y_tick_size=0,\n    fy_label=None,\n    fy_axis=\"left\",\n8    color_domain=fx_labels,\n    color_range=fx_colors,\n    margin_top=0,\n9    margin_left=100,\n    height=height\n)\n\n\n\n1\n\nFactors need to define a dark/light color and labels for the their False and True states.\n\n2\n\nCompute plot height based on number of unique models.\n\n3\n\nSets off each model with their own horizonal axis line.\n\n4\n\nOrder models on y axis from highest to lowest score.\n\n5\n\nConfidence interval using specified stderr column.\n\n6\n\nClickable legend to filter view by factor value.\n\n7\n\nY-axis labels and ticks already covered by factor and frame().\n\n8\n\nMap legend and colors map to factor.\n\n9\n\nLeave room for model names.",
+    "text": "This example illustrates the code behind the scores_by_model() pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.\nThe plot summarizes the scores of a single evaluation task, showing performance for 13 different models. Models are ordered based upon their headline score (defaulting to descending).\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import bar_x, rule_x, text\n\nevals = Data.from_file(\"agi-lsat-ar.parquet\")\n\nbaseline_color = \"#000000\"\nbaseline_value = 0.91\n    \nplot(\n1    bar_x(\n        evals,\n        x=\"score_headline_value\",\n        y=\"model\",\n        sort={\"y\": \"x\", \"reverse\": True},\n        fill=\"#416AD0\",\n        channels={\"Log Viewer\": \"log_viewer\"},\n        tip=True\n    ),\n2    rule_x(\n        x=[baseline_value],\n        stroke_dasharray=\"2,4\",\n        stroke_width=1,\n        stroke=[baseline_color]\n    ),\n3    text(\n        x=[baseline_value],\n        frame_anchor=\"top\",\n        line_anchor=\"bottom\",\n        dy=-3,\n        text=[\"Baseline\"],\n        text_anchor=\"middle\",\n        fill=[baseline_color]\n    ),\n4    marginLeft=250,\n    marginTop=30,\n    x_domain=[0, 1.0],\n    y_label=None,\n    x_label=\"Accuracy\"\n)\n\n\n\n1\n\nThis draws the core bar chart, sorting the y-axis by the value of x.\n\n2\n\nThis draws the baseline at the baseline_value position. Note that we are passing an explicit value for baseline rather that reading the value from the data frame.\n\n3\n\nThis draws the text label for the baseline, positioning it at the top of the frame and anchoring the bottom of the text to the that top position.\n\n4\n\nProvide margin to allow space for the y-axis labels and for the baseline text above the plot.",
     "crumbs": [
       "Examples",
       "Inspect",
-      "Scores by Factor"
+      "Scores by Model"
     ]
   },
   {
@@ -1391,15 +1416,15 @@
     ]
   },
   {
-    "objectID": "examples/inspect/scores-with-baseline/index.html",
-    "href": "examples/inspect/scores-with-baseline/index.html",
-    "title": "Scores With Baseline",
+    "objectID": "examples/inspect/scores-by-factor/index.html",
+    "href": "examples/inspect/scores-by-factor/index.html",
+    "title": "Scores by Factor",
     "section": "",
-    "text": "This example illustrates the code behind the scores_with_baseline() pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.\nThe plot summarizes the scores of a single evaluation task, showing performance for 13 different models. Models are ordered based upon their headline score (defaulting to descending).\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import bar_x, rule_x, text\n\nevals = Data.from_file(\"agi-lsat-ar.parquet\")\n\nbaseline_color = \"#000000\"\nbaseline_value = 0.91\n    \nplot(\n1    bar_x(\n        evals,\n        x=\"score_headline_value\",\n        y=\"model\",\n        sort={\"y\": \"x\", \"reverse\": True},\n        fill=\"#416AD0\",\n        channels={\"Log Viewer\": \"log_viewer\"},\n        tip=True\n    ),\n2    rule_x(\n        x=[baseline_value],\n        stroke_dasharray=\"2,4\",\n        stroke_width=1,\n        stroke=[baseline_color]\n    ),\n3    text(\n        x=[baseline_value],\n        frame_anchor=\"top\",\n        line_anchor=\"bottom\",\n        dy=-3,\n        text=[\"Baseline\"],\n        text_anchor=\"middle\",\n        fill=[baseline_color]\n    ),\n4    marginLeft=250,\n    marginTop=30,\n    x_domain=[0, 1.0],\n    y_label=None,\n    x_label=\"Accuracy\"\n)\n\n\n\n1\n\nThis draws the core bar chart, sorting the y-axis by the value of x.\n\n2\n\nThis draws the baseline at the baseline_value position. Note that we are passing an explicit value for baseline rather that reading the value from the data frame.\n\n3\n\nThis draws the text label for the baseline, positioning it at the top of the frame and anchoring the bottom of the text to the that top position.\n\n4\n\nProvide margin to allow space for the y-axis labels and for the baseline text above the plot.",
+    "text": "This example illustrates the code behind the scores_by_factor() pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.\n\n\n\nCode\n\nfrom inspect_viz import Data\nfrom inspect_viz.mark import frame, rule_y\nfrom inspect_viz.plot import legend, plot\nfrom inspect_viz.transform import ci_bounds, sql\n\nevals = Data.from_file(\"evals.csv\")\n\n# factor colors/labels\n1fx_colors = [\"#3266ae\", \"#a6c0e5\"]\nfx_labels = [\"No hint\", \"Hint\"]\n\n# confidence interval tranforms\nci_lower, ci_upper = ci_bounds(\n    0.95, \n    score=\"score_headline_value\", \n    stderr=\"score_headline_stderr\"\n)\n\n# compute plot height (65 pixels per model)\n2height = 65 * len(evals.column_unique(\"model_display_name\"))\n\nplot(\n3    frame(\"left\", inset_top=5, inset_bottom=5),\n    rule_y(\n        evals,\n        x=\"score_headline_value\",\n        y=\"task_arg_hint\",\n        fy=\"model_display_name\",\n4        sort={\"fy\": \"-x\"},\n        stroke=sql(f\"IF(NOT task_arg_hint, '{fx_labels[0]}', '{fx_labels[1]}')\"), \n        stroke_width=3,\n        stroke_linecap=\"round\",\n        marker_end=\"circle\",\n        tip=True,\n        channels={\n            \"Model\": \"model_display_name\", \n            \"Hint\": \"task_arg_hint\",\n            \"Score\": \"score_headline_value\", \n            \"Stderr\": \"score_headline_stderr\"\n        },\n    ),\n    rule_y(\n        evals,\n5        x1=ci_lower,\n        x2=ci_upper,\n        y=\"task_arg_hint\",\n        fy=\"model_display_name\",\n        stroke=f\"{fx_colors[0]}20\",\n        stroke_width=15,\n    ),\n6    legend=legend(\"color\", target=evals.selection),\n    x_label=\"Score\",\n7    y_label=None,\n    y_ticks=[],\n    y_tick_size=0,\n    fy_label=None,\n    fy_axis=\"left\",\n8    color_domain=fx_labels,\n    color_range=fx_colors,\n    margin_top=0,\n9    margin_left=100,\n    height=height\n)\n\n\n\n1\n\nFactors need to define a dark/light color and labels for the their False and True states.\n\n2\n\nCompute plot height based on number of unique models.\n\n3\n\nSets off each model with their own horizonal axis line.\n\n4\n\nOrder models on y axis from highest to lowest score.\n\n5\n\nConfidence interval using specified stderr column.\n\n6\n\nClickable legend to filter view by factor value.\n\n7\n\nY-axis labels and ticks already covered by factor and frame().\n\n8\n\nMap legend and colors map to factor.\n\n9\n\nLeave room for model names.",
     "crumbs": [
       "Examples",
       "Inspect",
-      "Scores w/ Baseline"
+      "Scores by Factor"
     ]
   },
   {
@@ -1443,60 +1468,35 @@
     "href": "view-scores-heatmap.html",
     "title": "Scores Heatmap",
     "section": "",
-    "text": "The scores_heatmap()function renders a heatmap for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_heatmap\n\nevals = Data.from_file(\"evals.parquet\")\nscores_heatmap(evals, height=200, legend=False)",
-    "crumbs": [
-      "Getting Started",
-      "Views",
-      "Scores Heatmap"
-    ]
+    "text": "The scores_heatmap()function renders a heatmap for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_heatmap\n\nevals = Data.from_file(\"evals.parquet\")\nscores_heatmap(evals, height=200, legend=False)"
   },
   {
     "objectID": "view-scores-heatmap.html#overview",
     "href": "view-scores-heatmap.html#overview",
     "title": "Scores Heatmap",
     "section": "",
-    "text": "The scores_heatmap()function renders a heatmap for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_heatmap\n\nevals = Data.from_file(\"evals.parquet\")\nscores_heatmap(evals, height=200, legend=False)",
-    "crumbs": [
-      "Getting Started",
-      "Views",
-      "Scores Heatmap"
-    ]
+    "text": "The scores_heatmap()function renders a heatmap for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_heatmap\n\nevals = Data.from_file(\"evals.parquet\")\nscores_heatmap(evals, height=200, legend=False)"
   },
   {
     "objectID": "view-scores-heatmap.html#data-preparation",
     "href": "view-scores-heatmap.html#data-preparation",
     "title": "Scores Heatmap",
     "section": "Data Preparation",
-    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"evals.parquet\")\nYou can additionanlly use the task_info() operation to map lower-level task names to task display names (e.g. “gpqa_diamond” -&gt; “GPQA Diamond”).\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer() and model_info()).",
-    "crumbs": [
-      "Getting Started",
-      "Views",
-      "Scores Heatmap"
-    ]
+    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"evals.parquet\")\nYou can additionanlly use the task_info() operation to map lower-level task names to task display names (e.g. “gpqa_diamond” -&gt; “GPQA Diamond”).\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer() and model_info())."
   },
   {
     "objectID": "view-scores-heatmap.html#function-reference",
     "href": "view-scores-heatmap.html#function-reference",
     "title": "Scores Heatmap",
     "section": "Function Reference",
-    "text": "Function Reference\nCreates a heatmap plot of success rate of eval data.\n\nSource\n\ndef scores_heatmap(\n    data: Data,\n    x: str = \"task_display_name\",\n    y: str = \"model_display_name\",\n    fill: str = \"score_headline_value\",\n    cell: CellOptions | None = None,\n    tip: bool = True,\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    height: float | None = None,\n    width: float | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    legend: Legend | bool | None = None,\n    sort: Literal[\"ascending\", \"descending\"] | SortOrder | None = \"ascending\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table.\n\nx str\n\nName of column to use for columns.\n\ny str\n\nName of column to use for rows.\n\nfill str\n\nName of the column to use as values to determine cell color.\n\ncell CellOptions | None\n\nOptions for the cell marks.\n\ntip bool\n\nWhether to show a tooltip with the value when hovering over a cell (defaults to True).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio).\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\ny-axis label (defaults to None).\n\nlegend Legend | bool | None\n\nOptions for the legend. Pass None to disable the legend.\n\nsort Literal['ascending', 'descending'] | SortOrder | None\n\nSort order for the x and y axes. If ascending, the highest values will be sorted to the top right. If descending, the highest values will appear in the bottom left. If None, no sorting is applied. If a SortOrder is provided, it will be used to sort the x and y axes.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes",
-    "crumbs": [
-      "Getting Started",
-      "Views",
-      "Scores Heatmap"
-    ]
+    "text": "Function Reference\nCreates a heatmap plot of success rate of eval data.\n\nSource\n\ndef scores_heatmap(\n    data: Data,\n    x: str = \"task_display_name\",\n    y: str = \"model_display_name\",\n    fill: str = \"score_headline_value\",\n    cell: CellOptions | None = None,\n    tip: bool = True,\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    height: float | None = None,\n    width: float | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    legend: Legend | bool | None = None,\n    sort: Literal[\"ascending\", \"descending\"] | SortOrder | None = \"ascending\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table.\n\nx str\n\nName of column to use for columns.\n\ny str\n\nName of column to use for rows.\n\nfill str\n\nName of the column to use as values to determine cell color.\n\ncell CellOptions | None\n\nOptions for the cell marks.\n\ntip bool\n\nWhether to show a tooltip with the value when hovering over a cell (defaults to True).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio).\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\ny-axis label (defaults to None).\n\nlegend Legend | bool | None\n\nOptions for the legend. Pass None to disable the legend.\n\nsort Literal['ascending', 'descending'] | SortOrder | None\n\nSort order for the x and y axes. If ascending, the highest values will be sorted to the top right. If descending, the highest values will appear in the bottom left. If None, no sorting is applied. If a SortOrder is provided, it will be used to sort the x and y axes.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes"
   },
   {
     "objectID": "view-scores-heatmap.html#implementation",
     "href": "view-scores-heatmap.html#implementation",
     "title": "Scores Heatmap",
     "section": "Implementation",
-    "text": "Implementation\nThe Scores Heatmap example demonstrates how this view was implemented using lower level plotting components.",
-    "crumbs": [
-      "Getting Started",
-      "Views",
-      "Scores Heatmap"
-    ]
+    "text": "Implementation\nThe Scores Heatmap example demonstrates how this view was implemented using lower level plotting components."
   },
   {
     "objectID": "view-scores-timeline.html",

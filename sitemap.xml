@@ -34,7 +34,7 @@
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/view-scores-by-model.html</loc>
-    <lastmod>2025-07-30T17:03:01.276Z</lastmod>
+    <lastmod>2025-07-30T17:11:59.436Z</lastmod>
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/index.html</loc>
@@ -49,8 +49,8 @@
     <lastmod>2025-07-12T13:14:50.957Z</lastmod>
   </url>
   <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-by-factor/index.html</loc>
-    <lastmod>2025-07-23T12:40:47.980Z</lastmod>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-by-model/index.html</loc>
+    <lastmod>2025-07-30T17:12:39.622Z</lastmod>
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-heatmap/index.html</loc>
@@ -117,8 +117,8 @@
     <lastmod>2025-07-29T19:49:36.386Z</lastmod>
   </url>
   <url>
-    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-with-baseline/index.html</loc>
-    <lastmod>2025-07-19T12:34:28.248Z</lastmod>
+    <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-by-factor/index.html</loc>
+    <lastmod>2025-07-23T12:40:47.980Z</lastmod>
   </url>
   <url>
     <loc>https://meridianlabs-ai.github.io/inspect_viz/examples/general/penguins/index.html</loc>
