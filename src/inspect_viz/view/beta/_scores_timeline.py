@@ -26,7 +26,7 @@ def scores_timeline(
     model_release_date: str = "model_release_date",
     score_name: str = "score_headline_name",
     score_value: str = "score_headline_value",
-    score_stderr: str = "score_headline_stderr",
+    score_stderr: str | tuple[str, str] = "score_headline_stderr",
     organizations: list[str] | None = None,
     filters: bool | list[Literal["task", "organization"]] = True,
     ci: float | bool = 0.95,
@@ -49,7 +49,7 @@ def scores_timeline(
        model_release_date: Column for model release date (defaults to "model_release_date").
        score_name: Column for scorer name (defaults to "score_headline_name").
        score_value: Column for score value (defaults to "score_headline_value").
-       score_stderr: Column for score stderr (defaults to "score_headline_stderr")
+       score_stderr: Column for score stderr (defaults to "score_headline_stderr"). Pass a tuple to specify distinct columns for lower and upper bounds.
        organizations: List of organizations to include (in order of desired presentation).
        filters: Provide UI to filter plot by task and organization(s).
        ci: Confidence interval (defaults to 0.95, pass `False` for no confidence intervals)
@@ -114,8 +114,12 @@ def scores_timeline(
         "Release Date": model_release_date,
         "Scorer": score_name,
         "Score": score_value,
-        "Stderr": score_stderr,
     }
+    if isinstance(score_stderr, tuple):
+        channels["Stderr (lower)"] = score_stderr[0]
+        channels["Stderr (upper)"] = score_stderr[1]
+    else:
+        channels["Stderr"] = score_stderr
     resolve_log_viewer_channel(data, channels)
 
     # start with dot plot

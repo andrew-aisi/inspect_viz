@@ -18,7 +18,7 @@ def scores_by_model(
     *,
     model_name: str = "model_display_name",
     score_value: str = "score_headline_value",
-    score_stderr: str = "score_headline_stderr",
+    score_stderr: str | tuple[str, str] = "score_headline_stderr",
     ci: float = 0.95,
     sort: Literal["asc", "desc"] | None = None,
     score_label: str | None | NotGiven = None,
@@ -38,7 +38,7 @@ def scores_by_model(
        data: Evals data table. This is typically created using a data frame read with the inspect `evals_df()` function.
        model_name: Column containing the model name (defaults to "model_display_name")
        score_value: Column containing the score value (defaults to "score_headline_value").
-       score_stderr: Column containing the score standard error (defaults to "score_headline_stderr").
+       score_stderr: Column containing the score standard error (defaults to "score_headline_stderr"). Pass a tuple to specify distinct columns for lower and upper bounds.
        ci: Confidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.
        sort: Sort order for the bars (sorts using the 'x' value). Can be "asc" or "desc". Defaults to "asc".
        score_label: x-axis label (defaults to None).

@@ -9,7 +9,7 @@ def ci_bounds(
     level: float,
     *,
     score: str | Param,
-    stderr: str | Param,
+    stderr: str | Param | tuple[str | Param, str | Param],
 ) -> tuple[Transform, Transform]:
     """Compute a confidence interval boundary.
 
@@ -18,12 +18,14 @@ def ci_bounds(
     Args:
        level: Confidence level (e.g. 0.95)
        score: Column name for score.
-       stderr: Column name for stderr.
+       stderr: Column name(s) for stderr. Pass a tuple to use distinct columns for lower and upper bounds.
     """
     if not 0 < level < 1:
         raise ValueError("level must be between 0 and 1 (exclusive)")
 
-    def bound(sign: str) -> Transform:
-        return sql(f"{score} {sign}" + f"({z_score(level)} * {stderr})")
+    stderr = stderr if isinstance(stderr, tuple) else (stderr, stderr)
 
-    return bound("-"), bound("+")
+    def bound(sign: str, col: str) -> Transform:
+        return sql(f"{score} {sign}" + f"({z_score(level)} * {col})")
+
+    return bound("-", stderr[0]), bound("+", stderr[1])
