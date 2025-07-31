@@ -18,8 +18,8 @@ from inspect_viz.transform import ci_bounds
 evals = Data.from_file("agi-lsat-ar.parquet")
 
 ci_lower, ci_upper = ci_bounds( # <1>
-    0.95,  # <1>
     score="score_headline_value",  # <1>
+    level=0.95, # <1>
     stderr="score_headline_stderr"  # <1>
 )  # <1>
 

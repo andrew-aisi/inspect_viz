@@ -53,8 +53,8 @@ from inspect_viz.transform import sql, ci_bounds
 
 # confidence interval bounds  # <1>
 ci_lower, ci_upper = ci_bounds(
-    0.95, 
     score="score_headline_value", 
+    level=0.95, 
     stderr="score_headline_stderr"
 ) # <1>
 

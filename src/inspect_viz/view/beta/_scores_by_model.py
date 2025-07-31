@@ -18,7 +18,7 @@ def scores_by_model(
     *,
     model_name: str = "model_display_name",
     score_value: str = "score_headline_value",
-    score_stderr: str | tuple[str, str] = "score_headline_stderr",
+    score_stderr: str = "score_headline_stderr",
     ci: float = 0.95,
     sort: Literal["asc", "desc"] | None = None,
     score_label: str | None | NotGiven = None,
@@ -38,7 +38,7 @@ def scores_by_model(
        data: Evals data table. This is typically created using a data frame read with the inspect `evals_df()` function.
        model_name: Column containing the model name (defaults to "model_display_name")
        score_value: Column containing the score value (defaults to "score_headline_value").
-       score_stderr: Column containing the score standard error (defaults to "score_headline_stderr"). Pass a tuple to specify distinct columns for lower and upper bounds.
+       score_stderr: Column containing the score standard error (defaults to "score_headline_stderr").
        ci: Confidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.
        sort: Sort order for the bars (sorts using the 'x' value). Can be "asc" or "desc". Defaults to "asc".
        score_label: x-axis label (defaults to None).
@@ -122,7 +122,7 @@ def scores_by_model(
     # add ci
     if ci is not False:
         ci = 0.95 if ci is True else ci
-        ci_lower, ci_upper = ci_bounds(ci, score=score_value, stderr=score_stderr)
+        ci_lower, ci_upper = ci_bounds(score_value, level=ci, stderr=score_stderr)
         components.append(
             rule_y(
                 data,

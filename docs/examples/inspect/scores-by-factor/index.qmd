@@ -21,8 +21,8 @@ fx_labels = ["No hint", "Hint"] # <1>
 
 # confidence interval tranforms
 ci_lower, ci_upper = ci_bounds(
-    0.95, 
     score="score_headline_value", 
+    level=0.95,
     stderr="score_headline_stderr"
 )
 
