@@ -90,6 +90,7 @@ title: inspect_viz.mark
 
 ### Mark
 ### MarkOptions
+### Marks
 ### Title
 ### Channel
 ### ChannelSpec
