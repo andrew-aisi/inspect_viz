@@ -218,6 +218,8 @@ website:
           href: reference/inspect_viz.mark.qmd#mark
         - text: MarkOptions
           href: reference/inspect_viz.mark.qmd#markoptions
+        - text: Marks
+          href: reference/inspect_viz.mark.qmd#marks
         - text: Title
           href: reference/inspect_viz.mark.qmd#title
         - text: Channel
