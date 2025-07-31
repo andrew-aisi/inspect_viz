@@ -3,7 +3,7 @@ title: Scores by Model
 subtitle: "Dataset: [agi-lsat-ar.parquet](agi-lsat-ar.parquet)"
 ---
 
-This example illustrates the code behind the [`scores_by_model()`](../../../view-scores-by_model.qmd) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
+This example illustrates the code behind the [`scores_by_model()`](../../../view-scores-by-model.qmd) pre-built view function. If you want to include this plot in your notebooks or websites you should start with that function rather than the lower-level code below.
 
 The plot summarizes the scores of a single evaluation task, showing performance for 13 different models. Models are ordered based upon their headline score (defaulting to descending). 
 
@@ -12,51 +12,55 @@ The plot summarizes the scores of a single evaluation task, showing performance 
 
 from inspect_viz import Data
 from inspect_viz.plot import plot
-from inspect_viz.mark import bar_x, rule_x, text
+from inspect_viz.mark import rule_y, baseline
+from inspect_viz.transform import ci_bounds
 
 evals = Data.from_file("agi-lsat-ar.parquet")
 
-baseline_color = "#000000"
-baseline_value = 0.91
-    
+ci_lower, ci_upper = ci_bounds( # <1>
+    0.95,  # <1>
+    score="score_headline_value",  # <1>
+    stderr="score_headline_stderr"  # <1>
+)  # <1>
+
 plot(
-    bar_x(                                    # <1>
-        evals,                                # <1>
-        x="score_headline_value",             # <1>
-        y="model",                            # <1>
-        sort={"y": "x", "reverse": True},     # <1>
-        fill="#416AD0",                       # <1>
-        channels={"Log Viewer": "log_viewer"}, # <1>
-        tip=True                              # <1>
-    ),                                        # <1>
-    rule_x(                                   # <2>
-        x=[baseline_value],               # <2>
-        stroke_dasharray="2,4",            # <2>
-        stroke_width=1,                    # <2> 
-        stroke=[baseline_color]           # <2>
-    ),                                        # <2>
-    text(                                     # <3>
-        x=[baseline_value],               # <3>
-        frame_anchor="top",               # <3>
-        line_anchor="bottom",             # <3>
-        dy=-3,                            # <3>
-        text=["Baseline"],                # <3>
-        text_anchor="middle",              # <3>
-        fill=[baseline_color]             # <3>
-    ),                                        # <3>
-    marginLeft=250,                           # <4>
-    marginTop=30,                             # <4>
-    x_domain=[0, 1.0],
+    rule_y( # <2>
+        evals, # <2>
+        x="score_headline_value", # <2>
+        y="model", # <2>
+        sort={"y": "x", "reverse": True}, # <2>
+        stroke_width=4, # <2>
+        stroke_linecap="round", # <2>
+        marker_end="circle", # <2>
+        tip=True, # <2>
+        stroke="#416AD0", # <2>
+    ), # <2>
+    rule_y( # <3>
+        evals, # <3>
+        x1=ci_lower, # <3>
+        x2=ci_upper, # <3>
+        y="model", # <3>
+        sort={"y": "x", "reverse": True}, # <3>
+        stroke="#416AD020", # <3>
+        stroke_width=15, # <3>
+    ), # <3>
+    baseline(0.78, label="Human"), # <4>
+    margin_left=225, # <5>
     y_label=None,
-    x_label="Accuracy"
+    x_label="Score",
+    x_domain=[0, 1.0] # <6>
 )
 ```
 
 
-1. This draws the core bar chart, sorting the y-axis by the value of x.
+1. Create transforms for upper and lower CI bounds.
 
-2. This draws the baseline at the `baseline_value` position. Note that we are passing an explicit value for baseline rather that reading the value from the data frame.
+2. This draws the core bar chart, sorting the y-axis by the value of x (descending).
 
-3. This draws the text label for the baseline, positioning it at the top of the frame and anchoring the bottom of the text to the that top position.
+3. This draws the error bars using the upper and lower bounds.
 
-4. Provide margin to allow space for the y-axis labels and for the baseline text above the plot.
+4. Add a mark for human baseline.
+
+5. Ensure there is room for model names in the left margin.
+
+6. Ensure that the x axis always goes to 1.0 (even if scores are below that).
