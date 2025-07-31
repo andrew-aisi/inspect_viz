@@ -1468,35 +1468,60 @@
     "href": "view-scores-heatmap.html",
     "title": "Scores Heatmap",
     "section": "",
-    "text": "The scores_heatmap()function renders a heatmap for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_heatmap\n\nevals = Data.from_file(\"evals.parquet\")\nscores_heatmap(evals, height=200, legend=False)"
+    "text": "The scores_heatmap()function renders a heatmap for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_heatmap\n\nevals = Data.from_file(\"evals.parquet\")\nscores_heatmap(evals, height=200, legend=False)",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores Heatmap"
+    ]
   },
   {
     "objectID": "view-scores-heatmap.html#overview",
     "href": "view-scores-heatmap.html#overview",
     "title": "Scores Heatmap",
     "section": "",
-    "text": "The scores_heatmap()function renders a heatmap for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_heatmap\n\nevals = Data.from_file(\"evals.parquet\")\nscores_heatmap(evals, height=200, legend=False)"
+    "text": "The scores_heatmap()function renders a heatmap for comparing eval scores.\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_heatmap\n\nevals = Data.from_file(\"evals.parquet\")\nscores_heatmap(evals, height=200, legend=False)",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores Heatmap"
+    ]
   },
   {
     "objectID": "view-scores-heatmap.html#data-preparation",
     "href": "view-scores-heatmap.html#data-preparation",
     "title": "Scores Heatmap",
     "section": "Data Preparation",
-    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"evals.parquet\")\nYou can additionanlly use the task_info() operation to map lower-level task names to task display names (e.g. “gpqa_diamond” -&gt; “GPQA Diamond”).\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer() and model_info())."
+    "text": "Data Preparation\nAbove we read the data for the plot from a parquet file. This file was in turn created by:\n\nReading logs into a data frame with evals_df().\nUsing the prepare() function to add model_info() and log_viewer() columns to the data frame.\n\nfrom inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare\n\ndf = evals_df(\"logs\")\ndf = prepare(df, \n    model_info(),\n    log_viewer(\"eval\", {\"logs\": \"https://samples.meridianlabs.ai/\"}),\n)\ndf.to_parquet(\"evals.parquet\")\nYou can additionanlly use the task_info() operation to map lower-level task names to task display names (e.g. “gpqa_diamond” -&gt; “GPQA Diamond”).\nNote that both the log viewer links and model names are optional (the plot will render without links and use raw model strings if the data isn’t prepared with log_viewer() and model_info()).",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores Heatmap"
+    ]
   },
   {
     "objectID": "view-scores-heatmap.html#function-reference",
     "href": "view-scores-heatmap.html#function-reference",
     "title": "Scores Heatmap",
     "section": "Function Reference",
-    "text": "Function Reference\nCreates a heatmap plot of success rate of eval data.\n\nSource\n\ndef scores_heatmap(\n    data: Data,\n    x: str = \"task_display_name\",\n    y: str = \"model_display_name\",\n    fill: str = \"score_headline_value\",\n    cell: CellOptions | None = None,\n    tip: bool = True,\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    height: float | None = None,\n    width: float | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    legend: Legend | bool | None = None,\n    sort: Literal[\"ascending\", \"descending\"] | SortOrder | None = \"ascending\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table.\n\nx str\n\nName of column to use for columns.\n\ny str\n\nName of column to use for rows.\n\nfill str\n\nName of the column to use as values to determine cell color.\n\ncell CellOptions | None\n\nOptions for the cell marks.\n\ntip bool\n\nWhether to show a tooltip with the value when hovering over a cell (defaults to True).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio).\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\ny-axis label (defaults to None).\n\nlegend Legend | bool | None\n\nOptions for the legend. Pass None to disable the legend.\n\nsort Literal['ascending', 'descending'] | SortOrder | None\n\nSort order for the x and y axes. If ascending, the highest values will be sorted to the top right. If descending, the highest values will appear in the bottom left. If None, no sorting is applied. If a SortOrder is provided, it will be used to sort the x and y axes.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes"
+    "text": "Function Reference\nCreates a heatmap plot of success rate of eval data.\n\nSource\n\ndef scores_heatmap(\n    data: Data,\n    x: str = \"task_display_name\",\n    y: str = \"model_display_name\",\n    fill: str = \"score_headline_value\",\n    cell: CellOptions | None = None,\n    tip: bool = True,\n    title: str | Title | None = None,\n    marks: Mark | list[Mark] | None = None,\n    height: float | None = None,\n    width: float | None = None,\n    x_label: str | None | NotGiven = None,\n    y_label: str | None | NotGiven = None,\n    legend: Legend | bool | None = None,\n    sort: Literal[\"ascending\", \"descending\"] | SortOrder | None = \"ascending\",\n    **attributes: Unpack[PlotAttributes],\n) -&gt; Component\n\ndata Data\n\nEvals data table.\n\nx str\n\nName of column to use for columns.\n\ny str\n\nName of column to use for rows.\n\nfill str\n\nName of the column to use as values to determine cell color.\n\ncell CellOptions | None\n\nOptions for the cell marks.\n\ntip bool\n\nWhether to show a tooltip with the value when hovering over a cell (defaults to True).\n\ntitle str | Title | None\n\nTitle for plot (str or mark created with the title() function)\n\nmarks Mark | list[Mark] | None\n\nAdditional marks to include in the plot.\n\nheight float | None\n\nThe outer height of the plot in pixels, including margins. The default is width / 1.618 (the golden ratio).\n\nwidth float | None\n\nThe outer width of the plot in pixels, including margins. Defaults to 700.\n\nx_label str | None | NotGiven\n\nx-axis label (defaults to None).\n\ny_label str | None | NotGiven\n\ny-axis label (defaults to None).\n\nlegend Legend | bool | None\n\nOptions for the legend. Pass None to disable the legend.\n\nsort Literal['ascending', 'descending'] | SortOrder | None\n\nSort order for the x and y axes. If ascending, the highest values will be sorted to the top right. If descending, the highest values will appear in the bottom left. If None, no sorting is applied. If a SortOrder is provided, it will be used to sort the x and y axes.\n\n**attributes Unpack[PlotAttributes]\n\nAdditional `PlotAttributes",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores Heatmap"
+    ]
   },
   {
     "objectID": "view-scores-heatmap.html#implementation",
     "href": "view-scores-heatmap.html#implementation",
     "title": "Scores Heatmap",
     "section": "Implementation",
-    "text": "Implementation\nThe Scores Heatmap example demonstrates how this view was implemented using lower level plotting components."
+    "text": "Implementation\nThe Scores Heatmap example demonstrates how this view was implemented using lower level plotting components.",
+    "crumbs": [
+      "Getting Started",
+      "Views",
+      "Scores Heatmap"
+    ]
   },
   {
     "objectID": "view-scores-timeline.html",
