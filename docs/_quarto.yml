@@ -52,7 +52,7 @@ website:
                - href: view-scores-by-model.qmd
                - href: view-scores-by-factor.qmd
                - href: view-scores-timeline.qmd
-               - href: view-scores-heatmap.qmq
+               - href: view-scores-heatmap.qmd
                - href: view-tool-calls.qmd
            - text: Components
              contents:
