@@ -7,10 +7,11 @@ from inspect_viz.input import checkbox_group, select
 from inspect_viz.layout._concat import vconcat
 from inspect_viz.layout._space import vspace
 from inspect_viz.mark._dot import dot
-from inspect_viz.mark._mark import Mark
+from inspect_viz.mark._mark import Marks
 from inspect_viz.mark._rule import rule_x
 from inspect_viz.mark._text import text
 from inspect_viz.mark._title import Title
+from inspect_viz.mark._util import flatten_marks
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._legend import legend
 from inspect_viz.plot._plot import plot
@@ -33,7 +34,7 @@ def scores_timeline(
     score_label: str = "Score",
     eval_label: str = "Eval",
     title: str | Title | None = None,
-    marks: Mark | list[Mark] | None = None,
+    marks: Marks | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
     **attributes: Unpack[PlotAttributes],
@@ -79,9 +80,7 @@ def scores_timeline(
             raise ValueError(f"Field '{field}' not provided in passed 'data'.")
 
     # resolve marks
-    marks = (
-        marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
-    )
+    marks = flatten_marks(marks)
 
     # count unique tasks and organizations
     num_tasks = len(data.column_unique(task_name))

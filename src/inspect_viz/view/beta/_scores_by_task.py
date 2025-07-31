@@ -6,9 +6,10 @@ from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.notgiven import NOT_GIVEN, NotGiven
 from inspect_viz._util.stats import z_score
 from inspect_viz.mark import bar_y, rule_x
-from inspect_viz.mark._mark import Mark
+from inspect_viz.mark._mark import Marks
 from inspect_viz.mark._title import Title
 from inspect_viz.mark._title import title as title_mark
+from inspect_viz.mark._util import flatten_marks
 from inspect_viz.plot import legend, plot
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.transform import sql
@@ -23,7 +24,7 @@ def scores_by_task(
     y_ci: bool | float = 0.95,
     y_label: str | None | NotGiven = NOT_GIVEN,
     title: str | Title | None = None,
-    marks: Mark | list[Mark] | None = None,
+    marks: Marks | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
     **attributes: Unpack[PlotAttributes],
@@ -61,9 +62,7 @@ def scores_by_task(
         title = title_mark(title, margin_top=40)
 
     # resolve marks
-    marks = (
-        marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
-    )
+    marks = flatten_marks(marks)
 
     # establish channels
     channels: dict[str, str] = {}

@@ -7,7 +7,6 @@ from inspect_viz.mark._mark import Mark
 from inspect_viz.mark._rule import rule_x, rule_y
 from inspect_viz.mark._text import text
 from inspect_viz.mark._types import FrameAnchor, LineAnchor
-from inspect_viz.transform._sql import sql
 from inspect_viz.transform._transform import Transform
 
 
@@ -117,10 +116,7 @@ def label_anchoring(
             "end": "bottom",
         }
         frame = cast(FrameAnchor, frame_mapping[label_position])
-        line = cast(
-            LineAnchor,
-            "bottom",
-        )
+        line: LineAnchor = "bottom"
         dy = label_inset or (30 if label_position == "start" else -30)
         return {"frame": frame, "line": line, "dy": dy, "rotate": 90, "dx": 3}
     else:
@@ -130,6 +126,6 @@ def label_anchoring(
             "end": "right",
         }
         frame = cast(FrameAnchor, frame_mapping[label_position])
-        line = cast(LineAnchor, "bottom")
+        line = "bottom"
         dx = label_inset or (-5 if label_position != "start" else 5)
         return {"frame": frame, "line": line, "dx": dx, "dy": -3}

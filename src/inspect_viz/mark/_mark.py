@@ -1,5 +1,5 @@
 import json
-from typing import Any, cast
+from typing import Any, Sequence, TypeAlias, cast
 
 from pydantic import JsonValue
 
@@ -65,3 +65,7 @@ def mark_options_to_camel(options: MarkOptions) -> dict[str, Any]:
             snake_to_camel(key): value for key, value in mark_options["tip"].items()
         }
     return mark_options
+
+
+Marks: TypeAlias = Mark | Sequence[Mark | Sequence[Mark]]
+"""Set of marks to add to a plot."""

@@ -3,9 +3,10 @@ from typing import Unpack
 from inspect_viz import Component, Data
 from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz.mark import cell, text
-from inspect_viz.mark._mark import Mark
+from inspect_viz.mark._mark import Marks
 from inspect_viz.mark._title import Title
 from inspect_viz.mark._types import TextStyles
+from inspect_viz.mark._util import flatten_marks
 from inspect_viz.plot import legend, plot
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.transform._aggregate import first
@@ -21,7 +22,7 @@ def tool_calls(
     x_label: str | None = "Message",
     y_label: str | None = "Sample",
     title: str | Title | None = None,
-    marks: Mark | list[Mark] | None = None,
+    marks: Marks | None = None,
     width: float | None = None,
     height: float | None = None,
     **attributes: Unpack[PlotAttributes],
@@ -60,9 +61,7 @@ def tool_calls(
             boundary = boundary * 2
 
     # resolve marks
-    marks = (
-        marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
-    )
+    marks = flatten_marks(marks)
 
     # attribute defaults
     defaults = PlotAttributes(

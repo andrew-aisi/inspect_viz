@@ -4,7 +4,7 @@ from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
 from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.notgiven import NotGiven
-from inspect_viz.mark._mark import Mark
+from inspect_viz.mark._mark import Mark, Marks
 from inspect_viz.mark._rule import rule_y
 from inspect_viz.mark._title import Title
 from inspect_viz.mark._util import flatten_marks
@@ -25,7 +25,7 @@ def scores_by_model(
     model_label: str | None | NotGiven = None,
     color: str | None = None,
     title: str | Title | None = None,
-    marks: Mark | list[Mark] | list[list[Mark]] | None = None,
+    marks: Marks | None = None,
     width: float | None = None,
     height: float | None = None,
     **attributes: Unpack[PlotAttributes],

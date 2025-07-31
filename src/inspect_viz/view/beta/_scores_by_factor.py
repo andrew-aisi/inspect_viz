@@ -4,7 +4,8 @@ from inspect_viz import Component, Data, Param
 from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.color import lighten_color_hsl
 from inspect_viz.mark import frame, rule_y
-from inspect_viz.mark._mark import Mark
+from inspect_viz.mark._mark import Mark, Marks
+from inspect_viz.mark._util import flatten_marks
 from inspect_viz.plot import PlotAttributes, legend, plot
 from inspect_viz.transform import ci_bounds, sql
 
@@ -21,7 +22,7 @@ def scores_by_factor(
     ci: bool | float = 0.95,
     color: str | tuple[str, str] = "#3266ae",
     title: str | Mark | None = None,
-    marks: Mark | list[Mark] | None = None,
+    marks: Marks | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
     **attributes: Unpack[PlotAttributes],
@@ -58,9 +59,7 @@ def scores_by_factor(
         raise ValueError("fx_labels must be a tuple of 2 strings.")
 
     # resolve marks
-    marks = (
-        marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
-    )
+    marks = flatten_marks(marks)
 
     # default attributes
     defaults = PlotAttributes(

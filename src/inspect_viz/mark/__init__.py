@@ -26,7 +26,7 @@ from ._hexgrid import hexgrid
 from ._image import image
 from ._line import line, line_x, line_y
 from ._link import link
-from ._mark import Mark
+from ._mark import Mark, Marks
 from ._options import MarkOptions, TipOptions, TipPointer
 from ._raster import heatmap, raster, raster_tile
 from ._rect import rect, rect_x, rect_y
@@ -51,6 +51,7 @@ from ._waffle import waffle_x, waffle_y
 __all__ = [
     "Mark",
     "MarkOptions",
+    "Marks",
     "Title",
     "ChannelName",
     "Channel",

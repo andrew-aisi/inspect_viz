@@ -20,7 +20,7 @@ from inspect_viz.view.beta import scores_by_model
 from inspect_viz.mark import baseline
 
 evals = Data.from_file("agi-lsat-ar.parquet")
-scores_by_model(evals, marks=[baseline(0.697)])
+scores_by_model(evals, marks=baseline(0.697, label="Human"))
 ```
 
 

@@ -8,10 +8,11 @@ from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.notgiven import NotGiven
 from inspect_viz.mark import cell as cell_mark
 from inspect_viz.mark._channel import SortOrder
-from inspect_viz.mark._mark import Mark
+from inspect_viz.mark._mark import Marks
 from inspect_viz.mark._text import text
 from inspect_viz.mark._title import Title
 from inspect_viz.mark._title import title as title_mark
+from inspect_viz.mark._util import flatten_marks
 from inspect_viz.plot import plot
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._legend import Legend
@@ -37,7 +38,7 @@ def scores_heatmap(
     cell: CellOptions | None = None,
     tip: bool = True,
     title: str | Title | None = None,
-    marks: Mark | list[Mark] | None = None,
+    marks: Marks | None = None,
     height: float | None = None,
     width: float | None = None,
     x_label: str | None | NotGiven = None,
@@ -84,9 +85,7 @@ def scores_heatmap(
         title = title_mark(title, margin_top=20)
 
     # resolve marks
-    marks = (
-        marks if isinstance(marks, list) else [marks] if isinstance(marks, Mark) else []
-    )
+    marks = flatten_marks(marks)
 
     # Compute the color domain
     min_value = data.column_min(fill)
