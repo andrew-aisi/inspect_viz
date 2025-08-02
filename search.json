@@ -148,7 +148,7 @@
     "href": "reference/index.html",
     "title": "Reference",
     "section": "",
-    "text": "inspect_viz\nCore API (data, components, params, selections)\n\n\ninspect_viz.plot\nPlot and legend creation.\n\n\ninspect_viz.view\nPlot and legend creation.\n\n\ninspect_viz.mark\nPlot marks (charts, annotations, etc.)\n\n\ninspect_viz.interactor\nPlot interactors for selection and navigation.\n\n\ninspect_viz.transform\nData transformers (aggregate, window, etc.)\n\n\ninspect_viz.table\nTabular data display.\n\n\ninspect_viz.input\nInputs for binding to parameters and selections.\n\n\ninspect_viz.layout\nComponent layout functions.",
+    "text": "inspect_viz\nCore API (data, components, params, selections)\n\n\ninspect_viz.plot\nPlot and legend creation.\n\n\ninspect_viz.view\nPre-built view functions.\n\n\ninspect_viz.mark\nPlot marks (charts, annotations, etc.)\n\n\ninspect_viz.interactor\nPlot interactors for selection and navigation.\n\n\ninspect_viz.transform\nData transformers (aggregate, window, etc.)\n\n\ninspect_viz.table\nTabular data display.\n\n\ninspect_viz.input\nInputs for binding to parameters and selections.\n\n\ninspect_viz.layout\nComponent layout functions.",
     "crumbs": [
       "Reference"
     ]

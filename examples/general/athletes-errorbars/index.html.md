@@ -1,0 +1,67 @@
+# Athletes (Error Bars)
+
+
+Confidence intervals of Olympic athlete heights, in meters. Data are
+batched into groups of 10 samples per sport. Use the samples slider to
+see how the intervals update as the sample size increases (as in [online
+aggregation](https://en.wikipedia.org/wiki/Online_aggregation)). For
+each sport, the numbers on the right show the maximum number of athletes
+in the full dataset.
+
+**Code**
+
+``` python
+import pandas as pd
+import numpy as np
+
+from inspect_viz import Data, Param, Selection
+from inspect_viz.mark import error_bar_x, text
+from inspect_viz.plot import plot, legend
+from inspect_viz.transform import count
+from inspect_viz.input import slider
+from inspect_viz.layout import hconcat, vconcat, vspace
+
+# prepare data (create batch column so we can target various numbers of samples)
+df = pd.read_parquet("athletes.parquet")
+df = df[df['height'].notna()]
+df['row_num'] = df.groupby('sport').cumcount() + 1
+df['batch'] = 10 * np.ceil(df['row_num'] / 10).astype(int)
+df = df.drop('row_num', axis=1)
+df = df.reset_index(drop=True)
+
+athletes = Data.from_dataframe(df)
+
+ci = Param(0.95)
+query = Selection.single()
+
+vconcat(
+    hconcat(
+        slider(
+            athletes, label="Samples", select="interval", target=query, 
+            column="batch", step=10, value=(0,20)
+        ),
+        slider(
+            label="Conf.", target=ci, 
+            min=0.5, max=0.999, value=0.95, step=0.001
+        )
+    ),
+    plot(
+        error_bar_x(
+            athletes, filter_by=query, ci=ci, 
+            x="height", y="sport", stroke="sex", stroke_width=1,
+            marker="tick", sort={ "y": "-x"}
+        ),
+        text(
+            athletes, text=count(), y="sport", dx=25,
+            frame_anchor="right", font_size=8, fill="#999"
+        ),
+        legend=legend("color", location="bottom"),
+        x_domain=[1.5,2.1],
+        y_domain="fixed",
+        y_grid=True,
+        y_label=None,
+        margin_top=0,
+        margin_left=105
+    )
+)
+```

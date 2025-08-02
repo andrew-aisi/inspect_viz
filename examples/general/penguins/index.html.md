@@ -1,0 +1,38 @@
+# Penguins Explorer
+
+
+Use the species drop down to see only points for a particular species.
+Use the x and y drop downs to explore differnet variables.
+
+**Code**
+
+``` python
+from inspect_viz import Data, Param
+from inspect_viz.input import select
+from inspect_viz.layout import hconcat, vconcat
+from inspect_viz.mark import dot
+from inspect_viz.plot import plot
+from inspect_viz.table import table
+
+penguins = Data.from_file("penguins.parquet")
+
+axes = ["body_mass", "flipper_length", "bill_depth", "bill_length"]
+x_axis = Param("body_mass")
+y_axis = Param("flipper_length")
+
+vconcat(
+    hconcat(
+        select(penguins, label="Species", column="species"),
+        select(label="X", options=axes, target=x_axis),
+        select(label="Y", options=axes, target=y_axis)
+    ),
+    plot(
+        dot(penguins, x=x_axis, y=y_axis, stroke="species", symbol="species"),
+        grid=True,
+        x_label="Body mass (g) →",
+        y_label="↑ Flipper length (mm)",
+        legend="symbol",
+    ),
+    table(penguins)
+)
+```

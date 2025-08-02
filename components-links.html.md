@@ -1,0 +1,128 @@
+# Links
+
+
+## Overview
+
+Inspect Viz supports creating direct links from visualizations to
+published Inspect log transcripts. Links can be made at the eval level,
+or to individual samples, messages, or events.
+
+The basic steps required for creating links to logs from visualizations
+are:
+
+1.  Publish your log directory using the
+    [`inspect view bundle`](https://inspect.aisi.org.uk/log-viewer.html#sec-publishing)
+    command.
+
+2.  Read logs into a data frame using the [log
+    dataframe](https://inspect.aisi.org.uk/dataframe.html) functions,
+    then ammend the data frame with log viewer URLs that point to the
+    published bundle (we’ll cover how to do this below).
+
+3.  Include the log viewer URLs as a custom channels on your plot
+    [marks](components-marks.qmd) as appropriate. The link will be
+    available within the [tooltip](components-plots.qmd#tooltips) for
+    your mark.
+
+## Step 1: Publish Logs
+
+You can use the command
+[`inspect view bundle`](https://inspect.aisi.org.uk/log-viewer.html#sec-publishing)
+(or the
+[`bundle_log_dir()`](https://inspect.aisi.org.uk/reference/inspect_ai.log.html#bundle_log_dir)
+function from Python) to create a self contained directory with the log
+viewer and a set of logs for display. This directory can then be
+deployed to any static web server ([GitHub
+Pages](https://docs.github.com/en/pages), [S3
+buckets](https://docs.aws.amazon.com/AmazonS3/latest/userguide/WebsiteHosting.html),
+[Netlify](https://docs.netlify.com/get-started/), etc.) to provide a
+standalone version of the viewer.
+
+For example, to bundle the `logs` directory to a directory named
+`logs-www`:
+
+``` bash
+$ inspect view bundle --log-dir logs --output-dir logs-www
+```
+
+You can then deploy `logs-www` to any static web host.
+
+## Step 2: Prepare Data
+
+Next, you’ll want to ammend the data frame that you’ve read with
+e.g. [`evals_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#evals_df)
+or
+[`samples_df()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#samples_df)
+with log viewer URLs that point to the published logs.
+
+You can do this using the
+[`prepare()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#prepare)
+and
+[`log_viewer()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#log_viewer)
+functions from the `inspect_ai.analysis` module. For example, if you
+have previously published your “logs” directory to
+https://example.com/logs/:
+
+``` python
+from inspect_viz import Data
+from inspect_ai.analysis.beta import evals_df, prepare, log_viewer
+
+# read evals and ammend with log viewer URL
+df = evals_df("logs")
+df = prepare(df, log_viewer("evals", {
+    "logs": "https://example.com/logs/"
+}))
+
+# read as inspect viz data
+evals = Data.from_dataframe(df)
+```
+
+## Step 3: Link Channel
+
+Once your data is prepared, you need to ensure that links are
+incorporated onto plots.
+
+### Custom Plot
+
+If you are creating a custom plot, you should add a mapping to the
+“log_viewer” column to your mark’s `channels`. For example:
+
+``` python
+from inspect_viz import Data
+from inspect_viz.plot import plot, legend
+from inspect_viz.mark import bar_y
+
+evals = Data.from_file("evals.parquet")
+
+plot(
+    bar_y( 
+        evals, x="model", fx="task_name",
+        y="score_headline_value",
+        channels={ "Log Viewer": "log_viewer" },
+        fill="model",
+    ),
+    legend=legend("color", location="bottom"),
+    x_label=None, x_ticks=[], fx_label=None,
+    y_label="score", y_domain=[0, 1.0]
+)
+```
+
+Line 11  
+Add Log Viewer channel mapped to the `log_viewer` column created with
+the `prepare()` function above.
+
+### Built-In Views
+
+The built-in [Views](views.qmd) already support the `log_viewer` column,
+so links appear automatically when using those functions. For example:
+
+``` python
+from inspect_viz import Data
+from inspect_viz.view.beta import scores_by_model
+
+evals = Data.from_file("agi-lsat-ar.parquet")
+scores_by_model(evals)
+```
+
+If you mouse over the bars you will see a log viewer link which you can
+click to navigate to the log.

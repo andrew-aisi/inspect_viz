@@ -1,0 +1,454 @@
+# Plots
+
+
+A `plot()` produces a single visualisation as a Web element. Similar to
+other grammars, a `plot` consists of *marks*—graphical primitives such
+as bars, areas, and lines—which serve as chart layers. Plots use the
+semantics of [Observable
+Plot](https://observablehq.com/plot/what-is-plot), such that each `plot`
+has a dedicated set of encoding *channels* with named *scale* mappings
+such as `x`, `y`, `color`, `opacity`, etc.
+
+## Basics
+
+Plots support faceting of the `x` and `y` dimensions, producing
+associated `fx` and `fy` scales. Plots are rendered to SVG output using
+Observable Plot.
+
+Here is a simple dot plot that demonstrates some key concepts:
+
+``` python
+from inspect_viz import Data
+from inspect_viz.plot import plot
+from inspect_viz.mark import dot
+
+penguins = Data.from_file("penguins.parquet")
+
+plot(
+    dot(penguins, x="body_mass", y="flipper_length",
+        stroke="species", symbol="species"),
+    legend="symbol",
+    grid=True,
+    width=700,
+    height=400
+)
+```
+
+Lines 8-9  
+`dot()` mark for a simple dot plot, using a distinct `stroke` and
+`symbol` to denote the “species” column.
+
+Line 10  
+Legend in the default location, keyed by `symbol`.
+
+Lines 11-13  
+Additional attributes that affect plot size and appearance.
+
+> [!TIP]
+>
+> Inspect Viz is built on top of the
+> [Mosaic](https://idl.uw.edu/mosaic/) data visualization system which
+> is in turn built on [Observable Plot](https://observablehq.com/plot/).
+>
+> The Inspect Viz Python API typically maps quite closely to the
+> Observable Plot JavaScript API. Once you start creating your own plots
+> and are using Google or an LLM to help with development, asking how to
+> do things in Observable Plot will typically yield actionable advice.
+
+## Facets
+
+Plots support faceting of the `x` and `y` dimensions, producing
+associated `fx` and `fy` scales. For example, here we comopare model
+performance on several tasks. The `task_name` is the `fx` scale,
+resulting in a separate grouping of bars for each task:
+
+``` python
+from inspect_viz import Data
+from inspect_viz.plot import plot, legend
+from inspect_viz.mark import bar_y
+
+evals = Data.from_file("evals.parquet")
+
+plot(
+    bar_y( 
+        evals, x="model", fx="task_name",
+        y="score_headline_value",
+        fill="model",
+        tip=True,
+        channels={
+            "Task": "task_name",
+            "Model": "model",
+            "Score": "score_headline_value",
+            "Log Viewer": "log_viewer"
+        }
+    ),
+    legend=legend("color", location="bottom"),
+    x_label=None, x_ticks=[], fx_label=None,
+    y_label="score", y_domain=[0, 1.0]
+)
+```
+
+Line 9  
+Add an x-facet (“task_name”) using the `fx` option.
+
+Line 20  
+Define legend using `legend()` function (to enable setting `location`
+and other options).
+
+Line 21  
+Remove default x labeling as it is handled by the legend.
+
+Line 22  
+Tweak y-axis with shorter label and ensure that it goes all the way up
+to 1.0.
+
+## Marks
+
+The plots above use only a single mark (`dot()` and `bar_y()`
+respectively). More sophisticated plots are often constructed with
+multiple marks. For example, here is a plot that adds a regression line
+mark do a standard dot plot:
+
+``` python
+from inspect_viz import Data
+from inspect_viz.mark import dot, regression_y
+from inspect_viz.plot import plot
+
+athletes = Data.from_file("athletes.parquet")
+
+plot(
+    dot(athletes, x="weight", y="height", fill="sex", opacity=0.1),
+    regression_y(athletes, x="weight", y="height", stroke="sex"),
+    legend="color"
+)
+```
+
+Line 8  
+Use `fill` to distinguish male and female athletes; use `opacity` to
+deal with a large density of data points.
+
+Line 9  
+Use `stroke` to ensure that male and female athletes each get their own
+regression line.
+
+## Tooltips
+
+Tooltips enable you to provide additional details when the user hovers
+their mouse over various regions of the plot. Tooltips are enabled
+automatically for dot marks (`dot()`, `dot_x()`, `dot_y()`, `circle()`,
+and `hexagon()`) and cell marks (`cell()`, `cell_x()`, etc.) and can be
+enabled with `tip=True` for other marks. For example:
+
+``` python
+plot(
+    bar_y( 
+        evals, x="model", fx="task_name",
+        y="score_headline_value",
+        fill="model",
+        tip=True
+    ),
+    legend=legend("color", location="bottom"),
+    x_label=None, x_ticks=[], fx_label=None,
+    y_label="score", y_domain=[0, 1.0]
+)
+```
+
+1.  Add `tip=True` to enable tooltips for marks where they are not
+    automatically enabled.
+
+Note that tooltips can interfere with plot interactions—for example, if
+your bar plot was clickable to drive selections in other plots you would
+not want to specify `tip=True`.
+
+### Channels
+
+By default, tooltips show all dataset channels that provide scales
+(e.g. `x`, `y`, `fx`, `stroke`, `fill`, `symbol`, etc.). For the plot
+above that would look like this:
+
+![](tooltip-basic.png)
+
+There are few things we can improve on here:
+
+1.  The labels are scale names rather than domain specific names
+    (e.g. “fx” rather than “model”)
+2.  The order of labels isn’t ideal.
+3.  There are some duplicate values (e.g “fill” and “fx”)
+4.  We might want to include additional columns not used in the rest of
+    the plot (e.g. a link to the log file).
+
+You can exercise more control over the tooltip by specifying `channels`
+along with the mark. For example:
+
+``` python
+plot(
+    bar_y( 
+        evals, x="model", fx="task_name",
+        y="score_headline_value",
+        fill="model",
+        tip=True,
+        channels={
+            "Task": "task_name", 
+            "Model": "model",
+            "Score": "score_headline_value",
+            "Log Viewer": "log_viewer"
+        }
+    ),
+    ...
+)
+```
+
+Lines 7,12  
+The `channels` option maps labels to columns in the underlying data—all
+defined `channels` will appear in the tooltip. URL values are
+automatically turned into links as shown here.
+
+![](tooltip-channels.png)
+
+## SQL
+
+You can use the `sql()` transform function to dynamically compute the
+values of channels within plots. For example, here we dynamically add a
+`bias` parameter to a column:
+
+``` python
+from inspect_viz.plot import plot
+from inspect_viz.mark import area_y
+from inspect_viz.tranform import sql
+
+plot(
+    area_y(data, x="t", y=sql(f"v + {bias}"))
+)
+```
+
+Any valid SQL expression can be used. For example, here we use an `IF`
+expression to set the stroke color based on a column value:
+
+``` python
+stroke=sql(f"IF(task_arg_hint, 'blue', 'red')")
+```
+
+## Colors
+
+Use the `color_scheme` option to the `plot()` function to pick a theme
+(see the `ColorScheme` reference for available schemes). Use the
+`color_range` option to specify an explicit set of colors. For example,
+here we use the “tableau10” `color_scheme`:
+
+``` python
+plot(
+    bar_y( 
+        evals, x="model", fx="task_name",
+        y="score_headline_value",
+        fill="model",
+    ),
+    legend=legend("color", location="bottom"),
+    x_label=None, x_ticks=[], fx_label=None,
+    y_label="score", y_domain=[0, 1.0],
+    color_scheme="tableau10"
+)
+```
+
+## Titles
+
+Plot titles can be added using the `title` option. For example, here we
+add a title at the top of the frame:
+
+``` python
+plot(
+    dot(athletes, x="weight", y="height", fill="sex", opacity=0.1),
+    regression_y(athletes, x="weight", y="height", stroke="sex"),
+    title="Olympic Athletes",
+    legend="color"
+)
+```
+
+If you have facet labels on the top of the x-axis, you may need to
+provide some additional `top_margin` for the `title` so that it is
+placed above the facet labels. Use the `title()` function to customize
+this:
+
+``` python
+from inspect_viz.mark import title
+
+plot(
+    ...
+    title=title("Olympic Athletes", margin_top=40),
+    ...
+)
+```
+
+You can also customize the font size, weight, and family using the
+`title()` function.
+
+## Data
+
+In the examples above we made `Data` available by reading from a parquet
+file. We can also read data from any Python Data Frame (e.g. Pandas,
+Polars, PyArrow, etc.). For example:
+
+``` python
+import pandas as pd
+from inspect_viz import Data
+
+# read directly from file
+penguins = Data.from_file("penguins.parquet")
+
+# read from Pandas DF (i.e. to preprocess first)
+df = pd.read_parquet("penguins.parquet")
+penguins = Data.from_dataframe(df)
+```
+
+You might wonder why is there a special `Data` class in Inspect Viz
+rather than using data frames directly? This is because Inpsect Viz is
+an interactive system where data can be dynamically filtered and
+transformed as part of plotting—the `Data` therefore needs to be sent to
+the web browser rather than remaining only in the Python session. This
+has a couple of important implications:
+
+1.  Data transformations should be done using standard Python Data Frame
+    operations *prior* to reading into `Data` for Inspect Viz.
+
+2.  Since `Data` is embedded in the web page, you will want to filter it
+    down to only the columns required for plotting (as you don’t want
+    the additional columns making the web page larger than is
+    necessary).
+
+### Data Selections
+
+One other important thing to understand is that `Data` has a built in
+*selection* which is used in filtering operations on the client. This
+means that if you want your inputs and plots to stay synchoronized, you
+should pass the same `Data` instance to all of them (i.e. import into
+`Data` once and then share that reference). For example:
+
+``` python
+from inspect_viz import Data
+from inspect_viz.plot import plot
+from inspect_viz.mark import dot
+from inspect_viz.input import select
+from inspect_viz.layout import vconcat
+
+# we import penguins once and then pass it to select() and dot()
+penguins = Data.from_file("penguins.parquet")
+
+vconcat( 
+   select(penguins, label="Species", column="species"),
+   plot(
+      dot(penguins, x="body_mass", y="flipper_length",
+          stroke="species", symbol="species"),
+      legend="symbol",
+      color_domain="fixed"  
+   )
+)
+```
+
+## Margins
+
+Since the text included in axes lables is dynamic, you will often need
+to adjust the plot margins to ensure that the text fits properly within
+the plot. Use the `margin_top`, `margin_left`, `margin_right`, and
+`margin_bottom` options to do this. Note that there are also
+`facet_margin_top`, `facet_margin_left`, etc. options available.
+
+For example, here we set a `margin_left` of 100 pixels to ensure that
+potentially long model names have room to display:
+
+``` python
+plot(
+    data,
+    bar_y(...),
+    margin_left=100
+)
+```
+
+## Attributes
+
+*Attributes* are plot-level settings such as `width`, `height`, margins,
+and scale options (e.g., `x_domain`, `color_range`, `y_tick_format`).
+Attributes may be `Param`-valued, in which case a plot updates upon
+param changes.
+
+Some of the more useful plot attribues include:
+
+- `width`, `height`, and `aspect_ratio` for controlling plot size.
+
+- `margin` and `facet_margin` (and more specific margins like
+  `margin_top`) for controlling layout margins.
+
+- `style` for providing CSS styles.
+
+- `aria_label` and `aria_description`, `x_aria_label`,
+  `x_aria_description`, etc. for accessibilty attributes.
+
+- `x_domain`, `x_range,`y_domain`, and`y_range\` for controlling the
+  domain and range of axes.
+
+- Tick settings for `x`, `y`, `fx`, and `fy` axes (e.g. `x_ticks`,
+  `x_tick_rotate`, etc.)
+
+- `r` (radius) scale settings (e.g. `r_domain`, `r_range`, `r_label`,
+  etc.)
+
+See `PlotAttributes` for documentation on all available plot attributes.
+
+## Legends
+
+*Legends* can be added to `plot` specifications or included as
+standalone elements.
+
+See the `legend()` function documentation for details on legend options
+including location, columns, label text, size, and margins.
+
+The `name` directive gives a `plot` a unique name. A standalone legend
+can reference a named plot `legend(..., for_plot="penguins")` to avoid
+respecifying scale domains and ranges.
+
+Legends also act as interactors, taking a bound `Selection` as a
+`target` parameter. For example, discrete legends use the logic of the
+`toggle` interactor to enable point selections. Two-way binding is
+supported for Selections using *single* resolution, enabling legends and
+other interactors to share state.
+
+See the docs on [Toggle](components-selections.qmd#toggle) interactors
+for an example of an interactive legend.
+
+## Baselines
+
+Baselines can be added by passing baselines to `marks` option. For
+example, here we add a baseline with the median weight from the athletes
+data:
+
+``` python
+from inspect_viz.mark import baseline
+from inspect_viz.transform import median, sql
+plot(
+    dot(athletes, x="weight", y="height", fill="sex", opacity=0.1),
+    baseline(70),
+    regression_y(athletes, x="weight", y="height", stroke="sex"),
+    legend="color"
+)
+```
+
+If you have a simple static baseline, you may simply provide the value,
+along with other options to customize the label, position, and other
+attributes of the baseline:
+
+``` python
+from inspect_viz.mark import title
+
+plot(
+    ...
+    baseline(
+        median("weight"), 
+        data=athletes, 
+        label="Median", 
+        label_position="middle", 
+        color="red"),
+    ...
+)
+```
+
+By default, baselines are drawn using the x-axis values. To draw a
+baseline using the y-axis values, pass `orientation="y"` to the baseline
+function.

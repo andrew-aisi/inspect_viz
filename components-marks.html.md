@@ -1,0 +1,143 @@
+# Marks
+
+
+## Overview
+
+*Marks* are graphical primitives, often with accompanying data
+transforms, that serve as chart layers. Marks accept a `Data` source
+(which are queried as required) and a set of supported options,
+including encoding *channels* (such as `x`, `y`, `fill`, and `stroke`)
+that can encode data *fields*.
+
+A data field may be a column reference or query expression, including
+dynamic param values. Common expressions include aggregates (`count()`,
+`sum()`, `avg()`, `median()`, *etc.*), window functions, date functions,
+and a `bin()` transform.
+
+Marks support dual modes of operation: if an explicit array of data
+values is provided instead of a backing `Data` reference, the values
+will be visualized without issuing any queries to the data. This
+functionality is particularly useful for adding manual annotations, such
+as custom rules or text labels.
+
+## Basic
+
+Basic marks, such as `dot()`, `bar_x()`, `bar_y()`, `rect()`, `cell()`,
+`text()`, `tick()`, `rule_x()`, and `rule_y()`, mirror their namesakes
+in [Observable Plot](https://observablehq.com/plot/).
+
+For example, here is a plot with two marks. (a dot plot and a regression
+line):
+
+``` python
+from inspect_viz import Data
+from inspect_viz.plot import plot
+from inspect_viz.mark import dot, regression_y
+
+athletes = Data.from_file("athletes.parquet")
+
+plot(
+    dot(athletes,  x="weight", y="height", fill="sex", opacity=0.1),
+    regression_y(athletes, x="weight", y="height", stroke="sex")
+)
+```
+
+Variants such as `bar_x()` and `bar_y()` indicate spatial orientation
+and data type assumptions. `bar_y()` indicates vertical bars—continuous
+`y` over an ordinal `x` domain—whereas `rect_y()` indicates a continuous
+`x` domain.
+
+`Data` is backed by a DuckDB SQL database running in the web browser.
+Basic marks follow a straightforward query construction process:
+
+- Iterate over all encoding channels to build a `SELECT` query.
+- If no aggregates are encountered, query all fields directly.
+- If aggregates are present, include non-aggregate fields as `GROUP BY`
+  criteria.
+- If provided, map filtering criteria to a SQL `WHERE` clause.
+
+## Channels
+
+Marks are constructed by mapping *channels* to scales. Besides columns,
+other types of channel inputs include transforms (e.g. `count()`,
+`bin()`, `stddev()`, or even arbitrary `sql()` statements) as well as
+literal values (often used for `text()` annotations on plots or a
+`line()` drawn at an arbitrary location).
+
+Here are the scales which you will most commonly bind channels to:
+
+| Scale    | Description                                             |
+|----------|---------------------------------------------------------|
+| `x`      | Horizontal position                                     |
+| `y`      | Vertical position                                       |
+| `fx`     | Horizontal facet position                               |
+| `fy`     | Vertical facet position                                 |
+| `z`      | Optional ordinal channel for grouping data into series. |
+| `r`      | Radius of a mark (e.g. circle radius)                   |
+| `stroke` | Color for mark                                          |
+| `fill`   | Fill color for mark                                     |
+| `symbol` | Symbol used for mark                                    |
+
+In addition, many marks have scales to deal with ranges of x or y values
+(e.g. area marks, arrows, etc.):
+
+| Scale | Description                  |
+|-------|------------------------------|
+| `x1`  | Starting horizontal position |
+| `x2`  | Ending horizontal position   |
+| `y1`  | Starting vertical position   |
+| `y2`  | Ending vertical position     |
+
+## Connected
+
+The `area()` and `line()` marks connect consecutive sample points.
+Connected marks are treated similarly to basic marks, with one notable
+addition: the queries for spatially oriented marks (`area_y()`,
+`line_x()`) can apply [M4
+optimization](https://observablehq.com/@uwdata/m4-scalable-time-series-visualization).
+The query construction method uses plot width and data min/max
+information to determine the pixel resolution of the mark range. When
+the data points outnumber available pixels, M4 performs perceptually
+faithful pixel-aware binning of the series, limiting the number of drawn
+points. This optimisation offers dramatic data reductions for both
+single and multiple series.
+
+Separately, a `regression_y()` mark is available for linear regression
+fits. Regression calculations and associated statistics are performed
+in-database in a single aggregate query. The mark then draws the
+regression line and optional confidence interval area.
+
+## Density
+
+The `density_y()` mark performs 1D kernel density estimation (KDE). The
+`density_y()` mark defaults to areas, but supports a `type` option to
+instead use lines, points, or other basic marks. The generated query
+performs *linear binning*, an alternative to standard binning that
+proportionally distributes the weight of a point between adjacent bins
+to provide greater accuracy for density estimation. The query uses
+subqueries for the “left” and “right” bins, then aggregates the results.
+The query result is a 1D grid of binned values which are then smoothed.
+As smoothing is performed in the browser, interactive bandwidth updates
+are processed immediately.
+
+The `density()`, `contour()`, `heatmap()`, and `raster()` marks compute
+densities over a 2D domain using either linear (default) or standard
+binning. Smoothing again is performed in browser; setting the
+`bandwidth` option to zero disables smoothing. The `contour()` mark then
+performs contour generation, whereas the `raster()` mark generates a
+coloured bitmap. The `heatmap()` mark is a convenient shortcut for a
+`raster()` that performs smoothing by default. Dynamic changes of
+bandwidth, contour thresholds, and color scales are handled immediately
+in browser.
+
+The `hexbin()` mark pushes hexagonal binning and aggregation to the
+database. Color and size channels may be mapped to `count()` or other
+aggregates. Hexagon plotting symbols can be replaced by other basic
+marks (such as `text()`) via the `type` option.
+
+The `dense_line()` mark creates a density map of line segments, rather
+than points. Line density estimation is pushed to the database. To
+ensure that steep lines are not over-represented, we approximate
+arc-length normalisation for each segment by normalising by the number
+of filled raster cells on a per-column basis. We then aggregate the
+resulting weights for all series to produce the line densities.
