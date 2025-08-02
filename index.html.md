@@ -28,6 +28,57 @@ Notebook](https://jupyter.org/) then include them in documents as static
 images or in websites as interactive Jupyter Widgets (see
 [Publishing](publishing.qmd) for details).
 
+#### LLM Assistance
+
+Inspect Viz makes it’s documentation available in an LLM friendly
+markdown format. Use the llms.txt file for configuring IDEs that support
+llms.txt documentation. Use the llms-guide.txt and/or llms-full.txt
+variants for pasting into model context.
+
+|  |  |
+|----|----|
+| [llms.txt](https://meridianlabs-ai.github.io/inspect_viz/llms.txt) | Documentation index (links to other docs). |
+| [llms-guide.txt](https://meridianlabs-ai.github.io/inspect_viz/llms-guide.txt) | Documentation excluding reference (138k). |
+| [llms-full.txt](https://meridianlabs-ai.github.io/inspect_viz/llms-full.txt) | Documentation including reference (529k) |
+
+You can also configure Claude Code to access the documentation using an
+MCP server (expand the section below for details).
+
+> [!NOTE]
+>
+> ### Claude Code llms.txt
+>
+> Execute the following from within a terminal to configure Inspect Viz
+> documentation for the current project:
+>
+> ``` bash
+> claude mcp add-json inspect-viz-docs '{"type":"stdio","command":"uvx" ,"args":["--from", "mcpdoc", "mcpdoc", "--urls", "inspect_viz:https://meridianlabs-ai.github.io/inspect_viz/llms.txt"]}' -s local
+> ```
+>
+> Alternatively, add the following configuration for your project to the
+> Claude Code config file (`~/.claude.json`):
+>
+> ``` json
+> "mcpServers": {
+>    "inspect-viz-docs": {
+>       "type": "stdio",
+>       "command": "uvx",
+>       "args": [
+>       "--from",
+>       "mcpdoc",
+>       "mcpdoc",
+>       "--urls",
+>       "inspect_viz:https://meridianlabs-ai.github.io/inspect_viz/llms.txt"
+>       ]
+>    }
+> }
+> ```
+
+In addition, the Inspect Viz Python API maps quite closely to the
+[Observable Plot](https://observablehq.com/plot/) JavaScript API that it
+is built on top of. Consequently, asking an LLM how to do things in
+Observable Plot will typically yield actionable advice.
+
 ## Views
 
 Inspect Viz [Views](views.qmd) are pre-built plots that work with data
