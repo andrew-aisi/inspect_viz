@@ -1,7 +1,11 @@
 project:
    type: website
+   resources: 
+      - llms.txt
    pre-render: 
       - reference/filter/sidebar.py
+   post-render:
+      - scripts/post-render.sh
 
 metadata-files: 
   - reference/_sidebar.yml  
