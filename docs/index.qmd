@@ -2,6 +2,13 @@
 title: "Inspect Viz"
 subtitle: |
    Data visualization for [Inspect AI](https://inspect.aisi.org.uk/) large language model evalutions.
+citation:
+  id: "Meridan_Labs_Inspect_Viz_2025"
+  title: "Inspect Viz: Data Visualization for Inspect AI Large Language Model Evalutions"
+  author: "Meridian Labs"
+  issued: 2025-08
+  url: "https://github.com/meridianlabs-ai/inspect_viz"
+  type: "software"
 tbl-colwidths: [35,75]
 ---
 
