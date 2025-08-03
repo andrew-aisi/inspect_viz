@@ -23,12 +23,12 @@ website:
    repo-actions: [issue]
    twitter-card:
       title: "Inspect Viz"
-      description: "Data visualization for Inspect AI large language model evalutions."
+      description: "Data visualization for Inspect AI evaluations."
       image: /inspect_viz.png
       card-style: summary_large_image
    open-graph: 
       title: "Inspect Viz"
-      description: "Data visualization for Inspect AI large language model evalutions"
+      description: "Data visualization for Inspect AI evalutions"
       image: /inspect_viz.png
    navbar:
       title: "Inspect Viz"
