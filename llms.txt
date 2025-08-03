@@ -24,7 +24,7 @@ Finally, these sections provide additional related documentation:
 - [Links](https://meridianlabs-ai.github.io/inspect_viz/components-links.html.md): How to direct links from visualizations to published Inspect log transcripts.
 - [Tables](https://meridianlabs-ai.github.io/inspect_viz/components-tables.html.md): How to create tables that display an interactive grid of data used in your visualization. 
 - [Inputs](https://meridianlabs-ai.github.io/inspect_viz/components-inputs.html.md): How to use inputs (e.g. sliders, select boxes, etc.) to create interactive visualisations.
-- [Selections](https://meridianlabs-ai.github.io/inspect_viz/components-selections.html.md): How to create plot selections that enable filtering and cross-filtering of plot data based on inputs and interactors.
+- [Interactivity](https://meridianlabs-ai.github.io/inspect_viz/components-interactivty.html.md): How to create plot selections that enable filtering and cross-filtering of plot data based on inputs and interactors.
 
 ## Examples
 

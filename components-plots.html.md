@@ -410,8 +410,8 @@ Legends also act as interactors, taking a bound `Selection` as a
 supported for Selections using *single* resolution, enabling legends and
 other interactors to share state.
 
-See the docs on [Toggle](components-selections.qmd#toggle) interactors
-for an example of an interactive legend.
+See the docs on [Toggle](components-interactivity.qmd#toggle)
+interactors for an example of an interactive legend.
 
 ## Baselines
 

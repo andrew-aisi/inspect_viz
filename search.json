@@ -567,195 +567,219 @@
     ]
   },
   {
-    "objectID": "publishing-websites.html",
-    "href": "publishing-websites.html",
-    "title": "Websites",
+    "objectID": "components-inputs.html",
+    "href": "components-inputs.html",
+    "title": "Inputs",
     "section": "",
-    "text": "If you want to publish one or more plots as part of a website there are a couple of high level orientations to the problem:\n\nUse a Jupyter-based website publishing system that supports interactive Jupyter Widgets (e.g. Quarto).\nUse the to_html() function to create embeddable HTML fragments for your plots and embed them in any website.\n\nWe’ll cover both of these approaches below.",
+    "text": "Inputs are used to create interactive visualisations by targeting either Param values or Selection ranges. Available inputs include:\nAll inputs can write updates to a provided Param or Selection. Param values are updated to match the input value. Selections are provided a predicate clause. This linking can be bidirectional: an input component will also subscribe to a param and track its value updates.",
     "crumbs": [
       "Getting Started",
-      "Publishing",
-      "Websites"
+      "Components",
+      "Inputs"
     ]
   },
   {
-    "objectID": "publishing-websites.html#overview",
-    "href": "publishing-websites.html#overview",
-    "title": "Websites",
+    "objectID": "components-inputs.html#select",
+    "href": "components-inputs.html#select",
+    "title": "Inputs",
+    "section": "Select",
+    "text": "Select\nThe select() input is used to select one more more values from a list. The list can be sourced from a data column (via the column parameter) or be static (via the options parameter). Here is a select input bound to a column (this input targets the default Selection associated with the passed Data):\n\nfrom inspect_viz import Data\nfrom inspect_viz.input import select\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nselect(penguins, label=\"Species\", column=\"species\")\n\n\n\n\nNote that by default the select has no value so does not filtering (represented by the default “All” selection). If you want a select() to have an initial value then specify it using the value parameter (or pass ‘auto’ to select the first value):\n\nselect(penguins, label=\"Species\", column=\"species\", value=\"auto\")\n\n\n\n\nHere is a select input with explicit options (this input targets a Param):\n\nfrom inspect_viz import Param\n\nfruit = Param(\"Apple\")\n\nselect(label=\"Fruit\", options=[\"Apple\", \"Orange\", \"Banana\"], target=fruit)\n\n\n\n\nPass multiple=True to enable multiple inputs. In this case values are specified via typing/autocomplete rather than a drop down menu.\n\nathletes = Data.from_file(\"athletes.parquet\")\n\nselect(athletes, label=\"Sports\", column=\"sport\", multiple=True)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "components-inputs.html#slider",
+    "href": "components-inputs.html#slider",
+    "title": "Inputs",
+    "section": "Slider",
+    "text": "Slider\nThe slider() input enables specificiation of either a single numeric value or a range of values. Here we enable the selection of a maximum body mass for a column:\n\nfrom inspect_viz.input import slider\n\nslider(penguins, label=\"Max Body Mass\", column=\"body_mass\")\n\n\n\n\nPass select=\"interval\" to specify an interval rather than single value:\n\nslider(penguins, label=\"Body Mass Range\", column=\"body_mass\", select=\"interval\")\n\n\n\n\nSliders can also target a Param and have explicit min, max, and step values:\n\nbias = Param(0.5)\n\nslider(label=\"Bias\", min=0, max=1.0, step=0.1, target=bias)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "components-inputs.html#search",
+    "href": "components-inputs.html#search",
+    "title": "Inputs",
+    "section": "Search",
+    "text": "Search\nThe search() input enables filtering a dataset based on text matching. For example, this input filters by WNBA player name\n\nfrom inspect_viz.input import search\n\nplayers = Data.from_file(\"wnba-shots-2023.parquet\")\n\nsearch(players, label=\"Athlete\", column=\"athlete_name\")",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "components-inputs.html#checkbox",
+    "href": "components-inputs.html#checkbox",
+    "title": "Inputs",
+    "section": "Checkbox",
+    "text": "Checkbox\nThe checkbox() input enables toggling a binary value. You can either target boolean Param values or provide custom values mapped to checked and unchecked.\n\nfrom inspect_viz.input import checkbox\n\nenabled = Param(True)\n\ncheckbox(label=\"Enabled\", target=enabled)\n\n\n\n\nHere we provide custom values that map to checked and unchecked states:\n\nbias = Param(0.1)\n\ncheckbox(label=\"Use Bias\", values=[0.0, 0.1], target=bias)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "components-inputs.html#radio-group",
+    "href": "components-inputs.html#radio-group",
+    "title": "Inputs",
+    "section": "Radio Group",
+    "text": "Radio Group\nThe radio_group() is an alternative to select() which displays all of the available options rather than collapsing them into a menu:\n\nfrom inspect_viz.input import radio_group\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nradio_group(penguins, label=\"Species\", column=\"species\")\n\n\n\n\nOr targeting a Param:\n\nfruit = Param(\"Apple\")\n\nradio_group(label=\"Fruit\", options=[\"Apple\", \"Orange\", \"Banana\"], target=fruit)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "components-inputs.html#checkbox-group",
+    "href": "components-inputs.html#checkbox-group",
+    "title": "Inputs",
+    "section": "Checkbox Group",
+    "text": "Checkbox Group\nThe checkbox_group() provides an interface to select multiple values (similar to select(..., multiple=True)):\n\nfrom inspect_viz.input import checkbox_group\n\npenguins = Data.from_file(\"penguins.parquet\")\n\ncheckbox_group(penguins, label=\"Species\", column=\"species\")\n\n\n\n\nYou can also use checkbox_group() with a Param:\n\nfruit = Param([\"Apple\", \"Orange\"])\n\ncheckbox_group(label=\"Fruit\", options=[\"Apple\", \"Orange\", \"Banana\"], target=fruit)",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Inspect Viz",
     "section": "",
-    "text": "If you want to publish one or more plots as part of a website there are a couple of high level orientations to the problem:\n\nUse a Jupyter-based website publishing system that supports interactive Jupyter Widgets (e.g. Quarto).\nUse the to_html() function to create embeddable HTML fragments for your plots and embed them in any website.\n\nWe’ll cover both of these approaches below.",
+    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for creating high quality interactive visualisations from Inspect evaluations.\nHere’s an Inspect Viz plot created with the scores_timeline() function that compares benchmarks scores over time1:\n\n\n\n\n\nUse the filters to switch benchmarks and restrict to models from various organization(s). Hover over the points to get additional details on them or view the underlying Inspect log for the evals.",
     "crumbs": [
       "Getting Started",
-      "Publishing",
-      "Websites"
+      "Welcome"
     ]
   },
   {
-    "objectID": "publishing-websites.html#quarto-websites",
-    "href": "publishing-websites.html#quarto-websites",
-    "title": "Websites",
-    "section": "Quarto Websites",
-    "text": "Quarto Websites\nThe Quarto publishing system can create websites that include dynamic output from Python code, including interactve Jupyter Widgets like the ones created by Inspect Viz. To install the quarto-cli Python package:\npip install quarto-cli\nQuarto is a markdown-based publishing system that enables you to embed executable Python blocks whose output is included in the published website. For instance, Here is the source code for the Bias Parameter example:\n---\ntitle: \"Bias Parameter\"\n1echo: false\n---\n\nUse the slider to create bias offsets for the y-axis.\n\n2```{python}\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import area_y\nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import sql\n\nrandom_walk = Data.from_file(\"random-walk.parquet\")\nbias = Param(0)\n```\n\n```{python} \nslider(label=\"Bias\", target=bias, min=0, max=1000, step=1, value=100)\n```\n\n```{python} \nplot(area_y(random_walk, x=\"t\", y=sql(f\"v + {bias}\"), fill=\"steelblue\"))\n```\n\n1\n\nWe specify echo: false to prevent display of code blocks.\n\n2\n\nMarkdown code blocks decorated with {python} are executed.\n\n\nHere is what the page looks like when rendered on the website (it’s a screenshot so you won’t be able to use the slider!):\n\n\nNotebook Execution\nWhen using Inspect Viz with Quarto Websites you should always add the following configuration to your _quarto.yml to specify that notebooks should be fully executed when rendered:\n\n\n_quarto.yml\n\nexecute: \n  enabled: true\n\n\n\nLearning More\nThe website was created with Quarto and includes many live Inspect Viz plots and tables. The source code for the Examples section is a good place to start to understand the basics.\nThe documentation on Quarto Websites includes a tutorial and many additional details on creating, customizing, and publishing websites.\nQuarto Dashboards are a special type of Quarto website optimized for displaying many plots and tables together, so are also worth considering.",
-    "crumbs": [
-      "Getting Started",
-      "Publishing",
-      "Websites"
-    ]
-  },
-  {
-    "objectID": "publishing-websites.html#html-fragments",
-    "href": "publishing-websites.html#html-fragments",
-    "title": "Websites",
-    "section": "HTML Fragments",
-    "text": "HTML Fragments\nIf you are working with an existing website or with another website publishing system, it is also straightforward to embed HTML snippets which include Inspect Viz plots and tables.\n\nSingle Plot\nTo create a standalone snippet which you can include in any website, use the write_html() function:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_html\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_html(\"penguins.html\", pl)\n\n\nMultiple Plots\nIf you want to include multiple plots on a page, you might find it more convenient to call the to_html() function as part of your website generation process. The returned HTML includes the Jupyter Widget runtime dependencies, so if you have multiple plots you’ll instead want to include these dependencies once in the &lt;head&gt; of your document and the create HTML snippets without the dependencies.\nHere is the dependencies code that you should place in the &lt;head&gt; tag:\n&lt;script src=\"https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js\" crossorigin=\"anonymous\"&gt;&lt;/script&gt;\n&lt;script src=\"https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js\" crossorigin=\"anonymous\"&gt;&lt;/script&gt;\nThen, specify dependencies=False when you call to_html() to get only the plot and not the dependencies scripts which are already in your &lt;head&gt; tag:\nfrom inspect_viz.plot import to_html\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\npl_html = to_html(pl, dependencies=False)\n\n# ...include pl_html in your website",
-    "crumbs": [
-      "Getting Started",
-      "Publishing",
-      "Websites"
-    ]
-  },
-  {
-    "objectID": "components-tables.html",
-    "href": "components-tables.html",
-    "title": "Tables",
+    "objectID": "index.html#welcome",
+    "href": "index.html#welcome",
+    "title": "Inspect Viz",
     "section": "",
-    "text": "Use tables to display an interactive grid of data used in your visualization. Tables support commonly used operations like sorting, filtering, pagination and a variety of other customization options.",
+    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for creating high quality interactive visualisations from Inspect evaluations.\nHere’s an Inspect Viz plot created with the scores_timeline() function that compares benchmarks scores over time1:\n\n\n\n\n\nUse the filters to switch benchmarks and restrict to models from various organization(s). Hover over the points to get additional details on them or view the underlying Inspect log for the evals.",
     "crumbs": [
       "Getting Started",
-      "Components",
-      "Tables"
+      "Welcome"
     ]
   },
   {
-    "objectID": "components-tables.html#basics",
-    "href": "components-tables.html#basics",
-    "title": "Tables",
-    "section": "Basics",
-    "text": "Basics\nIn its most simple form, the table() function will display the contents of the Data provided. For example, the following:\nfrom inspect_viz import Data\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins)\nresults in a table displaying all the columns and rows in the penguins dataset:\n\n\n\n\n\nIn addition to providing the base Data for the table, you may also select which columns are displayed:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, columns=[\n    \"species\", \n    \"island\", \n    \"sex\", \n    \"body_mass\"])\n\n\n\n\nTables have a number of global options for configuring the behavior, but also have many options specific to one or more columns. To specify column level options, using the column function in the list of columns rather than simply passing the column name:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, columns=[\n    column(\"species\", align=\"center\"), \n    \"island\", \n    \"sex\", \n    \"body_mass\"])\n\n\n\n\n\nSize\nBy default, tables will have a height which matches the size of their content and a width which files their container (with a default maximum size of 500px). You can explicitly provide a height and width value in pixels for the table if you’d like the table to be a specific size:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, height=200, width=550)\n\n\n\n\nYou can use max_width to constrain the maximum width of the table in pixels. It will still attempt to fill its container, but it’s width will not exceed the max_width.",
+    "objectID": "index.html#installation",
+    "href": "index.html#installation",
+    "title": "Inspect Viz",
+    "section": "Installation",
+    "text": "Installation\nFirst, install the inspect_viz package from GitHub as follows:\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nInspect Viz plots are interactive Jupyter Widgets and can be authored in variety of ways:\n\nIn any Jupyter Notebook (JupyterLab, VS Code, Colab, etc.)\nIn VS Code with the Jupyter: Run Current File in Interactive Window command.\nIn VS Code within a Quarto executable markdown document.\n\nSee the article on LLM Assistance for best practices on using language models to help with creating plots. See the articles on Publishing for details on including plots in documents as static images or within websites and dashboards as interactive widgets.",
     "crumbs": [
       "Getting Started",
-      "Components",
-      "Tables"
+      "Welcome"
     ]
   },
   {
-    "objectID": "components-tables.html#columns",
-    "href": "components-tables.html#columns",
-    "title": "Tables",
-    "section": "Columns",
-    "text": "Columns\nWhen providing column data for a table, you can provide a list of columns names from your Data to be displayed. You can also use the column function to provide additional options for each column. For example, to customize the string that is displayed in the header for the column, using the label option like:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, columns=[\n    \"species\", \n    \"island\", \n    \"sex\", \n    column(\"body_mass\", label=\"mass\")])\n\n\n\n\n\nWidth\nIf no explicit column size is provided, the width of each column is an equal share of the available space. You can specify the width of columns either using an explicit pixel size:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, width=370, columns=[\n    column(\"species\", width=80), \n    column(\"island\", width=100), \n    column(\"sex\", width=70), \n    column(\"body_mass\", width=100)])\n\n\n\n\nor using flex for some or all of the columns. Flex sizing works by dividing the remaining space in the grid among all flex columns in proportion to their flex value.\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, width=550, columns=[\n    column(\"species\", flex=1), \n    column(\"island\", flex=1.2), \n    column(\"sex\", width=70), \n    column(\"body_mass\", flex=1)])\n\n\n\n\nYou can also use max_width to set a maximum width for a column or min_width to set a minimum width for a column. This will be used to provide caps on width when columns are being sized automatically using flex sizing.\n\n\nAlignment\nYou can control the alignment of the values within each columns header and body using the align and header_align options. For example:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, columns=[\n    column(\"species\", align=\"center\", header_align=\"center\"), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\")])\n\n\n\n\n\n\nFormatting\nYou can control the formatting of each cell’s value using the format option. The format option accepts a d3-format string for numeric values and a d3-time-format string for date values to define how the value will be formatted.\ntable(penguins, columns=[\n    column(\"species\"), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\", format=\",.2f\")])\nDefault formats for values are as follows:\n\n\n\n\n\n\n\ntype\nformat\n\n\n\n\ninteger\n','\n\n\nnumber\nfloat\n',.2~f'\n\n\ndecimal\n',.4~f'\n\n\ndate\n'%Y-%m-%d'\n\n\ndatetime\ntimestamp\n'%Y-%m-%d %H:%M:%S'\n\n\n\n\n\nText Wrapping\nYou can control the text wrapping behavior of the values within each columns header and body using the wrap_text and header_wrap_text options. This is most frequently paired with auto_height to create rows with automatic heights which wrap text. For example:\ntable(penguins, columns=[\n    column(\"species\", auto_height=True, wrap_text=True), \n    column(\"island\", flex=1.2), \n    column(\"sex\", width=70), \n    column(\"body_mass\", flex=1)])",
+    "objectID": "index.html#views",
+    "href": "index.html#views",
+    "title": "Inspect Viz",
+    "section": "Views",
+    "text": "Views\nInspect Viz Views are pre-built plots that work with data created by the Inspect log data frame reading functions. For example, the scores_by_factor() view enables you to compare scores across models and a boolean factor:\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_factor\n\nevals = Data.from_file(\"evals-hint.parquet\")\nscores_by_factor(evals, \"task_arg_hint\", (\"No hint\", \"Hint\"))\n\n\n\n\nThe tool_calls() view enables you to visualize tool calls by sample:\n\nfrom inspect_viz.view.beta import tool_calls\n\ntools = Data.from_file(\"cybench_tools.parquet\")\ntool_calls(tools)\n\n\n\n\nAvailable views include:\n\n\n\n\n\n\n\nView\nDescription\n\n\n\n\nscores_by_task()\nBar plot for comparing eval scores (with confidence intervals) across models and tasks.\n\n\nscores_by_factor()\nBar bar plot for comparing eval scores by model and a boolean factor (e.g. no hint vs. hint).\n\n\nscores_timeline()\nScatter plot with eval scores by model, organization, and release date. Filterable by evaluation and organization.\n\n\nscores_heatmap()\nHeatmap with values for comparing scores across model and task.\n\n\nscores_by_model()\nBar plot for comparing model scores on a single eval.\n\n\ntool_calls()\nHeat map visualising tool calls over evaluation turns.",
     "crumbs": [
       "Getting Started",
-      "Components",
-      "Tables"
+      "Welcome"
     ]
   },
   {
-    "objectID": "components-tables.html#rows",
-    "href": "components-tables.html#rows",
-    "title": "Tables",
-    "section": "Rows",
-    "text": "Rows\n\nHeight\nBy default, each row of the the table, including the header row, is 29px tall. You can set an explicit row size for the body of the table using the row_height argument. Set the header’s row height using the header_height argument:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, header_height=60, row_height=50)\n\n\n\n\n\n\nAuto Height\nIn addition to explicitly providing the heights for rows, you can also allow the content to determine the height of the row. To do this, configure one or more column with auto_height. The height of the row will then be determined using the largest height required to display the content of any columns with the auto_height option.\ntable(penguins, width=550, columns=[\n    column(\"species\", flex=1), \n    column(\"island\", flex=1.2, auto_height=True), \n    column(\"sex\", width=70), \n    column(\"body_mass\", flex=1)])\nYou can also use the header_auto_height option to specify columns that will automatically size the header row height.",
+    "objectID": "index.html#plots",
+    "href": "index.html#plots",
+    "title": "Inspect Viz",
+    "section": "Plots",
+    "text": "Plots\nWhile pre-built views are useful, you also may want to create your own custom plots. Plots in inspect_viz are composed of one or more marks, which can do either higher level plotting (e.g. dot(), bar_x(), bar_y(), area(), heatmap(), etc.) or lower level drawing on the plot canvas (e.g. text(), image(), arrow(), etc.)\n\nDot Plot\nHere is an example of a simple dot plot using a dataset of GPQA Diamond results:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\n1gpqa = Data.from_file(\"gpqa.parquet\")\n\nplot(\n2    dot(\n        gpqa, \n        x=\"model_release_date\", \n        y=\"score_headline_value\",\n3        fill=\"model_organization_name\",\n4        channels= {\n            \"Model\": \"model_display_name\", \n            \"Score\": \"score_headline_value\",\n            \"Stderr\": \"score_headline_stderr\",\n        }\n    ),\n    title=\"GPQA Diamond\",\n5    legend=\"color\",\n    grid=True,\n    x_label=\"Release Date\",\n    y_label=\"Score\",\n6    y_domain=[0,1.0],\n)\n\n\n1\n\nRead the dataset from a parquet file. You can can also use Data.from_dataframe() to read data from any Pandas, Polars, or PyArrow data frame.\n\n2\n\nPlot using a dot() mark. The plot() function takes one or more marks or interactors.\n\n3\n\nMap the “model_organization_name” column to the fill scale of the plot (causing each orgnization to have its own color).\n\n4\n\nShow tooltip with defined channels.\n\n5\n\nAdd a legend to the plot as a key to our color mappings.\n\n6\n\nEnsure that the y-axis goes from 0 to 1.\n\n\n\n\n\n\n\n\n\nBar Plot\nHere is a simple horizontal bar plot that counts the number of each species:\n\nfrom inspect_viz.mark import bar_x\n\nevals = Data.from_file(\"agi-lsat-ar.parquet\")\n\nplot(\n    bar_x(\n        evals, \n        x=\"score_headline_value\", \n        y=\"model_display_name\",\n1        sort={\"y\": \"x\", \"reverse\": True},\n        fill=\"#3266ae\"\n    ),\n    title=\"AR-LSAT\",\n    x_label=\"Score\",\n2    y_label=None,\n    margin_left=120.\n)\n\n\n1\n\nSort the bars by score (descending).\n\n2\n\nY-axis is labeled with model names so remove default label and ensure it has enough margin.",
     "crumbs": [
       "Getting Started",
-      "Components",
-      "Tables"
+      "Welcome"
     ]
   },
   {
-    "objectID": "components-tables.html#sorting",
-    "href": "components-tables.html#sorting",
-    "title": "Tables",
-    "section": "Sorting",
-    "text": "Sorting\nEach column in the table is sortable by clicking on the header for the column you’d like to sort. Each click toggles between the sorting ascending, sorting descending, and not sorting. Holding shift while clicking will add the clicked column as a secondary sort, preserving any other sorts that have already been specified.\nYou can disable sorting for the entire table using the sorting argument:\ntable(penguins, sorting=False)\nYou can control whether individual columns can be sorted using the sortable option for column:\ntable(penguins, columns=[\n    column(\"species\", sortable=False), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\")])",
+    "objectID": "index.html#links",
+    "href": "index.html#links",
+    "title": "Inspect Viz",
+    "section": "Links",
+    "text": "Links\nInspect Viz supports creating direct links from visualizations to published Inspect log transcripts. Links can be made at the eval level, or to individual samples, messages, or events. For example, this plot produced with scores_by_model() includes a link to the underlying logs in its tooltips:\n\nfrom inspect_viz.view.beta import scores_by_model\nscores_by_model(evals) # baseline=0.91\n\n\n\n\nThe pre-built Views all support linking when a log_viewer column is available in the dataset. To learn more about ammending datasets with viewer URLs as well as adding linking support to your own plots see the article on Links.",
     "crumbs": [
       "Getting Started",
-      "Components",
-      "Tables"
+      "Welcome"
     ]
   },
   {
-    "objectID": "components-tables.html#filtering",
-    "href": "components-tables.html#filtering",
-    "title": "Tables",
-    "section": "Filtering",
-    "text": "Filtering\nEach column of the table is filterable by clicking the filter icon in the header of the column. Depending upon the type of data in the column, different filtering options will be presented to the user. To disable filtering for a table, use filtering:\ntable(penguins, filtering=False)\nYou can control whether individual columns can be filtered using the filterable option for column:\ntable(penguins, columns=[\n    column(\"species\", filterable=False), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\")])\n\nFilter Location\nYou can control where in the table filters appear by passing other header or row as the value for filter. header places in the filter as buttons in the header row next to the header text. row creates` a separate row with inline filter UI for filtering columns. For example:\ntable(penguins, filtering='row')",
+    "objectID": "index.html#filters",
+    "href": "index.html#filters",
+    "title": "Inspect Viz",
+    "section": "Filters",
+    "text": "Filters\nUse inputs to enable filtering datasets and dynamically updating plots. For example, if we had multiple benchmarks available for a scores timeline, we could add a select() input for choosing between them:\n\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\nbenchmarks = Data.from_file(\"benchmarks.parquet\")\n\nvconcat(\n    select(\n        benchmarks, \n        label=\"Benchmark\", \n        column=\"task_name\", \n        value=\"auto\"\n    ),\n    plot(\n        dot( \n            benchmarks, \n            x=\"model_release_date\", \n            y=\"score_headline_value\",\n            fill=\"model_organization_name\",\n        ),\n        legend=\"color\", \n        grid=True,\n        x_label=\"Release Date\",\n        y_label=\"Score\",\n        y_domain=[0,1.0],  \n        color_domain=\"fixed\"\n    )\n)\n\n\n\n\nWe’ve introduced a few new things here:\n\nThe vconcat() function from the layout module lets us stack inputs on top of our plot.\nThe select() function from the input module binds a select box to the task_name column.\nThe color_domain=\"fixed\" argument to plot() indicates that we want to preserve model organization colors even when the plot is filtered.",
     "crumbs": [
       "Getting Started",
-      "Components",
-      "Tables"
+      "Welcome"
     ]
   },
   {
-    "objectID": "components-tables.html#resizing",
-    "href": "components-tables.html#resizing",
-    "title": "Tables",
-    "section": "Resizing",
-    "text": "Resizing\nEach column of the table may be resized by the user by clicking and dragging the separator between columns in the header row. To make the table columns not resizable, use the resizing option:\ntable(penguins, resizing=False)\nYou can control whether individual columns can be resized using the resizable option for column:\ntable(penguins, columns=[\n    column(\"species\", resizable=False), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\")])",
+    "objectID": "index.html#marks",
+    "href": "index.html#marks",
+    "title": "Inspect Viz",
+    "section": "Marks",
+    "text": "Marks\nSo far the plots we’ve created include only a single mark, however many of the more interesting plots you’ll create will include multiple marks.\nFor example, here we create a heatmap of evaluation scores by model. There is a cell() mark which provides the heatmap background color and a text() mark which displays the value.\n\nfrom inspect_viz.mark import cell, text\n\nscores = Data.from_file(\"scores.parquet\")\n\nplot(\n    cell(\n        scores,                                                     \n        x=\"task_name\",\n        y=\"model\",\n        fill=\"score_headline_value\",\n    ),\n    text(\n        scores,\n        x=\"task_name\",\n        y=\"model\",\n        text=\"score_headline_value\",\n        fill=\"white\",\n    ),\n    padding=0,\n    color_scheme=\"viridis\",\n    height=250,\n    margin_left=150,\n    x_label=None,\n    y_label=None\n)\n\n\n\n\nMarks can be used to draw dots, lines, bars, cells, arrows, text, and images on a plot.",
     "crumbs": [
       "Getting Started",
-      "Components",
-      "Tables"
+      "Welcome"
     ]
   },
   {
-    "objectID": "components-tables.html#pagination",
-    "href": "components-tables.html#pagination",
-    "title": "Tables",
-    "section": "Pagination",
-    "text": "Pagination\nWhen configured, tables can display pages of items with pagination controls at the bottom of the table rather than display all the items in a scrollable body. To enable pagination, simply provide the pagination argument to the table:\n\nfrom inspect_viz.table import column, table\ntable(penguins, \n      columns=[\n        column(\"species\"), \n        column(\"island\"), \n        column(\"sex\"), \n        column(\"body_mass\")],\n      pagination=True)\n\n\n\n\nBy default, the table will automatically set the page size to use the available space in the table without scrolling. You can also explicitly choose page size and page size options:\n\nfrom inspect_viz.table import column, table, Pagination\ntable(penguins, \n      columns=[\n        column(\"species\"), \n        column(\"island\"), \n        column(\"sex\"), \n        column(\"body_mass\")],\n      pagination=Pagination(page_size=20, page_size_selector=[20,40,60]))",
+    "objectID": "index.html#data",
+    "href": "index.html#data",
+    "title": "Inspect Viz",
+    "section": "Data",
+    "text": "Data\nIn the examples above we made Data available by reading from a parquet file. We can also read data from any Python Data Frame (e.g. Pandas, Polars, PyArrow, etc.). For example:\nimport pandas as pd\nfrom inspect_viz import Data\n\n# read directly from file\npenguins = Data.from_file(\"penguins.parquet\")\n\n# read from Pandas DF (i.e. to preprocess first)\ndf = pd.read_parquet(\"penguins.parquet\")\npenguins = Data.from_dataframe(df)\nYou might wonder why is there a special Data class in Inspect Viz rather than using data frames directly? This is because Inpsect Viz is an interactive system where data can be dynamically filtered and transformed as part of plotting—the Data therefore needs to be sent to the web browser rather than remaining only in the Python session. This has a couple of important implications:\n\nData transformations should be done using standard Python Data Frame operations prior to reading into Data for Inspect Viz.\nSince Data is embedded in the web page, you will want to filter it down to only the columns required for plotting (as you don’t want the additional columns making the web page larger than is necessary).\n\n\nData Selections\nOne other important thing to understand is that Data has a built in selection which is used in filtering operations on the client. This means that if you want your inputs and plots to stay synchoronized, you should pass the same Data instance to all of them (i.e. import into Data once and then share that reference). For example:\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\n# we import penguins once and then pass it to select() and dot()\npenguins = Data.from_file(\"penguins.parquet\")\n\nvconcat( \n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"  \n   )\n)",
     "crumbs": [
       "Getting Started",
-      "Components",
-      "Tables"
+      "Welcome"
     ]
   },
   {
-    "objectID": "components-tables.html#grouping",
-    "href": "components-tables.html#grouping",
-    "title": "Tables",
-    "section": "Grouping",
-    "text": "Grouping\nWhen displaying tabular data, it can be useful to group the data by specific fields. For example, to display a table with the average attributes of male and female penguins based upon their species, you can using grouping function for some columns:\n\nfrom inspect_viz.transform import avg, count\ntable(penguins, \n      height=120,\n      columns=[\n        column(\"species\"), \n        column(avg(\"body_mass\")),\n        column(avg(\"flipper_length\"))])\n\n\n\n\nWhen providing transforms to apply to columns (e.g. avg, sum), columns without aggregating transforms will be treated as columns to group by. So in the above example, the table is grouped by species displaying the rest of the values using their aggregate values.",
+    "objectID": "index.html#tables",
+    "href": "index.html#tables",
+    "title": "Inspect Viz",
+    "section": "Tables",
+    "text": "Tables\nYou can also display data in a tabular layout using the table() function:\n\nfrom inspect_viz.table import column, table\n\nbenchmarks = Data.from_file(\"benchmarks.parquet\")\n\ntable(\n    benchmarks, \n    columns=[\n        column(\"model_organization_name\", label=\"Organization\"),\n        column(\"model_display_name\", label=\"Model\"),\n        column(\"model_release_date\", label=\"Release Date\"),\n        column(\"score_headline_value\", label=\"Score\", width=100),\n        column(\"score_headline_stderr\", label=\"StdErr\", width=100),\n    ]\n)\n\n\n\n\nYou can sort and filter tables by column, use a scrolling or paginated display, and customize several other aspects of table appearance and behavior.",
     "crumbs": [
       "Getting Started",
-      "Components",
-      "Tables"
+      "Welcome"
     ]
   },
   {
-    "objectID": "components-tables.html#literal-data",
-    "href": "components-tables.html#literal-data",
-    "title": "Tables",
-    "section": "Literal Data",
-    "text": "Literal Data\nYou can also pass literal values (an int | float | bool) as a column by passing one or more values as the column itself. For example:\n\ntable(penguins, \n      columns=[\n        column([1,2,3,4,5,6,7,8,9], label=\"sample_bucket\"),\n        column(\"species\"), \n        column(\"body_mass\"),\n        column(\"flipper_length\")])\n\n\n\n\nIf a single value is passed, that value will be repeated for every row in the dataset. If a list of values is passed, each row will increment through the list and include the value from the row index. If the list is shorter than the dataset, values will be repeated by repeatedly iterating through the list.",
+    "objectID": "index.html#learning-more",
+    "href": "index.html#learning-more",
+    "title": "Inspect Viz",
+    "section": "Learning More",
+    "text": "Learning More\nUse these resources to learn more about using Inspect Viz:\n\nViews describes the various available pre-built views and how to customize them.\nPlots goes into further depth on plotting options and how to create custom plots.\nArticles on Marks, Links, Tables, Inputs, and Interactivity explore other components commonly used in visualizations.\nPublishing covers publishing Inspect Viz content as standalone plots, notebooks, websites, and dashboards.\nReference provides details on the available marks, interactors, transforms, and inputs.\nExamples demonstrates more advanced plotting and interactivity features.",
     "crumbs": [
       "Getting Started",
-      "Components",
-      "Tables"
+      "Welcome"
     ]
   },
   {
-    "objectID": "components-tables.html#selection",
-    "href": "components-tables.html#selection",
-    "title": "Tables",
-    "section": "Selection",
-    "text": "Selection\nBy default, the table will display the selection provided by the data source. If you’d like, you can provide an alternative selection by using filter_by.\n\nTargeting Selections\nIt can be useful to use selected rows within a table to target a selection to be used elsewhere (for example, in highlighting points within a dot plot). To do this, use the target option to select the output selection. This will cause a selection clause of the form column IN (rows) to be added to the selection for each currently selected table row.\nFor example:\ntable(penguins, \n      target=selection)\nYou can use the select option to control how selection works within the table. By default, select is set to single_row which will allow selection of one row at a time by clicking the row. Other options are listed below:\n\n\n\n\n\n\n\nOption\nAction\n\n\n\n\nhover\nThe selection will be updated when the user’s mouse hovers over a row.\n\n\nsingle_row\nThe selection will be updated when a single row is selected. The selected row will be highlighted.\n\n\nmultiple_row\nThe selection will be updated when one or more rows are selected. The selected rows will be highlighted.\n\n\nsingle_row_checkbox\nThe selection will be updated when a single row is selected using a checkbox.\n\n\nmultiple_row_checkbox\nThe selection will be updated when one or more rows is selected using a checkbox.",
+    "objectID": "index.html#footnotes",
+    "href": "index.html#footnotes",
+    "title": "Inspect Viz",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nThis plot was inspired by and includes data from the Epoch AI Benchmarking Hub↩︎",
     "crumbs": [
       "Getting Started",
-      "Components",
-      "Tables"
-    ]
-  },
-  {
-    "objectID": "components-tables.html#appearance",
-    "href": "components-tables.html#appearance",
-    "title": "Tables",
-    "section": "Appearance",
-    "text": "Appearance\nTables have a minimal default appearance using the AG Grid Balham theme. If the table is being displayed in a Quarto page or dashboard, it will automatically inherit the theme of the page on which it is hosted.\nYou can customize most aspects of the table appearance using the style argument like:\n\nfrom inspect_viz.table import column, table, Pagination, TableStyle\ntable(penguins, \n      columns=[\n        column(\"species\"), \n        column(\"island\"), \n        column(\"sex\"), \n        column(\"body_mass\")],\n      style=TableStyle(\n        background_color=\"#FCFAFF\",  \n        foreground_color=\"purple\", \n        accent_color=\"#E8FFB3\"))\n\n\n\n\n\nColor\nUsing the three following basic color options will provide new colors for the table (with the overall colors of the table derived from these three themes). Each of these colors accepts a css color value (for example a hex color string or a named value like red).\n\n\n\n\n\n\n\nOption\nTarget\n\n\n\n\nbackground_color\nThe background color use for cells.\n\n\nforeground_color\nThe foreground color used for values within cells.\n\n\naccent_color\nAccent color used for things like selection and highlights.\n\n\n\nIn addition to the previous basic options, you can do further customization of the colors by passing a css color value to the following:\n\n\n\n\n\n\n\nOption\nTarget\n\n\n\n\ntext_color\nThe text color for UI elements presented within the table.\n\n\nheader_text_color\nThe color for text in the header row.\n\n\ncell_text_color\nThe color for text in cell within the body of the table.\n\n\nselected_row_background_color\nThe background color of selected rows.\n\n\n\n\n\nFonts\nYou can control the fonts used by the table by passing a css font-family value in the following options:\n\n\n\n\n\n\n\nOption\nTarget\n\n\n\n\nfont_family\nThe default font for all text within the table.\n\n\nheader_font_family\nThe font used for text within the header row.\n\n\ncell_font_family\nThe font used for text within the body of the table.\n\n\n\n\n\nBorder\nYou can control the border of the table using the following border options:\n\n\n\nOptions\nTarget\n\n\n\n\nborder_color\nThe color of the border (value css color value).\n\n\nborder_width\nThe width in pixels of the border.\n\n\nborder_radius\nThe border radius in pixels.\n\n\n\n\n\nSpacing\nThe spacing options controls how tightly data and UI elements are packed together in the table. All the padding within in the table is defined relative to this value, so changing this value will affect the spacing of everything in the table.\nBy default, tables have 4 pixels of spacing. To change this value, pass the number of pixels like so:\ntable(penguins, \n      columns=[\n        column(\"species\"), \n        column(\"island\"), \n        column(\"sex\"), \n        column(\"body_mass\")],\n      style=TableStyle(spacing=20))",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Tables"
+      "Welcome"
     ]
   },
   {
@@ -1165,312 +1189,267 @@
     ]
   },
   {
-    "objectID": "components-selections.html",
-    "href": "components-selections.html",
-    "title": "Selections",
+    "objectID": "components-tables.html",
+    "href": "components-tables.html",
+    "title": "Tables",
     "section": "",
-    "text": "Selections enable filtering and cross-filtering of plot data based based on Inputs and Interactors. Each Data table has a built-in selection and you can also create Selection instances for more sophisticated behaviors.",
+    "text": "Use tables to display an interactive grid of data used in your visualization. Tables support commonly used operations like sorting, filtering, pagination and a variety of other customization options.",
     "crumbs": [
       "Getting Started",
       "Components",
-      "Selections"
+      "Tables"
     ]
   },
   {
-    "objectID": "components-selections.html#overview",
-    "href": "components-selections.html#overview",
-    "title": "Selections",
-    "section": "",
-    "text": "Selections enable filtering and cross-filtering of plot data based based on Inputs and Interactors. Each Data table has a built-in selection and you can also create Selection instances for more sophisticated behaviors.",
+    "objectID": "components-tables.html#basics",
+    "href": "components-tables.html#basics",
+    "title": "Tables",
+    "section": "Basics",
+    "text": "Basics\nIn its most simple form, the table() function will display the contents of the Data provided. For example, the following:\nfrom inspect_viz import Data\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins)\nresults in a table displaying all the columns and rows in the penguins dataset:\n\n\n\n\n\nIn addition to providing the base Data for the table, you may also select which columns are displayed:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, columns=[\n    \"species\", \n    \"island\", \n    \"sex\", \n    \"body_mass\"])\n\n\n\n\nTables have a number of global options for configuring the behavior, but also have many options specific to one or more columns. To specify column level options, using the column function in the list of columns rather than simply passing the column name:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, columns=[\n    column(\"species\", align=\"center\"), \n    \"island\", \n    \"sex\", \n    \"body_mass\"])\n\n\n\n\n\nSize\nBy default, tables will have a height which matches the size of their content and a width which files their container (with a default maximum size of 500px). You can explicitly provide a height and width value in pixels for the table if you’d like the table to be a specific size:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, height=200, width=550)\n\n\n\n\nYou can use max_width to constrain the maximum width of the table in pixels. It will still attempt to fill its container, but it’s width will not exceed the max_width.",
     "crumbs": [
       "Getting Started",
       "Components",
-      "Selections"
+      "Tables"
     ]
   },
   {
-    "objectID": "components-selections.html#filtering",
-    "href": "components-selections.html#filtering",
-    "title": "Selections",
+    "objectID": "components-tables.html#columns",
+    "href": "components-tables.html#columns",
+    "title": "Tables",
+    "section": "Columns",
+    "text": "Columns\nWhen providing column data for a table, you can provide a list of columns names from your Data to be displayed. You can also use the column function to provide additional options for each column. For example, to customize the string that is displayed in the header for the column, using the label option like:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, columns=[\n    \"species\", \n    \"island\", \n    \"sex\", \n    column(\"body_mass\", label=\"mass\")])\n\n\n\n\n\nWidth\nIf no explicit column size is provided, the width of each column is an equal share of the available space. You can specify the width of columns either using an explicit pixel size:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, width=370, columns=[\n    column(\"species\", width=80), \n    column(\"island\", width=100), \n    column(\"sex\", width=70), \n    column(\"body_mass\", width=100)])\n\n\n\n\nor using flex for some or all of the columns. Flex sizing works by dividing the remaining space in the grid among all flex columns in proportion to their flex value.\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, width=550, columns=[\n    column(\"species\", flex=1), \n    column(\"island\", flex=1.2), \n    column(\"sex\", width=70), \n    column(\"body_mass\", flex=1)])\n\n\n\n\nYou can also use max_width to set a maximum width for a column or min_width to set a minimum width for a column. This will be used to provide caps on width when columns are being sized automatically using flex sizing.\n\n\nAlignment\nYou can control the alignment of the values within each columns header and body using the align and header_align options. For example:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import column, table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, columns=[\n    column(\"species\", align=\"center\", header_align=\"center\"), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\")])\n\n\n\n\n\n\nFormatting\nYou can control the formatting of each cell’s value using the format option. The format option accepts a d3-format string for numeric values and a d3-time-format string for date values to define how the value will be formatted.\ntable(penguins, columns=[\n    column(\"species\"), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\", format=\",.2f\")])\nDefault formats for values are as follows:\n\n\n\n\n\n\n\ntype\nformat\n\n\n\n\ninteger\n','\n\n\nnumber\nfloat\n',.2~f'\n\n\ndecimal\n',.4~f'\n\n\ndate\n'%Y-%m-%d'\n\n\ndatetime\ntimestamp\n'%Y-%m-%d %H:%M:%S'\n\n\n\n\n\nText Wrapping\nYou can control the text wrapping behavior of the values within each columns header and body using the wrap_text and header_wrap_text options. This is most frequently paired with auto_height to create rows with automatic heights which wrap text. For example:\ntable(penguins, columns=[\n    column(\"species\", auto_height=True, wrap_text=True), \n    column(\"island\", flex=1.2), \n    column(\"sex\", width=70), \n    column(\"body_mass\", flex=1)])",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Tables"
+    ]
+  },
+  {
+    "objectID": "components-tables.html#rows",
+    "href": "components-tables.html#rows",
+    "title": "Tables",
+    "section": "Rows",
+    "text": "Rows\n\nHeight\nBy default, each row of the the table, including the header row, is 29px tall. You can set an explicit row size for the body of the table using the row_height argument. Set the header’s row height using the header_height argument:\n\nfrom inspect_viz import Data\nfrom inspect_viz.table import table\n\npenguins = Data.from_file(\"penguins.parquet\")\ntable(penguins, header_height=60, row_height=50)\n\n\n\n\n\n\nAuto Height\nIn addition to explicitly providing the heights for rows, you can also allow the content to determine the height of the row. To do this, configure one or more column with auto_height. The height of the row will then be determined using the largest height required to display the content of any columns with the auto_height option.\ntable(penguins, width=550, columns=[\n    column(\"species\", flex=1), \n    column(\"island\", flex=1.2, auto_height=True), \n    column(\"sex\", width=70), \n    column(\"body_mass\", flex=1)])\nYou can also use the header_auto_height option to specify columns that will automatically size the header row height.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Tables"
+    ]
+  },
+  {
+    "objectID": "components-tables.html#sorting",
+    "href": "components-tables.html#sorting",
+    "title": "Tables",
+    "section": "Sorting",
+    "text": "Sorting\nEach column in the table is sortable by clicking on the header for the column you’d like to sort. Each click toggles between the sorting ascending, sorting descending, and not sorting. Holding shift while clicking will add the clicked column as a secondary sort, preserving any other sorts that have already been specified.\nYou can disable sorting for the entire table using the sorting argument:\ntable(penguins, sorting=False)\nYou can control whether individual columns can be sorted using the sortable option for column:\ntable(penguins, columns=[\n    column(\"species\", sortable=False), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\")])",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Tables"
+    ]
+  },
+  {
+    "objectID": "components-tables.html#filtering",
+    "href": "components-tables.html#filtering",
+    "title": "Tables",
+    "section": "Filtering",
+    "text": "Filtering\nEach column of the table is filterable by clicking the filter icon in the header of the column. Depending upon the type of data in the column, different filtering options will be presented to the user. To disable filtering for a table, use filtering:\ntable(penguins, filtering=False)\nYou can control whether individual columns can be filtered using the filterable option for column:\ntable(penguins, columns=[\n    column(\"species\", filterable=False), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\")])\n\nFilter Location\nYou can control where in the table filters appear by passing other header or row as the value for filter. header places in the filter as buttons in the header row next to the header text. row creates` a separate row with inline filter UI for filtering columns. For example:\ntable(penguins, filtering='row')",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Tables"
+    ]
+  },
+  {
+    "objectID": "components-tables.html#resizing",
+    "href": "components-tables.html#resizing",
+    "title": "Tables",
+    "section": "Resizing",
+    "text": "Resizing\nEach column of the table may be resized by the user by clicking and dragging the separator between columns in the header row. To make the table columns not resizable, use the resizing option:\ntable(penguins, resizing=False)\nYou can control whether individual columns can be resized using the resizable option for column:\ntable(penguins, columns=[\n    column(\"species\", resizable=False), \n    column(\"island\"), \n    column(\"sex\"), \n    column(\"body_mass\")])",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Tables"
+    ]
+  },
+  {
+    "objectID": "components-tables.html#pagination",
+    "href": "components-tables.html#pagination",
+    "title": "Tables",
+    "section": "Pagination",
+    "text": "Pagination\nWhen configured, tables can display pages of items with pagination controls at the bottom of the table rather than display all the items in a scrollable body. To enable pagination, simply provide the pagination argument to the table:\n\nfrom inspect_viz.table import column, table\ntable(penguins, \n      columns=[\n        column(\"species\"), \n        column(\"island\"), \n        column(\"sex\"), \n        column(\"body_mass\")],\n      pagination=True)\n\n\n\n\nBy default, the table will automatically set the page size to use the available space in the table without scrolling. You can also explicitly choose page size and page size options:\n\nfrom inspect_viz.table import column, table, Pagination\ntable(penguins, \n      columns=[\n        column(\"species\"), \n        column(\"island\"), \n        column(\"sex\"), \n        column(\"body_mass\")],\n      pagination=Pagination(page_size=20, page_size_selector=[20,40,60]))",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Tables"
+    ]
+  },
+  {
+    "objectID": "components-tables.html#grouping",
+    "href": "components-tables.html#grouping",
+    "title": "Tables",
+    "section": "Grouping",
+    "text": "Grouping\nWhen displaying tabular data, it can be useful to group the data by specific fields. For example, to display a table with the average attributes of male and female penguins based upon their species, you can using grouping function for some columns:\n\nfrom inspect_viz.transform import avg, count\ntable(penguins, \n      height=120,\n      columns=[\n        column(\"species\"), \n        column(avg(\"body_mass\")),\n        column(avg(\"flipper_length\"))])\n\n\n\n\nWhen providing transforms to apply to columns (e.g. avg, sum), columns without aggregating transforms will be treated as columns to group by. So in the above example, the table is grouped by species displaying the rest of the values using their aggregate values.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Tables"
+    ]
+  },
+  {
+    "objectID": "components-tables.html#literal-data",
+    "href": "components-tables.html#literal-data",
+    "title": "Tables",
+    "section": "Literal Data",
+    "text": "Literal Data\nYou can also pass literal values (an int | float | bool) as a column by passing one or more values as the column itself. For example:\n\ntable(penguins, \n      columns=[\n        column([1,2,3,4,5,6,7,8,9], label=\"sample_bucket\"),\n        column(\"species\"), \n        column(\"body_mass\"),\n        column(\"flipper_length\")])\n\n\n\n\nIf a single value is passed, that value will be repeated for every row in the dataset. If a list of values is passed, each row will increment through the list and include the value from the row index. If the list is shorter than the dataset, values will be repeated by repeatedly iterating through the list.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Tables"
+    ]
+  },
+  {
+    "objectID": "components-tables.html#selection",
+    "href": "components-tables.html#selection",
+    "title": "Tables",
+    "section": "Selection",
+    "text": "Selection\nBy default, the table will display the selection provided by the data source. If you’d like, you can provide an alternative selection by using filter_by.\n\nTargeting Selections\nIt can be useful to use selected rows within a table to target a selection to be used elsewhere (for example, in highlighting points within a dot plot). To do this, use the target option to select the output selection. This will cause a selection clause of the form column IN (rows) to be added to the selection for each currently selected table row.\nFor example:\ntable(penguins, \n      target=selection)\nYou can use the select option to control how selection works within the table. By default, select is set to single_row which will allow selection of one row at a time by clicking the row. Other options are listed below:\n\n\n\n\n\n\n\nOption\nAction\n\n\n\n\nhover\nThe selection will be updated when the user’s mouse hovers over a row.\n\n\nsingle_row\nThe selection will be updated when a single row is selected. The selected row will be highlighted.\n\n\nmultiple_row\nThe selection will be updated when one or more rows are selected. The selected rows will be highlighted.\n\n\nsingle_row_checkbox\nThe selection will be updated when a single row is selected using a checkbox.\n\n\nmultiple_row_checkbox\nThe selection will be updated when one or more rows is selected using a checkbox.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Tables"
+    ]
+  },
+  {
+    "objectID": "components-tables.html#appearance",
+    "href": "components-tables.html#appearance",
+    "title": "Tables",
+    "section": "Appearance",
+    "text": "Appearance\nTables have a minimal default appearance using the AG Grid Balham theme. If the table is being displayed in a Quarto page or dashboard, it will automatically inherit the theme of the page on which it is hosted.\nYou can customize most aspects of the table appearance using the style argument like:\n\nfrom inspect_viz.table import column, table, Pagination, TableStyle\ntable(penguins, \n      columns=[\n        column(\"species\"), \n        column(\"island\"), \n        column(\"sex\"), \n        column(\"body_mass\")],\n      style=TableStyle(\n        background_color=\"#FCFAFF\",  \n        foreground_color=\"purple\", \n        accent_color=\"#E8FFB3\"))\n\n\n\n\n\nColor\nUsing the three following basic color options will provide new colors for the table (with the overall colors of the table derived from these three themes). Each of these colors accepts a css color value (for example a hex color string or a named value like red).\n\n\n\n\n\n\n\nOption\nTarget\n\n\n\n\nbackground_color\nThe background color use for cells.\n\n\nforeground_color\nThe foreground color used for values within cells.\n\n\naccent_color\nAccent color used for things like selection and highlights.\n\n\n\nIn addition to the previous basic options, you can do further customization of the colors by passing a css color value to the following:\n\n\n\n\n\n\n\nOption\nTarget\n\n\n\n\ntext_color\nThe text color for UI elements presented within the table.\n\n\nheader_text_color\nThe color for text in the header row.\n\n\ncell_text_color\nThe color for text in cell within the body of the table.\n\n\nselected_row_background_color\nThe background color of selected rows.\n\n\n\n\n\nFonts\nYou can control the fonts used by the table by passing a css font-family value in the following options:\n\n\n\n\n\n\n\nOption\nTarget\n\n\n\n\nfont_family\nThe default font for all text within the table.\n\n\nheader_font_family\nThe font used for text within the header row.\n\n\ncell_font_family\nThe font used for text within the body of the table.\n\n\n\n\n\nBorder\nYou can control the border of the table using the following border options:\n\n\n\nOptions\nTarget\n\n\n\n\nborder_color\nThe color of the border (value css color value).\n\n\nborder_width\nThe width in pixels of the border.\n\n\nborder_radius\nThe border radius in pixels.\n\n\n\n\n\nSpacing\nThe spacing options controls how tightly data and UI elements are packed together in the table. All the padding within in the table is defined relative to this value, so changing this value will affect the spacing of everything in the table.\nBy default, tables have 4 pixels of spacing. To change this value, pass the number of pixels like so:\ntable(penguins, \n      columns=[\n        column(\"species\"), \n        column(\"island\"), \n        column(\"sex\"), \n        column(\"body_mass\")],\n      style=TableStyle(spacing=20))",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Tables"
+    ]
+  },
+  {
+    "objectID": "publishing-websites.html",
+    "href": "publishing-websites.html",
+    "title": "Websites",
+    "section": "",
+    "text": "If you want to publish one or more plots as part of a website there are a couple of high level orientations to the problem:\n\nUse a Jupyter-based website publishing system that supports interactive Jupyter Widgets (e.g. Quarto).\nUse the to_html() function to create embeddable HTML fragments for your plots and embed them in any website.\n\nWe’ll cover both of these approaches below.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Websites"
+    ]
+  },
+  {
+    "objectID": "publishing-websites.html#overview",
+    "href": "publishing-websites.html#overview",
+    "title": "Websites",
+    "section": "",
+    "text": "If you want to publish one or more plots as part of a website there are a couple of high level orientations to the problem:\n\nUse a Jupyter-based website publishing system that supports interactive Jupyter Widgets (e.g. Quarto).\nUse the to_html() function to create embeddable HTML fragments for your plots and embed them in any website.\n\nWe’ll cover both of these approaches below.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Websites"
+    ]
+  },
+  {
+    "objectID": "publishing-websites.html#quarto-websites",
+    "href": "publishing-websites.html#quarto-websites",
+    "title": "Websites",
+    "section": "Quarto Websites",
+    "text": "Quarto Websites\nThe Quarto publishing system can create websites that include dynamic output from Python code, including interactve Jupyter Widgets like the ones created by Inspect Viz. To install the quarto-cli Python package:\npip install quarto-cli\nQuarto is a markdown-based publishing system that enables you to embed executable Python blocks whose output is included in the published website. For instance, Here is the source code for the Bias Parameter example:\n---\ntitle: \"Bias Parameter\"\n1echo: false\n---\n\nUse the slider to create bias offsets for the y-axis.\n\n2```{python}\nfrom inspect_viz import Data, Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import area_y\nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import sql\n\nrandom_walk = Data.from_file(\"random-walk.parquet\")\nbias = Param(0)\n```\n\n```{python} \nslider(label=\"Bias\", target=bias, min=0, max=1000, step=1, value=100)\n```\n\n```{python} \nplot(area_y(random_walk, x=\"t\", y=sql(f\"v + {bias}\"), fill=\"steelblue\"))\n```\n\n1\n\nWe specify echo: false to prevent display of code blocks.\n\n2\n\nMarkdown code blocks decorated with {python} are executed.\n\n\nHere is what the page looks like when rendered on the website (it’s a screenshot so you won’t be able to use the slider!):\n\n\nNotebook Execution\nWhen using Inspect Viz with Quarto Websites you should always add the following configuration to your _quarto.yml to specify that notebooks should be fully executed when rendered:\n\n\n_quarto.yml\n\nexecute: \n  enabled: true\n\n\n\nLearning More\nThe website was created with Quarto and includes many live Inspect Viz plots and tables. The source code for the Examples section is a good place to start to understand the basics.\nThe documentation on Quarto Websites includes a tutorial and many additional details on creating, customizing, and publishing websites.\nQuarto Dashboards are a special type of Quarto website optimized for displaying many plots and tables together, so are also worth considering.",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Websites"
+    ]
+  },
+  {
+    "objectID": "publishing-websites.html#html-fragments",
+    "href": "publishing-websites.html#html-fragments",
+    "title": "Websites",
+    "section": "HTML Fragments",
+    "text": "HTML Fragments\nIf you are working with an existing website or with another website publishing system, it is also straightforward to embed HTML snippets which include Inspect Viz plots and tables.\n\nSingle Plot\nTo create a standalone snippet which you can include in any website, use the write_html() function:\nfrom inspect_viz import Data\nfrom inspect_viz.mark import dot\nfrom inspect_viz.plot import plot, write_html\n\npenguins = Data.from_file(\"penguins.parquet\")\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\nwrite_html(\"penguins.html\", pl)\n\n\nMultiple Plots\nIf you want to include multiple plots on a page, you might find it more convenient to call the to_html() function as part of your website generation process. The returned HTML includes the Jupyter Widget runtime dependencies, so if you have multiple plots you’ll instead want to include these dependencies once in the &lt;head&gt; of your document and the create HTML snippets without the dependencies.\nHere is the dependencies code that you should place in the &lt;head&gt; tag:\n&lt;script src=\"https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js\" crossorigin=\"anonymous\"&gt;&lt;/script&gt;\n&lt;script src=\"https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js\" crossorigin=\"anonymous\"&gt;&lt;/script&gt;\nThen, specify dependencies=False when you call to_html() to get only the plot and not the dependencies scripts which are already in your &lt;head&gt; tag:\nfrom inspect_viz.plot import to_html\n\npl = plot(\n    dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n        stroke=\"species\", symbol=\"species\"),\n    legend=\"symbol\",\n    grid=True\n)\n\npl_html = to_html(pl, dependencies=False)\n\n# ...include pl_html in your website",
+    "crumbs": [
+      "Getting Started",
+      "Publishing",
+      "Websites"
+    ]
+  },
+  {
+    "objectID": "components-interactivity.html",
+    "href": "components-interactivity.html",
+    "title": "Interactivty",
+    "section": "",
+    "text": "Inspect Viz supports interactive filtering and cross-filtering of plot data based based on Inputs and Interactors. Filtering is done based on Selections: each Data table has a built-in selection and you can also create Selection instances for more sophisticated behaviors.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Interactivty"
+    ]
+  },
+  {
+    "objectID": "components-interactivity.html#overview",
+    "href": "components-interactivity.html#overview",
+    "title": "Interactivty",
+    "section": "",
+    "text": "Inspect Viz supports interactive filtering and cross-filtering of plot data based based on Inputs and Interactors. Filtering is done based on Selections: each Data table has a built-in selection and you can also create Selection instances for more sophisticated behaviors.",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Interactivty"
+    ]
+  },
+  {
+    "objectID": "components-interactivity.html#filtering",
+    "href": "components-interactivity.html#filtering",
+    "title": "Interactivty",
     "section": "Filtering",
     "text": "Filtering\nThe most straightforward usage of selections is adding inputs which filter the data displayed in a plot. This filtering uses the built in selection of Data instances. For example, here we add a select() input to enable filtering by species:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\npenguins = Data.from_file(\"penguins.parquet\")\n\n1vconcat(\n2   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n3      dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n4      color_domain=\"fixed\"\n   )\n)\n\n\n1\n\nvconcat() function stacks the select input on top of the plot.\n\n2\n\nSelect input bound to “species” column.\n\n3\n\nUse of penguins in both select() and plot() automatically binds to default selection for the penguins Data object.\n\n4\n\nFixed color domain ensures that species colors remain the same even when filtered.\n\n\n\n\n\n\n\n\nFixed Domain\nThe example agove introduces an important concept when dealing with selections and filtering: \"fixed\" scale domains (in this case color_domain=\"fixed\"). Fixed scale domains instruct a plot to first calculate a scale domain in a data-driven manner, but then keep that domain fixed across subsequent updates.\nFixed domains enable stable configurations without requiring a hard-wired domain to be known in advance, preventing disorienting scale domain “jumps” that hamper comparison across filter interactions. Several of the examples below will use \"fixed\" domains to provide this stability across interactions.",
     "crumbs": [
       "Getting Started",
       "Components",
-      "Selections"
+      "Interactivty"
     ]
   },
   {
-    "objectID": "components-selections.html#interactors",
-    "href": "components-selections.html#interactors",
-    "title": "Selections",
+    "objectID": "components-interactivity.html#params",
+    "href": "components-interactivity.html#params",
+    "title": "Interactivty",
+    "section": "Params",
+    "text": "Params\nAs illustrated above, inputs can be used to filter dataset selections. Inputs can also be used to set Param values that make various aspects of plots dynamic. For example, here is a density plot of flight delays which uses a slider() input to vary the amount of smooth ing by setting the kernel bandwidth:\n\nfrom inspect_viz import Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import density_y\n\nflights = Data.from_file(\"flights.parquet\")\n\n1bandwidth = Param(0.1)\n\nvconcat(\n   slider(\n2      label=\"Bandwidth (σ)\", target=bandwidth,\n      min=0.1, max=100, step=0.1\n   ),\n   plot(\n      density_y(\n3         flights, x=\"delay\", fill=\"steelblue\", bandwidth=bandwidth\n      ),\n      x_domain=\"fixed\",\n      y_axis=None,\n      height=250,\n   )\n)\n\n\n1\n\nCreate a bandwidth parameter with a default value of 0.1.\n\n2\n\nBind the slider() to the bandwidth parameter.\n\n3\n\nApply the bandwidth to the plot (plot automatically redraws when the bandwidth changes).",
+    "crumbs": [
+      "Getting Started",
+      "Components",
+      "Interactivty"
+    ]
+  },
+  {
+    "objectID": "components-interactivity.html#interactors",
+    "href": "components-interactivity.html#interactors",
+    "title": "Interactivty",
     "section": "Interactors",
     "text": "Interactors\nInteractors imbue plots with interactive behavior. Most interactors listen to input events from rendered plot SVG elements to update bound selections. Interactors take facets into account to properly handle input events across subplots.\n\nInterval\nThe interval_x() and interval_y() interactors create 1D interval brushes. The interval_xy() interactor creates a 2D brush. Interval interactors accept a pixel_size parameter that sets the brush resolution: values may snap to a grid whose bins are larger than screen pixels and this can be leveraged to optimize query latency.\nFor example, below we stack two plots vertically, a dot() plot along with a bar_x() plot that counts the sex column. We then add an interval_x() interactor that enables us to filter the dataset using selections on the dot plot.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.interactor import Brush, interval_x\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import bar_x, dot, regression_y\nfrom inspect_viz.transform import count\n\nathletes = Data.from_file(\"athletes.parquet\")\n\n1range = Selection.intersect()\n\nvconcat(\n   plot(\n      dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n      regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n      interval_x(\n2         target=range,\n3         brush=Brush(fill=\"none\", stroke=\"#888\")\n      ),\n      legend=\"color\"\n   ),\n   plot(\n      bar_x(\n4         athletes, filter_by=range,\n         x=count(), y=\"sex\", fill=\"sex\"\n      ), \n      y_label=None,\n      height=150,\n5      x_domain=\"fixed\"\n   )\n)\n\n\n1\n\nA Selection is a means of filtering datasets based on interactions. Here we use an “intersect” selection for application of a simple filter from dot plot to bar plot.\n\n2\n\nThe range selection is set via the interval_x() interactor (which enables using the mouse to select an x-range).\n\n3\n\nThe Brush defines the color of the interactor (in this case #888, a medium-gray).\n\n4\n\nThe range selection is consumed using the filter_by parameter.\n\n5\n\nWe set the x_domain for the bar plot to “fixed” so that the scale doesn’t change as the dataset is filtered.\n\n\n\n\n\n\n\nTry using the mouse to brush over regions on the dot plot—the bar plot will update accordingly.\n\n\nToggle\nThe toggle() interactor selects individual points (e.g., by click or shift-click) and generates a selection clause over specified fields of those points. Directives such as toggle_color(), toggle_x(), and toggle_y() simplify specification of which channel fields are included in the resulting predicates.\nThe highlight() interactor updates the rendered state of a visualization in response to a Selection. Non-selected points are set to translucent, neutral gray, or other specified visual properties. Selected points maintain normal encodings.\nThis example demonstrates using the toggle_y() and highlight() interactors to render a bar chart that can be clicked to select a subset of points on the dot plot above it. The dot plot legend also targets the same the selection to make itself interactive.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.interactor import highlight, toggle_y\nfrom inspect_viz.plot import legend, plot\nfrom inspect_viz.mark import bar_x, dot\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.transform import count, date_month_day\n\nseattle = Data.from_file(\"seattle-weather.parquet\")\n\n1weather = Selection.single()\n\nvconcat(\n    plot(\n        dot(\n            data=seattle,\n2            filter_by=weather,\n            x=date_month_day(\"date\"),\n            y=\"temp_max\",\n            fill=\"weather\",\n            fill_opacity=0.7,\n3            r=\"precipitation\",\n        ),\n4        legend=legend(\"color\", target=weather),\n        x_tick_format=\"%b\",\n        color_domain=\"fixed\",\n        r_domain=\"fixed\", \n        r_range=[2, 10]\n    ),\n    plot(\n        bar_x(seattle, x=count(), y=\"weather\", fill=\"weather\"),\n5        toggle_y(target=weather),\n6        highlight(by=weather),\n        x_domain=\"fixed\",\n        y_label=None,\n        height=200\n    )\n)\n\n\n1\n\nSingle selection (filter out all other points).\n\n2\n\nDot plot should filter by the selection.\n\n3\n\nShow precipitation level using dot radius.\n\n4\n\nClicks on the legend target the same selection\n\n5\n\ntoggle_y() interactor to filter by weather.\n\n6\n\nhighlight() interactor to fade out unselected bars.\n\n\n\n\n\n\n\nTry clicking either the legend or the bar plot elements to filter the dot plot.",
     "crumbs": [
       "Getting Started",
       "Components",
-      "Selections"
+      "Interactivty"
     ]
   },
   {
-    "objectID": "components-selections.html#cross-filtering",
-    "href": "components-selections.html#cross-filtering",
-    "title": "Selections",
-    "section": "Cross Filtering",
-    "text": "Cross Filtering\nIn many cases you’ll want to have an input or interactor that both consumes and produces the same selection (i.e. filtered based on interactions with other inputs or interactors, but also able to provide its own filtering).\n\nInputs\nThis example demonstrates crossfiltering across inputs. We plot shot types taken during the 2023 WNBA season, providing a select() input that filters by team, and another select() input that filters by player (which in turn is also filtered by the currently selected team). Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat, hconcat\nfrom inspect_viz.mark import bar_x \nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import count\n\nshots = Data.from_file(\"wnba-shots-2023.parquet\")\n\n1filter = Selection.crossfilter()\n\nvconcat(\n   hconcat(\n      select(\n         shots, label=\"Team\", column=\"team_name\", \n2         target=filter\n      ),\n      select(\n         shots, label=\"Athlete\", column=\"athlete_name\", \n3         filter_by=filter, target=filter\n      )\n   ),\n   plot(\n      bar_x(\n         shots, filter_by=filter,\n         x=count(), y=\"category\", fill=\"category\"\n      ),\n      y_label=None,\n4      color_domain=\"fixed\",\n      y_domain=[\"Jump\", \"Layup\", \"Hook\"],\n      height=200,\n      margin_left=60\n   )\n)\n\n\n1\n\nCreate a crossfilter selection, which enables inputs to both consume and produce the same selection (conditioning their available choices on other inputs).\n\n2\n\nThe team select box targets the filter selection (filtering both the choices in the athelte select box and what is displayed in the plot).\n\n3\n\nThe athlete select box is both filtered by and targets the filter selection, enabling it to both confine itself to the selected team as well as filter what is displayed in the plot.\n\n4\n\nAs different teams and players are selected, the y-axis may take on differnet values and ordering. These options ensure that the y-axis remains stable across selections.\n\n\n\n\n\n\n\n\n\nInteractors\nThis example demonstrates crossfiltering across plot interactors. We plot histograms showing arrival delay and departure time for flights. When you select a range in one plot, the other plot updates to show only the data within that selection—and vice versa. This bidirectional filtering is achieved using Selection.crossfilter(), which ensures each plot’s selection affects all other plots except itself. Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.mark import rect_y\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import count, bin\nfrom inspect_viz.interactor import interval_x\n\nflights = Data.from_file(\"flights.parquet\")\n\n1brush = Selection.crossfilter()\n\n2def flights_plot(x, label):\n   return plot(\n      rect_y(\n         flights, filter_by=brush, \n         x=bin(x), y=count(), fill=\"steelblue\"\n      ),\n3      interval_x(target=brush),\n      height=200,\n      x_label=label,\n4      x_domain=\"fixed\",\n      y_tick_format=\"s\"\n   )\n\nvconcat(\n   flights_plot(\"delay\", \"Arrival Delay (min)\"),\n   flights_plot(\"time\", \"Departure Time (hour)\")\n)\n\n\n1\n\nCreate a crossfilter selection, which ensures each plot’s selection affects all other plots except itself.\n\n2\n\nOur two plots are identical save for the x value and the x_label so factor out into a function.\n\n3\n\nThe interval_x() interactor enables horizontal selection (targeting the crossfiltering brush).\n\n4\n\nUse a \"fixed\" domain so that the x-axis remains stable even when being filtered.\n\n\n\n\n\n\n\nTry selecting a horizontal range on either or both of the bar plots.",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Selections"
-    ]
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Inspect Viz",
-    "section": "",
-    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for creating high quality interactive visualisations from Inspect evaluations.\nHere’s an Inspect Viz plot created with the scores_timeline() function that compares benchmarks scores over time1:\n\n\n\n\n\nUse the filters to switch benchmarks and restrict to models from various organization(s). Hover over the points to get additional details on them or view the underlying Inspect log for the evals.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#welcome",
-    "href": "index.html#welcome",
-    "title": "Inspect Viz",
-    "section": "",
-    "text": "Welcome to Inspect Viz, a data visualisation library for Inspect AI. Inspect Viz provides flexible tools for creating high quality interactive visualisations from Inspect evaluations.\nHere’s an Inspect Viz plot created with the scores_timeline() function that compares benchmarks scores over time1:\n\n\n\n\n\nUse the filters to switch benchmarks and restrict to models from various organization(s). Hover over the points to get additional details on them or view the underlying Inspect log for the evals.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#getting-started",
-    "href": "index.html#getting-started",
-    "title": "Inspect Viz",
-    "section": "Getting Started",
-    "text": "Getting Started\nFirst, install the inspect_viz package from GitHub as follows:\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nInspect Viz plots are interactive Jupyter Widgets and can be authored in variety of ways:\n\nIn any Jupyter Notebook (JupyterLab, VS Code, Colab, etc.)\nIn VS Code with the Jupyter: Run Current File in Interactive Window command.\nIn VS Code within a Quarto executable markdown document.\n\nSee the article on LLM Assistance for best practices on using language models to help with creating plots. See the articles on Publishing for details on including plots in documents as static images or within websites and dashboards as interactive widgets.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#views",
-    "href": "index.html#views",
-    "title": "Inspect Viz",
-    "section": "Views",
-    "text": "Views\nInspect Viz Views are pre-built plots that work with data created by the Inspect log data frame reading functions. For example, the scores_by_factor() view enables you to compare scores across models and a boolean factor:\n\nfrom inspect_viz import Data\nfrom inspect_viz.view.beta import scores_by_factor\n\nevals = Data.from_file(\"evals-hint.parquet\")\nscores_by_factor(evals, \"task_arg_hint\", (\"No hint\", \"Hint\"))\n\n\n\n\nThe tool_calls() view enables you to visualize tool calls by sample:\n\nfrom inspect_viz.view.beta import tool_calls\n\ntools = Data.from_file(\"cybench_tools.parquet\")\ntool_calls(tools)\n\n\n\n\nAvailable views include:\n\n\n\n\n\n\n\nView\nDescription\n\n\n\n\nscores_by_task()\nBar plot for comparing eval scores (with confidence intervals) across models and tasks.\n\n\nscores_by_factor()\nBar bar plot for comparing eval scores by model and a boolean factor (e.g. no hint vs. hint).\n\n\nscores_timeline()\nScatter plot with eval scores by model, organization, and release date. Filterable by evaluation and organization.\n\n\nscores_heatmap()\nHeatmap with values for comparing scores across model and task.\n\n\nscores_by_model()\nBar plot for comparing model scores on a single eval.\n\n\ntool_calls()\nHeat map visualising tool calls over evaluation turns.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#plots",
-    "href": "index.html#plots",
-    "title": "Inspect Viz",
-    "section": "Plots",
-    "text": "Plots\nWhile pre-built views are useful, you also may want to create your own custom plots. Plots in inspect_viz are composed of one or more marks, which can do either higher level plotting (e.g. dot(), bar_x(), bar_y(), area(), heatmap(), etc.) or lower level drawing on the plot canvas (e.g. text(), image(), arrow(), etc.)\n\nDot Plot\nHere is an example of a simple dot plot using the Palmer Penguins dataset:\n\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\n\n1penguins = Data.from_file(\"penguins.parquet\")\n\nplot(\n    dot(\n        penguins, \n2        x=\"body_mass\", y=\"flipper_length\",\n3        stroke=\"species\", symbol=\"species\"\n    ),\n    grid=True,\n4    legend=\"symbol\"\n)\n\n\n1\n\nRead the dataset from a parquet file. You can can also use Data.from_dataframe() to read data from any Pandas, Polars, or PyArrow data frame.\n\n2\n\nPlot using a dot() mark. The plot() function takes one or more marks or interactors.\n\n3\n\nMap the “species” column to the stroke and symbol scales of the plot (causing each species to have its own color and symbol).\n\n4\n\nAdd a legend to the plot as a key to our scale mappings.\n\n\n\n\n\n\n\n\n\nBar Plot\nHere is a simple horizontal bar plot that counts the number of each species:\n\nfrom inspect_viz.mark import bar_x\nfrom inspect_viz.transform import count\n\nplot(\n    bar_x(penguins, x=count(), y=\"species\", fill=\"species\"),\n    y_label=None,\n    height=200,\n    margin_left=60\n)\n\n\n\n\nThe x axis for this plot is not mapped to a column, but rather to a count() transform ( transforms enable you to perform computations on columns for plotting). The fill option gives each species it’s own color. We also specify that we don’t want a y_label (as the species names serve that purpose) and a smaller than normal height.\n\n\n\n\n\n\nTip\n\n\n\nInspect Viz is built on top of the Mosaic data visualization system which is in turn built on Observable Plot.\nThe Inspect Viz Python API typically maps quite closely to the Observable Plot JavaScript API. Once you start creating your own plots and are using Google or an LLM to help with development, asking how to do things in Observable Plot will typically yield actionable advice.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#tables",
-    "href": "index.html#tables",
-    "title": "Inspect Viz",
-    "section": "Tables",
-    "text": "Tables\nYou can also display data in a tabular layout using the table() function:\n\nfrom inspect_viz.table import table\n\ntable(penguins)\n\n\n\n\nYou can sort and filter tables by column, use a scrolling or paginated display, and customize several other aspects of table appearance and behavior.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#links",
-    "href": "index.html#links",
-    "title": "Inspect Viz",
-    "section": "Links",
-    "text": "Links\nInspect Viz supports creating direct links from visualizations to published Inspect log transcripts. Links can be made at the eval level, or to individual samples, messages, or events. For example, this plot produced with scores_by_model() includes a link to the underlying logs in its tooltips:\n\nfrom inspect_viz.view.beta import scores_by_model\nscores_by_model(evals) # baseline=0.91\n\n\n\n\nThe pre-built Views all support linking when a log_viewer column is available in the dataset. To learn more about ammending datasets with viewer URLs as well as adding linking support to your own plots see the article on Links.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#filters",
-    "href": "index.html#filters",
-    "title": "Inspect Viz",
-    "section": "Filters",
-    "text": "Filters\nUse inputs to enable filtering datasets and dynamically updating plots. For example, here we add a select() input that filters on the species column:\n\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\nvconcat(\n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",  \n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"\n   )\n)\n\n\n\n\nWe’ve introduced a few new things here:\n\nThe vconcat() function from the layout module lets us stack inputs on top of our plot.\nThe select() function from the input module binds a select box to the species column.\nThe color_domain=\"fixed\" argument to plot() indicates that we want to preserve species colors even when the plot is filtered.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#marks",
-    "href": "index.html#marks",
-    "title": "Inspect Viz",
-    "section": "Marks",
-    "text": "Marks\nSo far the plots we’ve created include only a single mark, however many of the more interesting plots you’ll create will include multiple marks.\nFor example, here we explore the relationships between the height, weight, and sex of olympic athletes using dot() and regression_y() marks:\n\nfrom inspect_viz.mark import regression_y\n\nathletes = Data.from_file(\"athletes.parquet\")\n\nplot(\n    dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n    regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n    legend=\"color\"\n)\n\n\n\n\nNote that we set the opacity of the dot mark to 0.1 to help mitigate oversaturation that results from large numbers of data points being stacked on top of eachother.\nMarks can also be used to draw lines, arrows, text, or images on a plot.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#data",
-    "href": "index.html#data",
-    "title": "Inspect Viz",
-    "section": "Data",
-    "text": "Data\nIn the examples above we made Data available by reading from a parquet file. We can also read data from any Python Data Frame (e.g. Pandas, Polars, PyArrow, etc.). For example:\nimport pandas as pd\nfrom inspect_viz import Data\n\n# read directly from file\npenguins = Data.from_file(\"penguins.parquet\")\n\n# read from Pandas DF (i.e. to preprocess first)\ndf = pd.read_parquet(\"penguins.parquet\")\npenguins = Data.from_dataframe(df)\nYou might wonder why is there a special Data class in Inspect Viz rather than using data frames directly? This is because Inpsect Viz is an interactive system where data can be dynamically filtered and transformed as part of plotting—the Data therefore needs to be sent to the web browser rather than remaining only in the Python session. This has a couple of important implications:\n\nData transformations should be done using standard Python Data Frame operations prior to reading into Data for Inspect Viz.\nSince Data is embedded in the web page, you will want to filter it down to only the columns required for plotting (as you don’t want the additional columns making the web page larger than is necessary).\n\n\nData Selections\nOne other important thing to understand is that Data has a built in selection which is used in filtering operations on the client. This means that if you want your inputs and plots to stay synchoronized, you should pass the same Data instance to all of them (i.e. import into Data once and then share that reference). For example:\nfrom inspect_viz import Data\nfrom inspect_viz.plot import plot\nfrom inspect_viz.mark import dot\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat\n\n# we import penguins once and then pass it to select() and dot()\npenguins = Data.from_file(\"penguins.parquet\")\n\nvconcat( \n   select(penguins, label=\"Species\", column=\"species\"),\n   plot(\n      dot(penguins, x=\"body_mass\", y=\"flipper_length\",\n          stroke=\"species\", symbol=\"species\"),\n      legend=\"symbol\",\n      color_domain=\"fixed\"  \n   )\n)",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#params",
-    "href": "index.html#params",
-    "title": "Inspect Viz",
-    "section": "Params",
-    "text": "Params\nAs illustrated above, inputs can be used to filter dataset selections. Inputs can also be used to set Param values that make various aspects of plots dynamic. For example, here is a density plot of flight delays which uses a slider() input to vary the amount of smooth ing by setting the kernel bandwidth:\n\nfrom inspect_viz import Param\nfrom inspect_viz.input import slider\nfrom inspect_viz.mark import density_y\n\nflights = Data.from_file(\"flights.parquet\")\n\n1bandwidth = Param(0.1)\n\nvconcat(\n   slider(\n2      label=\"Bandwidth (σ)\", target=bandwidth,\n      min=0.1, max=100, step=0.1\n   ),\n   plot(\n      density_y(\n3         flights, x=\"delay\", fill=\"steelblue\", bandwidth=bandwidth\n      ),\n      x_domain=\"fixed\",\n      y_axis=None,\n      height=250,\n   )\n)\n\n\n1\n\nCreate a bandwidth parameter with a default value of 0.1.\n\n2\n\nBind the slider() to the bandwidth parameter.\n\n3\n\nApply the bandwidth to the plot (plot automatically redraws when the bandwidth changes).",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#selections",
-    "href": "index.html#selections",
-    "title": "Inspect Viz",
-    "section": "Selections",
-    "text": "Selections\nAbove in Filtering we began exploring dataset selections. Inputs are one way to set selections, but you can also set selections through direct interaction with plots.\nFor example, below we stack two plots vertically, the dot() plot from above along with a bar_x() plot that counts the sex column. We then add an interval_x() interactor that enables us to filter the dataset using selections on the dot plot.\nThere are a number of new things introduced here, click on the numbers near the right margin for additional explanation.\n\nfrom inspect_viz import Selection\nfrom inspect_viz.interactor import Brush, interval_x\n\n1range = Selection.intersect()\n\nvconcat(\n   plot(\n      dot(athletes, x=\"weight\", y=\"height\", fill=\"sex\", opacity=0.1),\n      regression_y(athletes, x=\"weight\", y=\"height\", stroke=\"sex\"),\n      interval_x(\n2         target=range,\n3         brush=Brush(fill=\"none\", stroke=\"#888\")\n      ),\n      legend=\"color\"\n   ),\n   plot(\n      bar_x(\n4         athletes, filter_by=range,\n         x=count(), y=\"sex\", fill=\"sex\"\n      ), \n      y_label=None,\n      height=150,\n5      x_domain=\"fixed\"\n   )\n)\n\n\n1\n\nA Selection is a means of filtering datasets based on interactions. Here we use an “intersect” selection for application of a simple filter from dot plot to bar plot.\n\n2\n\nThe range selection is set via the interval_x() interactor (which enables using the mouse to select an x-range).\n\n3\n\nThe Brush defines the color of the interactor (in this case #888, a medium-gray).\n\n4\n\nThe range selection is consumed using the filter_by parameter.\n\n5\n\nWe set the x_domain for the bar plot to “fixed” so that the scale doesn’t change as the dataset is filtered.\n\n\n\n\n\n\n\nTry using the mouse to brush over regions on the dot plot—the bar plot will update accordingly.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#crossfilter",
-    "href": "index.html#crossfilter",
-    "title": "Inspect Viz",
+    "objectID": "components-interactivity.html#crossfilter",
+    "href": "components-interactivity.html#crossfilter",
+    "title": "Interactivty",
     "section": "Crossfilter",
-    "text": "Crossfilter\nIn many cases you’ll want to have an input or interactor that both consumes and produces the same selection (i.e. filtered based on interactions with other inputs or interactors, but also able to provide its own filtering).\n\nInputs\nThis example demonstrates crossfiltering across inputs. We plot shot types taken during the 2023 WNBA season, providing a select() input that filters by team, and another select() input that filters by player (which in turn is also filtered by the currently selected team). Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz.layout import hconcat\n\nshots = Data.from_file(\"wnba-shots-2023.parquet\")\n\n1filter = Selection.crossfilter()\n\nvconcat(\n   hconcat(\n      select(\n         shots, label=\"Team\", column=\"team_name\", \n2         target=filter\n      ),\n      select(\n         shots, label=\"Athlete\", column=\"athlete_name\", \n3         filter_by=filter, target=filter\n      )\n   ),\n   plot(\n      bar_x(\n         shots, filter_by=filter,\n         x=count(), y=\"category\", fill=\"category\"\n      ),\n      y_label=None,\n4      color_domain=\"fixed\",\n      y_domain=[\"Jump\", \"Layup\", \"Hook\"],\n      height=200,\n      margin_left=60\n   )\n)\n\n\n1\n\nCreate a crossfilter selection, which enables inputs to both consume and produce the same selection (conditioning their available choices on other inputs).\n\n2\n\nThe team select box targets the filter selection (filtering both the choices in the athelte select box and what is displayed in the plot).\n\n3\n\nThe athlete select box is both filtered by and targets the filter selection, enabling it to both confine itself to the selected team as well as filter what is displayed in the plot.\n\n4\n\nAs different teams and players are selected, the y-axis may take on differnet values and ordering. These options ensure that the y-axis remains stable across selections.\n\n\n\n\n\n\n\n\n\nInteractors\nThis example demonstrates crossfiltering across plot interactors. We plot histograms showing arrival delay and departure time for flights. When you select a range in one plot, the other plot updates to show only the data within that selection—and vice versa. This bidirectional filtering is achieved using Selection.crossfilter(), which ensures each plot’s selection affects all other plots except itself. Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz.mark import rect_y\nfrom inspect_viz.transform import count, bin\n\nflights = Data.from_file(\"flights.parquet\")\n\n1brush = Selection.crossfilter()\n\n2def flights_plot(x, label):\n   return plot(\n      rect_y(\n         flights, filter_by=brush, \n         x=bin(x), y=count(), fill=\"steelblue\"\n      ),\n3      interval_x(target=brush),\n      height=200,\n      x_label=label,\n4      x_domain=\"fixed\",\n      y_tick_format=\"s\"\n   )\n\nvconcat(\n   flights_plot(\"delay\", \"Arrival Delay (min)\"),\n   flights_plot(\"time\", \"Departure Time (hour)\")\n)\n\n\n1\n\nCreate a crossfilter selection, which ensures each plot’s selection affects all other plots except itself.\n\n2\n\nOur two plots are identical save for the x value and the x_label so factor out into a function.\n\n3\n\nThe interval_x() interactor enables horizontal selection (targeting the crossfiltering brush).\n\n4\n\nUse a \"fixed\" domain so that the x-axis remains stable even when being filtered.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#learning-more",
-    "href": "index.html#learning-more",
-    "title": "Inspect Viz",
-    "section": "Learning More",
-    "text": "Learning More\nUse these resources to learn more about using Inspect Viz:\n\nViews describes the various available pre-built views and how to customize them.\nComponents goes into further depth on the main concepts and components of the library.\nPublishing covers publishing Inspect Viz content as standalone plots, notebooks, websites, and dashboards.\nReference provides details on the available marks, interactors, transforms, and inputs.\nExamples demonstrates more advanced plotting and interactivity features.",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "index.html#footnotes",
-    "href": "index.html#footnotes",
-    "title": "Inspect Viz",
-    "section": "Footnotes",
-    "text": "Footnotes\n\n\nThis plot was inspired by and includes data from the Epoch AI Benchmarking Hub↩︎",
-    "crumbs": [
-      "Getting Started",
-      "Welcome"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html",
-    "href": "components-inputs.html",
-    "title": "Inputs",
-    "section": "",
-    "text": "Inputs are used to create interactive visualisations by targeting either Param values or Selection ranges. Available inputs include:\nAll inputs can write updates to a provided Param or Selection. Param values are updated to match the input value. Selections are provided a predicate clause. This linking can be bidirectional: an input component will also subscribe to a param and track its value updates.",
+    "text": "Crossfilter\nIn many cases you’ll want to have an input or interactor that both consumes and produces the same selection (i.e. filtered based on interactions with other inputs or interactors, but also able to provide its own filtering).\n\nInputs\nThis example demonstrates crossfiltering across inputs. We plot shot types taken during the 2023 WNBA season, providing a select() input that filters by team, and another select() input that filters by player (which in turn is also filtered by the currently selected team). Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.input import select\nfrom inspect_viz.layout import vconcat, hconcat\nfrom inspect_viz.mark import bar_x \nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import count\n\nshots = Data.from_file(\"wnba-shots-2023.parquet\")\n\n1filter = Selection.crossfilter()\n\nvconcat(\n   hconcat(\n      select(\n         shots, label=\"Team\", column=\"team_name\", \n2         target=filter\n      ),\n      select(\n         shots, label=\"Athlete\", column=\"athlete_name\", \n3         filter_by=filter, target=filter\n      )\n   ),\n   plot(\n      bar_x(\n         shots, filter_by=filter,\n         x=count(), y=\"category\", fill=\"category\"\n      ),\n      y_label=None,\n4      color_domain=\"fixed\",\n      y_domain=[\"Jump\", \"Layup\", \"Hook\"],\n      height=200,\n      margin_left=60\n   )\n)\n\n\n1\n\nCreate a crossfilter selection, which enables inputs to both consume and produce the same selection (conditioning their available choices on other inputs).\n\n2\n\nThe team select box targets the filter selection (filtering both the choices in the athelte select box and what is displayed in the plot).\n\n3\n\nThe athlete select box is both filtered by and targets the filter selection, enabling it to both confine itself to the selected team as well as filter what is displayed in the plot.\n\n4\n\nAs different teams and players are selected, the y-axis may take on differnet values and ordering. These options ensure that the y-axis remains stable across selections.\n\n\n\n\n\n\n\n\n\nInteractors\nThis example demonstrates crossfiltering across plot interactors. We plot histograms showing arrival delay and departure time for flights. When you select a range in one plot, the other plot updates to show only the data within that selection—and vice versa. This bidirectional filtering is achieved using Selection.crossfilter(), which ensures each plot’s selection affects all other plots except itself. Click on the numbers at right for additional explanation of the code.\n\nfrom inspect_viz import Data, Selection\nfrom inspect_viz.mark import rect_y\nfrom inspect_viz.layout import vconcat\nfrom inspect_viz.plot import plot\nfrom inspect_viz.transform import count, bin\nfrom inspect_viz.interactor import interval_x\n\nflights = Data.from_file(\"flights.parquet\")\n\n1brush = Selection.crossfilter()\n\n2def flights_plot(x, label):\n   return plot(\n      rect_y(\n         flights, filter_by=brush, \n         x=bin(x), y=count(), fill=\"steelblue\"\n      ),\n3      interval_x(target=brush),\n      height=200,\n      x_label=label,\n4      x_domain=\"fixed\",\n      y_tick_format=\"s\"\n   )\n\nvconcat(\n   flights_plot(\"delay\", \"Arrival Delay (min)\"),\n   flights_plot(\"time\", \"Departure Time (hour)\")\n)\n\n\n1\n\nCreate a crossfilter selection, which ensures each plot’s selection affects all other plots except itself.\n\n2\n\nOur two plots are identical save for the x value and the x_label so factor out into a function.\n\n3\n\nThe interval_x() interactor enables horizontal selection (targeting the crossfiltering brush).\n\n4\n\nUse a \"fixed\" domain so that the x-axis remains stable even when being filtered.\n\n\n\n\n\n\n\nTry selecting a horizontal range on either or both of the bar plots.",
     "crumbs": [
       "Getting Started",
       "Components",
-      "Inputs"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html#select",
-    "href": "components-inputs.html#select",
-    "title": "Inputs",
-    "section": "Select",
-    "text": "Select\nThe select() input is used to select one more more values from a list. The list can be sourced from a data column (via the column parameter) or be static (via the options parameter). Here is a select input bound to a column (this input targets the default Selection associated with the passed Data):\n\nfrom inspect_viz import Data\nfrom inspect_viz.input import select\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nselect(penguins, label=\"Species\", column=\"species\")\n\n\n\n\nNote that by default the select has no value so does not filtering (represented by the default “All” selection). If you want a select() to have an initial value then specify it using the value parameter (or pass ‘auto’ to select the first value):\n\nselect(penguins, label=\"Species\", column=\"species\", value=\"auto\")\n\n\n\n\nHere is a select input with explicit options (this input targets a Param):\n\nfrom inspect_viz import Param\n\nfruit = Param(\"Apple\")\n\nselect(label=\"Fruit\", options=[\"Apple\", \"Orange\", \"Banana\"], target=fruit)\n\n\n\n\nPass multiple=True to enable multiple inputs. In this case values are specified via typing/autocomplete rather than a drop down menu.\n\nathletes = Data.from_file(\"athletes.parquet\")\n\nselect(athletes, label=\"Sports\", column=\"sport\", multiple=True)",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Inputs"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html#slider",
-    "href": "components-inputs.html#slider",
-    "title": "Inputs",
-    "section": "Slider",
-    "text": "Slider\nThe slider() input enables specificiation of either a single numeric value or a range of values. Here we enable the selection of a maximum body mass for a column:\n\nfrom inspect_viz.input import slider\n\nslider(penguins, label=\"Max Body Mass\", column=\"body_mass\")\n\n\n\n\nPass select=\"interval\" to specify an interval rather than single value:\n\nslider(penguins, label=\"Body Mass Range\", column=\"body_mass\", select=\"interval\")\n\n\n\n\nSliders can also target a Param and have explicit min, max, and step values:\n\nbias = Param(0.5)\n\nslider(label=\"Bias\", min=0, max=1.0, step=0.1, target=bias)",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Inputs"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html#search",
-    "href": "components-inputs.html#search",
-    "title": "Inputs",
-    "section": "Search",
-    "text": "Search\nThe search() input enables filtering a dataset based on text matching. For example, this input filters by WNBA player name\n\nfrom inspect_viz.input import search\n\nplayers = Data.from_file(\"wnba-shots-2023.parquet\")\n\nsearch(players, label=\"Athlete\", column=\"athlete_name\")",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Inputs"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html#checkbox",
-    "href": "components-inputs.html#checkbox",
-    "title": "Inputs",
-    "section": "Checkbox",
-    "text": "Checkbox\nThe checkbox() input enables toggling a binary value. You can either target boolean Param values or provide custom values mapped to checked and unchecked.\n\nfrom inspect_viz.input import checkbox\n\nenabled = Param(True)\n\ncheckbox(label=\"Enabled\", target=enabled)\n\n\n\n\nHere we provide custom values that map to checked and unchecked states:\n\nbias = Param(0.1)\n\ncheckbox(label=\"Use Bias\", values=[0.0, 0.1], target=bias)",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Inputs"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html#radio-group",
-    "href": "components-inputs.html#radio-group",
-    "title": "Inputs",
-    "section": "Radio Group",
-    "text": "Radio Group\nThe radio_group() is an alternative to select() which displays all of the available options rather than collapsing them into a menu:\n\nfrom inspect_viz.input import radio_group\n\npenguins = Data.from_file(\"penguins.parquet\")\n\nradio_group(penguins, label=\"Species\", column=\"species\")\n\n\n\n\nOr targeting a Param:\n\nfruit = Param(\"Apple\")\n\nradio_group(label=\"Fruit\", options=[\"Apple\", \"Orange\", \"Banana\"], target=fruit)",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Inputs"
-    ]
-  },
-  {
-    "objectID": "components-inputs.html#checkbox-group",
-    "href": "components-inputs.html#checkbox-group",
-    "title": "Inputs",
-    "section": "Checkbox Group",
-    "text": "Checkbox Group\nThe checkbox_group() provides an interface to select multiple values (similar to select(..., multiple=True)):\n\nfrom inspect_viz.input import checkbox_group\n\npenguins = Data.from_file(\"penguins.parquet\")\n\ncheckbox_group(penguins, label=\"Species\", column=\"species\")\n\n\n\n\nYou can also use checkbox_group() with a Param:\n\nfruit = Param([\"Apple\", \"Orange\"])\n\ncheckbox_group(label=\"Fruit\", options=[\"Apple\", \"Orange\", \"Banana\"], target=fruit)",
-    "crumbs": [
-      "Getting Started",
-      "Components",
-      "Inputs"
+      "Interactivty"
     ]
   },
   {

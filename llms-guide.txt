@@ -16,7 +16,7 @@ Use the filters to switch benchmarks and restrict to models from various
 organization(s). Hover over the points to get additional details on them
 or view the underlying Inspect log for the evals.
 
-## Getting Started
+## Installation
 
 First, install the `inspect_viz` package from GitHub as follows:
 
@@ -90,24 +90,35 @@ level plotting (e.g. `dot()`, `bar_x()`, `bar_y()`, `area()`,
 
 ### Dot Plot
 
-Here is an example of a simple dot plot using the [Palmer
-Penguins](https://huggingface.co/datasets/SIH/palmer-penguins) dataset:
+Here is an example of a simple dot plot using a dataset of [GPQA
+Diamond](https://huggingface.co/datasets/fingertap/GPQA-Diamond)
+results:
 
 ``` python
 from inspect_viz import Data
 from inspect_viz.plot import plot
 from inspect_viz.mark import dot
 
-penguins = Data.from_file("penguins.parquet")
+gpqa = Data.from_file("gpqa.parquet")
 
 plot(
     dot(
-        penguins, 
-        x="body_mass", y="flipper_length",
-        stroke="species", symbol="species"
+        gpqa, 
+        x="model_release_date", 
+        y="score_headline_value",
+        fill="model_organization_name",
+        channels= {
+            "Model": "model_display_name", 
+            "Score": "score_headline_value",
+            "Stderr": "score_headline_stderr",
+        }
     ),
+    title="GPQA Diamond",
+    legend="color",
     grid=True,
-    legend="symbol"
+    x_label="Release Date",
+    y_label="Score",
+    y_domain=[0,1.0],
 )
 ```
 
@@ -116,16 +127,22 @@ Read the dataset from a parquet file. You can can also use
 `Data.from_dataframe()` to read data from any Pandas, Polars, or PyArrow
 data frame.
 
-Line 10  
+Line 8  
 Plot using a `dot()` mark. The `plot()` function takes one or more marks
 or interactors.
 
-Line 11  
-Map the “species” column to the `stroke` and `symbol` scales of the plot
-(causing each species to have its own color and symbol).
+Line 12  
+Map the “model_organization_name” column to the `fill` scale of the plot
+(causing each orgnization to have its own color).
 
-Line 14  
-Add a `legend` to the plot as a key to our scale mappings.
+Lines 13,17  
+Show tooltip with defined channels.
+
+Line 20  
+Add a `legend` to the plot as a key to our color mappings.
+
+Line 24  
+Ensure that the y-axis goes from 0 to 1.
 
 ### Bar Plot
 
@@ -134,48 +151,30 @@ species:
 
 ``` python
 from inspect_viz.mark import bar_x
-from inspect_viz.transform import count
+
+evals = Data.from_file("agi-lsat-ar.parquet")
 
 plot(
-    bar_x(penguins, x=count(), y="species", fill="species"),
+    bar_x(
+        evals, 
+        x="score_headline_value", 
+        y="model_display_name",
+        sort={"y": "x", "reverse": True},
+        fill="#3266ae"
+    ),
+    title="AR-LSAT",
+    x_label="Score",
     y_label=None,
-    height=200,
-    margin_left=60
+    margin_left=120.
 )
 ```
 
-The `x` axis for this plot is not mapped to a column, but rather to a
-`count()` transform ( [transforms](reference/inspect_viz.transform.qmd)
-enable you to perform computations on columns for plotting). The `fill`
-option gives each species it’s own color. We also specify that we don’t
-want a `y_label` (as the species names serve that purpose) and a smaller
-than normal height.
+Line 10  
+Sort the bars by score (descending).
 
-> [!TIP]
->
-> Inspect Viz is built on top of the
-> [Mosaic](https://idl.uw.edu/mosaic/) data visualization system which
-> is in turn built on [Observable Plot](https://observablehq.com/plot/).
->
-> The Inspect Viz Python API typically maps quite closely to the
-> Observable Plot JavaScript API. Once you start creating your own plots
-> and are using Google or an LLM to help with development, asking how to
-> do things in Observable Plot will typically yield actionable advice.
-
-## Tables
-
-You can also display data in a tabular layout using the `table()`
-function:
-
-``` python
-from inspect_viz.table import table
-
-table(penguins)
-```
-
-You can sort and filter tables by column, use a scrolling or paginated
-display, and customize several other aspects of table appearance and
-behavior.
+Lines 15-16  
+Y-axis is labeled with model names so remove default label and ensure it
+has enough margin.
 
 ## Links
 
@@ -198,21 +197,37 @@ plots see the article on [Links](components-links.qmd).
 ## Filters
 
 Use [inputs](reference/inspect_viz.input.qmd) to enable filtering
-datasets and dynamically updating plots. For example, here we add a
-`select()` input that filters on the `species` column:
+datasets and dynamically updating plots. For example, if we had multiple
+benchmarks available for a scores timeline, we could add a `select()`
+input for choosing between them:
 
 ``` python
 from inspect_viz.input import select
 from inspect_viz.layout import vconcat
 
+benchmarks = Data.from_file("benchmarks.parquet")
+
 vconcat(
-   select(penguins, label="Species", column="species"),
-   plot(
-      dot(penguins, x="body_mass", y="flipper_length",  
-          stroke="species", symbol="species"),
-      legend="symbol",
-      color_domain="fixed"
-   )
+    select(
+        benchmarks, 
+        label="Benchmark", 
+        column="task_name", 
+        value="auto"
+    ),
+    plot(
+        dot( 
+            benchmarks, 
+            x="model_release_date", 
+            y="score_headline_value",
+            fill="model_organization_name",
+        ),
+        legend="color", 
+        grid=True,
+        x_label="Release Date",
+        y_label="Score",
+        y_domain=[0,1.0],  
+        color_domain="fixed"
+    )
 )
 ```
 
@@ -224,10 +239,11 @@ We’ve introduced a few new things here:
 
 2.  The `select()` function from the
     [input](reference/inspect_viz.input.qmd) module binds a select box
-    to the `species` column.
+    to the `task_name` column.
 
 3.  The `color_domain="fixed"` argument to `plot()` indicates that we
-    want to preserve species colors even when the plot is filtered.
+    want to preserve model organization colors even when the plot is
+    filtered.
 
 ## Marks
 
@@ -235,27 +251,40 @@ So far the plots we’ve created include only a single
 [mark](reference/inspect_viz.mark.qmd), however many of the more
 interesting plots you’ll create will include multiple marks.
 
-For example, here we explore the relationships between the height,
-weight, and sex of olympic athletes using `dot()` and `regression_y()`
-marks:
+For example, here we create a heatmap of evaluation scores by model.
+There is a `cell()` mark which provides the heatmap background color and
+a `text()` mark which displays the value.
 
 ``` python
-from inspect_viz.mark import regression_y
+from inspect_viz.mark import cell, text
 
-athletes = Data.from_file("athletes.parquet")
+scores = Data.from_file("scores.parquet")
 
 plot(
-    dot(athletes, x="weight", y="height", fill="sex", opacity=0.1),
-    regression_y(athletes, x="weight", y="height", stroke="sex"),
-    legend="color"
+    cell(
+        scores,                                                     
+        x="task_name",
+        y="model",
+        fill="score_headline_value",
+    ),
+    text(
+        scores,
+        x="task_name",
+        y="model",
+        text="score_headline_value",
+        fill="white",
+    ),
+    padding=0,
+    color_scheme="viridis",
+    height=250,
+    margin_left=150,
+    x_label=None,
+    y_label=None
 )
 ```
 
-Note that we set the `opacity` of the dot mark to 0.1 to help mitigate
-oversaturation that results from large numbers of data points being
-stacked on top of eachother.
-
-Marks can also be used to draw lines, arrows, text, or images on a plot.
+Marks can be used to draw dots, lines, bars, cells, arrows, text, and
+images on a plot.
 
 ## Data
 
@@ -319,234 +348,31 @@ vconcat(
 )
 ```
 
-## Params
+## Tables
 
-As illustrated above, inputs can be used to filter dataset selections.
-Inputs can also be used to set `Param` values that make various aspects
-of plots dynamic. For example, here is a density plot of flight delays
-which uses a `slider()` input to vary the amount of smooth ing by
-setting the kernel bandwidth:
+You can also display data in a tabular layout using the `table()`
+function:
 
 ``` python
-from inspect_viz import Param
-from inspect_viz.input import slider
-from inspect_viz.mark import density_y
+from inspect_viz.table import column, table
 
-flights = Data.from_file("flights.parquet")
+benchmarks = Data.from_file("benchmarks.parquet")
 
-bandwidth = Param(0.1)
-
-vconcat(
-   slider(
-      label="Bandwidth (σ)", target=bandwidth,
-      min=0.1, max=100, step=0.1
-   ),
-   plot(
-      density_y(
-         flights, x="delay", fill="steelblue", bandwidth=bandwidth
-      ),
-      x_domain="fixed",
-      y_axis=None,
-      height=250,
-   )
+table(
+    benchmarks, 
+    columns=[
+        column("model_organization_name", label="Organization"),
+        column("model_display_name", label="Model"),
+        column("model_release_date", label="Release Date"),
+        column("score_headline_value", label="Score", width=100),
+        column("score_headline_stderr", label="StdErr", width=100),
+    ]
 )
 ```
 
-Line 7  
-Create a `bandwidth` parameter with a default value of 0.1.
-
-Line 11  
-Bind the `slider()` to the `bandwidth` parameter.
-
-Line 16  
-Apply the `bandwidth` to the plot (plot automatically redraws when the
-bandwidth changes).
-
-## Selections
-
-Above in [Filtering](#filtering) we began exploring dataset selections.
-Inputs are one way to set selections, but you can also set selections
-through direct interaction with plots.
-
-For example, below we stack two plots vertically, the `dot()` plot from
-above along with a `bar_x()` plot that counts the `sex` column. We then
-add an `interval_x()` [interactor](reference/inspect_viz.interactor.qmd)
-that enables us to filter the dataset using selections on the dot plot.
-
-There are a number of new things introduced here, click on the numbers
-near the right margin for additional explanation.
-
-``` python
-from inspect_viz import Selection
-from inspect_viz.interactor import Brush, interval_x
-
-range = Selection.intersect()
-
-vconcat(
-   plot(
-      dot(athletes, x="weight", y="height", fill="sex", opacity=0.1),
-      regression_y(athletes, x="weight", y="height", stroke="sex"),
-      interval_x(
-         target=range,
-         brush=Brush(fill="none", stroke="#888")
-      ),
-      legend="color"
-   ),
-   plot(
-      bar_x(
-         athletes, filter_by=range,
-         x=count(), y="sex", fill="sex"
-      ), 
-      y_label=None,
-      height=150,
-      x_domain="fixed"
-   )
-)
-```
-
-Line 4  
-A `Selection` is a means of filtering datasets based on interactions.
-Here we use an “intersect” selection for application of a simple filter
-from dot plot to bar plot.
-
-Line 11  
-The `range` selection is set via the `interval_x()` interactor (which
-enables using the mouse to select an x-range).
-
-Line 12  
-The `Brush` defines the color of the interactor (in this case `#888`, a
-medium-gray).
-
-Line 18  
-The `range` selection is consumed using the `filter_by` parameter.
-
-Line 23  
-We set the `x_domain` for the bar plot to “fixed” so that the scale
-doesn’t change as the dataset is filtered.
-
-Try using the mouse to brush over regions on the dot plot—the bar plot
-will update accordingly.
-
-## Crossfilter
-
-In many cases you’ll want to have an input or interactor that both
-consumes and produces the same selection (i.e. filtered based on
-interactions with other inputs or interactors, but also able to provide
-its own filtering).
-
-### Inputs
-
-This example demonstrates crossfiltering across
-[inputs](reference/inspect_viz.input.qmd). We plot shot types taken
-during the 2023 WNBA season, providing a `select()` input that filters
-by team, and another `select()` input that filters by player (which in
-turn is also filtered by the currently selected team). Click on the
-numbers at right for additional explanation of the code.
-
-``` python
-from inspect_viz.layout import hconcat
-
-shots = Data.from_file("wnba-shots-2023.parquet")
-
-filter = Selection.crossfilter()
-
-vconcat(
-   hconcat(
-      select(
-         shots, label="Team", column="team_name", 
-         target=filter
-      ),
-      select(
-         shots, label="Athlete", column="athlete_name", 
-         filter_by=filter, target=filter
-      )
-   ),
-   plot(
-      bar_x(
-         shots, filter_by=filter,
-         x=count(), y="category", fill="category"
-      ),
-      y_label=None,
-      color_domain="fixed",
-      y_domain=["Jump", "Layup", "Hook"],
-      height=200,
-      margin_left=60
-   )
-)
-```
-
-Line 5  
-Create a crossfilter selection, which enables inputs to both consume and
-produce the same selection (conditioning their available choices on
-other inputs).
-
-Line 11  
-The team select box targets the `filter` selection (filtering both the
-choices in the athelte select box and what is displayed in the plot).
-
-Line 15  
-The athlete select box is both *filtered by* and targets the `filter`
-selection, enabling it to both confine itself to the selected team as
-well as filter what is displayed in the plot.
-
-Lines 24-25  
-As different teams and players are selected, the y-axis may take on
-differnet values and ordering. These options ensure that the y-axis
-remains stable across selections.
-
-### Interactors
-
-This example demonstrates crossfiltering across plot
-[interactors](reference/inspect_viz.interactor.qmd). We plot histograms
-showing arrival delay and departure time for flights. When you select a
-range in one plot, the other plot updates to show only the data within
-that selection—and vice versa. This bidirectional filtering is achieved
-using `Selection.crossfilter()`, which ensures each plot’s selection
-affects all other plots except itself. Click on the numbers at right for
-additional explanation of the code.
-
-``` python
-from inspect_viz.mark import rect_y
-from inspect_viz.transform import count, bin
-
-flights = Data.from_file("flights.parquet")
-
-brush = Selection.crossfilter()
-
-def flights_plot(x, label):
-   return plot(
-      rect_y(
-         flights, filter_by=brush, 
-         x=bin(x), y=count(), fill="steelblue"
-      ),
-      interval_x(target=brush),
-      height=200,
-      x_label=label,
-      x_domain="fixed",
-      y_tick_format="s"
-   )
-
-vconcat(
-   flights_plot("delay", "Arrival Delay (min)"),
-   flights_plot("time", "Departure Time (hour)")
-)
-```
-
-Line 6  
-Create a crossfilter selection, which ensures each plot’s selection
-affects all other plots except itself.
-
-Line 8  
-Our two plots are identical save for the `x` value and the `x_label` so
-factor out into a function.
-
-Line 14  
-The `interval_x()` interactor enables horizontal selection (targeting
-the crossfiltering `brush`).
-
-Line 17  
-Use a `"fixed"` domain so that the x-axis remains stable even when being
-filtered.
+You can sort and filter tables by column, use a scrolling or paginated
+display, and customize several other aspects of table appearance and
+behavior.
 
 ## Learning More
 
@@ -555,8 +381,14 @@ Use these resources to learn more about using Inspect Viz:
 - [Views](views.qmd) describes the various available pre-built views and
   how to customize them.
 
-- [Components](components-plots.qmd) goes into further depth on the main
-  concepts and components of the library.
+- [Plots](components-plots.qmd) goes into further depth on plotting
+  options and how to create custom plots.
+
+- Articles on [Marks](components-marks.qmd),
+  [Links](components-links.qmd), [Tables](components-tables.qmd),
+  [Inputs](components-inputs.qmd), and
+  [Interactivity](components-interactivity.qmd) explore other components
+  commonly used in visualizations.
 
 - [Publishing](publishing.qmd) covers publishing Inspect Viz content as
   standalone plots, notebooks, websites, and dashboards.
@@ -983,8 +815,8 @@ Legends also act as interactors, taking a bound `Selection` as a
 supported for Selections using *single* resolution, enabling legends and
 other interactors to share state.
 
-See the docs on [Toggle](components-selections.qmd#toggle) interactors
-for an example of an interactive legend.
+See the docs on [Toggle](components-interactivity.qmd#toggle)
+interactors for an example of an interactive legend.
 
 ## Baselines
 
@@ -1970,16 +1802,16 @@ fruit = Param(["Apple", "Orange"])
 checkbox_group(label="Fruit", options=["Apple", "Orange", "Banana"], target=fruit)
 ```
 
-# Selections
+# Interactivty
 
 
 ## Overview
 
-*Selections* enable filtering and cross-filtering of plot data based
-based on [Inputs](components-inputs.qmd) and
-[Interactors](#interactors). Each `Data` table has a built-in selection
-and you can also create `Selection` instances for more sophisticated
-behaviors.
+Inspect Viz supports interactive filtering and cross-filtering of plot
+data based based on [Inputs](components-inputs.qmd) and
+[Interactors](#interactors). Filtering is done based on *Selections*:
+each `Data` table has a built-in selection and you can also create
+`Selection` instances for more sophisticated behaviors.
 
 ## Filtering
 
@@ -2035,6 +1867,49 @@ hard-wired domain to be known in advance, preventing disorienting scale
 domain “jumps” that hamper comparison across filter interactions.
 Several of the examples below will use `"fixed"` domains to provide this
 stability across interactions.
+
+## Params
+
+As illustrated above, inputs can be used to filter dataset selections.
+Inputs can also be used to set `Param` values that make various aspects
+of plots dynamic. For example, here is a density plot of flight delays
+which uses a `slider()` input to vary the amount of smooth ing by
+setting the kernel bandwidth:
+
+``` python
+from inspect_viz import Param
+from inspect_viz.input import slider
+from inspect_viz.mark import density_y
+
+flights = Data.from_file("flights.parquet")
+
+bandwidth = Param(0.1)
+
+vconcat(
+   slider(
+      label="Bandwidth (σ)", target=bandwidth,
+      min=0.1, max=100, step=0.1
+   ),
+   plot(
+      density_y(
+         flights, x="delay", fill="steelblue", bandwidth=bandwidth
+      ),
+      x_domain="fixed",
+      y_axis=None,
+      height=250,
+   )
+)
+```
+
+Line 7  
+Create a `bandwidth` parameter with a default value of 0.1.
+
+Line 11  
+Bind the `slider()` to the `bandwidth` parameter.
+
+Line 16  
+Apply the `bandwidth` to the plot (plot automatically redraws when the
+bandwidth changes).
 
 ## Interactors
 
@@ -2191,7 +2066,7 @@ Line 32
 Try clicking either the legend or the bar plot elements to filter the
 dot plot.
 
-## Cross Filtering
+## Crossfilter
 
 In many cases you’ll want to have an input or interactor that both
 consumes and produces the same selection (i.e. filtered based on
@@ -2384,7 +2259,7 @@ plotted by “task_display_name” (`fx`) and “model_display_name” (`x`). By
 default, confidence intervals are also plotted (disable this with
 `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5f8862d2d1480ad43623482c450a1dcbce2bbdf5/src/inspect_viz/view/beta/_scores_by_task.py#L18)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/297c1724ad698d2e8f40316c737fab1e576c6d18/src/inspect_viz/view/beta/_scores_by_task.py#L18)
 
 ``` python
 def scores_by_task(
@@ -2513,7 +2388,7 @@ Summarize eval scores using a bar plot. By default, scores (`y`) are
 plotted by “model_display_name” (`y`). By default, confidence intervals
 are also plotted (disable this with `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5f8862d2d1480ad43623482c450a1dcbce2bbdf5/src/inspect_viz/view/beta/_scores_by_model.py#L16)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/297c1724ad698d2e8f40316c737fab1e576c6d18/src/inspect_viz/view/beta/_scores_by_model.py#L16)
 
 ``` python
 def scores_by_model(
@@ -2649,7 +2524,7 @@ this is “task_arg_hint”).
 Summarize eval scores with a factor of variation (e.g ‘No hint’
 vs. ‘Hint’).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5f8862d2d1480ad43623482c450a1dcbce2bbdf5/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/297c1724ad698d2e8f40316c737fab1e576c6d18/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
 
 ``` python
 def scores_by_factor(
@@ -2788,7 +2663,7 @@ organization will filter the plot by that organization.
 
 Eval scores by model, organization, and release date.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5f8862d2d1480ad43623482c450a1dcbce2bbdf5/src/inspect_viz/view/beta/_scores_timeline.py#L21)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/297c1724ad698d2e8f40316c737fab1e576c6d18/src/inspect_viz/view/beta/_scores_timeline.py#L21)
 
 ``` python
 def scores_timeline(
@@ -2946,7 +2821,7 @@ isn’t prepared with `log_viewer()` and `model_info()`).
 
 Creates a heatmap plot of success rate of eval data.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5f8862d2d1480ad43623482c450a1dcbce2bbdf5/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/297c1724ad698d2e8f40316c737fab1e576c6d18/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
 
 ``` python
 def scores_heatmap(
@@ -3094,7 +2969,7 @@ usage).
 
 Heat map visualising tool calls over evaluation turns.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5f8862d2d1480ad43623482c450a1dcbce2bbdf5/src/inspect_viz/view/beta/_tool_calls.py#L15)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/297c1724ad698d2e8f40316c737fab1e576c6d18/src/inspect_viz/view/beta/_tool_calls.py#L15)
 
 ``` python
 def tool_calls(
