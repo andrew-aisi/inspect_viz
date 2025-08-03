@@ -2,7 +2,7 @@
 
 > Welcome to Inspect Viz, a data visualisation library for [Inspect
 AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools
-for high quality interactive visualisations from Inspect evaluations.
+for creating high quality interactive visualisations from Inspect evaluations.
 
 The the two most useful documentation sections are:
 

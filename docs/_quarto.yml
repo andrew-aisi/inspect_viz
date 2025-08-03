@@ -47,8 +47,12 @@ website:
       - title: Main
         style: docked
         contents:
-           - href: index.qmd
-             text: Welcome
+           - text: Getting Started
+             contents:
+               - href: index.qmd
+                 text: Welcome
+               - href: llm-assistance.qmd
+                 text: "LLM Assistance"
            - href: views.qmd
              text: Views
              contents:
