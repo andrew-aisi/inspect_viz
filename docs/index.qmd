@@ -83,23 +83,33 @@ While pre-built views are useful, you also may want to create your own custom pl
 
 ### Dot Plot
 
-Here is an example of a simple dot plot using the [Palmer Penguins](https://huggingface.co/datasets/SIH/palmer-penguins) dataset:
+Here is an example of a simple dot plot using a dataset of [GPQA Diamond](https://huggingface.co/datasets/fingertap/GPQA-Diamond) results:
 
 ```{python}
 from inspect_viz import Data
 from inspect_viz.plot import plot
 from inspect_viz.mark import dot
 
-penguins = Data.from_file("penguins.parquet") # <1>
+gpqa = Data.from_file("gpqa.parquet") # <1>
 
 plot(
-    dot(
-        penguins, 
-        x="body_mass", y="flipper_length",  # <2> 
-        stroke="species", symbol="species"  # <3> 
+    dot( # <2>
+        gpqa, 
+        x="model_release_date", 
+        y="score_headline_value",
+        fill="model_organization_name", # <3>
+        channels= {   # <4>
+            "Model": "model_display_name", 
+            "Score": "score_headline_value",
+            "Stderr": "score_headline_stderr",
+        } # <4>
     ),
+    title="GPQA Diamond",
+    legend="color", # <5>
     grid=True,
-    legend="symbol" # <4>
+    x_label="Release Date",
+    y_label="Score",
+    y_domain=[0,1.0],  # <6>
 )
 ```
 
@@ -107,9 +117,13 @@ plot(
 
 2.  Plot using a `dot()` mark. The `plot()` function takes one or more marks or interactors.
 
-3.  Map the "species" column to the `stroke` and `symbol` scales of the plot (causing each species to have its own color and symbol).
+3.  Map the "model_organization_name" column to the `fill` scale of the plot (causing each orgnization to have its own color).
 
-4.  Add a `legend` to the plot as a key to our scale mappings.
+4.  Show tooltip with defined channels.
+
+5.  Add a `legend` to the plot as a key to our color mappings.
+
+6.  Ensure that the y-axis goes from 0 to 1.
 
 ### Bar Plot
 
@@ -117,28 +131,33 @@ Here is a simple horizontal bar plot that counts the number of each species:
 
 ```{python}
 from inspect_viz.mark import bar_x
-from inspect_viz.transform import count
+
+evals = Data.from_file("agi-lsat-ar.parquet")
 
 plot(
-    bar_x(penguins, x=count(), y="species", fill="species"),
-    y_label=None,
-    height=200,
-    margin_left=60
+    bar_x(
+        evals, 
+        x="score_headline_value", 
+        y="model_display_name",
+        sort={"y": "x", "reverse": True},  # <1>
+        fill="#3266ae"
+    ),
+    title="AR-LSAT",
+    x_label="Score",
+    y_label=None,     # <2>
+    margin_left=120.  # <2>
 )
 ```
 
-The `x` axis for this plot is not mapped to a column, but rather to a `count()` transform ( [transforms](reference/inspect_viz.transform.qmd) enable you to perform computations on columns for plotting). The `fill` option gives each species it's own color. We also specify that we don't want a `y_label` (as the species names serve that purpose) and a smaller than normal height.
+1. Sort the bars by score (descending).
 
-{{< include _observable-tip.md >}}
+2. Y-axis is labeled with model names so remove default label and ensure it has enough margin.
+
 
 ## Links
 
 Inspect Viz supports creating direct links from visualizations to published Inspect log transcripts. Links can be made at the eval level, or to individual samples, messages, or events. For example, this plot produced with `scores_by_model()` includes a link to the underlying logs in its tooltips:
 
-```{python}
-#| include: false
-evals = Data.from_file("agi-lsat-ar.parquet")
-```
 
 ```{python}
 from inspect_viz.view.beta import scores_by_model
@@ -149,21 +168,36 @@ The pre-built [Views](views.qmd) all support linking when a `log_viewer` column 
 
 ## Filters
 
-Use [inputs](reference/inspect_viz.input.qmd) to enable filtering datasets and dynamically updating plots. For example, here we add a `select()` input that filters on the `species` column:
+Use [inputs](reference/inspect_viz.input.qmd) to enable filtering datasets and dynamically updating plots. For example, if we had multiple benchmarks available for a scores timeline, we could add a `select()` input for choosing between them:
 
 ```{python}
 #| classes: svg-spacing
 from inspect_viz.input import select
 from inspect_viz.layout import vconcat
 
+benchmarks = Data.from_file("benchmarks.parquet")
+
 vconcat(
-   select(penguins, label="Species", column="species"),
-   plot(
-      dot(penguins, x="body_mass", y="flipper_length",  
-          stroke="species", symbol="species"),
-      legend="symbol",
-      color_domain="fixed"
-   )
+    select(
+        benchmarks, 
+        label="Benchmark", 
+        column="task_name", 
+        value="auto"
+    ),
+    plot(
+        dot( 
+            benchmarks, 
+            x="model_release_date", 
+            y="score_headline_value",
+            fill="model_organization_name",
+        ),
+        legend="color", 
+        grid=True,
+        x_label="Release Date",
+        y_label="Score",
+        y_domain=[0,1.0],  
+        color_domain="fixed"
+    )
 )
 ```
 
@@ -171,31 +205,45 @@ We've introduced a few new things here:
 
 1.  The `vconcat()` function from the [layout](reference/inspect_viz.layout.qmd) module lets us stack inputs on top of our plot.
 
-2.  The `select()` function from the [input](reference/inspect_viz.input.qmd) module binds a select box to the `species` column.
+2.  The `select()` function from the [input](reference/inspect_viz.input.qmd) module binds a select box to the `task_name` column.
 
-3.  The `color_domain="fixed"` argument to `plot()` indicates that we want to preserve species colors even when the plot is filtered.
+3.  The `color_domain="fixed"` argument to `plot()` indicates that we want to preserve model organization colors even when the plot is filtered.
 
 ## Marks
 
 So far the plots we've created include only a single [mark](reference/inspect_viz.mark.qmd), however many of the more interesting plots you'll create will include multiple marks.
 
-For example, here we explore the relationships between the height, weight, and sex of olympic athletes using `dot()` and `regression_y()` marks:
+For example, here we create a heatmap of evaluation scores by model. There is a `cell()` mark which provides the heatmap background color and a `text()` mark which displays the value.
 
 ```{python}
-from inspect_viz.mark import regression_y
+from inspect_viz.mark import cell, text
 
-athletes = Data.from_file("athletes.parquet")
+scores = Data.from_file("scores.parquet")
 
 plot(
-    dot(athletes, x="weight", y="height", fill="sex", opacity=0.1),
-    regression_y(athletes, x="weight", y="height", stroke="sex"),
-    legend="color"
+    cell(
+        scores,                                                     
+        x="task_name",
+        y="model",
+        fill="score_headline_value",
+    ),
+    text(
+        scores,
+        x="task_name",
+        y="model",
+        text="score_headline_value",
+        fill="white",
+    ),
+    padding=0,
+    color_scheme="viridis",
+    height=250,
+    margin_left=150,
+    x_label=None,
+    y_label=None
 )
 ```
 
-Note that we set the `opacity` of the dot mark to 0.1 to help mitigate oversaturation that results from large numbers of data points being stacked on top of eachother.
-
-Marks can also be used to draw lines, arrows, text, or images on a plot.
+Marks can be used to draw dots, lines, bars, cells, arrows, text, and images on a plot.
 
 {{< include _data.md >}}
 
@@ -205,9 +253,20 @@ Marks can also be used to draw lines, arrows, text, or images on a plot.
 You can also display data in a tabular layout using the `table()` function:
 
 ```{python}
-from inspect_viz.table import table
+from inspect_viz.table import column, table
 
-table(penguins)
+benchmarks = Data.from_file("benchmarks.parquet")
+
+table(
+    benchmarks, 
+    columns=[
+        column("model_organization_name", label="Organization"),
+        column("model_display_name", label="Model"),
+        column("model_release_date", label="Release Date"),
+        column("score_headline_value", label="Score", width=100),
+        column("score_headline_stderr", label="StdErr", width=100),
+    ]
+)
 ```
 
 You can sort and filter tables by column, use a scrolling or paginated display, and customize several other aspects of table appearance and behavior.

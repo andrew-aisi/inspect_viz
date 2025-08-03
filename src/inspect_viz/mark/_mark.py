@@ -27,17 +27,13 @@ class Mark(Component):
             defaults or {}
         ) | mark_options_to_camel(options)
 
-        # set line_width for tip if necessary
-        INFINITE_LINE = 1000000000
-        tip = resolved_options.get("tip")
-        if tip is True:
-            resolved_options["tip"] = {"lineWidth": INFINITE_LINE}
-        elif isinstance(tip, dict):
-            tip["lineWidth"] = INFINITE_LINE
-
         # capture channel information and pass it along
         # as a hidden channel
         if "channels" in options:
+            # channels implies tip
+            if "tip" not in resolved_options:
+                resolved_options["tip"] = True
+
             channels_json = json.dumps(options.get("channels", {}))
 
             # Note - even though the types indicate a string must be passed through, a list will actually go through with a simple static value
@@ -45,6 +41,14 @@ class Mark(Component):
             resolved_options["channels"][HIDDEN_USER_CHANNEL] = cast(
                 Any, [channels_json]
             )
+
+        # set line_width for tip if necessary
+        INFINITE_LINE = 1000000000
+        tip = resolved_options.get("tip")
+        if tip is True:
+            resolved_options["tip"] = {"lineWidth": INFINITE_LINE}
+        elif isinstance(tip, dict):
+            tip["lineWidth"] = INFINITE_LINE
 
         # if shift_overlapping_text is set, add a hidden channel
         # to indicate that text should be shifted
