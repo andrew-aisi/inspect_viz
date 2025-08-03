@@ -10,6 +10,10 @@
     display: inline-block;
 }
 
+#quarto-content .mosaic-widget {
+    margin-bottom: 1rem;
+}
+
 .toolbar .mosaic-widget,
 .panel-input .mosaic-widget,
 .card-toolbar .mosaic-widget,
