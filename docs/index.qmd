@@ -219,7 +219,9 @@ Use these resources to learn more about using Inspect Viz:
 
 -   [Views](views.qmd) describes the various available pre-built views and how to customize them.
 
--   [Components](components-plots.qmd) goes into further depth on the main concepts and components of the library.
+-   [Plots](components-plots.qmd) goes into further depth on plotting options and how to create custom plots.
+
+-   Articles on [Marks](components-marks.qmd), [Links](components-links.qmd), [Tables](components-tables.qmd), [Inputs](components-inputs.qmd), and [Interactivity](components-interactivity.qmd) explore other components commonly used in visualizations.
 
 -   [Publishing](publishing.qmd) covers publishing Inspect Viz content as standalone plots, notebooks, websites, and dashboards.
 
