@@ -5,7 +5,8 @@
 
 Welcome to Inspect Viz, a data visualisation library for [Inspect
 AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools
-for high quality interactive visualisations from Inspect evaluations.
+for creating high quality interactive visualisations from Inspect
+evaluations.
 
 Here’s an Inspect Viz plot created with the
 [`scores_timeline()`](view-scores-timeline.qmd) function that compares
@@ -15,7 +16,7 @@ Use the filters to switch benchmarks and restrict to models from various
 organization(s). Hover over the points to get additional details on them
 or view the underlying Inspect log for the evals.
 
-#### Getting Started
+## Getting Started
 
 First, install the `inspect_viz` package from GitHub as follows:
 
@@ -23,61 +24,23 @@ First, install the `inspect_viz` package from GitHub as follows:
 pip install git+https://github.com/meridianlabs-ai/inspect_viz
 ```
 
-You can author visualisations in any [Jupyter
-Notebook](https://jupyter.org/) then include them in documents as static
-images or in websites as interactive Jupyter Widgets (see
-[Publishing](publishing.qmd) for details).
+Inspect Viz plots are interactive Jupyter Widgets and can be authored in
+variety of ways:
 
-#### LLM Assistance
+1.  In any [Jupyter Notebook](https://jupyter.org/) (JupyterLab, VS
+    Code, Colab, etc.)
 
-Inspect Viz makes it’s documentation available in an LLM friendly
-markdown format. Use the llms.txt file for configuring IDEs that support
-llms.txt documentation. Use the llms-guide.txt and/or llms-full.txt
-variants for pasting into model context.
+2.  In VS Code with the **Jupyter: Run Current File in Interactive
+    Window** command.
 
-|  |  |
-|----|----|
-| [llms.txt](https://meridianlabs-ai.github.io/inspect_viz/llms.txt) | Documentation index (links to other docs). |
-| [llms-guide.txt](https://meridianlabs-ai.github.io/inspect_viz/llms-guide.txt) | Documentation excluding reference (138k). |
-| [llms-full.txt](https://meridianlabs-ai.github.io/inspect_viz/llms-full.txt) | Documentation including reference (529k) |
+3.  In VS Code within a [Quarto](https://quarto.org) executable markdown
+    document.
 
-You can also configure Claude Code to access the documentation using an
-MCP server (expand the section below for details).
-
-> [!NOTE]
->
-> ### Claude Code llms.txt
->
-> Execute the following from within a terminal to configure Inspect Viz
-> documentation for the current project:
->
-> ``` bash
-> claude mcp add-json inspect-viz-docs '{"type":"stdio","command":"uvx" ,"args":["--from", "mcpdoc", "mcpdoc", "--urls", "inspect_viz:https://meridianlabs-ai.github.io/inspect_viz/llms.txt"]}' -s local
-> ```
->
-> Alternatively, add the following configuration for your project to the
-> Claude Code config file (`~/.claude.json`):
->
-> ``` json
-> "mcpServers": {
->    "inspect-viz-docs": {
->       "type": "stdio",
->       "command": "uvx",
->       "args": [
->       "--from",
->       "mcpdoc",
->       "mcpdoc",
->       "--urls",
->       "inspect_viz:https://meridianlabs-ai.github.io/inspect_viz/llms.txt"
->       ]
->    }
-> }
-> ```
-
-In addition, the Inspect Viz Python API maps quite closely to the
-[Observable Plot](https://observablehq.com/plot/) JavaScript API that it
-is built on top of. Consequently, asking an LLM how to do things in
-Observable Plot will typically yield actionable advice.
+See the article on [LLM Assistance](llm-assistance.qmd) for best
+practices on using language models to help with creating plots. See the
+articles on [Publishing](publishing.qmd) for details on including plots
+in documents as static images or within websites and dashboards as
+interactive widgets.
 
 ## Views
 

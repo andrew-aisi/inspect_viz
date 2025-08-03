@@ -5,7 +5,8 @@
 
 Welcome to Inspect Viz, a data visualisation library for [Inspect
 AI](https://inspect.aisi.org.uk/). Inspect Viz provides flexible tools
-for high quality interactive visualisations from Inspect evaluations.
+for creating high quality interactive visualisations from Inspect
+evaluations.
 
 Here’s an Inspect Viz plot created with the
 [`scores_timeline()`](view-scores-timeline.qmd) function that compares
@@ -15,7 +16,7 @@ Use the filters to switch benchmarks and restrict to models from various
 organization(s). Hover over the points to get additional details on them
 or view the underlying Inspect log for the evals.
 
-#### Getting Started
+## Getting Started
 
 First, install the `inspect_viz` package from GitHub as follows:
 
@@ -23,61 +24,23 @@ First, install the `inspect_viz` package from GitHub as follows:
 pip install git+https://github.com/meridianlabs-ai/inspect_viz
 ```
 
-You can author visualisations in any [Jupyter
-Notebook](https://jupyter.org/) then include them in documents as static
-images or in websites as interactive Jupyter Widgets (see
-[Publishing](publishing.qmd) for details).
+Inspect Viz plots are interactive Jupyter Widgets and can be authored in
+variety of ways:
 
-#### LLM Assistance
+1.  In any [Jupyter Notebook](https://jupyter.org/) (JupyterLab, VS
+    Code, Colab, etc.)
 
-Inspect Viz makes it’s documentation available in an LLM friendly
-markdown format. Use the llms.txt file for configuring IDEs that support
-llms.txt documentation. Use the llms-guide.txt and/or llms-full.txt
-variants for pasting into model context.
+2.  In VS Code with the **Jupyter: Run Current File in Interactive
+    Window** command.
 
-|  |  |
-|----|----|
-| [llms.txt](https://meridianlabs-ai.github.io/inspect_viz/llms.txt) | Documentation index (links to other docs). |
-| [llms-guide.txt](https://meridianlabs-ai.github.io/inspect_viz/llms-guide.txt) | Documentation excluding reference (138k). |
-| [llms-full.txt](https://meridianlabs-ai.github.io/inspect_viz/llms-full.txt) | Documentation including reference (529k) |
+3.  In VS Code within a [Quarto](https://quarto.org) executable markdown
+    document.
 
-You can also configure Claude Code to access the documentation using an
-MCP server (expand the section below for details).
-
-> [!NOTE]
->
-> ### Claude Code llms.txt
->
-> Execute the following from within a terminal to configure Inspect Viz
-> documentation for the current project:
->
-> ``` bash
-> claude mcp add-json inspect-viz-docs '{"type":"stdio","command":"uvx" ,"args":["--from", "mcpdoc", "mcpdoc", "--urls", "inspect_viz:https://meridianlabs-ai.github.io/inspect_viz/llms.txt"]}' -s local
-> ```
->
-> Alternatively, add the following configuration for your project to the
-> Claude Code config file (`~/.claude.json`):
->
-> ``` json
-> "mcpServers": {
->    "inspect-viz-docs": {
->       "type": "stdio",
->       "command": "uvx",
->       "args": [
->       "--from",
->       "mcpdoc",
->       "mcpdoc",
->       "--urls",
->       "inspect_viz:https://meridianlabs-ai.github.io/inspect_viz/llms.txt"
->       ]
->    }
-> }
-> ```
-
-In addition, the Inspect Viz Python API maps quite closely to the
-[Observable Plot](https://observablehq.com/plot/) JavaScript API that it
-is built on top of. Consequently, asking an LLM how to do things in
-Observable Plot will typically yield actionable advice.
+See the article on [LLM Assistance](llm-assistance.qmd) for best
+practices on using language models to help with creating plots. See the
+articles on [Publishing](publishing.qmd) for details on including plots
+in documents as static images or within websites and dashboards as
+interactive widgets.
 
 ## Views
 
@@ -2421,7 +2384,7 @@ plotted by “task_display_name” (`fx`) and “model_display_name” (`x`). By
 default, confidence intervals are also plotted (disable this with
 `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/c61568f204f6e2fb9202da4ee1cb7194634e36f2/src/inspect_viz/view/beta/_scores_by_task.py#L18)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5f8862d2d1480ad43623482c450a1dcbce2bbdf5/src/inspect_viz/view/beta/_scores_by_task.py#L18)
 
 ``` python
 def scores_by_task(
@@ -2550,7 +2513,7 @@ Summarize eval scores using a bar plot. By default, scores (`y`) are
 plotted by “model_display_name” (`y`). By default, confidence intervals
 are also plotted (disable this with `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/c61568f204f6e2fb9202da4ee1cb7194634e36f2/src/inspect_viz/view/beta/_scores_by_model.py#L16)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5f8862d2d1480ad43623482c450a1dcbce2bbdf5/src/inspect_viz/view/beta/_scores_by_model.py#L16)
 
 ``` python
 def scores_by_model(
@@ -2686,7 +2649,7 @@ this is “task_arg_hint”).
 Summarize eval scores with a factor of variation (e.g ‘No hint’
 vs. ‘Hint’).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/c61568f204f6e2fb9202da4ee1cb7194634e36f2/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5f8862d2d1480ad43623482c450a1dcbce2bbdf5/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
 
 ``` python
 def scores_by_factor(
@@ -2825,7 +2788,7 @@ organization will filter the plot by that organization.
 
 Eval scores by model, organization, and release date.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/c61568f204f6e2fb9202da4ee1cb7194634e36f2/src/inspect_viz/view/beta/_scores_timeline.py#L21)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5f8862d2d1480ad43623482c450a1dcbce2bbdf5/src/inspect_viz/view/beta/_scores_timeline.py#L21)
 
 ``` python
 def scores_timeline(
@@ -2983,7 +2946,7 @@ isn’t prepared with `log_viewer()` and `model_info()`).
 
 Creates a heatmap plot of success rate of eval data.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/c61568f204f6e2fb9202da4ee1cb7194634e36f2/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5f8862d2d1480ad43623482c450a1dcbce2bbdf5/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
 
 ``` python
 def scores_heatmap(
@@ -3131,7 +3094,7 @@ usage).
 
 Heat map visualising tool calls over evaluation turns.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/c61568f204f6e2fb9202da4ee1cb7194634e36f2/src/inspect_viz/view/beta/_tool_calls.py#L15)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5f8862d2d1480ad43623482c450a1dcbce2bbdf5/src/inspect_viz/view/beta/_tool_calls.py#L15)
 
 ``` python
 def tool_calls(
