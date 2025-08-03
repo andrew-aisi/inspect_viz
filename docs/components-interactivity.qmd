@@ -1,5 +1,5 @@
 ---
-title: Selections
+title: Interactivty
 ---
 
 ```{python}
@@ -13,7 +13,7 @@ plot_defaults(
 
 ## Overview
 
-_Selections_ enable filtering and cross-filtering of plot data based based on [Inputs](components-inputs.qmd) and [Interactors](#interactors). Each `Data` table has a built-in selection and you can also create `Selection` instances for more sophisticated behaviors.
+Inspect Viz supports interactive filtering and cross-filtering of plot data based based on [Inputs](components-inputs.qmd) and [Interactors](#interactors). Filtering is done based on _Selections_: each `Data` table has a built-in selection and you can also create `Selection` instances for more sophisticated behaviors.
 
 ## Filtering
 
@@ -52,6 +52,43 @@ vconcat( # <1>
 The example agove introduces an important concept when dealing with selections and filtering: `"fixed"` scale domains (in this case `color_domain="fixed"`). Fixed scale domains instruct a plot to first calculate a scale domain in a data-driven manner, but then keep that domain fixed across subsequent updates. 
 
 Fixed domains enable stable configurations without requiring a hard-wired domain to be known in advance, preventing disorienting scale domain "jumps" that hamper comparison across filter interactions. Several of the examples below will use `"fixed"` domains to provide this stability across interactions.
+
+
+
+## Params
+
+As illustrated above, inputs can be used to filter dataset selections. Inputs can also be used to set `Param` values that make various aspects of plots dynamic. For example, here is a density plot of flight delays which uses a `slider()` input to vary the amount of smooth ing by setting the kernel bandwidth:
+
+```{python}
+from inspect_viz import Param
+from inspect_viz.input import slider
+from inspect_viz.mark import density_y
+
+flights = Data.from_file("flights.parquet")
+
+bandwidth = Param(0.1) # <1> 
+
+vconcat(
+   slider(
+      label="Bandwidth (σ)", target=bandwidth, # <2>
+      min=0.1, max=100, step=0.1
+   ),
+   plot(
+      density_y(
+         flights, x="delay", fill="steelblue", bandwidth=bandwidth # <3>
+      ),
+      x_domain="fixed",
+      y_axis=None,
+      height=250,
+   )
+)
+```
+
+1.  Create a `bandwidth` parameter with a default value of 0.1.
+
+2.  Bind the `slider()` to the `bandwidth` parameter.
+
+3.  Apply the `bandwidth` to the plot (plot automatically redraws when the bandwidth changes).
 
 
 ## Interactors
@@ -174,7 +211,7 @@ vconcat(
 Try clicking either the legend or the bar plot elements to filter the dot plot.
 
 
-## Cross Filtering
+## Crossfilter
 
 In many cases you'll want to have an input or interactor that both consumes and produces the same selection (i.e. filtered based on interactions with other inputs or interactors, but also able to provide its own filtering).
 

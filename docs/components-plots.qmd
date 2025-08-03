@@ -289,7 +289,7 @@ The `name` directive gives a `plot` a unique name. A standalone legend can refer
 
 Legends also act as interactors, taking a bound `Selection` as a `target` parameter. For example, discrete legends use the logic of the `toggle` interactor to enable point selections. Two-way binding is supported for Selections using *single* resolution, enabling legends and other interactors to share state.
 
-See the docs on [Toggle](components-selections.qmd#toggle) interactors for an example of an interactive legend.
+See the docs on [Toggle](components-interactivity.qmd#toggle) interactors for an example of an interactive legend.
 
 ## Baselines 
 
