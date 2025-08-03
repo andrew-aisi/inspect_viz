@@ -2259,7 +2259,7 @@ plotted by “task_display_name” (`fx`) and “model_display_name” (`x`). By
 default, confidence intervals are also plotted (disable this with
 `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/297c1724ad698d2e8f40316c737fab1e576c6d18/src/inspect_viz/view/beta/_scores_by_task.py#L18)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_scores_by_task.py#L18)
 
 ``` python
 def scores_by_task(
@@ -2388,7 +2388,7 @@ Summarize eval scores using a bar plot. By default, scores (`y`) are
 plotted by “model_display_name” (`y`). By default, confidence intervals
 are also plotted (disable this with `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/297c1724ad698d2e8f40316c737fab1e576c6d18/src/inspect_viz/view/beta/_scores_by_model.py#L16)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_scores_by_model.py#L16)
 
 ``` python
 def scores_by_model(
@@ -2524,7 +2524,7 @@ this is “task_arg_hint”).
 Summarize eval scores with a factor of variation (e.g ‘No hint’
 vs. ‘Hint’).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/297c1724ad698d2e8f40316c737fab1e576c6d18/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
 
 ``` python
 def scores_by_factor(
@@ -2663,7 +2663,7 @@ organization will filter the plot by that organization.
 
 Eval scores by model, organization, and release date.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/297c1724ad698d2e8f40316c737fab1e576c6d18/src/inspect_viz/view/beta/_scores_timeline.py#L21)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_scores_timeline.py#L21)
 
 ``` python
 def scores_timeline(
@@ -2821,7 +2821,7 @@ isn’t prepared with `log_viewer()` and `model_info()`).
 
 Creates a heatmap plot of success rate of eval data.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/297c1724ad698d2e8f40316c737fab1e576c6d18/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
 
 ``` python
 def scores_heatmap(
@@ -2969,7 +2969,7 @@ usage).
 
 Heat map visualising tool calls over evaluation turns.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/297c1724ad698d2e8f40316c737fab1e576c6d18/src/inspect_viz/view/beta/_tool_calls.py#L15)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_tool_calls.py#L15)
 
 ``` python
 def tool_calls(
