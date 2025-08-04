@@ -28,7 +28,7 @@ To create the plot we read a raw messages data frame from an eval log using the 
 
 ```{python}
 #| eval: false
-from inspect_ai.analysis.beta import messages_df, log_viewer, model_info, prepare, EvalModel, MessageColumns, SampleSummary
+from inspect_ai.analysis import messages_df, log_viewer, model_info, prepare, EvalModel, MessageColumns, SampleSummary
 
 
 # read messages from log
