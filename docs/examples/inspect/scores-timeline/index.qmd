@@ -44,16 +44,16 @@ vconcat(
         # benchmark score
         dot(
             evals,
-            x=epoch_ms("model_release_date"),
+            x=epoch_ms("model_release_date"), # <3> 
             y="score_headline_value",
             r=3,
             fill="model_organization_name",
-            channels= {  # <3>
+            channels= {  # <4>
                 "Model": "model_display_name", 
                 "Scorer": "score_headline_name", 
                 "Stderr": "score_headline_stderr",
                 "Log Viewer": "log_viewer"
-            } # <3>
+            } # <4>
         ),
         # confidence interval
         rule_x( 
@@ -63,34 +63,36 @@ vconcat(
             y1=ci_lower,
             y2=ci_upper,
             stroke="model_organization_name",
-            stroke_opacity=0.4, # <4>
+            stroke_opacity=0.4, # <5>
             marker="tick-x",
         ), 
-        regression_y(evals, 
-                x=epoch_ms("model_release_date"), 
-                y="score_headline_value", 
-                stroke="#AAAAAA"
+        # regression line
+        regression_y(
+            evals, 
+            x=epoch_ms("model_release_date"), 
+            y="score_headline_value", 
+            stroke="#AAAAAA"
         ),
         # frontier annotation
         text(
             evals,
-            text="model_display_name",  # <5>
+            text="model_display_name",  # <6>
             x=epoch_ms("model_release_date"),
             y="score_headline_value",
             line_anchor="middle",
             frame_anchor="right",
-            filter="frontier",  # <6>
+            filter="frontier",  # <7>
             dx=-4,
             fill="model_organization_name",
         ),
-        legend=legend("color", target=evals.selection), # <7>
-        x_domain="fixed",  # <8>
-        y_domain=[0,1.0],  # <8>
+        legend=legend("color", target=evals.selection), # <8>
+        x_domain="fixed",  # <9>
+        y_domain=[0,1.0],  # <9>
         x_label="Release Date",
         y_label="Score",
         color_label="Organization",
         color_domain="fixed",
-        x_tick_format="%b\n%Y",
+        x_tick_format="%b. %Y", # <10>
         grid=True,
         
     )
@@ -101,17 +103,21 @@ vconcat(
 
 2. Create transforms used to compute the confidence intervals for each point.
 
-3. Additional channels are added to the tooltip.
+3. Use `epoch_ms` to convert the date into a timestamp so it is numeric for use in computing the regression
 
-4. Confidence interval: compute dynamically using `ci_value()`, color by organization, and reduce opacity.
+4. Additional channels are added to the tooltip.
 
-5. Text annotations are automatically moved to avoid collisions.
+5. Confidence interval: compute dynamically using `ci_value()`, color by organization, and reduce opacity.
 
-6. Only show annotations for records with `frontier=True`.
+6. Text annotations are automatically moved to avoid collisions.
 
-7. Specifying `target` makes the legend clickable.
+7. Only show annotations for records with `frontier=True`.
 
-8. Domains: `x_domain` fixed so that the axes don't jump around for organization selections; `y_domain` should always span up to 1.0.
+8. Specifying `target` makes the legend clickable.
+
+9. Domains: `x_domain` fixed so that the axes don't jump around for organization selections; `y_domain` should always span up to 1.0.
+
+10. Use a tick format to format the x_axis value (which is a numeric timestamp) into a pretty date string.
 
 This plot was inspired by and includes data from the [Epoch AI](https://epoch.ai/data/ai-benchmarking-dashboard) Benchmarking Hub.
 
