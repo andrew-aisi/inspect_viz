@@ -23,7 +23,7 @@ function, then filter down to just the fields we require for
 visualization:
 
 ``` python
-from inspect_ai.analysis.beta import messages_df, log_viewer, model_info, prepare, EvalModel, MessageColumns, SampleSummary
+from inspect_ai.analysis import messages_df, log_viewer, model_info, prepare, EvalModel, MessageColumns, SampleSummary
 
 
 # read messages from log
@@ -66,7 +66,7 @@ usage).
 
 Heat map visualising tool calls over evaluation turns.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_tool_calls.py#L15)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_tool_calls.py#L15)
 
 ``` python
 def tool_calls(

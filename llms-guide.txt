@@ -633,6 +633,59 @@ expression to set the stroke color based on a column value:
 stroke=sql(f"IF(task_arg_hint, 'blue', 'red')")
 ```
 
+## Dates
+
+### Numeric Values
+
+In some cases your plots will want to deal with date columns as numeric
+values (e.g. for plotting a regression line). For this case, use the
+`epochs_ms()` transform function to take a date and turn it into a
+timestampm (milliseconds since the epoch). For example:
+
+``` python
+from inspect_viz.mark import regression_y
+from inspect_viz.transform import epoch_ms
+
+regression_y(
+    evals, 
+    x=epoch_ms("model_release_date"), 
+    y="score_headline_value", 
+    stroke="#AAAAAA"
+)
+```
+
+Note that when doing this you’ll also want to apply formatting to the
+tick labels so they appear as dates (the next section covers how to do
+this).
+
+### Tick Formatting
+
+Use the tick format attributes (e.g. `x_tick_format` and
+`y_tick_format`) to specify the formatting for date columns on tick
+labels. For example:
+
+``` python
+plot(
+    ...,
+    x_tick_format="%b. %Y"
+)
+```
+
+You can specify any [d3-time-format](https://d3js.org/d3-time-format) as
+the tick format.
+
+### Reductions
+
+In some cases you may have timeseries data which you’d like to reduce
+across months or years (e.g.collapse year values to enable comparison
+over months only). The following transformations can be used to do this:
+
+|  |  |
+|----|----|
+| `date_day()` | Transform a Date value to a day of the month for cyclic comparison. Year and month values are collapsed to enable comparison over days only. |
+| `date_month()` | Transform a Date value to a month boundary for cyclic comparison. Year values are collapsed to enable comparison over months only. |
+| `date_day_month()` | Map date/times to a month and day value, all within the same year for comparison. |
+
 ## Colors
 
 Use the `color_scheme` option to the `plot()` function to pick a theme
@@ -1069,7 +1122,7 @@ https://example.com/logs/:
 
 ``` python
 from inspect_viz import Data
-from inspect_ai.analysis.beta import evals_df, prepare, log_viewer
+from inspect_ai.analysis import evals_df, prepare, log_viewer
 
 # read evals and ammend with log viewer URL
 df = evals_df("logs")
@@ -2231,7 +2284,7 @@ in turn created by:
     columns to the data frame.
 
 ``` python
-from inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare
+from inspect_ai.analysis import evals_df, log_viewer, model_into, prepare
 
 df = evals_df("logs")
 df = prepare(df, 
@@ -2259,7 +2312,7 @@ plotted by “task_display_name” (`fx`) and “model_display_name” (`x`). By
 default, confidence intervals are also plotted (disable this with
 `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_scores_by_task.py#L18)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_by_task.py#L18)
 
 ``` python
 def scores_by_task(
@@ -2360,7 +2413,7 @@ in turn created by:
     columns to the data frame.
 
 ``` python
-from inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare
+from inspect_ai.analysis import evals_df, log_viewer, model_into, prepare
 
 df = evals_df("logs")
 df = prepare(df, 
@@ -2388,7 +2441,7 @@ Summarize eval scores using a bar plot. By default, scores (`y`) are
 plotted by “model_display_name” (`y`). By default, confidence intervals
 are also plotted (disable this with `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_scores_by_model.py#L16)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_by_model.py#L16)
 
 ``` python
 def scores_by_model(
@@ -2500,7 +2553,7 @@ in turn created by:
     columns to the data frame.
 
 ``` python
-from inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare
+from inspect_ai.analysis import evals_df, log_viewer, model_into, prepare
 
 df = evals_df("logs")
 df = prepare(df, 
@@ -2524,7 +2577,7 @@ this is “task_arg_hint”).
 Summarize eval scores with a factor of variation (e.g ‘No hint’
 vs. ‘Hint’).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
 
 ``` python
 def scores_by_factor(
@@ -2636,7 +2689,7 @@ in turn created by:
     columns to the data frame.
 
 ``` python
-from inspect_ai.analysis.beta import (
+from inspect_ai.analysis import (
     evals_df, frontier, log_viewer, model_into, prepare
 )
 
@@ -2663,7 +2716,7 @@ organization will filter the plot by that organization.
 
 Eval scores by model, organization, and release date.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_scores_timeline.py#L21)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_timeline.py#L25)
 
 ``` python
 def scores_timeline(
@@ -2685,6 +2738,7 @@ def scores_timeline(
     marks: Marks | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
+    regression: bool = False,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -2750,6 +2804,10 @@ The outer height of the plot in pixels, including margins. The default
 is width / 1.618 (the [golden
 ratio](https://en.wikipedia.org/wiki/Golden_ratio))
 
+`regression` bool  
+If `True`, adds a regression line to the plot (uses the confidence
+interval passed using ci). Defaults to False.
+
 `**attributes` Unpack\[[PlotAttributes](reference/inspect_viz.plot.qmd#plotattributes)\]  
 Additional `PlotAttributes`. By default, the `x_domain` is set to
 “fixed”, the `y_domain` is set to `[0,1.0]`, `color_label` is set to
@@ -2798,7 +2856,7 @@ in turn created by:
     columns to the data frame.
 
 ``` python
-from inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare
+from inspect_ai.analysis import evals_df, log_viewer, model_into, prepare
 
 df = evals_df("logs")
 df = prepare(df, 
@@ -2821,7 +2879,7 @@ isn’t prepared with `log_viewer()` and `model_info()`).
 
 Creates a heatmap plot of success rate of eval data.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
 
 ``` python
 def scores_heatmap(
@@ -2926,7 +2984,7 @@ function, then filter down to just the fields we require for
 visualization:
 
 ``` python
-from inspect_ai.analysis.beta import messages_df, log_viewer, model_info, prepare, EvalModel, MessageColumns, SampleSummary
+from inspect_ai.analysis import messages_df, log_viewer, model_info, prepare, EvalModel, MessageColumns, SampleSummary
 
 
 # read messages from log
@@ -2969,7 +3027,7 @@ usage).
 
 Heat map visualising tool calls over evaluation turns.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_tool_calls.py#L15)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_tool_calls.py#L15)
 
 ``` python
 def tool_calls(
@@ -3350,9 +3408,9 @@ from inspect_viz import Data, Selection
 from inspect_viz.input import checkbox_group, select
 from inspect_viz.layout import vconcat, vspace
 from inspect_viz.plot import plot, legend
-from inspect_viz.mark import dot, rule_x, text
+from inspect_viz.mark import dot, rule_x, text, regression_y
 from inspect_viz.table import table
-from inspect_viz.transform import ci_bounds
+from inspect_viz.transform import ci_bounds, epoch_ms
 
 # read data
 evals = Data.from_file("benchmarks.parquet")
@@ -3363,6 +3421,7 @@ ci_lower, ci_upper = ci_bounds(
     level=0.95,
     stderr="score_headline_stderr"
 )
+
 
 vconcat(
     # select benchmark
@@ -3377,7 +3436,7 @@ vconcat(
         # benchmark score
         dot(
             evals,
-            x="model_release_date",
+            x=epoch_ms("model_release_date"),
             y="score_headline_value",
             r=3,
             fill="model_organization_name",
@@ -3391,7 +3450,7 @@ vconcat(
         # confidence interval
         rule_x( 
             evals,
-            x="model_release_date",
+            x=epoch_ms("model_release_date"),
             y="score_headline_value",
             y1=ci_lower,
             y2=ci_upper,
@@ -3399,11 +3458,18 @@ vconcat(
             stroke_opacity=0.4,
             marker="tick-x",
         ), 
+        # regression line
+        regression_y(
+            evals, 
+            x=epoch_ms("model_release_date"), 
+            y="score_headline_value", 
+            stroke="#AAAAAA"
+        ),
         # frontier annotation
         text(
             evals,
             text="model_display_name",
-            x="model_release_date",
+            x=epoch_ms("model_release_date"),
             y="score_headline_value",
             line_anchor="middle",
             frame_anchor="right",
@@ -3418,7 +3484,9 @@ vconcat(
         y_label="Score",
         color_label="Organization",
         color_domain="fixed",
-        grid=True
+        x_tick_format="%b. %Y",
+        grid=True,
+        
     )
 )
 ```
@@ -3431,25 +3499,33 @@ Lines 13,17
 Create transforms used to compute the confidence intervals for each
 point.
 
-Lines 36,41  
+Line 33  
+Use `epoch_ms` to convert the date into a timestamp so it is numeric for
+use in computing the regression
+
+Lines 37,42  
 Additional channels are added to the tooltip.
 
-Line 51  
+Line 52  
 Confidence interval: compute dynamically using `ci_value()`, color by
 organization, and reduce opacity.
 
-Line 57  
+Line 65  
 Text annotations are automatically moved to avoid collisions.
 
-Line 62  
+Line 70  
 Only show annotations for records with `frontier=True`.
 
-Line 66  
+Line 74  
 Specifying `target` makes the legend clickable.
 
-Lines 67-68  
+Lines 75-76  
 Domains: `x_domain` fixed so that the axes don’t jump around for
 organization selections; `y_domain` should always span up to 1.0.
+
+Line 81  
+Use a tick format to format the x_axis value (which is a numeric
+timestamp) into a pretty date string.
 
 This plot was inspired by and includes data from the [Epoch
 AI](https://epoch.ai/data/ai-benchmarking-dashboard) Benchmarking Hub.

@@ -228,6 +228,59 @@ expression to set the stroke color based on a column value:
 stroke=sql(f"IF(task_arg_hint, 'blue', 'red')")
 ```
 
+## Dates
+
+### Numeric Values
+
+In some cases your plots will want to deal with date columns as numeric
+values (e.g. for plotting a regression line). For this case, use the
+`epochs_ms()` transform function to take a date and turn it into a
+timestampm (milliseconds since the epoch). For example:
+
+``` python
+from inspect_viz.mark import regression_y
+from inspect_viz.transform import epoch_ms
+
+regression_y(
+    evals, 
+    x=epoch_ms("model_release_date"), 
+    y="score_headline_value", 
+    stroke="#AAAAAA"
+)
+```
+
+Note that when doing this you’ll also want to apply formatting to the
+tick labels so they appear as dates (the next section covers how to do
+this).
+
+### Tick Formatting
+
+Use the tick format attributes (e.g. `x_tick_format` and
+`y_tick_format`) to specify the formatting for date columns on tick
+labels. For example:
+
+``` python
+plot(
+    ...,
+    x_tick_format="%b. %Y"
+)
+```
+
+You can specify any [d3-time-format](https://d3js.org/d3-time-format) as
+the tick format.
+
+### Reductions
+
+In some cases you may have timeseries data which you’d like to reduce
+across months or years (e.g.collapse year values to enable comparison
+over months only). The following transformations can be used to do this:
+
+|  |  |
+|----|----|
+| `date_day()` | Transform a Date value to a day of the month for cyclic comparison. Year and month values are collapsed to enable comparison over days only. |
+| `date_month()` | Transform a Date value to a month boundary for cyclic comparison. Year values are collapsed to enable comparison over months only. |
+| `date_day_month()` | Map date/times to a month and day value, all within the same year for comparison. |
+
 ## Colors
 
 Use the `color_scheme` option to the `plot()` function to pick a theme

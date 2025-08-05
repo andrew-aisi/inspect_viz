@@ -20,9 +20,9 @@ from inspect_viz import Data, Selection
 from inspect_viz.input import checkbox_group, select
 from inspect_viz.layout import vconcat, vspace
 from inspect_viz.plot import plot, legend
-from inspect_viz.mark import dot, rule_x, text
+from inspect_viz.mark import dot, rule_x, text, regression_y
 from inspect_viz.table import table
-from inspect_viz.transform import ci_bounds
+from inspect_viz.transform import ci_bounds, epoch_ms
 
 # read data
 evals = Data.from_file("benchmarks.parquet")
@@ -33,6 +33,7 @@ ci_lower, ci_upper = ci_bounds(
     level=0.95,
     stderr="score_headline_stderr"
 )
+
 
 vconcat(
     # select benchmark
@@ -47,7 +48,7 @@ vconcat(
         # benchmark score
         dot(
             evals,
-            x="model_release_date",
+            x=epoch_ms("model_release_date"),
             y="score_headline_value",
             r=3,
             fill="model_organization_name",
@@ -61,7 +62,7 @@ vconcat(
         # confidence interval
         rule_x( 
             evals,
-            x="model_release_date",
+            x=epoch_ms("model_release_date"),
             y="score_headline_value",
             y1=ci_lower,
             y2=ci_upper,
@@ -69,11 +70,18 @@ vconcat(
             stroke_opacity=0.4,
             marker="tick-x",
         ), 
+        # regression line
+        regression_y(
+            evals, 
+            x=epoch_ms("model_release_date"), 
+            y="score_headline_value", 
+            stroke="#AAAAAA"
+        ),
         # frontier annotation
         text(
             evals,
             text="model_display_name",
-            x="model_release_date",
+            x=epoch_ms("model_release_date"),
             y="score_headline_value",
             line_anchor="middle",
             frame_anchor="right",
@@ -88,7 +96,9 @@ vconcat(
         y_label="Score",
         color_label="Organization",
         color_domain="fixed",
-        grid=True
+        x_tick_format="%b. %Y",
+        grid=True,
+        
     )
 )
 ```
@@ -101,25 +111,33 @@ Lines 13,17
 Create transforms used to compute the confidence intervals for each
 point.
 
-Lines 36,41  
+Line 33  
+Use `epoch_ms` to convert the date into a timestamp so it is numeric for
+use in computing the regression
+
+Lines 37,42  
 Additional channels are added to the tooltip.
 
-Line 51  
+Line 52  
 Confidence interval: compute dynamically using `ci_value()`, color by
 organization, and reduce opacity.
 
-Line 57  
+Line 65  
 Text annotations are automatically moved to avoid collisions.
 
-Line 62  
+Line 70  
 Only show annotations for records with `frontier=True`.
 
-Line 66  
+Line 74  
 Specifying `target` makes the legend clickable.
 
-Lines 67-68  
+Lines 75-76  
 Domains: `x_domain` fixed so that the axes don’t jump around for
 organization selections; `y_domain` should always span up to 1.0.
+
+Line 81  
+Use a tick format to format the x_axis value (which is a numeric
+timestamp) into a pretty date string.
 
 This plot was inspired by and includes data from the [Epoch
 AI](https://epoch.ai/data/ai-benchmarking-dashboard) Benchmarking Hub.

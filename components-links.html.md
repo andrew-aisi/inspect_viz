@@ -65,7 +65,7 @@ https://example.com/logs/:
 
 ``` python
 from inspect_viz import Data
-from inspect_ai.analysis.beta import evals_df, prepare, log_viewer
+from inspect_ai.analysis import evals_df, prepare, log_viewer
 
 # read evals and ammend with log viewer URL
 df = evals_df("logs")

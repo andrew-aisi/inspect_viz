@@ -32,7 +32,7 @@ in turn created by:
     columns to the data frame.
 
 ``` python
-from inspect_ai.analysis.beta import (
+from inspect_ai.analysis import (
     evals_df, frontier, log_viewer, model_into, prepare
 )
 
@@ -59,7 +59,7 @@ organization will filter the plot by that organization.
 
 Eval scores by model, organization, and release date.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_scores_timeline.py#L21)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_timeline.py#L25)
 
 ``` python
 def scores_timeline(
@@ -81,6 +81,7 @@ def scores_timeline(
     marks: Marks | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
+    regression: bool = False,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -145,6 +146,10 @@ The outer width of the plot in pixels, including margins. Defaults to
 The outer height of the plot in pixels, including margins. The default
 is width / 1.618 (the [golden
 ratio](https://en.wikipedia.org/wiki/Golden_ratio))
+
+`regression` bool  
+If `True`, adds a regression line to the plot (uses the confidence
+interval passed using ci). Defaults to False.
 
 `**attributes` Unpack\[[PlotAttributes](reference/inspect_viz.plot.qmd#plotattributes)\]  
 Additional `PlotAttributes`. By default, the `x_domain` is set to

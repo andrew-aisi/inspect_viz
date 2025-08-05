@@ -31,7 +31,7 @@ in turn created by:
     columns to the data frame.
 
 ``` python
-from inspect_ai.analysis.beta import evals_df, log_viewer, model_into, prepare
+from inspect_ai.analysis import evals_df, log_viewer, model_into, prepare
 
 df = evals_df("logs")
 df = prepare(df, 
@@ -54,7 +54,7 @@ isn’t prepared with `log_viewer()` and `model_info()`).
 
 Creates a heatmap plot of success rate of eval data.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
 
 ``` python
 def scores_heatmap(

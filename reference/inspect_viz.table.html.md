@@ -5,7 +5,7 @@
 
 Tabular display of data.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/88f82778eacd79a9181996e7f5216afe52391f66/src/inspect_viz/table/_table.py#L243)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/table/_table.py#L243)
 
 ``` python
 def table(
