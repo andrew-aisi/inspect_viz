@@ -120,7 +120,7 @@ plot(
 
 Tooltips enable you to provide additional details when the user hovers their mouse over various regions of the plot. Tooltips are enabled automatically for dot marks (`dot()`, `dot_x()`, `dot_y()`, `circle()`, and `hexagon()`) and cell marks (`cell()`, `cell_x()`, etc.) and can be enabled with `tip=True` for other marks. For example:
 
-```python
+``` python
 plot(
     bar_y( 
         evals, x="model", fx="task_name",
@@ -134,10 +134,9 @@ plot(
 )
 ```
 
-1. Add `tip=True` to enable tooltips for marks where they are not automatically enabled.
+1.  Add `tip=True` to enable tooltips for marks where they are not automatically enabled.
 
 Note that tooltips can interfere with plot interactions---for example, if your bar plot was clickable to drive selections in other plots you would not want to specify `tip=True`.
-
 
 ### Channels
 
@@ -145,16 +144,16 @@ By default, tooltips show all dataset channels that provide scales (e.g. `x`, `y
 
 ![](tooltip-basic.png){.border}
 
-There are few things we can improve on here: 
+There are few things we can improve on here:
 
-1. The labels are scale names rather than domain specific names (e.g. "fx" rather than "model")
-2. The order of labels isn't ideal.
-3. There are some duplicate values (e.g "fill" and "fx")
-4. We might want to include additional columns not used in the rest of the plot (e.g. a link to the log file).
+1.  The labels are scale names rather than domain specific names (e.g. "fx" rather than "model")
+2.  The order of labels isn't ideal.
+3.  There are some duplicate values (e.g "fill" and "fx")
+4.  We might want to include additional columns not used in the rest of the plot (e.g. a link to the log file).
 
 You can exercise more control over the tooltip by specifying `channels` along with the mark. For example:
 
-```python
+``` python
 plot(
     bar_y( 
         evals, x="model", fx="task_name",
@@ -172,7 +171,7 @@ plot(
 )
 ```
 
-1. The `channels` option maps labels to columns in the underlying data---all defined `channels` will appear in the tooltip. URL values are automatically turned into links as shown here.
+1.  The `channels` option maps labels to columns in the underlying data---all defined `channels` will appear in the tooltip. URL values are automatically turned into links as shown here.
 
 ![](tooltip-channels.png){.border}
 
@@ -180,7 +179,7 @@ plot(
 
 You can use the `sql()` transform function to dynamically compute the values of channels within plots. For example, here we dynamically add a `bias` parameter to a column:
 
-```python
+``` python
 from inspect_viz.plot import plot
 from inspect_viz.mark import area_y
 from inspect_viz.tranform import sql
@@ -192,9 +191,52 @@ plot(
 
 Any valid SQL expression can be used. For example, here we use an `IF` expression to set the stroke color based on a column value:
 
-```python
+``` python
 stroke=sql(f"IF(task_arg_hint, 'blue', 'red')")
 ```
+
+## Dates
+
+### Numeric Values
+
+In some cases your plots will want to deal with date columns as numeric values (e.g. for plotting a regression line). For this case, use the `epochs_ms()` transform function to take a date and turn it into a timestampm (milliseconds since the epoch). For example:
+
+``` python
+from inspect_viz.mark import regression_y
+from inspect_viz.transform import epoch_ms
+
+regression_y(
+    evals, 
+    x=epoch_ms("model_release_date"), 
+    y="score_headline_value", 
+    stroke="#AAAAAA"
+)
+```
+
+Note that when doing this you'll also want to apply formatting to the tick labels so they appear as dates (the next section covers how to do this).
+
+### Tick Formatting
+
+Use the tick format attributes (e.g. `x_tick_format` and `y_tick_format`) to specify the formatting for date columns on tick labels. For example:
+
+``` python
+plot(
+    ...,
+    x_tick_format="%b. %Y"
+)
+```
+
+You can specify any [d3-time-format](https://d3js.org/d3-time-format) as the tick format.
+
+### Reductions
+
+In some cases you may have timeseries data which you'd like to reduce across months or years (e.g.collapse year values to enable comparison over months only). The following transformations can be used to do this:
+
+|  |  |
+|----|----|
+| `date_day()` | Transform a Date value to a day of the month for cyclic comparison. Year and month values are collapsed to enable comparison over days only. |
+| `date_month()` | Transform a Date value to a month boundary for cyclic comparison. Year values are collapsed to enable comparison over months only. |
+| `date_day_month()` | Map date/times to a month and day value, all within the same year for comparison. |
 
 ## Colors
 
@@ -229,7 +271,7 @@ plot(
 
 If you have facet labels on the top of the x-axis, you may need to provide some additional `top_margin` for the `title` so that it is placed above the facet labels. Use the `title()` function to customize this:
 
-```python
+``` python
 from inspect_viz.mark import title
 
 plot(
@@ -249,7 +291,7 @@ Since the text included in axes lables is dynamic, you will often need to adjust
 
 For example, here we set a `margin_left` of 100 pixels to ensure that potentially long model names have room to display:
 
-```python
+``` python
 plot(
     data,
     bar_y(...),
@@ -291,7 +333,7 @@ Legends also act as interactors, taking a bound `Selection` as a `target` parame
 
 See the docs on [Toggle](components-interactivity.qmd#toggle) interactors for an example of an interactive legend.
 
-## Baselines 
+## Baselines
 
 Baselines can be added by passing baselines to `marks` option. For example, here we add a baseline with the median weight from the athletes data:
 
@@ -308,7 +350,7 @@ plot(
 
 If you have a simple static baseline, you may simply provide the value, along with other options to customize the label, position, and other attributes of the baseline:
 
-```python
+``` python
 from inspect_viz.mark import title
 
 plot(

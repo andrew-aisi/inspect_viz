@@ -312,6 +312,8 @@ website:
           href: reference/inspect_viz.transform.qmd#date_month
         - text: date_month_day
           href: reference/inspect_viz.transform.qmd#date_month_day
+        - text: epoch_ms
+          href: reference/inspect_viz.transform.qmd#epoch_ms
         - text: avg
           href: reference/inspect_viz.transform.qmd#avg
         - text: count
