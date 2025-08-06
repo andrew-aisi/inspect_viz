@@ -400,15 +400,71 @@ See `PlotAttributes` for documentation on all available plot attributes.
 
 ## Legends
 
-*Legends* can be added to `plot` specifications or included as standalone elements.
+*Legends* can be added to `plot` specifications or included as standalone elements:
 
-See the `legend()` function documentation for details on legend options including columns, label text, size, frame_anchor, inset, and margins.
+```python
+from inspect_viz.plot import plot, legend
 
-The `name` directive gives a `plot` a unique name. A standalone legend can reference a named plot `legend(..., for_plot="penguins")` to avoid respecifying scale domains and ranges.
+plot(
+    ...,
+    legend=legend("color")
+)
+```
+
+Below we'll describe the options used to position and style legends. See the `legend()` function documentation for details on all legend options.
+
+### Positioning
+
+- Use `frame_anchor` to position the legend on a side or corner of the plot. 
+- Use `inset` to position the legend inside the plot area (use `inset_x` and `inset_y` to position more precisely)
+
+For example, to place the legend inset in the top left, you could write:
+
+```python
+legend("color", frame_anchor="top-left", inset=20)
+```
+
+![](legend-basic.png)
+
+
+### Legend Style
+
+Legends are by default placed in a bordered box. Use the `border` and `background` options to control box colors (specifying `False` to omit border or background color). For example:
+
+```python
+legend("color", border="blue", background="white")
+```
+
+### Multiple Legends
+
+You may can pass multiple legends (strings like "color" or calls to `legend()`) to the `plot()` funciton. Each may be positioned independently using `frame_anchor` and `inset`, or if they share a position, the legends will be merged into a container in that location.
+
+For example, the following adds two legends in the same container in the default position ( right of the plot):
+
+```python
+plot(
+    dot(penguins, x=x_axis, y=y_axis, stroke="species", symbol="species"),
+    grid=True,
+    x_label="Body mass (g) →",
+    y_label="↑ Flipper length (mm)",
+    legend=[legend("color"), legend("symbol")]
+)
+```
+
+![](legend-multiple.png)
+
+
+
+### Interactions
 
 Legends also act as interactors, taking a bound `Selection` as a `target` parameter. For example, discrete legends use the logic of the `toggle` interactor to enable point selections. Two-way binding is supported for Selections using *single* resolution, enabling legends and other interactors to share state.
 
 See the docs on [Toggle](components-interactivity.qmd#toggle) interactors for an example of an interactive legend.
+
+### Legend Name
+
+The `name` directive gives a `plot` a unique name. A standalone legend can reference a named plot `legend(..., for_plot="penguins")` to avoid respecifying scale domains and ranges.
+
 
 ## Baselines
 
