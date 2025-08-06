@@ -40,7 +40,6 @@ evals = Data.from_file("benchmarks.parquet")
 scores_timeline(
     evals, 
     legend=legend("color", frame_anchor="top-left", inset=20), 
-    regression=True
 )
 ```
 
