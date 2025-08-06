@@ -1,0 +1,113 @@
+name: Build
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+            - 'release/**'
+    workflow_dispatch:
+
+jobs:
+    py-ruff:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-version: ['3.10', '3.11']
+        steps:
+            - uses: actions/checkout@v4
+            - name: Lint with Ruff
+              uses: chartboost/ruff-action@v1
+            - name: Format with Ruff
+              uses: chartboost/ruff-action@v1
+              with:
+                  args: 'format --check'
+
+    py-mypy:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-version: ['3.10', '3.11']
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v4
+              with:
+                  python-version: ${{ matrix.python-version }}
+            - name: Cache pip dependencies
+              uses: actions/cache@v3
+              with:
+                  path: ~/.cache/pip
+                  key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}-${{ matrix.python-version }}
+                  restore-keys: |
+                      ${{ runner.os }}-pip-
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  python -m pip install .[dev]
+            - name: Run mypy
+              run: |
+                  mypy src
+
+    ts-typecheck:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22.x'
+            - name: Install dependencies
+              run: yarn install
+            - name: Run typecheck
+              run: yarn typecheck
+
+    ts-format:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22.x'
+            - name: Install dependencies
+              run: yarn install
+            - name: Check format
+              run: yarn format:check
+
+    ts-build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22.x'
+            - name: Install dependencies
+              run: yarn install
+            - name: Check format
+              run: yarn build
+
+    py-build:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-version: ['3.10', '3.11']
+        steps:
+            - uses: actions/checkout@v4
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v4
+              with:
+                  python-version: ${{ matrix.python-version }}
+            - name: Install build dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  python -m pip install build
+            - name: Build package
+              run: python -m build
+            - name: Verify package
+              run: |
+                  python -m pip install dist/*.whl
+                  python -c "import inspect_viz; print('Package imported successfully')"
