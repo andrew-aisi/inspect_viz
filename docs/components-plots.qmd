@@ -233,7 +233,7 @@ You can specify any [d3-time-format](https://d3js.org/d3-time-format) as the tic
 In some cases you may have timeseries data which you'd like to reduce across months or years (e.g.collapse year values to enable comparison over months only). The following transformations can be used to do this:
 
 |  |  |
-|----|----|
+|------------------------------------|------------------------------------|
 | `date_day()` | Transform a Date value to a day of the month for cyclic comparison. Year and month values are collapsed to enable comparison over days only. |
 | `date_month()` | Transform a Date value to a month boundary for cyclic comparison. Year values are collapsed to enable comparison over months only. |
 | `date_day_month()` | Map date/times to a month and day value, all within the same year for comparison. |
@@ -255,6 +255,8 @@ plot(
     color_scheme="tableau10"
 )
 ```
+
+{{< include _data.md >}}
 
 ## Titles
 
@@ -283,7 +285,82 @@ plot(
 
 You can also customize the font size, weight, and family using the `title()` function.
 
-{{< include _data.md >}}
+## Axes
+
+There are several options available for controlling the domain, range, ticks, and labels for axes.
+
+### Labels
+
+By default axes labels are taken from the columns they are mapped to. Specify an `x_label` or `y_label` to override this:
+
+``` python
+plot(
+    ...,
+    x_label="release_date",
+    y_label="score"
+)
+```
+
+If you want no axes label at all, pass `None`. For example:
+
+``` python
+plot(
+    ...,
+    x_label=None
+)
+```
+
+### Domain
+
+By default, the x and y axes have a domain that matches the underlying data. For example, if the data ranges from 0 to 0.8 the axes will reflect this. Set a specific `x_domain` or `y_domain` to override this. For example, here we specify that we want the y-axis to span from 0 to 1.0:
+
+``` python
+plot(
+    ...,
+    y_domain=[0,1.0]
+)
+```
+
+You can also specify "fixed" for a domain, which will preserve the domain of the initial values plotted. This is useful if you have created filters for your data and you want the axes to remain stable across filtering. For example:
+
+``` python
+plot(
+    ...,
+    y_domain="fixed"
+)
+```
+
+### Ticks
+
+You can explicitly control the axes ticks using the `x_ticks` and `y_ticks` options. For example, here we specify ticks from 0 to 100 by 10:
+
+``` python
+plot(
+    ...,
+    x_ticks=range(0, 100, 10)
+)
+```
+
+If you want no ticks at all specify `[]`, for example:
+
+``` python
+plot(
+    ...,
+    x_ticks=[]
+)
+```
+
+There are several other tick related options. Here
+
+-   `[x,y]_tick_size` — The length of axis tick marks in pixels.
+
+-   `[x,y]_tick_rotate` — The rotation angle of axis tick labels in degrees clockwise.
+
+-   `[x,y]_tick_spacing` — The desired approximate spacing between adjacent axis ticks, affecting the default ticks.
+
+-   `[x,y]_tick_padding` — The distance between an axis tick mark and its associated text label.
+
+-   `[x,y]_tick_format` — How to format inputs for axis tick labels (a [d3-format](https://d3js.org/d3-format) or [d3-time-format](https://d3js.org/d3-time-format)).
 
 ## Margins
 
