@@ -319,7 +319,7 @@ has a couple of important implications:
     the additional columns making the web page larger than is
     necessary).
 
-### Data Selections
+### Selections
 
 One other important thing to understand is that `Data` has a built in
 *selection* which is used in filtering operations on the client. This

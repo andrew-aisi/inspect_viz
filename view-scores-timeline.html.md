@@ -59,7 +59,7 @@ organization will filter the plot by that organization.
 
 Eval scores by model, organization, and release date.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/view/beta/_scores_timeline.py#L26)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/d697f917d685f1ea3b013a6cc3b2ced25077008e/src/inspect_viz/view/beta/_scores_timeline.py#L26)
 
 ``` python
 def scores_timeline(
