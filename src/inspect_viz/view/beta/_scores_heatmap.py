@@ -32,17 +32,17 @@ class CellOptions(TypedDict, total=False):
 
 def scores_heatmap(
     data: Data,
-    x: str = "task_display_name",
-    y: str = "model_display_name",
-    fill: str = "score_headline_value",
+    task_name: str = "task_display_name",
+    task_label: str | None | NotGiven = None,
+    model_name: str = "model_display_name",
+    model_label: str | None | NotGiven = None,
+    score_value: str = "score_headline_value",
     cell: CellOptions | None = None,
     tip: bool = True,
     title: str | Title | None = None,
     marks: Marks | None = None,
     height: float | None = None,
     width: float | None = None,
-    x_label: str | None | NotGiven = None,
-    y_label: str | None | NotGiven = None,
     legend: Legend | bool | None = None,
     sort: Literal["ascending", "descending"] | SortOrder | None = "ascending",
     **attributes: Unpack[PlotAttributes],
@@ -52,9 +52,11 @@ def scores_heatmap(
 
     Args:
        data: Evals data table.
-       x: Name of column to use for columns.
-       y: Name of column to use for rows.
-       fill: Name of the column to use as values to determine cell color.
+       task_name: Name of column to use for columns.
+       task_label: x-axis label (defaults to None).
+       model_name: Name of column to use for rows.
+       model_label: y-axis label (defaults to None).
+       score_value: Name of the column to use as values to determine cell color.
        cell: Options for the cell marks.
        sort: Sort order for the x and y axes. If ascending, the highest values will be sorted to the top right. If descending, the highest values will appear in the bottom left. If None, no sorting is applied. If a SortOrder is provided, it will be used to sort the x and y axes.
        tip: Whether to show a tooltip with the value when hovering over a cell (defaults to True).
@@ -63,21 +65,19 @@ def scores_heatmap(
        marks: Additional marks to include in the plot.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio)).
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
-       x_label: x-axis label (defaults to None).
-       y_label: y-axis label (defaults to None).
        **attributes: Additional `PlotAttributes
     """
     # resolve x
-    if x == "task_display_name" and x not in data.columns:
-        x = "task_name"
+    if task_name == "task_display_name" and task_name not in data.columns:
+        task_name = "task_name"
 
     # Resolve the y column to average
     margin_left = None
-    if y == "model_display_name":
+    if model_name == "model_display_name":
         margin_left = 120
         if "model_display_name" not in data.columns:
             # fallback to using the raw model string
-            y = "model"
+            model_name = "model"
             margin_left = 220
 
     # resolve title
@@ -88,8 +88,8 @@ def scores_heatmap(
     marks = flatten_marks(marks)
 
     # Compute the color domain
-    min_value = data.column_min(fill)
-    max_value = data.column_max(fill)
+    min_value = data.column_min(score_value)
+    max_value = data.column_max(score_value)
 
     color_domain = [min_value, max_value]
     if min_value >= 0 and max_value <= 1:
@@ -122,9 +122,9 @@ def scores_heatmap(
         components.append(
             text(
                 data,
-                x=x,
-                y=y,
-                text=avg(fill),
+                x=task_name,
+                y=model_name,
+                text=avg(score_value),
                 fill=cell["text"],
                 styles={"font_weight": 600},
             )
@@ -135,12 +135,12 @@ def scores_heatmap(
 
     # channels
     channels: dict[str, str] = {}
-    if x == "task_name" or x == "task_display_name":
-        channels["Task"] = x
-    if y == "model" or y == "model_display_name":
-        channels["Model"] = y
-    if fill == "score_headline_value":
-        channels["Score"] = fill
+    if task_name == "task_name" or task_name == "task_display_name":
+        channels["Task"] = task_name
+    if model_name == "model" or model_name == "model_display_name":
+        channels["Model"] = model_name
+    if score_value == "score_headline_value":
+        channels["Score"] = score_value
     resolve_log_viewer_channel(data, channels)
 
     # resolve the sort order
@@ -156,9 +156,9 @@ def scores_heatmap(
     heatmap = plot(
         cell_mark(
             data,
-            x=x,
-            y=y,
-            fill=avg(fill),
+            x=task_name,
+            y=model_name,
+            fill=avg(score_value),
             tip=tip,
             inset=cell["inset"] if cell else None,
             sort=resolved_sort,
@@ -182,8 +182,8 @@ def scores_heatmap(
         title=title,
         width=width,
         height=height,
-        x_label=x_label,
-        y_label=y_label,
+        x_label=task_label,
+        y_label=model_label,
         **attributes,
     )
 
