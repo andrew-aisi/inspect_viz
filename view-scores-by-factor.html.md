@@ -56,7 +56,7 @@ this is “task_arg_hint”).
 Summarize eval scores with a factor of variation (e.g ‘No hint’
 vs. ‘Hint’).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
 
 ``` python
 def scores_by_factor(

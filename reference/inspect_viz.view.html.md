@@ -19,7 +19,7 @@ plotted by “task_display_name” (`fx`) and “model_display_name” (`x`). By
 default, confidence intervals are also plotted (disable this with
 `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_by_task.py#L18)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/view/beta/_scores_by_task.py#L18)
 
 ``` python
 def scores_by_task(
@@ -84,7 +84,7 @@ to 10 pixels and `x_ticks` is set to `[]`.
 Summarize eval scores with a factor of variation (e.g ‘No hint’
 vs. ‘Hint’).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
 
 ``` python
 def scores_by_factor(
@@ -160,7 +160,7 @@ Additional \`PlotAttributes
 
 Eval scores by model, organization, and release date.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_timeline.py#L25)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/view/beta/_scores_timeline.py#L26)
 
 ``` python
 def scores_timeline(
@@ -183,6 +183,7 @@ def scores_timeline(
     width: float | Param | None = None,
     height: float | Param | None = None,
     regression: bool = False,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -252,6 +253,10 @@ ratio](https://en.wikipedia.org/wiki/Golden_ratio))
 If `True`, adds a regression line to the plot (uses the confidence
 interval passed using ci). Defaults to False.
 
+`legend` [Legend](inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Legend to use for the plot (defaults to `None`, which uses the default
+legend).
+
 `**attributes` Unpack\[[PlotAttributes](inspect_viz.plot.qmd#plotattributes)\]  
 Additional `PlotAttributes`. By default, the `x_domain` is set to
 “fixed”, the `y_domain` is set to `[0,1.0]`, `color_label` is set to
@@ -266,7 +271,7 @@ Summarize eval scores using a bar plot. By default, scores (`y`) are
 plotted by “model_display_name” (`y`). By default, confidence intervals
 are also plotted (disable this with `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_by_model.py#L16)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/view/beta/_scores_by_model.py#L16)
 
 ``` python
 def scores_by_model(
@@ -342,7 +347,7 @@ Additional `PlotAttributes`. By default, the `y_inset_top` and
 
 Creates a heatmap plot of success rate of eval data.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
 
 ``` python
 def scores_heatmap(
@@ -422,7 +427,7 @@ Additional \`PlotAttributes
 
 Heat map visualising tool calls over evaluation turns.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_tool_calls.py#L15)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/view/beta/_tool_calls.py#L15)
 
 ``` python
 def tool_calls(
@@ -495,7 +500,7 @@ Additional `PlotAttributes`. By default, the `margin_top` is set to 0,
 
 Cell options for the heatmap.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_heatmap.py#L23)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/view/beta/_scores_heatmap.py#L23)
 
 ``` python
 class CellOptions(TypedDict, total=False)

@@ -11,7 +11,7 @@ from inspect_viz import Data, Param
 from inspect_viz.input import select
 from inspect_viz.layout import hconcat, vconcat
 from inspect_viz.mark import dot
-from inspect_viz.plot import plot
+from inspect_viz.plot import plot, legend
 from inspect_viz.table import table
 
 penguins = Data.from_file("penguins.parquet")
@@ -31,8 +31,7 @@ vconcat(
         grid=True,
         x_label="Body mass (g) →",
         y_label="↑ Flipper length (mm)",
-        legend="symbol",
+        legend="color"
     ),
-    table(penguins)
 )
 ```

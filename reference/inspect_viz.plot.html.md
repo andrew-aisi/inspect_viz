@@ -7,7 +7,7 @@
 
 Create a plot.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_plot.py#L20)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_plot.py#L20)
 
 ``` python
 def plot(
@@ -20,7 +20,11 @@ def plot(
     width: float | Param | None = None,
     height: float | Param | None = None,
     name: str | None = None,
-    legend: Literal["color", "opacity", "symbol"] | Legend | None = None,
+    legend: Literal["color", "opacity", "symbol"]
+    | Sequence[Literal["color", "opacity", "symbol"]]
+    | Legend
+    | Sequence[Legend]
+    | None = None,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -68,7 +72,7 @@ ratio](https://en.wikipedia.org/wiki/Golden_ratio))
 A unique name for the plot. The name is used by standalone legend
 components to to lookup the plot and access scale mappings.
 
-`legend` Literal\['color', 'opacity', 'symbol'\] \| [Legend](inspect_viz.plot.qmd#legend) \| None  
+`legend` Literal\['color', 'opacity', 'symbol'\] \| Sequence\[Literal\['color', 'opacity', 'symbol'\]\] \| [Legend](inspect_viz.plot.qmd#legend) \| Sequence\[[Legend](inspect_viz.plot.qmd#legend)\] \| None  
 Plot legend.
 
 `**attributes` Unpack\[[PlotAttributes](inspect_viz.plot.qmd#plotattributes)\]  
@@ -78,7 +82,7 @@ Additional `PlotAttributes`.
 
 Plot attributes.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_attributes.py#L155)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_attributes.py#L155)
 
 ``` python
 class PlotAttributes(TypedDict, total=False)
@@ -1356,12 +1360,12 @@ effective area), while a negative value insets away from the right edge
 
 Create a legend.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_legend.py#L38)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_legend.py#L54)
 
 ``` python
 def legend(
     legend: Literal["color", "opacity", "symbol"],
-    location: Literal["bottom", "left", "right", "top"] = "right",
+    *,
     columns: Literal["auto"] | int | None = "auto",
     label: str | None = None,
     target: Selection | None = None,
@@ -1374,15 +1378,17 @@ def legend(
     margin_right: float | None = None,
     margin_top: float | None = None,
     for_plot: str | None = None,
+    frame_anchor: FrameAnchor | None = None,
+    inset: float | None = None,
+    inset_x: float | None = None,
+    inset_y: float | None = None,
+    border: str | bool = True,
+    background: str | bool = True,
 ) -> Legend
 ```
 
 `legend` Literal\['color', 'opacity', 'symbol'\]  
 Legend type (`"color"`, `"opacity"`, or `"symbol"`).
-
-`location` Literal\['bottom', 'left', 'right', 'top'\]  
-The legend location (used for display only when passing a legend to
-the`plot()` function). Also affects default value for `columns`.
 
 `columns` Literal\['auto'\] \| int \| None  
 The number of columns to use to layout a discrete legend (defaults to
@@ -1426,15 +1432,43 @@ The name of the plot this legend applies to. A plot must include a
 `name` attribute to be referenced. Note that this is not use when
 passing a legend to the `plot()` function.
 
+`frame_anchor` [FrameAnchor](inspect_viz.mark.qmd#frameanchor) \| None  
+Where to position the relative the plot frame. Defaults to “right”.
+
+`inset` float \| None  
+The inset of the legend from the plot frame, in pixels. If no inset is
+specified, the legend will be positioned outside the plot frame.
+
+`inset_x` float \| None  
+The horizontal inset of the legend from the plot frame, in pixels.
+
+`inset_y` float \| None  
+The vertical inset of the legend from the plot frame, in pixels.
+
+`border` str \| bool  
+The border color for the legend. Pass ‘True’ to use the default border
+color, or a string to specify a custom color. Pass ‘False’ to disable
+the border. Defaults to `True`.
+
+`background` str \| bool  
+The background color for the legend. Pass ‘True’ to use the default
+background color, or a string to specify a custom color. Pass ‘False’ to
+disable the background. Defaults to `True`.
+
 ### Legend
 
 Plot legend (create legends using the `legend()` function).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_legend.py#L8)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_legend.py#L11)
 
 ``` python
 class Legend(Component)
 ```
+
+#### Attributes
+
+`frame_anchor` [FrameAnchor](inspect_viz.mark.qmd#frameanchor)  
+The frame anchor for the legend.
 
 ## Export
 
@@ -1442,7 +1476,7 @@ class Legend(Component)
 
 Genreate an HTML snippet for a plot or other component.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_write.py#L21)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_write.py#L21)
 
 ``` python
 def to_html(component: Component, dependencies: bool = True) -> str
@@ -1461,7 +1495,7 @@ when generating HTML.
 
 Write an HTML file for a plot or other component.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_write.py#L77)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_write.py#L77)
 
 ``` python
 def write_html(
@@ -1485,7 +1519,7 @@ when generating HTML.
 
 Export a plot or table to a PNG.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_write.py#L105)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_write.py#L105)
 
 ``` python
 def write_png(
@@ -1515,7 +1549,7 @@ Set global plot defaults.
 Note that this function should be called once at the outset (subsequent
 calls to it do not reset the defaults).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_defaults.py#L42)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_defaults.py#L42)
 
 ``` python
 def plot_defaults(**defaults: Unpack[PlotDefaults]) -> None
@@ -1531,7 +1565,7 @@ Default options for plots.
 Use the `plot_defaults()` function to set global defaults for plot
 options.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_defaults.py#L9)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_defaults.py#L9)
 
 ``` python
 class PlotDefaults(PlotAttributes, total=False)
@@ -1578,7 +1612,7 @@ scale, it might be 396.
 How a scale encodes abstract data, say by applying a mathematical
 transformation.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_attributes.py#L7)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_attributes.py#L7)
 
 ``` python
 PositionScale: TypeAlias = Literal[
@@ -1606,7 +1640,7 @@ Built-in projection types.
 Named projections are scaled and translated to fit the **domain** to the
 plot’s frame (minus insets).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_attributes.py#L25)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_attributes.py#L25)
 
 ``` python
 Projection: TypeAlias = Literal[
@@ -1633,7 +1667,7 @@ Projection: TypeAlias = Literal[
 
 Continuous scaling transformations.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_attributes.py#L48)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_attributes.py#L48)
 
 ``` python
 ContinuousScale: TypeAlias = Literal[
@@ -1652,7 +1686,7 @@ ContinuousScale: TypeAlias = Literal[
 
 Color scale tranformations.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_attributes.py#L60)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_attributes.py#L60)
 
 ``` python
 ColorScale: TypeAlias = Literal[
@@ -1683,7 +1717,7 @@ ColorScale: TypeAlias = Literal[
 
 Color schemes.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_attributes.py#L84)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_attributes.py#L84)
 
 ``` python
 ColorScheme: TypeAlias = Literal[
@@ -1736,7 +1770,7 @@ ColorScheme: TypeAlias = Literal[
 
 How to interpolate color range values.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_attributes.py#L130)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_attributes.py#L130)
 
 ``` python
 Interpolate: TypeAlias = Literal[
@@ -1752,7 +1786,7 @@ Interpolate: TypeAlias = Literal[
 
 Whether to apply a directional arrow to an axis scale label.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/plot/_attributes.py#L140)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/plot/_attributes.py#L140)
 
 ``` python
 LabelArrow = (

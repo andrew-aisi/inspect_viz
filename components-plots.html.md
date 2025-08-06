@@ -82,7 +82,7 @@ plot(
             "Log Viewer": "log_viewer"
         }
     ),
-    legend=legend("color", location="bottom"),
+    legend=legend("color", frame_anchor="bottom"),
     x_label=None, x_ticks=[], fx_label=None,
     y_label="score", y_domain=[0, 1.0]
 )
@@ -147,7 +147,7 @@ plot(
         fill="model",
         tip=True
     ),
-    legend=legend("color", location="bottom"),
+    legend=legend("color", frame_anchor="bottom"),
     x_label=None, x_ticks=[], fx_label=None,
     y_label="score", y_domain=[0, 1.0]
 )
@@ -295,44 +295,12 @@ plot(
         y="score_headline_value",
         fill="model",
     ),
-    legend=legend("color", location="bottom"),
+    legend=legend("color", frame_anchor="bottom"),
     x_label=None, x_ticks=[], fx_label=None,
     y_label="score", y_domain=[0, 1.0],
     color_scheme="tableau10"
 )
 ```
-
-## Titles
-
-Plot titles can be added using the `title` option. For example, here we
-add a title at the top of the frame:
-
-``` python
-plot(
-    dot(athletes, x="weight", y="height", fill="sex", opacity=0.1),
-    regression_y(athletes, x="weight", y="height", stroke="sex"),
-    title="Olympic Athletes",
-    legend="color"
-)
-```
-
-If you have facet labels on the top of the x-axis, you may need to
-provide some additional `top_margin` for the `title` so that it is
-placed above the facet labels. Use the `title()` function to customize
-this:
-
-``` python
-from inspect_viz.mark import title
-
-plot(
-    ...
-    title=title("Olympic Athletes", margin_top=40),
-    ...
-)
-```
-
-You can also customize the font size, weight, and family using the
-`title()` function.
 
 ## Data
 
@@ -396,6 +364,131 @@ vconcat(
 )
 ```
 
+## Titles
+
+Plot titles can be added using the `title` option. For example, here we
+add a title at the top of the frame:
+
+``` python
+plot(
+    dot(athletes, x="weight", y="height", fill="sex", opacity=0.1),
+    regression_y(athletes, x="weight", y="height", stroke="sex"),
+    title="Olympic Athletes",
+    legend="color"
+)
+```
+
+If you have facet labels on the top of the x-axis, you may need to
+provide some additional `top_margin` for the `title` so that it is
+placed above the facet labels. Use the `title()` function to customize
+this:
+
+``` python
+from inspect_viz.mark import title
+
+plot(
+    ...
+    title=title("Olympic Athletes", margin_top=40),
+    ...
+)
+```
+
+You can also customize the font size, weight, and family using the
+`title()` function.
+
+## Axes
+
+There are several options available for controlling the domain, range,
+ticks, and labels for axes.
+
+### Labels
+
+By default axes labels are taken from the columns they are mapped to.
+Specify an `x_label` or `y_label` to override this:
+
+``` python
+plot(
+    ...,
+    x_label="release_date",
+    y_label="score"
+)
+```
+
+If you want no axes label at all, pass `None`. For example:
+
+``` python
+plot(
+    ...,
+    x_label=None
+)
+```
+
+### Domain
+
+By default, the x and y axes have a domain that matches the underlying
+data. For example, if the data ranges from 0 to 0.8 the axes will
+reflect this. Set a specific `x_domain` or `y_domain` to override this.
+For example, here we specify that we want the y-axis to span from 0 to
+1.0:
+
+``` python
+plot(
+    ...,
+    y_domain=[0,1.0]
+)
+```
+
+You can also specify “fixed” for a domain, which will preserve the
+domain of the initial values plotted. This is useful if you have created
+filters for your data and you want the axes to remain stable across
+filtering. For example:
+
+``` python
+plot(
+    ...,
+    y_domain="fixed"
+)
+```
+
+### Ticks
+
+You can explicitly control the axes ticks using the `x_ticks` and
+`y_ticks` options. For example, here we specify ticks from 0 to 100 by
+10:
+
+``` python
+plot(
+    ...,
+    x_ticks=range(0, 100, 10)
+)
+```
+
+If you want no ticks at all specify `[]`, for example:
+
+``` python
+plot(
+    ...,
+    x_ticks=[]
+)
+```
+
+There are several other tick related options. Here
+
+- `[x,y]_tick_size` — The length of axis tick marks in pixels.
+
+- `[x,y]_tick_rotate` — The rotation angle of axis tick labels in
+  degrees clockwise.
+
+- `[x,y]_tick_spacing` — The desired approximate spacing between
+  adjacent axis ticks, affecting the default ticks.
+
+- `[x,y]_tick_padding` — The distance between an axis tick mark and its
+  associated text label.
+
+- `[x,y]_tick_format` — How to format inputs for axis tick labels (a
+  [d3-format](https://d3js.org/d3-format) or
+  [d3-time-format](https://d3js.org/d3-time-format)).
+
 ## Margins
 
 Since the text included in axes lables is dynamic, you will often need
@@ -448,14 +541,68 @@ See `PlotAttributes` for documentation on all available plot attributes.
 ## Legends
 
 *Legends* can be added to `plot` specifications or included as
-standalone elements.
+standalone elements:
 
-See the `legend()` function documentation for details on legend options
-including location, columns, label text, size, and margins.
+``` python
+from inspect_viz.plot import plot, legend
 
-The `name` directive gives a `plot` a unique name. A standalone legend
-can reference a named plot `legend(..., for_plot="penguins")` to avoid
-respecifying scale domains and ranges.
+plot(
+    ...,
+    legend=legend("color")
+)
+```
+
+Below we’ll describe the options used to position and style legends. See
+the `legend()` function documentation for details on all legend options.
+
+### Positioning
+
+- Use `frame_anchor` to position the legend on a side or corner of the
+  plot.
+- Use `inset` to position the legend inside the plot area (use `inset_x`
+  and `inset_y` to position more precisely)
+
+For example, to place the legend inset in the top left, you could write:
+
+``` python
+legend("color", frame_anchor="top-left", inset=20)
+```
+
+![](legend-basic.png)
+
+### Legend Style
+
+Legends are by default placed in a bordered box. Use the `border` and
+`background` options to control box colors (specifying `False` to omit
+border or background color). For example:
+
+``` python
+legend("color", border="blue", background="white")
+```
+
+### Multiple Legends
+
+You may can pass multiple legends (strings like “color” or calls to
+`legend()`) to the `plot()` funciton. Each may be positioned
+independently using `frame_anchor` and `inset`, or if they share a
+position, the legends will be merged into a container in that location.
+
+For example, the following adds two legends in the same container in the
+default position ( right of the plot):
+
+``` python
+plot(
+    dot(penguins, x=x_axis, y=y_axis, stroke="species", symbol="species"),
+    grid=True,
+    x_label="Body mass (g) →",
+    y_label="↑ Flipper length (mm)",
+    legend=[legend("color"), legend("symbol")]
+)
+```
+
+![](legend-multiple.png)
+
+### Interactions
 
 Legends also act as interactors, taking a bound `Selection` as a
 `target` parameter. For example, discrete legends use the logic of the
@@ -465,6 +612,12 @@ other interactors to share state.
 
 See the docs on [Toggle](components-interactivity.qmd#toggle)
 interactors for an example of an interactive legend.
+
+### Legend Name
+
+The `name` directive gives a `plot` a unique name. A standalone legend
+can reference a named plot `legend(..., for_plot="penguins")` to avoid
+respecifying scale domains and ranges.
 
 ## Baselines
 

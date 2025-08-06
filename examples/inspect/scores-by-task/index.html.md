@@ -28,7 +28,7 @@ plot(
         tip=True
     ),
     title=title("Plot Title", margin_top=40),
-    legend=legend("color", location="bottom"),
+    legend=legend("color", frame_anchor="bottom"),
     x_label=None, fx_label=None, x_ticks=[],
     y_label="score", y_domain=[0, 1.0],
     color_label="Model"
@@ -87,7 +87,7 @@ plot(
         stroke="black",
         marker="tick-x",
     ),
-    legend=legend("color", location="bottom"),
+    legend=legend("color", frame_anchor="bottom"),
     x_label=None, fx_label=None, x_ticks=[],
     y_label="score", y_domain=[0, 1.0],
     color_label="Model"

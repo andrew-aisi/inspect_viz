@@ -42,7 +42,7 @@ plot(
         font_weight=200,
         dx=50
     ),
-    legend=legend("color", location="right"),
+    legend=legend("color", frame_anchor="right"),
     margin_top=0,
     margin_left=20,
     margin_right=100,

@@ -59,7 +59,7 @@ organization will filter the plot by that organization.
 
 Eval scores by model, organization, and release date.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/b9cec35f6737fc6370449c21698040b41718d44c/src/inspect_viz/view/beta/_scores_timeline.py#L25)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/57398cdd89b657acc684e24ff8d6dac08dcfbab2/src/inspect_viz/view/beta/_scores_timeline.py#L26)
 
 ``` python
 def scores_timeline(
@@ -82,6 +82,7 @@ def scores_timeline(
     width: float | Param | None = None,
     height: float | Param | None = None,
     regression: bool = False,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -150,6 +151,10 @@ ratio](https://en.wikipedia.org/wiki/Golden_ratio))
 `regression` bool  
 If `True`, adds a regression line to the plot (uses the confidence
 interval passed using ci). Defaults to False.
+
+`legend` [Legend](reference/inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Legend to use for the plot (defaults to `None`, which uses the default
+legend).
 
 `**attributes` Unpack\[[PlotAttributes](reference/inspect_viz.plot.qmd#plotattributes)\]  
 Additional `PlotAttributes`. By default, the `x_domain` is set to
