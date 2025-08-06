@@ -2506,6 +2506,7 @@ var applyLegendStyles = (legendEl) => {
   legendContainerParentEl.style.position = "relative";
   legendContainerEl.style.padding = "0.3em";
   legendContainerEl.style.position = "absolute";
+  legendContainerEl.style.width = "max-content";
   applyBackground(legendContainerEl, options.background);
   applyBorder(legendContainerEl, options.border);
   applyParentPadding(options, legendContainerEl, legendContainerParentEl);

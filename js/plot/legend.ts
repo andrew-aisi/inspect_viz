@@ -196,6 +196,7 @@ const applyLegendStyles = (legendEl: HTMLElement): void => {
     legendContainerParentEl.style.position = 'relative';
     legendContainerEl.style.padding = '0.3em';
     legendContainerEl.style.position = 'absolute';
+    legendContainerEl.style.width = 'max-content';
 
     // Background and border
     applyBackground(legendContainerEl, options.background);
