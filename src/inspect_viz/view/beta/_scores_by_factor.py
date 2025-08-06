@@ -12,13 +12,13 @@ from inspect_viz.transform import ci_bounds, sql
 
 def scores_by_factor(
     data: Data,
-    fx: str,
-    fx_labels: tuple[str, str],
-    x: str = "score_headline_value",
-    x_stderr: str = "score_headline_stderr",
-    x_label: str = "Score",
-    y: str = "model",
-    y_label: str = "Model",
+    factor: str,
+    factor_labels: tuple[str, str],
+    score_value: str = "score_headline_value",
+    score_stderr: str = "score_headline_stderr",
+    score_label: str = "Score",
+    model: str = "model",
+    model_label: str = "Model",
     ci: bool | float = 0.95,
     color: str | tuple[str, str] = "#3266ae",
     title: str | Mark | None = None,
@@ -31,13 +31,13 @@ def scores_by_factor(
 
     Args:
        data: Evals data table. This is typically created using a data frame read with the inspect `evals_df()` function.
-       fx: Field with factor of variation (should be of type boolean).
-       fx_labels: Tuple of labels for factor of variation. `False` value should be first, e.g. `("No hint", "Hint")`.
-       x: Name of field for x (scoring) axis (defaults to "score_headline_value").
-       x_stderr: Name of field for scoring stderr (defaults to "score_headline_stderr").
-       x_label: Label for x-axis (defaults to "Score").
-       y: Name of field for y axis (defaults to "model").
-       y_label: Lable for y axis (defaults to "Model").
+       factor: Field with factor of variation (should be of type boolean).
+       factor_labels: Tuple of labels for factor of variation. `False` value should be first, e.g. `("No hint", "Hint")`.
+       score_value: Name of field for x (scoring) axis (defaults to "score_headline_value").
+       score_stderr: Name of field for scoring stderr (defaults to "score_headline_stderr").
+       score_label: Label for x-axis (defaults to "Score").
+       model: Name of field for y axis (defaults to "model").
+       model_label: Lable for y axis (defaults to "Model").
        ci: Confidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.)
        color: Hex color value (or tuple of two values). If one value is provided the second is computed by lightening the main color.
        title: Title for plot (`str` or mark created with the `title()` function).
@@ -52,11 +52,11 @@ def scores_by_factor(
 
     # compute default height
     if height is None:
-        height = 65 * len(data.column_unique(y))
+        height = 65 * len(data.column_unique(model))
 
     # validate that we have labels
-    if not isinstance(fx_labels, tuple) or len(fx_labels) != 2:
-        raise ValueError("fx_labels must be a tuple of 2 strings.")
+    if not isinstance(factor_labels, tuple) or len(factor_labels) != 2:
+        raise ValueError("factor_labels must be a tuple of 2 strings.")
 
     # resolve marks
     marks = flatten_marks(marks)
@@ -67,15 +67,15 @@ def scores_by_factor(
         y_ticks=[],
         y_tick_size=0,
         fy_axis="left",
-        color_domain=fx_labels,
+        color_domain=factor_labels,
         color_range=color,
     )
     attributes = defaults | attributes
 
     # build channels
-    channels = {y_label: y, x_label: x}
+    channels = {model_label: model, score_label: score_value}
     if ci is not False:
-        channels["Stderr"] = x_stderr
+        channels["Stderr"] = score_stderr
     resolve_log_viewer_channel(data, channels)
 
     # start w/ bars
@@ -83,30 +83,34 @@ def scores_by_factor(
         frame("left", inset_top=5, inset_bottom=5),
         rule_y(
             data,
-            x=x,
-            y=fx,
-            fy=y,
+            x=score_value,
+            y=factor,
+            fy=model,
             sort={"fy": "-x"},
-            stroke=sql(f"IF(NOT {fx}, '{fx_labels[0]}', '{fx_labels[1]}')"),
+            stroke=sql(f"IF(NOT {factor}, '{factor_labels[0]}', '{factor_labels[1]}')"),
             stroke_width=3,
             stroke_linecap="round",
             marker_end="circle",
             tip=True,
-            channels={y_label: y, x_label: x, "Stderr": x_stderr},
+            channels={
+                model_label: model,
+                score_label: score_value,
+                "Stderr": score_stderr,
+            },
         ),
     ]
 
     # add ci
     if ci is not False:
         ci = 0.95 if ci is True else ci
-        ci_lower, ci_upper = ci_bounds(x, level=ci, stderr=x_stderr)
+        ci_lower, ci_upper = ci_bounds(score_value, level=ci, stderr=score_stderr)
         components.append(
             rule_y(
                 data,
                 x1=ci_lower,
                 x2=ci_upper,
-                y=fx,
-                fy=y,
+                y=factor,
+                fy=model,
                 sort={"fy": "-x"},
                 stroke=f"{color[0]}20",
                 stroke_width=15,
@@ -119,7 +123,7 @@ def scores_by_factor(
     return plot(
         *components,
         legend=legend("color", target=data.selection),
-        x_label=x_label,
+        x_label=score_label,
         y_label=None,
         fy_label=None,
         title=title,
