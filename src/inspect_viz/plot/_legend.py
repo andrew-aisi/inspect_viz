@@ -1,8 +1,11 @@
+from typing import cast
+
 from pydantic import JsonValue
 from typing_extensions import Literal
 
 from .._core.component import Component
 from .._core.selection import Selection
+from ..mark._types import FrameAnchor
 
 
 class Legend(Component):
@@ -11,8 +14,8 @@ class Legend(Component):
     def __init__(
         self,
         legend: Literal["color", "opacity", "symbol"],
-        location: Literal["bottom", "left", "right", "top"],
         columns: Literal["auto"] | int | None,
+        frame_anchor: FrameAnchor | None,
         config: dict[str, JsonValue],
     ) -> None:
         # base config
@@ -20,24 +23,37 @@ class Legend(Component):
 
         # handle columns
         if columns == "auto":
-            columns = 1 if location in ["left", "right"] else None
+            columns = (
+                1
+                if frame_anchor
+                in [
+                    "left",
+                    "right",
+                    "top-right",
+                    "top-left",
+                    "bottom-right",
+                    "bottom-left",
+                ]
+                else None
+            )
         if columns is not None:
             legend_config["columns"] = columns
+
+        # capture frame anchor
+        config["_frame_anchor"] = frame_anchor or "right"
 
         # forward super to config
         super().__init__(legend_config | config)
 
-        # save location
-        self._location = location
-
     @property
-    def location(self) -> Literal["bottom", "left", "right", "top"]:
-        return self._location
+    def frame_anchor(self) -> FrameAnchor:
+        """The frame anchor for the legend."""
+        return cast(FrameAnchor, self.config["_frame_anchor"])
 
 
 def legend(
     legend: Literal["color", "opacity", "symbol"],
-    location: Literal["bottom", "left", "right", "top"] = "right",
+    *,
     columns: Literal["auto"] | int | None = "auto",
     label: str | None = None,
     target: Selection | None = None,
@@ -50,14 +66,18 @@ def legend(
     margin_right: float | None = None,
     margin_top: float | None = None,
     for_plot: str | None = None,
+    frame_anchor: FrameAnchor | None = None,
+    inset: float | None = None,
+    inset_x: float | None = None,
+    inset_y: float | None = None,
+    border: str | bool = True,
+    background: str | bool = True,
 ) -> Legend:
     """Create a legend.
 
     Args:
       legend: Legend type (`"color"`, `"opacity"`, or `"symbol"`).
       label: The legend label.
-      location: The legend location (used for display only when passing a legend
-        to the`plot()` function). Also affects default value for `columns`.
       columns: The number of columns to use to layout a discrete legend
         (defaults to "auto", which uses 1 column for location "left" or "right")
       target: The target selection. If specified, the legend is interactive,
@@ -75,6 +95,12 @@ def legend(
       for_plot: The name of the plot this legend applies to. A plot must include a
         `name` attribute to be referenced. Note that this is not use when
         passing a legend to the `plot()` function.
+      frame_anchor: Where to position the relative the plot frame. Defaults to "right".
+      inset: The inset of the legend from the plot frame, in pixels. If no inset is specified, the legend will be positioned outside the plot frame.
+      inset_x: The horizontal inset of the legend from the plot frame, in pixels.
+      inset_y: The vertical inset of the legend from the plot frame, in pixels.
+      border: The border color for the legend. Pass 'True' to use the default border color, or a string to specify a custom color. Pass 'False' to disable the border. Defaults to `True`.
+      background: The background color for the legend. Pass 'True' to use the default background color, or a string to specify a custom color. Pass 'False' to disable the background. Defaults to `True`.
     """
     config: dict[str, JsonValue] = {}
     if label is not None:
@@ -100,4 +126,11 @@ def legend(
     if for_plot is not None:
         config["for"] = for_plot
 
-    return Legend(legend, location, columns, config=config)
+    # Forward options
+    config["_inset"] = inset
+    config["_inset_x"] = inset_x
+    config["_inset_y"] = inset_y
+    config["_border"] = border
+    config["_background"] = background
+
+    return Legend(legend, columns, frame_anchor or "right", config=config)
