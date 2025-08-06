@@ -20,7 +20,7 @@ You might wonder why is there a special `Data` class in Inspect Viz rather than 
 
 2. Since `Data` is embedded in the web page, you will want to filter it down to only the columns required for plotting (as you don't want the additional columns making the web page larger than is necessary).
 
-### Data Selections
+### Selections
 
 One other important thing to understand is that `Data` has a built in _selection_ which is used in filtering operations on the client. This means that if you want your inputs and plots to stay synchoronized, you should pass the same `Data` instance to all of them (i.e. import into `Data` once and then share that reference). For example:
 
