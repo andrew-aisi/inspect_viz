@@ -10,3 +10,6 @@
     flex-direction: row;
 }
 
+div.legend > div {
+    margin-bottom: 0 !important;
+}
