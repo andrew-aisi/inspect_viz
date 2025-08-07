@@ -45,6 +45,7 @@ def scores_heatmap(
     width: float | None = None,
     legend: Legend | bool | None = None,
     sort: Literal["ascending", "descending"] | SortOrder | None = "ascending",
+    orientation: Literal["horizontal", "vertical"] = "horizontal",
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """
@@ -65,6 +66,7 @@ def scores_heatmap(
        marks: Additional marks to include in the plot.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio)).
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
+       orientation: The orientation of the heatmap. If "horizontal", the tasks will be on the x-axis and models on the y-axis. If "vertical", the tasks will be on the y-axis and models on the x-axis.
        **attributes: Additional `PlotAttributes
     """
     # resolve x
@@ -122,8 +124,8 @@ def scores_heatmap(
         components.append(
             text(
                 data,
-                x=task_name,
-                y=model_name,
+                x=task_name if orientation == "horizontal" else model_name,
+                y=model_name if orientation == "horizontal" else task_name,
                 text=avg(score_value),
                 fill=cell["text"],
                 styles={"font_weight": 600},
@@ -156,8 +158,8 @@ def scores_heatmap(
     heatmap = plot(
         cell_mark(
             data,
-            x=task_name,
-            y=model_name,
+            x=task_name if orientation == "horizontal" else model_name,
+            y=model_name if orientation == "horizontal" else task_name,
             fill=avg(score_value),
             tip=tip,
             inset=cell["inset"] if cell else None,
