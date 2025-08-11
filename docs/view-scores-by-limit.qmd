@@ -1,0 +1,39 @@
+---
+title: "Scores by limit"
+reference: "inspect_viz.view.beta"
+filters:
+   - at: pre-ast
+     type: json
+     path: reference/filter/filter.py
+   - at: pre-ast
+     path: reference/filter/post.lua
+datafile: "cybench_token_limit.parquet"
+---
+
+## Overview
+
+The `scores_by_limit()` function renders a line plot for evaluating how a model's **success rate** changes as the **compute budget** increases (e.g., token limit or time). It helps answer “*Will performance keep improving if I spend more?*”. The shaded band displays the confidence interval derived from the standard error. 
+
+This visualization requires that you run your evaluation wiht a very high time or token limit, allowing the model a large amount of the resource to complete each sample in the evaluation. The `scores_by_limit_df` function will then prepare the dataframe for visualization, computing the amount of the time or tokens required to solve each sample.
+
+```{python}
+from inspect_viz import Data
+from inspect_viz.view.beta import scores_by_limit
+
+evals = Data.from_file("examples/inspect/scores-by-limit/swebench_token_limit.parquet")
+scores_by_limit(evals)
+```
+
+## Data Preparation
+
+{{< include _data_preparation_scores_by_limit.md >}}
+
+{{< include _data_preparation_optional.md >}}
+
+## Function Reference {reference="scores_by_limit"}
+
+## Dataframe Function Reference {reference="scores_by_limit_df"}
+
+## Implementation
+
+The [Scores by limit](examples/inspect/scores-by-limit/index.qmd) example demonstrates how this view was implemented using lower level plotting components.
