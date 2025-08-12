@@ -3,6 +3,7 @@ from typing import Literal
 
 import numpy as np
 import pandas as pd
+from typing_extensions import Unpack
 
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
@@ -14,6 +15,7 @@ from inspect_viz._util.stats import z_score
 from inspect_viz.interactor._interactors import highlight, nearest_x
 from inspect_viz.mark import area_y, line
 from inspect_viz.plot import plot
+from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._legend import legend
 from inspect_viz.transform._sql import sql
 
@@ -161,10 +163,11 @@ def scores_by_limit(
     height: float | None = None,
     width: float | None = None,
     ci: float = 0.95,
+    **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """Visualizes success rate as a function of a resource limit (time, tokens).
 
-    Here, model success rate is plotted as a function of the time, tokens, or other resource limit.
+    Model success rate is plotted as a function of the time, tokens, or other resource limit.
 
     Args:
        data: A dataframe prepared using the `prepare_limit_dataframe` function.
@@ -308,13 +311,19 @@ def scores_by_limit(
             ]
         )
 
+    # resolve defaults
+    defaults: PlotAttributes = {
+        "x_scale": "log" if use_log else "linear",
+        "y_domain": "fixed",
+    }
+    attributes = defaults | attributes
+
     return plot(
         components,
         x_label=limit_label,
         y_label="Success rate",
         legend=legend("color", target=model_selection),
-        x_scale="log" if use_log else "linear",
-        y_domain="fixed",
         height=height,
         width=width,
+        **attributes,
     )

@@ -9,7 +9,7 @@ citation:
   issued: 2025-08
   url: "https://github.com/meridianlabs-ai/inspect_viz"
   type: "software"
-tbl-colwidths: [35,75]
+tbl-colwidths: [35,65]
 ---
 
 ```{python}
@@ -90,7 +90,7 @@ Available views include:
 
 ## Plots
 
-While pre-built views are useful, you also may want to create your own custom plots. Plots in `inspect_viz` are composed of one or more [marks](reference/inspect_viz.mark.qmd), which can do either higher level plotting (e.g. `dot()`, `bar_x()`, `bar_y()`, `area()`, `heatmap()`, etc.) or lower level drawing on the plot canvas (e.g. `text()`, `image()`, `arrow()`, etc.)
+While pre-built views are useful, you also may want to create your own custom plots. Plots in `inspect_viz` are composed of one or more [marks](reference/inspect_viz.mark.qmd), which can do either higher level plotting (e.g. `dot()`, `bar_x()`, `bar_y()`, `area()`, `heatmap()`, etc.) or lower level drawing on tπhe plot canvas (e.g. `text()`, `image()`, `arrow()`, etc.)
 
 ### Dot Plot
 

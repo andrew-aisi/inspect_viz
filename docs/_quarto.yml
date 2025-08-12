@@ -68,11 +68,10 @@ website:
                - href: view-scores-by-task.qmd
                - href: view-scores-by-model.qmd
                - href: view-scores-by-factor.qmd
+               - href: view-scores-by-limit.qmd
                - href: view-scores-timeline.qmd
                - href: view-scores-heatmap.qmd
                - href: view-tool-calls.qmd
-               - href: view-scores-by-limit.qmd
-                 text: "Scores by Limit"
            - text: Components
              contents:
                - href: components-plots.qmd
@@ -98,11 +97,10 @@ website:
               - href: examples/inspect/scores-by-task/index.qmd
               - href: examples/inspect/scores-by-model/index.qmd
               - href: examples/inspect/scores-by-factor/index.qmd
+              - href: examples/inspect/scores-by-limit/index.qmd
               - href: examples/inspect/scores-timeline/index.qmd
               - href: examples/inspect/scores-heatmap/index.qmd
               - href: examples/inspect/tool-calls/index.qmd
-              - href: examples/inspect/scores-by-limit/index.qmd
-                text: "Scores by Limit"
           - section: General
             contents:
               - href: examples/general/penguins/index.qmd
