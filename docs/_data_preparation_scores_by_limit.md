@@ -10,13 +10,8 @@ Here is the data preparation code end-to-end:
 
 ```python
 from inspect_ai.analysis import (
-    EvalInfo,
-    EvalModel,
-    SampleSummary,
-    log_viewer,
-    model_info,
-    prepare,
-    samples_df
+    EvalInfo, EvalModel, SampleSummary,
+    log_viewer, model_info, prepare, samples_df
 )
 from inspect_viz.view.beta import scores_by_limit_df
 
@@ -28,7 +23,7 @@ df = samples_df(  # <1>
 
 df = scores_by_limit_df(                          # <3>
     df,                                           # <3>
-    score="score_swe_bench_scorer_stderr",        # <3>
+    score="score_swe_bench_scorer",        # <3>
 )
 
 df = prepare(df,                                                     #<4>
