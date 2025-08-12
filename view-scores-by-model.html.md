@@ -43,7 +43,7 @@ df = prepare(df,
 df.to_parquet("agi-lsat-ar.parquet")
 ```
 
-You can additionanlly use the
+You can additionally use the
 [`task_info()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#task_info)
 operation to map lower-level task names to task display names
 (e.g. “gpqa_diamond” -\> “GPQA Diamond”).
@@ -61,7 +61,7 @@ Summarize eval scores using a bar plot. By default, scores (`y`) are
 plotted by “model_display_name” (`y`). By default, confidence intervals
 are also plotted (disable this with `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/d697f917d685f1ea3b013a6cc3b2ced25077008e/src/inspect_viz/view/beta/_scores_by_model.py#L16)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_scores_by_model.py#L18)
 
 ``` python
 def scores_by_model(

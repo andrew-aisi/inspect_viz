@@ -42,7 +42,7 @@ df = prepare(df,
 df.to_parquet("evals-hint.parquet")
 ```
 
-You can additionanlly use the
+You can additionally use the
 [`task_info()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#task_info)
 operation to map lower-level task names to task display names
 (e.g. “gpqa_diamond” -\> “GPQA Diamond”).
@@ -56,18 +56,18 @@ this is “task_arg_hint”).
 Summarize eval scores with a factor of variation (e.g ‘No hint’
 vs. ‘Hint’).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/d697f917d685f1ea3b013a6cc3b2ced25077008e/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
 
 ``` python
 def scores_by_factor(
     data: Data,
-    fx: str,
-    fx_labels: tuple[str, str],
-    x: str = "score_headline_value",
-    x_stderr: str = "score_headline_stderr",
-    x_label: str = "Score",
-    y: str = "model",
-    y_label: str = "Model",
+    factor: str,
+    factor_labels: tuple[str, str],
+    score_value: str = "score_headline_value",
+    score_stderr: str = "score_headline_stderr",
+    score_label: str = "Score",
+    model: str = "model",
+    model_label: str = "Model",
     ci: bool | float = 0.95,
     color: str | tuple[str, str] = "#3266ae",
     title: str | Mark | None = None,
@@ -82,26 +82,26 @@ def scores_by_factor(
 Evals data table. This is typically created using a data frame read with
 the inspect `evals_df()` function.
 
-`fx` str  
+`factor` str  
 Field with factor of variation (should be of type boolean).
 
-`fx_labels` tuple\[str, str\]  
+`factor_labels` tuple\[str, str\]  
 Tuple of labels for factor of variation. `False` value should be first,
 e.g. `("No hint", "Hint")`.
 
-`x` str  
+`score_value` str  
 Name of field for x (scoring) axis (defaults to “score_headline_value”).
 
-`x_stderr` str  
+`score_stderr` str  
 Name of field for scoring stderr (defaults to “score_headline_stderr”).
 
-`x_label` str  
+`score_label` str  
 Label for x-axis (defaults to “Score”).
 
-`y` str  
+`model` str  
 Name of field for y axis (defaults to “model”).
 
-`y_label` str  
+`model_label` str  
 Lable for y axis (defaults to “Model”).
 
 `ci` bool \| float  

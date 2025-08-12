@@ -30,6 +30,7 @@ Finally, these sections provide additional related documentation:
 
 - [Scores by Task](https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-by-task/index.html.md): Bar plot summarizing eval scores by model and task.
 - [Scores by Factor](https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-by-factor/index.html.md): Bar plot for comparing eval scores by model and a boolean factor (e.g. no hint vs. hint).
+| [Scores by Limit](https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-by-limit/index.html.md) | Line plot for evaluating how a model’s success rate changes as token or time limits  increase.
 - [Scores Timeline](https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-timeline/index.html.md): Dot plot of eval scores for various models, with release date on the x-axis.
 - [Scores Heatmap](https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-heatmap/index.html.md): Heatmap with values for comparing scores across model and task.
 - [Scores by Model](https://meridianlabs-ai.github.io/inspect_viz/examples/inspect/scores-by-model/index.html.md): Visualise model scores on a single evaluation, with one or more baselines.
@@ -56,6 +57,7 @@ Finally, these sections provide additional related documentation:
 
 - [scores_by_task()](https://meridianlabs-ai.github.io/inspect_viz/view-scores-by-task.html.md): Bar plot for comparing eval scores (with confidence intervals) across models and tasks.
 - [scores_by_factor()](https://meridianlabs-ai.github.io/inspect_viz/view-scores-by-factor.html.md): Bar bar plot for comparing eval scores by model and a boolean factor (e.g. no hint vs. hint).
+- [scores_by_limit()](https://meridianlabs-ai.github.io/inspect_viz/view-scores-by-limit.html.md): Line plot showing success rate by token limit.
 - [scores_timeline()](https://meridianlabs-ai.github.io/inspect_viz/view-scores-timeline.html.md): Scatter plot with eval scores by model, organization, and release date. Filterable by evaluation and organization.
 - [scores_heatmap()](https://meridianlabs-ai.github.io/inspect_viz/view-scores-heatmap.html.md): Heatmap with values for comparing scores across model and task.
 - [scores_by_model()](https://meridianlabs-ai.github.io/inspect_viz/view-scores-by-model.html.md): Bar plot for comparing model scores on a single eval.

@@ -74,6 +74,7 @@ Available views include:
 |----|----|
 | [`scores_by_task()`](view-scores-by-task.qmd) | Bar plot for comparing eval scores (with confidence intervals) across models and tasks. |
 | [`scores_by_factor()`](view-scores-by-factor.qmd) | Bar bar plot for comparing eval scores by model and a boolean factor (e.g. no hint vs. hint). |
+| [`scores_by_limit()`](view-scores-by-limit.qmd) | Line plot showing success rate by token limit. |
 | [`scores_timeline()`](view-scores-timeline.qmd) | Scatter plot with eval scores by model, organization, and release date. Filterable by evaluation and organization. |
 | [`scores_heatmap()`](view-scores-heatmap.qmd) | Heatmap with values for comparing scores across model and task. |
 | [`scores_by_model()`](view-scores-by-model.qmd) | Bar plot for comparing model scores on a single eval. |
@@ -85,7 +86,7 @@ While pre-built views are useful, you also may want to create your own
 custom plots. Plots in `inspect_viz` are composed of one or more
 [marks](reference/inspect_viz.mark.qmd), which can do either higher
 level plotting (e.g. `dot()`, `bar_x()`, `bar_y()`, `area()`,
-`heatmap()`, etc.) or lower level drawing on the plot canvas
+`heatmap()`, etc.) or lower level drawing on tπhe plot canvas
 (e.g. `text()`, `image()`, `arrow()`, etc.)
 
 ### Dot Plot

@@ -41,7 +41,7 @@ df = prepare(df,
 df.to_parquet("evals.parquet")
 ```
 
-You can additionanlly use the
+You can additionally use the
 [`task_info()`](https://inspect.aisi.org.uk/reference/inspect_ai.analysis.html#task_info)
 operation to map lower-level task names to task display names
 (e.g. “gpqa_diamond” -\> “GPQA Diamond”).
@@ -54,24 +54,25 @@ isn’t prepared with `log_viewer()` and `model_info()`).
 
 Creates a heatmap plot of success rate of eval data.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/d697f917d685f1ea3b013a6cc3b2ced25077008e/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
 
 ``` python
 def scores_heatmap(
     data: Data,
-    x: str = "task_display_name",
-    y: str = "model_display_name",
-    fill: str = "score_headline_value",
+    task_name: str = "task_display_name",
+    task_label: str | None | NotGiven = None,
+    model_name: str = "model_display_name",
+    model_label: str | None | NotGiven = None,
+    score_value: str = "score_headline_value",
     cell: CellOptions | None = None,
     tip: bool = True,
     title: str | Title | None = None,
     marks: Marks | None = None,
     height: float | None = None,
     width: float | None = None,
-    x_label: str | None | NotGiven = None,
-    y_label: str | None | NotGiven = None,
     legend: Legend | bool | None = None,
     sort: Literal["ascending", "descending"] | SortOrder | None = "ascending",
+    orientation: Literal["horizontal", "vertical"] = "horizontal",
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -79,13 +80,19 @@ def scores_heatmap(
 `data` [Data](reference/inspect_viz.qmd#data)  
 Evals data table.
 
-`x` str  
+`task_name` str  
 Name of column to use for columns.
 
-`y` str  
+`task_label` str \| None \| NotGiven  
+x-axis label (defaults to None).
+
+`model_name` str  
 Name of column to use for rows.
 
-`fill` str  
+`model_label` str \| None \| NotGiven  
+y-axis label (defaults to None).
+
+`score_value` str  
 Name of the column to use as values to determine cell color.
 
 `cell` [CellOptions](reference/inspect_viz.view.qmd#celloptions) \| None  
@@ -110,12 +117,6 @@ ratio](https://en.wikipedia.org/wiki/Golden_ratio)).
 The outer width of the plot in pixels, including margins. Defaults to
 700.
 
-`x_label` str \| None \| NotGiven  
-x-axis label (defaults to None).
-
-`y_label` str \| None \| NotGiven  
-y-axis label (defaults to None).
-
 `legend` [Legend](reference/inspect_viz.plot.qmd#legend) \| bool \| None  
 Options for the legend. Pass None to disable the legend.
 
@@ -124,6 +125,11 @@ Sort order for the x and y axes. If ascending, the highest values will
 be sorted to the top right. If descending, the highest values will
 appear in the bottom left. If None, no sorting is applied. If a
 SortOrder is provided, it will be used to sort the x and y axes.
+
+`orientation` Literal\['horizontal', 'vertical'\]  
+The orientation of the heatmap. If “horizontal”, the tasks will be on
+the x-axis and models on the y-axis. If “vertical”, the tasks will be on
+the y-axis and models on the x-axis.
 
 `**attributes` Unpack\[[PlotAttributes](reference/inspect_viz.plot.qmd#plotattributes)\]  
 Additional \`PlotAttributes

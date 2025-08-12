@@ -19,17 +19,17 @@ plotted by “task_display_name” (`fx`) and “model_display_name” (`x`). By
 default, confidence intervals are also plotted (disable this with
 `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/d697f917d685f1ea3b013a6cc3b2ced25077008e/src/inspect_viz/view/beta/_scores_by_task.py#L18)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_scores_by_task.py#L18)
 
 ``` python
 def scores_by_task(
     data: Data,
-    x: str = "model_display_name",
-    fx: str = "task_display_name",
-    y: str = "score_headline_value",
-    y_stderr: str = "score_headline_stderr",
-    y_ci: bool | float = 0.95,
-    y_label: str | None | NotGiven = NOT_GIVEN,
+    model_name: str = "model_display_name",
+    task_name: str = "task_display_name",
+    score_value: str = "score_headline_value",
+    score_stderr: str = "score_headline_stderr",
+    score_label: str | None | NotGiven = NOT_GIVEN,
+    ci: bool | float = 0.95,
     title: str | Title | None = None,
     marks: Marks | None = None,
     width: float | Param | None = None,
@@ -42,23 +42,23 @@ def scores_by_task(
 Evals data table. This is typically created using a data frame read with
 the inspect `evals_df()` function.
 
-`x` str  
-Name of field for x axis (defaults to “model_display_name”)
+`model_name` str  
+Name of field for the model name (defaults to “model_display_name”)
 
-`fx` str  
-Name of field for x facet (defaults to “task_display_name”)
+`task_name` str  
+Name of field for the task name (defaults to “task_display_name”)
 
-`y` str  
-Name of field for y axis (defaults to “score_headline_value”).
+`score_value` str  
+Name of field for the score value (defaults to “score_headline_value”).
 
-`y_stderr` str  
+`score_stderr` str  
 Name of field for stderr (defaults to “score_headline_metric”).
 
-`y_ci` bool \| float  
-Confidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.
+`score_label` str \| None \| NotGiven  
+Score axis label (pass None for no label).
 
-`y_label` str \| None \| NotGiven  
-Y axis label (pass None for no label).
+`ci` bool \| float  
+Confidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.
 
 `title` str \| [Title](inspect_viz.mark.qmd#title) \| None  
 Title for plot (`str` or mark created with the `title()` function).
@@ -84,18 +84,18 @@ to 10 pixels and `x_ticks` is set to `[]`.
 Summarize eval scores with a factor of variation (e.g ‘No hint’
 vs. ‘Hint’).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/d697f917d685f1ea3b013a6cc3b2ced25077008e/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
 
 ``` python
 def scores_by_factor(
     data: Data,
-    fx: str,
-    fx_labels: tuple[str, str],
-    x: str = "score_headline_value",
-    x_stderr: str = "score_headline_stderr",
-    x_label: str = "Score",
-    y: str = "model",
-    y_label: str = "Model",
+    factor: str,
+    factor_labels: tuple[str, str],
+    score_value: str = "score_headline_value",
+    score_stderr: str = "score_headline_stderr",
+    score_label: str = "Score",
+    model: str = "model",
+    model_label: str = "Model",
     ci: bool | float = 0.95,
     color: str | tuple[str, str] = "#3266ae",
     title: str | Mark | None = None,
@@ -110,26 +110,26 @@ def scores_by_factor(
 Evals data table. This is typically created using a data frame read with
 the inspect `evals_df()` function.
 
-`fx` str  
+`factor` str  
 Field with factor of variation (should be of type boolean).
 
-`fx_labels` tuple\[str, str\]  
+`factor_labels` tuple\[str, str\]  
 Tuple of labels for factor of variation. `False` value should be first,
 e.g. `("No hint", "Hint")`.
 
-`x` str  
+`score_value` str  
 Name of field for x (scoring) axis (defaults to “score_headline_value”).
 
-`x_stderr` str  
+`score_stderr` str  
 Name of field for scoring stderr (defaults to “score_headline_stderr”).
 
-`x_label` str  
+`score_label` str  
 Label for x-axis (defaults to “Score”).
 
-`y` str  
+`model` str  
 Name of field for y axis (defaults to “model”).
 
-`y_label` str  
+`model_label` str  
 Lable for y axis (defaults to “Model”).
 
 `ci` bool \| float  
@@ -160,7 +160,7 @@ Additional \`PlotAttributes
 
 Eval scores by model, organization, and release date.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/d697f917d685f1ea3b013a6cc3b2ced25077008e/src/inspect_viz/view/beta/_scores_timeline.py#L26)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_scores_timeline.py#L28)
 
 ``` python
 def scores_timeline(
@@ -271,7 +271,7 @@ Summarize eval scores using a bar plot. By default, scores (`y`) are
 plotted by “model_display_name” (`y`). By default, confidence intervals
 are also plotted (disable this with `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/d697f917d685f1ea3b013a6cc3b2ced25077008e/src/inspect_viz/view/beta/_scores_by_model.py#L16)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_scores_by_model.py#L18)
 
 ``` python
 def scores_by_model(
@@ -347,24 +347,25 @@ Additional `PlotAttributes`. By default, the `y_inset_top` and
 
 Creates a heatmap plot of success rate of eval data.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/d697f917d685f1ea3b013a6cc3b2ced25077008e/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
 
 ``` python
 def scores_heatmap(
     data: Data,
-    x: str = "task_display_name",
-    y: str = "model_display_name",
-    fill: str = "score_headline_value",
+    task_name: str = "task_display_name",
+    task_label: str | None | NotGiven = None,
+    model_name: str = "model_display_name",
+    model_label: str | None | NotGiven = None,
+    score_value: str = "score_headline_value",
     cell: CellOptions | None = None,
     tip: bool = True,
     title: str | Title | None = None,
     marks: Marks | None = None,
     height: float | None = None,
     width: float | None = None,
-    x_label: str | None | NotGiven = None,
-    y_label: str | None | NotGiven = None,
     legend: Legend | bool | None = None,
     sort: Literal["ascending", "descending"] | SortOrder | None = "ascending",
+    orientation: Literal["horizontal", "vertical"] = "horizontal",
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -372,13 +373,19 @@ def scores_heatmap(
 `data` [Data](inspect_viz.qmd#data)  
 Evals data table.
 
-`x` str  
+`task_name` str  
 Name of column to use for columns.
 
-`y` str  
+`task_label` str \| None \| NotGiven  
+x-axis label (defaults to None).
+
+`model_name` str  
 Name of column to use for rows.
 
-`fill` str  
+`model_label` str \| None \| NotGiven  
+y-axis label (defaults to None).
+
+`score_value` str  
 Name of the column to use as values to determine cell color.
 
 `cell` [CellOptions](inspect_viz.view.qmd#celloptions) \| None  
@@ -403,12 +410,6 @@ ratio](https://en.wikipedia.org/wiki/Golden_ratio)).
 The outer width of the plot in pixels, including margins. Defaults to
 700.
 
-`x_label` str \| None \| NotGiven  
-x-axis label (defaults to None).
-
-`y_label` str \| None \| NotGiven  
-y-axis label (defaults to None).
-
 `legend` [Legend](inspect_viz.plot.qmd#legend) \| bool \| None  
 Options for the legend. Pass None to disable the legend.
 
@@ -418,8 +419,123 @@ be sorted to the top right. If descending, the highest values will
 appear in the bottom left. If None, no sorting is applied. If a
 SortOrder is provided, it will be used to sort the x and y axes.
 
+`orientation` Literal\['horizontal', 'vertical'\]  
+The orientation of the heatmap. If “horizontal”, the tasks will be on
+the x-axis and models on the y-axis. If “vertical”, the tasks will be on
+the y-axis and models on the x-axis.
+
 `**attributes` Unpack\[[PlotAttributes](inspect_viz.plot.qmd#plotattributes)\]  
 Additional \`PlotAttributes
+
+### scores_by_limit
+
+Visualizes success rate as a function of a resource limit (time,
+tokens).
+
+Model success rate is plotted as a function of the time, tokens, or
+other resource limit.
+
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_scores_by_limit.py#L153)
+
+``` python
+def scores_by_limit(
+    data: Data,
+    model: str = "model_display_name",
+    success: str = "success_rate",
+    stderr: str | None = "standard_error",
+    facet: str | None = None,
+    other_termination_rate: str | bool = False,
+    limit: str | None = None,
+    limit_label: str | NotGiven = NOT_GIVEN,
+    scale: Literal["log", "linear", "auto"] = "auto",
+    height: float | None = None,
+    width: float | None = None,
+    ci: float = 0.95,
+    **attributes: Unpack[PlotAttributes],
+) -> Component
+```
+
+`data` [Data](inspect_viz.qmd#data)  
+A dataframe prepared using the `prepare_limit_dataframe` function.
+
+`model` str  
+Name of field holding the model (defaults to “model_display_name”).
+
+`success` str  
+Name of field containing the success rate (defaults to “success_rate”).
+
+`stderr` str \| None  
+Name of field containing the standard_error (defaults to
+“standard_error”).
+
+`facet` str \| None  
+Name of field to use for faceting (defaults to None).
+
+`other_termination_rate` str \| bool  
+Name of field containing the other termination rate (defaults to
+“other_termination_rate”).
+
+`limit` str \| None  
+Name of field for x axis (by default, will detect limit type using the
+columns present in the data frame).
+
+`limit_label` str \| NotGiven  
+The limit label (by default, will select limit label using the columns
+present in the data frame). Pass None for no label.
+
+`scale` Literal\['log', 'linear', 'auto'\]  
+The scale type for the limit access. If ‘auto’, will use log scale if
+the range is 2 or more orders of magnitude (defaults to ‘auto’).
+
+`height` float \| None  
+The outer height of the plot in pixels, including margins. The default
+is width / 1.618 (the [golden
+ratio](https://en.wikipedia.org/wiki/Golden_ratio))
+
+`width` float \| None  
+The outer width of the plot in pixels, including margins. Defaults to
+700.
+
+`ci` float  
+Confidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.
+
+`**attributes` Unpack\[[PlotAttributes](inspect_viz.plot.qmd#plotattributes)\]  
+Additional `PlotAttributes`.
+
+### scores_by_limit_df
+
+Prepares a dataframe for plotting success rate as a function of a
+resource limit (time, tokens).
+
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_scores_by_limit.py#L23)
+
+``` python
+def scores_by_limit_df(
+    df: pd.DataFrame,
+    score: str,
+    limit: Literal["total_tokens", "total_time", "working_time"] = "total_tokens",
+    scale: Literal["log", "linear", "auto"] = "auto",
+    steps: int = 100,
+) -> pd.DataFrame
+```
+
+`df` pd.DataFrame  
+A dataframe containing sample summaries and eval information.
+
+`score` str  
+Name of field containing the score (0 = fail, 1 = success).
+
+`limit` Literal\['total_tokens', 'total_time', 'working_time'\]  
+The resource limit to use (one of ‘total_tokens’, ‘total_time’,
+‘working_time’). Defaults to ‘total_tokens’.
+
+`scale` Literal\['log', 'linear', 'auto'\]  
+The scale type for the limit access. If ‘auto’, will use log scale if
+the range is 2 or more orders of magnitude (defaults to ‘auto’).
+
+`steps` int  
+The number of points to use when sampling the limit range (defaults to
+100).
 
 ## Tools
 
@@ -427,7 +543,7 @@ Additional \`PlotAttributes
 
 Heat map visualising tool calls over evaluation turns.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/d697f917d685f1ea3b013a6cc3b2ced25077008e/src/inspect_viz/view/beta/_tool_calls.py#L15)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_tool_calls.py#L15)
 
 ``` python
 def tool_calls(
@@ -500,7 +616,7 @@ Additional `PlotAttributes`. By default, the `margin_top` is set to 0,
 
 Cell options for the heatmap.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/d697f917d685f1ea3b013a6cc3b2ced25077008e/src/inspect_viz/view/beta/_scores_heatmap.py#L23)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_scores_heatmap.py#L23)
 
 ``` python
 class CellOptions(TypedDict, total=False)

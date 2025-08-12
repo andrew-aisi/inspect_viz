@@ -557,12 +557,26 @@ values of channels within plots. For example, here we dynamically add a
 `bias` parameter to a column:
 
 ``` python
-from inspect_viz.plot import plot
+from inspect_viz import Data, Param
+from inspect_viz.input import slider
+from inspect_viz.layout import vconcat
 from inspect_viz.mark import area_y
-from inspect_viz.tranform import sql
+from inspect_viz.plot import plot
+from inspect_viz.transform import sql
 
-plot(
-    area_y(data, x="t", y=sql(f"v + {bias}"))
+random_walk = Data.from_file("random-walk.parquet")
+bias = Param(100)
+
+vconcat(
+    slider(label="Bias", target=bias, min=0, max=1000, step=1),
+    plot(
+        area_y(
+            random_walk, 
+            x="t", 
+            y=sql(f"v + {bias}"), 
+            fill="steelblue"
+        )
+    )
 )
 ```
 
