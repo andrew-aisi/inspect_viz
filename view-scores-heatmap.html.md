@@ -54,7 +54,7 @@ isn’t prepared with `log_viewer()` and `model_info()`).
 
 Creates a heatmap plot of success rate of eval data.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
 
 ``` python
 def scores_heatmap(

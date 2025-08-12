@@ -59,7 +59,7 @@ plotted by “task_display_name” (`fx`) and “model_display_name” (`x`). By
 default, confidence intervals are also plotted (disable this with
 `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/3355b3a08db97991ae7846363f624fa3f5ed46bc/src/inspect_viz/view/beta/_scores_by_task.py#L18)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_task.py#L18)
 
 ``` python
 def scores_by_task(
