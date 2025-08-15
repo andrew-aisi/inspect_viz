@@ -284,6 +284,45 @@ There are several other tick related options. Here
 -   `[x,y]_tick_format` — How to format inputs for axis tick labels (a [d3-format](https://d3js.org/d3-format) or [d3-time-format](https://d3js.org/d3-time-format)).
 
 
+## Sorting
+
+You may sort a mark's index, which changes the effective order of the data presented by that mark. This is useful for two scenarios:
+
+1. Sorting an ordinal scale (for example, sorting the x or y axis to control the order in which elements are arranged). For example, in the `heatmap` implementation, we sort the x and y axis in order to position the highest score values in the top right corner of the heat map:
+
+    ```python
+    plot(
+        cell_mark(
+            data,
+            x=x_value,
+            y=y_value,
+            fill=avg(color_value),
+            sort={
+                "y": {"value": "fill", "reduce": "sum", "reverse": True},
+                "x": {"value": "fill", "reduce": "sum", "reverse": False},
+            }
+        )
+    )
+    ```
+    This example will sort the ordinal values of each axes.
+
+2. Sorting the entire dataset to control the order in which the marks are drawn. This effectively controls the z-index of the mark, making it useful when there are overlapping marks and you'd like to control the order.
+
+    ```python
+    plot(
+        dot(
+            penguins, 
+            x="species, 
+            r="body_mass",
+            y="flipper_length",
+            sort="body_mass",
+            reverse=True
+        )
+    )
+    ```
+
+    This example sorts the dot marks from largest to smallest, resulting in the smaller dot markş being drawn on top of the larger dots marks.
+
 ## Legends
 
 *Legends* can be added to `plot` specifications or included as standalone elements:
