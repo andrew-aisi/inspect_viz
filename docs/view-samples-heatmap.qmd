@@ -22,8 +22,7 @@ samples = Data.from_file("writing_bench_samples.parquet")
 samples_heatmap(
   samples, 
   score_value="score_multi_scorer_wrapper", 
-  height=200, 
-  legend=True
+  height=200
 )
 ```
 

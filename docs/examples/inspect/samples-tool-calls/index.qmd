@@ -51,7 +51,7 @@ plot(
 )
 ```
 
-1. Read tool call data (see [Data Preparation](../../../view-tool-calls.qmd#data-preparation) for details).
+1. Read tool call data (see [Data Preparation](../../../view-samples-tool-calls.qmd#data-preparation) for details).
 
 2. `cell()` mark showing tool calls.
 
