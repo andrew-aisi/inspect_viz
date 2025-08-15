@@ -218,7 +218,10 @@ const applyLegendStyles = (legendEl: HTMLElement): void => {
 
 const applyBackground = (targetEl: HTMLElement, background: string | boolean | null): void => {
     if (background !== false) {
-        targetEl.style.background = background === true ? 'white' : background || 'white';
+        const backgroundDefaultColor =
+            'var(--bs-body-bg, var(--jp-cell-editor-background, #ffffff))';
+        targetEl.style.background =
+            background === true ? backgroundDefaultColor : background || backgroundDefaultColor;
     }
 };
 

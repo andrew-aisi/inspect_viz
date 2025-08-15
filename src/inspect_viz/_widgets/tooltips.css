@@ -10,7 +10,7 @@
 
 /* Styling for striping */
 .inspect-tip-container > .inspect-tip-row:nth-child(even) > * {
-  background-color: var(--quarto-scss-export-table-striped-bg);
+  background-color: var(--quarto-scss-export-table-striped-bg, var(--jp-cell-editor-active-background, #f7f7f7));
 }
 
 /* Optional padding & border */
@@ -46,8 +46,8 @@
 }
 
 .tippy-box[data-theme~='inspect'] {
-  background-color: var(--bs-body-bg, #ffffff);
-  color: var(--bs-body-color, #000000);
+  background-color: var(--bs-body-bg, var(--jp-cell-editor-background, #ffffff));
+  color: var(--bs-body-color, var(--jp-content-font-color0, #000000));
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.9));
   min-width: 200px;
 }
@@ -57,7 +57,7 @@
 }
 
 .tippy-box[data-theme~='inspect'] .tippy-arrow:before {
-  color: var(--bs-body-bg, #ffffff); 
+  color: var(--bs-body-bg, var(--jp-cell-editor-background, #ffffff));
   filter: drop-shadow(3 1px 1px rgba(0, 0, 0, 0.9));
   transform: translateY(1.5px); /* Move arrow down to reduce overlap */
 }

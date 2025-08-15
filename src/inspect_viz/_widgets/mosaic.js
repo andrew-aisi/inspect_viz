@@ -2519,7 +2519,8 @@ var applyLegendStyles = (legendEl) => {
 };
 var applyBackground = (targetEl, background) => {
   if (background !== false) {
-    targetEl.style.background = background === true ? "white" : background || "white";
+    const backgroundDefaultColor = "var(--bs-body-bg, var(--jp-cell-editor-background, #ffffff))";
+    targetEl.style.background = background === true ? backgroundDefaultColor : background || backgroundDefaultColor;
   }
 };
 var applyBorder = (targetEl, border) => {

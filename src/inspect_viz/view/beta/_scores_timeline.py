@@ -119,7 +119,11 @@ def scores_timeline(
     )
     if num_organizations > 1 and organizations_filter:
         inputs.append(
-            checkbox_group(data, column=model_organization, options=organizations)
+            checkbox_group(
+                data,
+                column=model_organization,
+                options=organizations,
+            )
         )
 
     # build channels (log_viewer is optional)
