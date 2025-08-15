@@ -2,13 +2,16 @@ from typing_extensions import Unpack
 
 from inspect_viz import Component, Data
 from inspect_viz._util.channels import resolve_log_viewer_channel
+from inspect_viz._util.notgiven import NOT_GIVEN, NotGiven
 from inspect_viz.mark import cell, text
 from inspect_viz.mark._mark import Marks
 from inspect_viz.mark._title import Title
 from inspect_viz.mark._types import TextStyles
 from inspect_viz.mark._util import flatten_marks
-from inspect_viz.plot import legend, plot
+from inspect_viz.plot import legend as create_legend
+from inspect_viz.plot import plot
 from inspect_viz.plot._attributes import PlotAttributes
+from inspect_viz.plot._legend import Legend
 from inspect_viz.transform._aggregate import first
 
 
@@ -25,6 +28,7 @@ def samples_tool_calls(
     marks: Marks | None = None,
     width: float | None = None,
     height: float | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """Heat map visualising tool calls over evaluation turns.
@@ -42,6 +46,7 @@ def samples_tool_calls(
        marks: Additional marks to include in the plot.
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
+       legend: Options for the legend. Pass None to disable the legend.
        **attributes: Additional `PlotAttributes`. By default, the `margin_top` is set to 0, `margin_left` to 20, `margin_right` to 100, `color_label` is "Tool", `y_ticks` is empty,  and `x_ticks` and `color_domain` are calculated from `data`.
     """
     # determine unique values for tools
@@ -83,6 +88,12 @@ def samples_tool_calls(
     }
     resolve_log_viewer_channel(data, channels)
 
+    plot_legend = (
+        create_legend("color", frame_anchor="right")
+        if isinstance(legend, NotGiven)
+        else legend
+    )
+
     return plot(
         cell(data, x=x, y=y, fill=tool, channels=channels),
         text(
@@ -100,7 +111,7 @@ def samples_tool_calls(
         title=title,
         width=width,
         height=height,
-        legend=legend("color", frame_anchor="right"),
+        legend=plot_legend,
         x_label=x_label,
         y_label=y_label,
         **attributes,

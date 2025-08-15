@@ -3,7 +3,7 @@ from typing_extensions import Literal, Unpack
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
 from inspect_viz._util.channels import resolve_log_viewer_channel
-from inspect_viz._util.notgiven import NotGiven
+from inspect_viz._util.notgiven import NOT_GIVEN, NotGiven
 from inspect_viz.mark._channel import SortOrder
 from inspect_viz.mark._mark import Marks
 from inspect_viz.mark._title import Title
@@ -25,7 +25,7 @@ def samples_heatmap(
     marks: Marks | None = None,
     height: float | None = None,
     width: float | None = None,
-    legend: Legend | bool | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     sort: Literal["ascending", "descending"] | SortOrder | None = "ascending",
     orientation: Literal["horizontal", "vertical"] = "horizontal",
     **attributes: Unpack[PlotAttributes],

@@ -4,7 +4,7 @@ from typing_extensions import Literal, Unpack
 
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
-from inspect_viz._util.notgiven import NotGiven
+from inspect_viz._util.notgiven import NOT_GIVEN, NotGiven
 from inspect_viz.mark import cell as cell_mark
 from inspect_viz.mark._channel import SortOrder
 from inspect_viz.mark._mark import Marks
@@ -43,7 +43,7 @@ def heatmap(
     marks: Marks | None = None,
     height: float | None = None,
     width: float | None = None,
-    legend: Legend | bool | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     sort: Literal["ascending", "descending"] | SortOrder | None = "ascending",
     orientation: Literal["horizontal", "vertical"] = "horizontal",
     **attributes: Unpack[PlotAttributes],
@@ -142,6 +142,19 @@ def heatmap(
     else:
         resolved_sort = sort
 
+    plot_legend = (
+        create_legend(
+            legend="color",
+            frame_anchor="bottom",
+            columns="auto",
+            width=370,
+            border=False,
+            background=False,
+        )
+        if isinstance(legend, NotGiven)
+        else legend
+    )
+
     heatmap = plot(
         cell_mark(
             data,
@@ -154,20 +167,7 @@ def heatmap(
             channels=channels if channels is not None else {},
         ),
         *components,
-        legend=(
-            create_legend(
-                legend="color",
-                frame_anchor="bottom",
-                columns="auto",
-                width=370,
-                border=False,
-                background=False,
-            )
-            if legend is None or legend is True
-            else legend
-            if legend
-            else None
-        ),
+        legend=plot_legend,
         title=title,
         width=width,
         height=height,

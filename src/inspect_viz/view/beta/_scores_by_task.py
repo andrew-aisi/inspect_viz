@@ -10,8 +10,10 @@ from inspect_viz.mark._mark import Marks
 from inspect_viz.mark._title import Title
 from inspect_viz.mark._title import title as title_mark
 from inspect_viz.mark._util import flatten_marks
-from inspect_viz.plot import legend, plot
+from inspect_viz.plot import legend as create_legend
+from inspect_viz.plot import plot
 from inspect_viz.plot._attributes import PlotAttributes
+from inspect_viz.plot._legend import Legend
 from inspect_viz.transform import sql
 
 
@@ -27,6 +29,7 @@ def scores_by_task(
     marks: Marks | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """Bar plot for comparing eval scores.
@@ -45,6 +48,7 @@ def scores_by_task(
        marks: Additional marks to include in the plot.
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
+       legend: Options for the legend. Pass None to disable the legend.
        **attributes: Additional `PlotAttributes`. By default, the `margin_bottom` are is set to 10 pixels and `x_ticks` is set to `[]`.
     """
     # resolve the x
@@ -113,10 +117,16 @@ def scores_by_task(
     # add custom marks
     components.extend(marks)
 
+    plot_legend = (
+        create_legend("color", frame_anchor="bottom")
+        if isinstance(legend, NotGiven)
+        else legend
+    )
+
     # render plot
     return plot(
         components,
-        legend=legend("color", frame_anchor="bottom"),
+        legend=plot_legend,
         x_label=None,
         fx_label=None,
         y_label=score_label,

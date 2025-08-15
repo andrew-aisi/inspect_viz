@@ -5,12 +5,13 @@ from typing_extensions import Unpack
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
 from inspect_viz._util.channels import resolve_log_viewer_channel
-from inspect_viz._util.notgiven import NotGiven
+from inspect_viz._util.notgiven import NOT_GIVEN, NotGiven
 from inspect_viz.mark._mark import Mark, Marks
 from inspect_viz.mark._rule import rule_y
 from inspect_viz.mark._title import Title
 from inspect_viz.mark._util import flatten_marks
 from inspect_viz.plot._attributes import PlotAttributes
+from inspect_viz.plot._legend import Legend
 from inspect_viz.plot._plot import plot
 from inspect_viz.transform._ci import ci_bounds
 
@@ -30,6 +31,7 @@ def scores_by_model(
     marks: Marks | None = None,
     width: float | None = None,
     height: float | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """Bar plot for comparing the scores of different models on a single evaluation.
@@ -50,6 +52,7 @@ def scores_by_model(
        marks: Additional marks to include in the plot.
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
+       legend: Options for the legend. Pass None to disable the legend.
        **attributes: Additional `PlotAttributes`. By default, the `y_inset_top` and `margin_bottom` are set to 10 pixels and `x_ticks` is set to `[]`.
     """
     # Resolve the y column
@@ -137,6 +140,8 @@ def scores_by_model(
             ),
         )
 
+    plot_legend = None if isinstance(legend, NotGiven) else legend
+
     # The plots
     return plot(
         *components,
@@ -146,5 +151,6 @@ def scores_by_model(
         title=title,
         height=height,
         width=width,
+        legend=plot_legend,
         **attributes,
     )

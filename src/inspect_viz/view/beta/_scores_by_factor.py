@@ -3,10 +3,13 @@ from typing_extensions import Unpack
 from inspect_viz import Component, Data, Param
 from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.color import lighten_color_hsl
+from inspect_viz._util.notgiven import NOT_GIVEN, NotGiven
 from inspect_viz.mark import frame, rule_y
 from inspect_viz.mark._mark import Mark, Marks
 from inspect_viz.mark._util import flatten_marks
-from inspect_viz.plot import PlotAttributes, legend, plot
+from inspect_viz.plot import PlotAttributes, plot
+from inspect_viz.plot import legend as create_legend
+from inspect_viz.plot._legend import Legend
 from inspect_viz.transform import ci_bounds, sql
 
 
@@ -25,6 +28,7 @@ def scores_by_factor(
     marks: Marks | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """Summarize eval scores with a factor of variation (e.g 'No hint' vs. 'Hint').
@@ -44,6 +48,7 @@ def scores_by_factor(
        marks: Additional marks to include in the plot.
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. Default to 65 pixels for each item on the "y" axis.
+       legend: Options for the legend. Pass None to disable the legend.
        **attributes: Additional `PlotAttributes
     """
     # provide secondary color if necessary
@@ -120,9 +125,15 @@ def scores_by_factor(
     # add custom marks
     components.extend(marks)
 
+    plot_legend = (
+        create_legend("color", target=data.selection)
+        if isinstance(legend, NotGiven)
+        else legend
+    )
+
     return plot(
         *components,
-        legend=legend("color", target=data.selection),
+        legend=plot_legend,
         x_label=score_label,
         y_label=None,
         fy_label=None,

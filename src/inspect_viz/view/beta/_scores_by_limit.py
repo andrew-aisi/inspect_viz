@@ -7,7 +7,6 @@ from typing_extensions import Unpack
 
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
-from inspect_viz._core.param import Param
 from inspect_viz._core.selection import Selection
 from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.inspect import value_to_float
@@ -20,7 +19,8 @@ from inspect_viz.mark._title import Title
 from inspect_viz.mark._util import flatten_marks
 from inspect_viz.plot import plot
 from inspect_viz.plot._attributes import PlotAttributes
-from inspect_viz.plot._legend import legend
+from inspect_viz.plot._legend import Legend
+from inspect_viz.plot._legend import legend as create_legend
 from inspect_viz.transform._sql import sql
 
 
@@ -168,6 +168,7 @@ def scores_by_limit(
     marks: Marks | None = None,
     height: float | None = None,
     width: float | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     ci: float = 0.95,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
@@ -190,6 +191,7 @@ def scores_by_limit(
        marks: Additional marks to include in the plot.
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
+       legend: Options for the legend. Pass None to disable the legend.
        **attributes: Additional `PlotAttributes`.
     """
     # resolve column names
@@ -333,11 +335,17 @@ def scores_by_limit(
     }
     attributes = defaults | attributes
 
+    plot_legend = (
+        create_legend("color", target=model_selection)
+        if isinstance(legend, NotGiven)
+        else legend
+    )
+
     return plot(
         components,
         x_label=limit_label,
         y_label="Success rate",
-        legend=legend("color", target=model_selection),
+        legend=plot_legend,
         height=height,
         width=width,
         **attributes,
