@@ -7,6 +7,7 @@ from typing_extensions import Unpack
 
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
+from inspect_viz._core.param import Param
 from inspect_viz._core.selection import Selection
 from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.inspect import value_to_float
@@ -14,6 +15,9 @@ from inspect_viz._util.notgiven import NOT_GIVEN, NotGiven
 from inspect_viz._util.stats import z_score
 from inspect_viz.interactor._interactors import highlight, nearest_x
 from inspect_viz.mark import area_y, line
+from inspect_viz.mark._mark import Marks
+from inspect_viz.mark._title import Title
+from inspect_viz.mark._util import flatten_marks
 from inspect_viz.plot import plot
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._legend import legend
@@ -160,6 +164,8 @@ def scores_by_limit(
     limit: str | None = None,
     limit_label: str | NotGiven = NOT_GIVEN,
     scale: Literal["log", "linear", "auto"] = "auto",
+    title: str | Title | None = None,
+    marks: Marks | None = None,
     height: float | None = None,
     width: float | None = None,
     ci: float = 0.95,
@@ -180,6 +186,8 @@ def scores_by_limit(
        ci: Confidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.
        limit_label: The limit label (by default, will select limit label using the columns present in the data frame). Pass None for no label.
        scale: The scale type for the limit access. If 'auto', will use log scale if the range is 2 or more orders of magnitude (defaults to 'auto').
+       title: Title for plot (`str` or mark created with the `title()` function)
+       marks: Additional marks to include in the plot.
        width: The outer width of the plot in pixels, including margins. Defaults to 700.
        height: The outer height of the plot in pixels, including margins. The default is width / 1.618 (the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio))
        **attributes: Additional `PlotAttributes`.
@@ -190,6 +198,9 @@ def scores_by_limit(
 
     if other_termination_rate is True:
         other_termination_rate = "other_termination_rate"
+
+    # resolve marks
+    marks = flatten_marks(marks)
 
     # validate columns in dataframe
     required_columns = [
@@ -311,6 +322,10 @@ def scores_by_limit(
             ]
         )
 
+    if marks is not None:
+        # Add custom marks to the plot
+        components.extend(marks)
+
     # resolve defaults
     defaults: PlotAttributes = {
         "x_scale": "log" if use_log else "linear",
@@ -326,4 +341,5 @@ def scores_by_limit(
         height=height,
         width=width,
         **attributes,
+        title=title,
     )
