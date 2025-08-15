@@ -194,7 +194,11 @@ const applyLegendStyles = (legendEl: HTMLElement): void => {
 
     // Global configuration
     legendContainerParentEl.style.position = 'relative';
-    legendContainerEl.style.padding = '0.3em';
+    if (options.frameAnchor === 'bottom' || options.frameAnchor === 'top') {
+        legendContainerEl.style.padding = '0 0.3em';
+    } else {
+        legendContainerEl.style.padding = '0.3em';
+    }
     legendContainerEl.style.position = 'absolute';
     legendContainerEl.style.width = 'max-content';
 
