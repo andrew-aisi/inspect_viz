@@ -81,13 +81,13 @@ scores_by_factor(
 )
 ```
 
-The [`samples_tool_calls()`](view-samples-tool-calls.qmd) view enables you to visualize tool calls by sample:
+The [`sample_tool_calls()`](view-sample-tool-calls.qmd) view enables you to visualize tool calls by sample:
 
 ```{python}
-from inspect_viz.view.beta import samples_tool_calls
+from inspect_viz.view.beta import sample_tool_calls
 
 tools = Data.from_file("cybench_tools.parquet")
-samples_tool_calls(tools, legend=legend("color", frame_anchor="bottom", border=False))
+sample_tool_calls(tools, legend=legend("color", frame_anchor="bottom", border=False))
 ```
 `
 Available views include:

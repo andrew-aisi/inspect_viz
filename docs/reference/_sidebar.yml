@@ -44,10 +44,10 @@ website:
           href: reference/inspect_viz.view.qmd#scores_by_limit
         - text: scores_by_limit_df
           href: reference/inspect_viz.view.qmd#scores_by_limit_df
-        - text: samples_tool_calls
-          href: reference/inspect_viz.view.qmd#samples_tool_calls
-        - text: samples_heatmap
-          href: reference/inspect_viz.view.qmd#samples_heatmap
+        - text: sample_tool_calls
+          href: reference/inspect_viz.view.qmd#sample_tool_calls
+        - text: sample_heatmap
+          href: reference/inspect_viz.view.qmd#sample_heatmap
         - text: heatmap
           href: reference/inspect_viz.view.qmd#heatmap
         - text: CellOptions

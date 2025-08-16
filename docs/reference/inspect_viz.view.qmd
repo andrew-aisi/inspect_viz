@@ -18,8 +18,8 @@ View functions are currently in beta and are exported from the **inspect_ai.view
 
 ## Samples
 
-### samples_tool_calls
-### samples_heatmap
+### sample_tool_calls
+### sample_heatmap
 
 ## General
 
