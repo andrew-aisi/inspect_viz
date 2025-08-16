@@ -325,8 +325,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/inspect_viz.view.html#tool_calls" class="sidebar-item-text sidebar-link">
- <span class="menu-text">tool_calls</span></a>
+  <a href="../reference/inspect_viz.view.html#sample_tool_calls" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">sample_tool_calls</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/inspect_viz.view.html#sample_heatmap" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">sample_heatmap</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/inspect_viz.view.html#heatmap" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">heatmap</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -1462,9 +1474,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#scores_by_limit" id="toc-scores_by_limit" class="nav-link" data-scroll-target="#scores_by_limit">scores_by_limit</a></li>
   <li><a href="#scores_by_limit_df" id="toc-scores_by_limit_df" class="nav-link" data-scroll-target="#scores_by_limit_df">scores_by_limit_df</a></li>
   </ul></li>
-  <li><a href="#tools" id="toc-tools" class="nav-link" data-scroll-target="#tools">Tools</a>
+  <li><a href="#samples" id="toc-samples" class="nav-link" data-scroll-target="#samples">Samples</a>
   <ul class="collapse">
-  <li><a href="#tool_calls" id="toc-tool_calls" class="nav-link" data-scroll-target="#tool_calls">tool_calls</a></li>
+  <li><a href="#sample_tool_calls" id="toc-sample_tool_calls" class="nav-link" data-scroll-target="#sample_tool_calls">sample_tool_calls</a></li>
+  <li><a href="#sample_heatmap" id="toc-sample_heatmap" class="nav-link" data-scroll-target="#sample_heatmap">sample_heatmap</a></li>
+  </ul></li>
+  <li><a href="#general" id="toc-general" class="nav-link" data-scroll-target="#general">General</a>
+  <ul class="collapse">
+  <li><a href="#heatmap" id="toc-heatmap" class="nav-link" data-scroll-target="#heatmap">heatmap</a></li>
   </ul></li>
   <li><a href="#types" id="toc-types" class="nav-link" data-scroll-target="#types">Types</a>
   <ul class="collapse">
@@ -1515,7 +1532,7 @@ Note
 <p>Bar plot for comparing eval scores.</p>
 <p>Summarize eval scores using a bar plot. By default, scores (<code>y</code>) are plotted by “task_display_name” (<code>fx</code>) and “model_display_name” (<code>x</code>). By default, confidence intervals are also plotted (disable this with <code>y_ci=False</code>).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_task.py#L18">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_task.py#L20">Source</a>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_by_task(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1529,8 +1546,9 @@ Note
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    marks: Marks <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    legend: Legend <span class="op">|</span> NotGiven <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> NOT_GIVEN,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <dl>
 <dt><code class="ref-definition">data</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
 <dd>
@@ -1576,6 +1594,10 @@ Note
 <dd>
 <p>The outer height of the plot in pixels, including margins. The default is width / 1.618 (the <a href="https://en.wikipedia.org/wiki/Golden_ratio">golden ratio</a>)</p>
 </dd>
+<dt><code class="ref-definition">legend</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.plot.html#legend">Legend</a></span> | <span class="element-type-name">NotGiven</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Options for the legend. Pass None to disable the legend.</p>
+</dd>
 <dt><code class="ref-definition">**attributes</code> <span class="element-type"><span class="element-type-name">Unpack</span>[<span class="element-type-name"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>]</span></dt>
 <dd>
 <p>Additional <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>. By default, the <code>margin_bottom</code> are is set to 10 pixels and <code>x_ticks</code> is set to <code>[]</code>.</p>
@@ -1586,7 +1608,7 @@ Note
 <h3 class="anchored" data-anchor-id="scores_by_factor">scores_by_factor</h3>
 <p>Summarize eval scores with a factor of variation (e.g ‘No hint’ vs.&nbsp;‘Hint’).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_factor.py#L13">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_factor.py#L16">Source</a>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_by_factor(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1603,8 +1625,9 @@ Note
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    marks: Marks <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> Param <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    legend: Legend <span class="op">|</span> NotGiven <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> NOT_GIVEN,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <dl>
 <dt><code class="ref-definition">data</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
 <dd>
@@ -1662,6 +1685,10 @@ Note
 <dd>
 <p>The outer height of the plot in pixels, including margins. Default to 65 pixels for each item on the “y” axis.</p>
 </dd>
+<dt><code class="ref-definition">legend</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.plot.html#legend">Legend</a></span> | <span class="element-type-name">NotGiven</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Options for the legend. Pass None to disable the legend.</p>
+</dd>
 <dt><code class="ref-definition">**attributes</code> <span class="element-type"><span class="element-type-name">Unpack</span>[<span class="element-type-name"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>]</span></dt>
 <dd>
 <p>Additional `PlotAttributes</p>
@@ -1672,7 +1699,7 @@ Note
 <h3 class="anchored" data-anchor-id="scores_timeline">scores_timeline</h3>
 <p>Eval scores by model, organization, and release date.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_timeline.py#L28">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_timeline.py#L28">Source</a>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_timeline(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1789,7 +1816,7 @@ Note
 <p>Bar plot for comparing the scores of different models on a single evaluation.</p>
 <p>Summarize eval scores using a bar plot. By default, scores (<code>y</code>) are plotted by “model_display_name” (<code>y</code>). By default, confidence intervals are also plotted (disable this with <code>y_ci=False</code>).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_model.py#L18">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_model.py#L19">Source</a>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_by_model(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1806,8 +1833,9 @@ Note
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    marks: Marks <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    legend: Legend <span class="op">|</span> NotGiven <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> NOT_GIVEN,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <dl>
 <dt><code class="ref-definition">data</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
 <dd>
@@ -1861,6 +1889,10 @@ Note
 <dd>
 <p>The outer height of the plot in pixels, including margins. The default is width / 1.618 (the <a href="https://en.wikipedia.org/wiki/Golden_ratio">golden ratio</a>)</p>
 </dd>
+<dt><code class="ref-definition">legend</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.plot.html#legend">Legend</a></span> | <span class="element-type-name">NotGiven</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Options for the legend. Pass None to disable the legend.</p>
+</dd>
 <dt><code class="ref-definition">**attributes</code> <span class="element-type"><span class="element-type-name">Unpack</span>[<span class="element-type-name"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>]</span></dt>
 <dd>
 <p>Additional <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>. By default, the <code>y_inset_top</code> and <code>margin_bottom</code> are set to 10 pixels and <code>x_ticks</code> is set to <code>[]</code>.</p>
@@ -1871,7 +1903,7 @@ Note
 <h3 class="anchored" data-anchor-id="scores_heatmap">scores_heatmap</h3>
 <p>Creates a heatmap plot of success rate of eval data.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_heatmap.py#L33">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_heatmap.py#L15">Source</a>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_heatmap(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1886,7 +1918,7 @@ Note
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    marks: Marks <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    legend: Legend <span class="op">|</span> <span class="bu">bool</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    legend: Legend <span class="op">|</span> NotGiven <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> NOT_GIVEN,</span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    sort: Literal[<span class="st">"ascending"</span>, <span class="st">"descending"</span>] <span class="op">|</span> SortOrder <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="st">"ascending"</span>,</span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    orientation: Literal[<span class="st">"horizontal"</span>, <span class="st">"vertical"</span>] <span class="op">=</span> <span class="st">"horizontal"</span>,</span>
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
@@ -1940,7 +1972,7 @@ Note
 <dd>
 <p>The outer width of the plot in pixels, including margins. Defaults to 700.</p>
 </dd>
-<dt><code class="ref-definition">legend</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.plot.html#legend">Legend</a></span> | <span class="element-type-name">bool</span> | <span class="element-type-name">None</span></span></dt>
+<dt><code class="ref-definition">legend</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.plot.html#legend">Legend</a></span> | <span class="element-type-name">NotGiven</span> | <span class="element-type-name">None</span></span></dt>
 <dd>
 <p>Options for the legend. Pass None to disable the legend.</p>
 </dd>
@@ -1963,7 +1995,7 @@ Note
 <p>Visualizes success rate as a function of a resource limit (time, tokens).</p>
 <p>Model success rate is plotted as a function of the time, tokens, or other resource limit.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_limit.py#L153">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_limit.py#L157">Source</a>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_by_limit(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
@@ -1975,11 +2007,14 @@ Note
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    limit: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    limit_label: <span class="bu">str</span> <span class="op">|</span> NotGiven <span class="op">=</span> NOT_GIVEN,</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    scale: Literal[<span class="st">"log"</span>, <span class="st">"linear"</span>, <span class="st">"auto"</span>] <span class="op">=</span> <span class="st">"auto"</span>,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    ci: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.95</span>,</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    title: <span class="bu">str</span> <span class="op">|</span> Title <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    marks: Marks <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    legend: Legend <span class="op">|</span> NotGiven <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> NOT_GIVEN,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    ci: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <dl>
 <dt><code class="ref-definition">data</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
 <dd>
@@ -2017,6 +2052,14 @@ Note
 <dd>
 <p>The scale type for the limit access. If ‘auto’, will use log scale if the range is 2 or more orders of magnitude (defaults to ‘auto’).</p>
 </dd>
+<dt><code class="ref-definition">title</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name"><a href="../reference/inspect_viz.mark.html#title">Title</a></span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Title for plot (<code>str</code> or mark created with the <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.mark.html#title">title()</a></span> function)</p>
+</dd>
+<dt><code class="ref-definition">marks</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.mark.html#marks">Marks</a></span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Additional marks to include in the plot.</p>
+</dd>
 <dt><code class="ref-definition">height</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name">None</span></span></dt>
 <dd>
 <p>The outer height of the plot in pixels, including margins. The default is width / 1.618 (the <a href="https://en.wikipedia.org/wiki/Golden_ratio">golden ratio</a>)</p>
@@ -2024,6 +2067,10 @@ Note
 <dt><code class="ref-definition">width</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name">None</span></span></dt>
 <dd>
 <p>The outer width of the plot in pixels, including margins. Defaults to 700.</p>
+</dd>
+<dt><code class="ref-definition">legend</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.plot.html#legend">Legend</a></span> | <span class="element-type-name">NotGiven</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Options for the legend. Pass None to disable the legend.</p>
 </dd>
 <dt><code class="ref-definition">ci</code> <span class="element-type"><span class="element-type-name">float</span></span></dt>
 <dd>
@@ -2039,7 +2086,7 @@ Note
 <h3 class="anchored" data-anchor-id="scores_by_limit_df">scores_by_limit_df</h3>
 <p>Prepares a dataframe for plotting success rate as a function of a resource limit (time, tokens).</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_limit.py#L23">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_limit.py#L27">Source</a>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scores_by_limit_df(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    df: pd.DataFrame,</span>
@@ -2072,15 +2119,15 @@ Note
 </dl>
 </section>
 </section>
-<section id="tools" class="level2">
-<h2 class="anchored" data-anchor-id="tools">Tools</h2>
-<section id="tool_calls" class="level3">
-<h3 class="anchored" data-anchor-id="tool_calls">tool_calls</h3>
+<section id="samples" class="level2">
+<h2 class="anchored" data-anchor-id="samples">Samples</h2>
+<section id="sample_tool_calls" class="level3">
+<h3 class="anchored" data-anchor-id="sample_tool_calls">sample_tool_calls</h3>
 <p>Heat map visualising tool calls over evaluation turns.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_tool_calls.py#L15">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_sample_tool_calls.py#L18">Source</a>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tool_calls(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sample_tool_calls(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    x: <span class="bu">str</span> <span class="op">=</span> <span class="st">"order"</span>,</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    y: <span class="bu">str</span> <span class="op">=</span> <span class="st">"id"</span>,</span>
@@ -2093,8 +2140,9 @@ Note
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    marks: Marks <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    legend: Legend <span class="op">|</span> NotGiven <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> NOT_GIVEN,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <dl>
 <dt><code class="ref-definition">data</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
 <dd>
@@ -2144,9 +2192,203 @@ Note
 <dd>
 <p>The outer height of the plot in pixels, including margins. The default is width / 1.618 (the <a href="https://en.wikipedia.org/wiki/Golden_ratio">golden ratio</a>)</p>
 </dd>
+<dt><code class="ref-definition">legend</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.plot.html#legend">Legend</a></span> | <span class="element-type-name">NotGiven</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Options for the legend. Pass None to disable the legend.</p>
+</dd>
 <dt><code class="ref-definition">**attributes</code> <span class="element-type"><span class="element-type-name">Unpack</span>[<span class="element-type-name"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>]</span></dt>
 <dd>
 <p>Additional <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>. By default, the <code>margin_top</code> is set to 0, <code>margin_left</code> to 20, <code>margin_right</code> to 100, <code>color_label</code> is “Tool”, <code>y_ticks</code> is empty, and <code>x_ticks</code> and <code>color_domain</code> are calculated from <code>data</code>.</p>
+</dd>
+</dl>
+</section>
+<section id="sample_heatmap" class="level3">
+<h3 class="anchored" data-anchor-id="sample_heatmap">sample_heatmap</h3>
+<p>Creates a heatmap plot of success rate of eval data.</p>
+<div class="source-link">
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_sample_heatmap.py#L15">Source</a>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sample_heatmap(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">id</span>: <span class="bu">str</span> <span class="op">=</span> <span class="st">"id"</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    id_label: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">|</span> NotGiven <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    model_name: <span class="bu">str</span> <span class="op">=</span> <span class="st">"model_display_name"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    model_label: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">|</span> NotGiven <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    score_value: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    cell: CellOptions <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    tip: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    title: <span class="bu">str</span> <span class="op">|</span> Title <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    marks: Marks <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    legend: Legend <span class="op">|</span> NotGiven <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> NOT_GIVEN,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    sort: Literal[<span class="st">"ascending"</span>, <span class="st">"descending"</span>] <span class="op">|</span> SortOrder <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="st">"ascending"</span>,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    orientation: Literal[<span class="st">"horizontal"</span>, <span class="st">"vertical"</span>] <span class="op">=</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl>
+<dt><code class="ref-definition">data</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
+<dd>
+<p>Evals data table.</p>
+</dd>
+<dt><code class="ref-definition">id</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
+<dd>
+<p>Name of column to use for displaying the sample id.</p>
+</dd>
+<dt><code class="ref-definition">id_label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span> | <span class="element-type-name">NotGiven</span></span></dt>
+<dd>
+<p>x-axis label (defaults to None).</p>
+</dd>
+<dt><code class="ref-definition">model_name</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
+<dd>
+<p>Name of column to use for rows.</p>
+</dd>
+<dt><code class="ref-definition">model_label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span> | <span class="element-type-name">NotGiven</span></span></dt>
+<dd>
+<p>y-axis label (defaults to None).</p>
+</dd>
+<dt><code class="ref-definition">score_value</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Name of the column to use as values to determine cell color.</p>
+</dd>
+<dt><code class="ref-definition">cell</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.view.html#celloptions">CellOptions</a></span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Options for the cell marks.</p>
+</dd>
+<dt><code class="ref-definition">tip</code> <span class="element-type"><span class="element-type-name">bool</span></span></dt>
+<dd>
+<p>Whether to show a tooltip with the value when hovering over a cell (defaults to True).</p>
+</dd>
+<dt><code class="ref-definition">title</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name"><a href="../reference/inspect_viz.mark.html#title">Title</a></span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Title for plot (<code>str</code> or mark created with the <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.mark.html#title">title()</a></span> function)</p>
+</dd>
+<dt><code class="ref-definition">marks</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.mark.html#marks">Marks</a></span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Additional marks to include in the plot.</p>
+</dd>
+<dt><code class="ref-definition">height</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>The outer height of the plot in pixels, including margins. The default is width / 1.618 (the <a href="https://en.wikipedia.org/wiki/Golden_ratio">golden ratio</a>).</p>
+</dd>
+<dt><code class="ref-definition">width</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>The outer width of the plot in pixels, including margins. Defaults to 700.</p>
+</dd>
+<dt><code class="ref-definition">legend</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.plot.html#legend">Legend</a></span> | <span class="element-type-name">NotGiven</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Options for the legend. Pass None to disable the legend.</p>
+</dd>
+<dt><code class="ref-definition">sort</code> <span class="element-type"><span class="element-type-name">Literal</span>['ascending', 'descending'] | <span class="element-type-name">SortOrder</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Sort order for the x and y axes. If ascending, the highest values will be sorted to the top right. If descending, the highest values will appear in the bottom left. If None, no sorting is applied. If a SortOrder is provided, it will be used to sort the x and y axes.</p>
+</dd>
+<dt><code class="ref-definition">orientation</code> <span class="element-type"><span class="element-type-name">Literal</span>['horizontal', 'vertical']</span></dt>
+<dd>
+<p>The orientation of the heatmap. If “horizontal”, the tasks will be on the x-axis and models on the y-axis. If “vertical”, the tasks will be on the y-axis and models on the x-axis.</p>
+</dd>
+<dt><code class="ref-definition">**attributes</code> <span class="element-type"><span class="element-type-name">Unpack</span>[<span class="element-type-name"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>]</span></dt>
+<dd>
+<p>Additional `PlotAttributes</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="general" class="level2">
+<h2 class="anchored" data-anchor-id="general">General</h2>
+<section id="heatmap" class="level3">
+<h3 class="anchored" data-anchor-id="heatmap">heatmap</h3>
+<p>Creates a heatmap plot of arbitrary data.</p>
+<div class="source-link">
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_heatmap.py#L32">Source</a>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> heatmap(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    data: Data,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    x_value: <span class="bu">str</span> <span class="op">=</span> <span class="st">"id"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    x_label: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">|</span> NotGiven <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    y_value: <span class="bu">str</span> <span class="op">=</span> <span class="st">"model_display_name"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    y_label: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">|</span> NotGiven <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    color_value: <span class="bu">str</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    channels: <span class="bu">dict</span>[<span class="bu">str</span>, Any] <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    cell: CellOptions <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    tip: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    title: <span class="bu">str</span> <span class="op">|</span> Title <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    marks: Marks <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    height: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    width: <span class="bu">float</span> <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    legend: Legend <span class="op">|</span> NotGiven <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> NOT_GIVEN,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    sort: Literal[<span class="st">"ascending"</span>, <span class="st">"descending"</span>] <span class="op">|</span> SortOrder <span class="op">|</span> <span class="va">None</span> <span class="op">=</span> <span class="st">"ascending"</span>,</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    orientation: Literal[<span class="st">"horizontal"</span>, <span class="st">"vertical"</span>] <span class="op">=</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>attributes: Unpack[PlotAttributes],</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Component</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<dl>
+<dt><code class="ref-definition">data</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.html#data">Data</a></span></span></dt>
+<dd>
+<p>Evals data table.</p>
+</dd>
+<dt><code class="ref-definition">x_value</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
+<dd>
+<p>x-axis value</p>
+</dd>
+<dt><code class="ref-definition">x_label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span> | <span class="element-type-name">NotGiven</span></span></dt>
+<dd>
+<p>x-axis label (defaults to None).</p>
+</dd>
+<dt><code class="ref-definition">y_value</code> <span class="element-type"><span class="element-type-name">str</span></span></dt>
+<dd>
+<p>y axis value</p>
+</dd>
+<dt><code class="ref-definition">y_label</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span> | <span class="element-type-name">NotGiven</span></span></dt>
+<dd>
+<p>y-axis label (defaults to None).</p>
+</dd>
+<dt><code class="ref-definition">color_value</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Name of the column to use as values to determine cell color.</p>
+</dd>
+<dt><code class="ref-definition">channels</code> <span class="element-type">dict[<span class="element-type-name">str</span>, <span class="element-type-name">Any</span>] | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Channels to use for the plot. If None, the default channels are used.</p>
+</dd>
+<dt><code class="ref-definition">cell</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.view.html#celloptions">CellOptions</a></span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Options for the cell marks.</p>
+</dd>
+<dt><code class="ref-definition">tip</code> <span class="element-type"><span class="element-type-name">bool</span></span></dt>
+<dd>
+<p>Whether to show a tooltip with the value when hovering over a cell (defaults to True).</p>
+</dd>
+<dt><code class="ref-definition">title</code> <span class="element-type"><span class="element-type-name">str</span> | <span class="element-type-name"><a href="../reference/inspect_viz.mark.html#title">Title</a></span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Title for plot (<code>str</code> or mark created with the <span class="element-type-name ref-interlink"><a href="../reference/inspect_viz.mark.html#title">title()</a></span> function)</p>
+</dd>
+<dt><code class="ref-definition">marks</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.mark.html#marks">Marks</a></span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Additional marks to include in the plot.</p>
+</dd>
+<dt><code class="ref-definition">height</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>The outer height of the plot in pixels, including margins. The default is width / 1.618 (the <a href="https://en.wikipedia.org/wiki/Golden_ratio">golden ratio</a>).</p>
+</dd>
+<dt><code class="ref-definition">width</code> <span class="element-type"><span class="element-type-name">float</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>The outer width of the plot in pixels, including margins. Defaults to 700.</p>
+</dd>
+<dt><code class="ref-definition">legend</code> <span class="element-type"><span class="element-type-name"><a href="../reference/inspect_viz.plot.html#legend">Legend</a></span> | <span class="element-type-name">NotGiven</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Options for the legend. Pass None to disable the legend.</p>
+</dd>
+<dt><code class="ref-definition">sort</code> <span class="element-type"><span class="element-type-name">Literal</span>['ascending', 'descending'] | <span class="element-type-name">SortOrder</span> | <span class="element-type-name">None</span></span></dt>
+<dd>
+<p>Sort order for the x and y axes. If ascending, the highest values will be sorted to the top right. If descending, the highest values will appear in the bottom left. If None, no sorting is applied. If a SortOrder is provided, it will be used to sort the x and y axes.</p>
+</dd>
+<dt><code class="ref-definition">orientation</code> <span class="element-type"><span class="element-type-name">Literal</span>['horizontal', 'vertical']</span></dt>
+<dd>
+<p>The orientation of the heatmap. If “horizontal”, the tasks will be on the x-axis and models on the y-axis. If “vertical”, the tasks will be on the y-axis and models on the x-axis.</p>
+</dd>
+<dt><code class="ref-definition">**attributes</code> <span class="element-type"><span class="element-type-name">Unpack</span>[<span class="element-type-name"><a href="../reference/inspect_viz.plot.html#plotattributes">PlotAttributes</a></span>]</span></dt>
+<dd>
+<p>Additional `PlotAttributes</p>
 </dd>
 </dl>
 </section>
@@ -2157,9 +2399,9 @@ Note
 <h3 class="anchored" data-anchor-id="celloptions">CellOptions</h3>
 <p>Cell options for the heatmap.</p>
 <div class="source-link">
-<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_heatmap.py#L23">Source</a>
+<a href="https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_heatmap.py#L22">Source</a>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CellOptions(TypedDict, total<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python doc-declaration code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CellOptions(TypedDict, total<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section class="level4">
 <h4 class="anchored" data-anchor-id="">Attributes</h4>
 <dl>

@@ -59,7 +59,7 @@ plotted by “task_display_name” (`fx`) and “model_display_name” (`x`). By
 default, confidence intervals are also plotted (disable this with
 `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_task.py#L18)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_task.py#L20)
 
 ``` python
 def scores_by_task(
@@ -74,6 +74,7 @@ def scores_by_task(
     marks: Marks | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -114,6 +115,9 @@ The outer width of the plot in pixels, including margins. Defaults to
 The outer height of the plot in pixels, including margins. The default
 is width / 1.618 (the [golden
 ratio](https://en.wikipedia.org/wiki/Golden_ratio))
+
+`legend` [Legend](reference/inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
 
 `**attributes` Unpack\[[PlotAttributes](reference/inspect_viz.plot.qmd#plotattributes)\]  
 Additional `PlotAttributes`. By default, the `margin_bottom` are is set

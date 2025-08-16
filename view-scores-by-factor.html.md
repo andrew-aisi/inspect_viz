@@ -56,7 +56,7 @@ this is “task_arg_hint”).
 Summarize eval scores with a factor of variation (e.g ‘No hint’
 vs. ‘Hint’).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_factor.py#L16)
 
 ``` python
 def scores_by_factor(
@@ -74,6 +74,7 @@ def scores_by_factor(
     marks: Marks | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -124,6 +125,9 @@ The outer width of the plot in pixels, including margins. Defaults to
 `height` float \| [Param](reference/inspect_viz.qmd#param) \| None  
 The outer height of the plot in pixels, including margins. Default to 65
 pixels for each item on the “y” axis.
+
+`legend` [Legend](reference/inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
 
 `**attributes` Unpack\[[PlotAttributes](reference/inspect_viz.plot.qmd#plotattributes)\]  
 Additional \`PlotAttributes

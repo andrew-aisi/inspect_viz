@@ -19,7 +19,7 @@ plotted by “task_display_name” (`fx`) and “model_display_name” (`x`). By
 default, confidence intervals are also plotted (disable this with
 `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_task.py#L18)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_task.py#L20)
 
 ``` python
 def scores_by_task(
@@ -34,6 +34,7 @@ def scores_by_task(
     marks: Marks | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -75,6 +76,9 @@ The outer height of the plot in pixels, including margins. The default
 is width / 1.618 (the [golden
 ratio](https://en.wikipedia.org/wiki/Golden_ratio))
 
+`legend` [Legend](inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
+
 `**attributes` Unpack\[[PlotAttributes](inspect_viz.plot.qmd#plotattributes)\]  
 Additional `PlotAttributes`. By default, the `margin_bottom` are is set
 to 10 pixels and `x_ticks` is set to `[]`.
@@ -84,7 +88,7 @@ to 10 pixels and `x_ticks` is set to `[]`.
 Summarize eval scores with a factor of variation (e.g ‘No hint’
 vs. ‘Hint’).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_factor.py#L16)
 
 ``` python
 def scores_by_factor(
@@ -102,6 +106,7 @@ def scores_by_factor(
     marks: Marks | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -153,6 +158,9 @@ The outer width of the plot in pixels, including margins. Defaults to
 The outer height of the plot in pixels, including margins. Default to 65
 pixels for each item on the “y” axis.
 
+`legend` [Legend](inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
+
 `**attributes` Unpack\[[PlotAttributes](inspect_viz.plot.qmd#plotattributes)\]  
 Additional \`PlotAttributes
 
@@ -160,7 +168,7 @@ Additional \`PlotAttributes
 
 Eval scores by model, organization, and release date.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_timeline.py#L28)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_timeline.py#L28)
 
 ``` python
 def scores_timeline(
@@ -271,7 +279,7 @@ Summarize eval scores using a bar plot. By default, scores (`y`) are
 plotted by “model_display_name” (`y`). By default, confidence intervals
 are also plotted (disable this with `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_model.py#L18)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_model.py#L19)
 
 ``` python
 def scores_by_model(
@@ -289,6 +297,7 @@ def scores_by_model(
     marks: Marks | None = None,
     width: float | None = None,
     height: float | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -339,6 +348,9 @@ The outer height of the plot in pixels, including margins. The default
 is width / 1.618 (the [golden
 ratio](https://en.wikipedia.org/wiki/Golden_ratio))
 
+`legend` [Legend](inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
+
 `**attributes` Unpack\[[PlotAttributes](inspect_viz.plot.qmd#plotattributes)\]  
 Additional `PlotAttributes`. By default, the `y_inset_top` and
 `margin_bottom` are set to 10 pixels and `x_ticks` is set to `[]`.
@@ -347,7 +359,7 @@ Additional `PlotAttributes`. By default, the `y_inset_top` and
 
 Creates a heatmap plot of success rate of eval data.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_heatmap.py#L15)
 
 ``` python
 def scores_heatmap(
@@ -363,7 +375,7 @@ def scores_heatmap(
     marks: Marks | None = None,
     height: float | None = None,
     width: float | None = None,
-    legend: Legend | bool | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     sort: Literal["ascending", "descending"] | SortOrder | None = "ascending",
     orientation: Literal["horizontal", "vertical"] = "horizontal",
     **attributes: Unpack[PlotAttributes],
@@ -410,7 +422,7 @@ ratio](https://en.wikipedia.org/wiki/Golden_ratio)).
 The outer width of the plot in pixels, including margins. Defaults to
 700.
 
-`legend` [Legend](inspect_viz.plot.qmd#legend) \| bool \| None  
+`legend` [Legend](inspect_viz.plot.qmd#legend) \| NotGiven \| None  
 Options for the legend. Pass None to disable the legend.
 
 `sort` Literal\['ascending', 'descending'\] \| SortOrder \| None  
@@ -435,7 +447,7 @@ tokens).
 Model success rate is plotted as a function of the time, tokens, or
 other resource limit.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_limit.py#L153)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_limit.py#L157)
 
 ``` python
 def scores_by_limit(
@@ -448,8 +460,11 @@ def scores_by_limit(
     limit: str | None = None,
     limit_label: str | NotGiven = NOT_GIVEN,
     scale: Literal["log", "linear", "auto"] = "auto",
+    title: str | Title | None = None,
+    marks: Marks | None = None,
     height: float | None = None,
     width: float | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     ci: float = 0.95,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
@@ -487,6 +502,12 @@ present in the data frame). Pass None for no label.
 The scale type for the limit access. If ‘auto’, will use log scale if
 the range is 2 or more orders of magnitude (defaults to ‘auto’).
 
+`title` str \| [Title](inspect_viz.mark.qmd#title) \| None  
+Title for plot (`str` or mark created with the `title()` function)
+
+`marks` [Marks](inspect_viz.mark.qmd#marks) \| None  
+Additional marks to include in the plot.
+
 `height` float \| None  
 The outer height of the plot in pixels, including margins. The default
 is width / 1.618 (the [golden
@@ -495,6 +516,9 @@ ratio](https://en.wikipedia.org/wiki/Golden_ratio))
 `width` float \| None  
 The outer width of the plot in pixels, including margins. Defaults to
 700.
+
+`legend` [Legend](inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
 
 `ci` float  
 Confidence interval (e.g. 0.80, 0.90, 0.95, etc.). Defaults to 0.95.
@@ -507,7 +531,7 @@ Additional `PlotAttributes`.
 Prepares a dataframe for plotting success rate as a function of a
 resource limit (time, tokens).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_limit.py#L23)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_limit.py#L27)
 
 ``` python
 def scores_by_limit_df(
@@ -537,16 +561,16 @@ the range is 2 or more orders of magnitude (defaults to ‘auto’).
 The number of points to use when sampling the limit range (defaults to
 100).
 
-## Tools
+## Samples
 
-### tool_calls
+### sample_tool_calls
 
 Heat map visualising tool calls over evaluation turns.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_tool_calls.py#L15)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_sample_tool_calls.py#L18)
 
 ``` python
-def tool_calls(
+def sample_tool_calls(
     data: Data,
     x: str = "order",
     y: str = "id",
@@ -559,6 +583,7 @@ def tool_calls(
     marks: Marks | None = None,
     width: float | None = None,
     height: float | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -604,11 +629,188 @@ The outer height of the plot in pixels, including margins. The default
 is width / 1.618 (the [golden
 ratio](https://en.wikipedia.org/wiki/Golden_ratio))
 
+`legend` [Legend](inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
+
 `**attributes` Unpack\[[PlotAttributes](inspect_viz.plot.qmd#plotattributes)\]  
 Additional `PlotAttributes`. By default, the `margin_top` is set to 0,
 `margin_left` to 20, `margin_right` to 100, `color_label` is “Tool”,
 `y_ticks` is empty, and `x_ticks` and `color_domain` are calculated from
 `data`.
+
+### sample_heatmap
+
+Creates a heatmap plot of success rate of eval data.
+
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_sample_heatmap.py#L15)
+
+``` python
+def sample_heatmap(
+    data: Data,
+    id: str = "id",
+    id_label: str | None | NotGiven = None,
+    model_name: str = "model_display_name",
+    model_label: str | None | NotGiven = None,
+    score_value: str | None = None,
+    cell: CellOptions | None = None,
+    tip: bool = True,
+    title: str | Title | None = None,
+    marks: Marks | None = None,
+    height: float | None = None,
+    width: float | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
+    sort: Literal["ascending", "descending"] | SortOrder | None = "ascending",
+    orientation: Literal["horizontal", "vertical"] = "horizontal",
+    **attributes: Unpack[PlotAttributes],
+) -> Component
+```
+
+`data` [Data](inspect_viz.qmd#data)  
+Evals data table.
+
+`id` str  
+Name of column to use for displaying the sample id.
+
+`id_label` str \| None \| NotGiven  
+x-axis label (defaults to None).
+
+`model_name` str  
+Name of column to use for rows.
+
+`model_label` str \| None \| NotGiven  
+y-axis label (defaults to None).
+
+`score_value` str \| None  
+Name of the column to use as values to determine cell color.
+
+`cell` [CellOptions](inspect_viz.view.qmd#celloptions) \| None  
+Options for the cell marks.
+
+`tip` bool  
+Whether to show a tooltip with the value when hovering over a cell
+(defaults to True).
+
+`title` str \| [Title](inspect_viz.mark.qmd#title) \| None  
+Title for plot (`str` or mark created with the `title()` function)
+
+`marks` [Marks](inspect_viz.mark.qmd#marks) \| None  
+Additional marks to include in the plot.
+
+`height` float \| None  
+The outer height of the plot in pixels, including margins. The default
+is width / 1.618 (the [golden
+ratio](https://en.wikipedia.org/wiki/Golden_ratio)).
+
+`width` float \| None  
+The outer width of the plot in pixels, including margins. Defaults to
+700.
+
+`legend` [Legend](inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
+
+`sort` Literal\['ascending', 'descending'\] \| SortOrder \| None  
+Sort order for the x and y axes. If ascending, the highest values will
+be sorted to the top right. If descending, the highest values will
+appear in the bottom left. If None, no sorting is applied. If a
+SortOrder is provided, it will be used to sort the x and y axes.
+
+`orientation` Literal\['horizontal', 'vertical'\]  
+The orientation of the heatmap. If “horizontal”, the tasks will be on
+the x-axis and models on the y-axis. If “vertical”, the tasks will be on
+the y-axis and models on the x-axis.
+
+`**attributes` Unpack\[[PlotAttributes](inspect_viz.plot.qmd#plotattributes)\]  
+Additional \`PlotAttributes
+
+## General
+
+### heatmap
+
+Creates a heatmap plot of arbitrary data.
+
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_heatmap.py#L32)
+
+``` python
+def heatmap(
+    data: Data,
+    x_value: str = "id",
+    x_label: str | None | NotGiven = None,
+    y_value: str = "model_display_name",
+    y_label: str | None | NotGiven = None,
+    color_value: str | None = None,
+    channels: dict[str, Any] | None = None,
+    cell: CellOptions | None = None,
+    tip: bool = True,
+    title: str | Title | None = None,
+    marks: Marks | None = None,
+    height: float | None = None,
+    width: float | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
+    sort: Literal["ascending", "descending"] | SortOrder | None = "ascending",
+    orientation: Literal["horizontal", "vertical"] = "horizontal",
+    **attributes: Unpack[PlotAttributes],
+) -> Component
+```
+
+`data` [Data](inspect_viz.qmd#data)  
+Evals data table.
+
+`x_value` str  
+x-axis value
+
+`x_label` str \| None \| NotGiven  
+x-axis label (defaults to None).
+
+`y_value` str  
+y axis value
+
+`y_label` str \| None \| NotGiven  
+y-axis label (defaults to None).
+
+`color_value` str \| None  
+Name of the column to use as values to determine cell color.
+
+`channels` dict\[str, Any\] \| None  
+Channels to use for the plot. If None, the default channels are used.
+
+`cell` [CellOptions](inspect_viz.view.qmd#celloptions) \| None  
+Options for the cell marks.
+
+`tip` bool  
+Whether to show a tooltip with the value when hovering over a cell
+(defaults to True).
+
+`title` str \| [Title](inspect_viz.mark.qmd#title) \| None  
+Title for plot (`str` or mark created with the `title()` function)
+
+`marks` [Marks](inspect_viz.mark.qmd#marks) \| None  
+Additional marks to include in the plot.
+
+`height` float \| None  
+The outer height of the plot in pixels, including margins. The default
+is width / 1.618 (the [golden
+ratio](https://en.wikipedia.org/wiki/Golden_ratio)).
+
+`width` float \| None  
+The outer width of the plot in pixels, including margins. Defaults to
+700.
+
+`legend` [Legend](inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
+
+`sort` Literal\['ascending', 'descending'\] \| SortOrder \| None  
+Sort order for the x and y axes. If ascending, the highest values will
+be sorted to the top right. If descending, the highest values will
+appear in the bottom left. If None, no sorting is applied. If a
+SortOrder is provided, it will be used to sort the x and y axes.
+
+`orientation` Literal\['horizontal', 'vertical'\]  
+The orientation of the heatmap. If “horizontal”, the tasks will be on
+the x-axis and models on the y-axis. If “vertical”, the tasks will be on
+the y-axis and models on the x-axis.
+
+`**attributes` Unpack\[[PlotAttributes](inspect_viz.plot.qmd#plotattributes)\]  
+Additional \`PlotAttributes
 
 ## Types
 
@@ -616,7 +818,7 @@ Additional `PlotAttributes`. By default, the `margin_top` is set to 0,
 
 Cell options for the heatmap.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_heatmap.py#L23)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_heatmap.py#L22)
 
 ``` python
 class CellOptions(TypedDict, total=False)

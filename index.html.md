@@ -53,22 +53,28 @@ enables you to compare scores across models and a boolean factor:
 ``` python
 from inspect_viz import Data
 from inspect_viz.view.beta import scores_by_factor
+from inspect_viz.plot import legend
 
 evals = Data.from_file("evals-hint.parquet")
-scores_by_factor(evals, "task_arg_hint", ("No hint", "Hint"))
+scores_by_factor(
+    evals,
+    "task_arg_hint",
+    ("No hint", "Hint"),
+    legend=legend("color", frame_anchor="bottom-right", border=False, inset=20),
+)
 ```
 
-The [`tool_calls()`](view-tool-calls.qmd) view enables you to visualize
-tool calls by sample:
+The [`sample_tool_calls()`](view-sample-tool-calls.qmd) view enables you
+to visualize tool calls by sample:
 
 ``` python
-from inspect_viz.view.beta import tool_calls
+from inspect_viz.view.beta import sample_tool_calls
 
 tools = Data.from_file("cybench_tools.parquet")
-tool_calls(tools)
+sample_tool_calls(tools, legend=legend("color", frame_anchor="bottom", border=False))
 ```
 
-Available views include:
+\` Available views include:
 
 | View | Description |
 |----|----|
@@ -78,7 +84,8 @@ Available views include:
 | [`scores_timeline()`](view-scores-timeline.qmd) | Scatter plot with eval scores by model, organization, and release date. Filterable by evaluation and organization. |
 | [`scores_heatmap()`](view-scores-heatmap.qmd) | Heatmap with values for comparing scores across model and task. |
 | [`scores_by_model()`](view-scores-by-model.qmd) | Bar plot for comparing model scores on a single eval. |
-| [`tool_calls()`](view-tool-calls.qmd) | Heat map visualising tool calls over evaluation turns. |
+| [`sample_tool_calls()`](view-sample-tool-calls.qmd) | Heat map visualising tool calls over evaluation turns. |
+| [`sample_heatmap()`](view-sample-heatmap.qmd) | Heat map visualising sample scores. |
 
 ## Plots
 

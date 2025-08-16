@@ -11,7 +11,7 @@ from inspect_viz import Data
 from inspect_viz.view.beta import scores_heatmap
 
 evals = Data.from_file("evals.parquet")
-scores_heatmap(evals, height=200, legend=True)
+scores_heatmap(evals, height=200)
 ```
 
 ## Data Preparation
@@ -54,7 +54,7 @@ isn’t prepared with `log_viewer()` and `model_info()`).
 
 Creates a heatmap plot of success rate of eval data.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_heatmap.py#L15)
 
 ``` python
 def scores_heatmap(
@@ -70,7 +70,7 @@ def scores_heatmap(
     marks: Marks | None = None,
     height: float | None = None,
     width: float | None = None,
-    legend: Legend | bool | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     sort: Literal["ascending", "descending"] | SortOrder | None = "ascending",
     orientation: Literal["horizontal", "vertical"] = "horizontal",
     **attributes: Unpack[PlotAttributes],
@@ -117,7 +117,7 @@ ratio](https://en.wikipedia.org/wiki/Golden_ratio)).
 The outer width of the plot in pixels, including margins. Defaults to
 700.
 
-`legend` [Legend](reference/inspect_viz.plot.qmd#legend) \| bool \| None  
+`legend` [Legend](reference/inspect_viz.plot.qmd#legend) \| NotGiven \| None  
 Options for the legend. Pass None to disable the legend.
 
 `sort` Literal\['ascending', 'descending'\] \| SortOrder \| None  

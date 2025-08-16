@@ -53,22 +53,28 @@ enables you to compare scores across models and a boolean factor:
 ``` python
 from inspect_viz import Data
 from inspect_viz.view.beta import scores_by_factor
+from inspect_viz.plot import legend
 
 evals = Data.from_file("evals-hint.parquet")
-scores_by_factor(evals, "task_arg_hint", ("No hint", "Hint"))
+scores_by_factor(
+    evals,
+    "task_arg_hint",
+    ("No hint", "Hint"),
+    legend=legend("color", frame_anchor="bottom-right", border=False, inset=20),
+)
 ```
 
-The [`tool_calls()`](view-tool-calls.qmd) view enables you to visualize
-tool calls by sample:
+The [`sample_tool_calls()`](view-sample-tool-calls.qmd) view enables you
+to visualize tool calls by sample:
 
 ``` python
-from inspect_viz.view.beta import tool_calls
+from inspect_viz.view.beta import sample_tool_calls
 
 tools = Data.from_file("cybench_tools.parquet")
-tool_calls(tools)
+sample_tool_calls(tools, legend=legend("color", frame_anchor="bottom", border=False))
 ```
 
-Available views include:
+\` Available views include:
 
 | View | Description |
 |----|----|
@@ -78,7 +84,8 @@ Available views include:
 | [`scores_timeline()`](view-scores-timeline.qmd) | Scatter plot with eval scores by model, organization, and release date. Filterable by evaluation and organization. |
 | [`scores_heatmap()`](view-scores-heatmap.qmd) | Heatmap with values for comparing scores across model and task. |
 | [`scores_by_model()`](view-scores-by-model.qmd) | Bar plot for comparing model scores on a single eval. |
-| [`tool_calls()`](view-tool-calls.qmd) | Heat map visualising tool calls over evaluation turns. |
+| [`sample_tool_calls()`](view-sample-tool-calls.qmd) | Heat map visualising tool calls over evaluation turns. |
+| [`sample_heatmap()`](view-sample-heatmap.qmd) | Heat map visualising sample scores. |
 
 ## Plots
 
@@ -728,6 +735,56 @@ There are several other tick related options. Here
 - `[x,y]_tick_format` — How to format inputs for axis tick labels (a
   [d3-format](https://d3js.org/d3-format) or
   [d3-time-format](https://d3js.org/d3-time-format)).
+
+## Sorting
+
+You may sort a mark’s index, which changes the effective order of the
+data presented by that mark. This is useful for two scenarios:
+
+1.  Sorting an ordinal scale (for example, sorting the x or y axis to
+    control the order in which elements are arranged). For example, in
+    the `heatmap` implementation, we sort the x and y axis in order to
+    position the highest score values in the top right corner of the
+    heat map:
+
+    ``` python
+    plot(
+        cell_mark(
+            data,
+            x=x_value,
+            y=y_value,
+            fill=avg(color_value),
+            sort={
+                "y": {"value": "fill", "reduce": "sum", "reverse": True},
+                "x": {"value": "fill", "reduce": "sum", "reverse": False},
+            }
+        )
+    )
+    ```
+
+    This example will sort the ordinal values of each axes.
+
+2.  Sorting the entire dataset to control the order in which the marks
+    are drawn. This effectively controls the z-index of the mark, making
+    it useful when there are overlapping marks and you’d like to control
+    the order.
+
+    ``` python
+    plot(
+        dot(
+            penguins, 
+            x="species, 
+            r="body_mass",
+            y="flipper_length",
+            sort="body_mass",
+            reverse=True
+        )
+    )
+    ```
+
+    This example sorts the dot marks from largest to smallest, resulting
+    in the smaller dot markş being drawn on top of the larger dots
+    marks.
 
 ## Legends
 
@@ -2477,7 +2534,7 @@ plotted by “task_display_name” (`fx`) and “model_display_name” (`x`). By
 default, confidence intervals are also plotted (disable this with
 `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_task.py#L18)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_task.py#L20)
 
 ``` python
 def scores_by_task(
@@ -2492,6 +2549,7 @@ def scores_by_task(
     marks: Marks | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -2532,6 +2590,9 @@ The outer width of the plot in pixels, including margins. Defaults to
 The outer height of the plot in pixels, including margins. The default
 is width / 1.618 (the [golden
 ratio](https://en.wikipedia.org/wiki/Golden_ratio))
+
+`legend` [Legend](reference/inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
 
 `**attributes` Unpack\[[PlotAttributes](reference/inspect_viz.plot.qmd#plotattributes)\]  
 Additional `PlotAttributes`. By default, the `margin_bottom` are is set
@@ -2606,7 +2667,7 @@ Summarize eval scores using a bar plot. By default, scores (`y`) are
 plotted by “model_display_name” (`y`). By default, confidence intervals
 are also plotted (disable this with `y_ci=False`).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_model.py#L18)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_model.py#L19)
 
 ``` python
 def scores_by_model(
@@ -2624,6 +2685,7 @@ def scores_by_model(
     marks: Marks | None = None,
     width: float | None = None,
     height: float | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -2673,6 +2735,9 @@ The outer width of the plot in pixels, including margins. Defaults to
 The outer height of the plot in pixels, including margins. The default
 is width / 1.618 (the [golden
 ratio](https://en.wikipedia.org/wiki/Golden_ratio))
+
+`legend` [Legend](reference/inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
 
 `**attributes` Unpack\[[PlotAttributes](reference/inspect_viz.plot.qmd#plotattributes)\]  
 Additional `PlotAttributes`. By default, the `y_inset_top` and
@@ -2742,7 +2807,7 @@ this is “task_arg_hint”).
 Summarize eval scores with a factor of variation (e.g ‘No hint’
 vs. ‘Hint’).
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_by_factor.py#L13)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_by_factor.py#L16)
 
 ``` python
 def scores_by_factor(
@@ -2760,6 +2825,7 @@ def scores_by_factor(
     marks: Marks | None = None,
     width: float | Param | None = None,
     height: float | Param | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -2810,6 +2876,9 @@ The outer width of the plot in pixels, including margins. Defaults to
 `height` float \| [Param](reference/inspect_viz.qmd#param) \| None  
 The outer height of the plot in pixels, including margins. Default to 65
 pixels for each item on the “y” axis.
+
+`legend` [Legend](reference/inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
 
 `**attributes` Unpack\[[PlotAttributes](reference/inspect_viz.plot.qmd#plotattributes)\]  
 Additional \`PlotAttributes
@@ -2881,7 +2950,7 @@ organization will filter the plot by that organization.
 
 Eval scores by model, organization, and release date.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_timeline.py#L28)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_timeline.py#L28)
 
 ``` python
 def scores_timeline(
@@ -3006,7 +3075,7 @@ from inspect_viz import Data
 from inspect_viz.view.beta import scores_heatmap
 
 evals = Data.from_file("evals.parquet")
-scores_heatmap(evals, height=200, legend=True)
+scores_heatmap(evals, height=200)
 ```
 
 ## Data Preparation
@@ -3049,7 +3118,7 @@ isn’t prepared with `log_viewer()` and `model_info()`).
 
 Creates a heatmap plot of success rate of eval data.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_scores_heatmap.py#L33)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_scores_heatmap.py#L15)
 
 ``` python
 def scores_heatmap(
@@ -3065,7 +3134,7 @@ def scores_heatmap(
     marks: Marks | None = None,
     height: float | None = None,
     width: float | None = None,
-    legend: Legend | bool | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     sort: Literal["ascending", "descending"] | SortOrder | None = "ascending",
     orientation: Literal["horizontal", "vertical"] = "horizontal",
     **attributes: Unpack[PlotAttributes],
@@ -3112,7 +3181,7 @@ ratio](https://en.wikipedia.org/wiki/Golden_ratio)).
 The outer width of the plot in pixels, including margins. Defaults to
 700.
 
-`legend` [Legend](reference/inspect_viz.plot.qmd#legend) \| bool \| None  
+`legend` [Legend](reference/inspect_viz.plot.qmd#legend) \| NotGiven \| None  
 Options for the legend. Pass None to disable the legend.
 
 `sort` Literal\['ascending', 'descending'\] \| SortOrder \| None  
@@ -3135,20 +3204,20 @@ The [Scores Heatmap](examples/inspect/scores-heatmap/index.qmd) example
 demonstrates how this view was implemented using lower level plotting
 components.
 
-# Tool Calls
+# Sample Tool Calls
 
 
 ## Overview
 
-The `tool_calls()` function creates a heat map visualising tool calls
-over evaluation turns.
+The `sample_tool_calls()` function creates a heat map visualising tool
+calls over evaluation turns for each sample.
 
 ``` python
 from inspect_viz import Data
-from inspect_viz.view.beta import tool_calls
+from inspect_viz.view.beta import sample_tool_calls
 
 tools = Data.from_file("cybench_tools.parquet")
-tool_calls(tools)
+sample_tool_calls(tools)
 ```
 
 ## Data Preparation
@@ -3161,7 +3230,6 @@ visualization:
 
 ``` python
 from inspect_ai.analysis import messages_df, log_viewer, model_info, prepare, EvalModel, MessageColumns, SampleSummary
-
 
 # read messages from log
 log = "<path-to-log>.eval"
@@ -3203,10 +3271,10 @@ usage).
 
 Heat map visualising tool calls over evaluation turns.
 
-[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/4f22634e35c5dd4410d75f3db2210791c92d61f9/src/inspect_viz/view/beta/_tool_calls.py#L15)
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_sample_tool_calls.py#L18)
 
 ``` python
-def tool_calls(
+def sample_tool_calls(
     data: Data,
     x: str = "order",
     y: str = "id",
@@ -3219,6 +3287,7 @@ def tool_calls(
     marks: Marks | None = None,
     width: float | None = None,
     height: float | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
     **attributes: Unpack[PlotAttributes],
 ) -> Component
 ```
@@ -3264,6 +3333,9 @@ The outer height of the plot in pixels, including margins. The default
 is width / 1.618 (the [golden
 ratio](https://en.wikipedia.org/wiki/Golden_ratio))
 
+`legend` [Legend](reference/inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
+
 `**attributes` Unpack\[[PlotAttributes](reference/inspect_viz.plot.qmd#plotattributes)\]  
 Additional `PlotAttributes`. By default, the `margin_top` is set to 0,
 `margin_left` to 20, `margin_right` to 100, `color_label` is “Tool”,
@@ -3272,7 +3344,160 @@ Additional `PlotAttributes`. By default, the `margin_top` is set to 0,
 
 ## Implementation
 
-The [Tool Calls](examples/inspect/tool-calls/index.qmd) example
+The [Sample Tool Calls](examples/inspect/sample-tool-calls/index.qmd)
+example demonstrates how this view was implemented using lower level
+plotting components.
+
+# Sample Heatmap
+
+
+## Overview
+
+The `sample_heatmap()`function renders a heatmap for viewing individual
+sample scores. Each sample is shown along one axis, models are shown
+along the other axis.
+
+``` python
+from inspect_viz import Data
+from inspect_viz.view.beta import sample_heatmap
+
+samples = Data.from_file("writing_bench_samples.parquet")
+sample_heatmap(
+  samples, 
+  score_value="score_multi_scorer_wrapper", 
+  height=200
+)
+```
+
+## Data Preparation
+
+Above we read the data for the plot from a parquet file. This file was
+in turn created by:
+
+1.  Reading logs into a dataframe with `samples_df`, specifying the
+    SampleSummaryColumns and the EvaalModel columns.
+
+2.  Using the `prepare()` function to `model_info()` and `log_viewer()`
+    columns to the data frame.
+
+``` python
+from inspect_ai.analysis import samples_df, log_viewer, model_info, prepare, EvalModel, SampleSummary
+
+df = samples_df("logs", columns=SampleSummary + EvalModel)
+df = prepare(df, 
+    model_info(), 
+    log_viewer("sample", {"logs": "https://samples.meridianlabs.ai/"}),
+  )
+df.to_parquet("writing_bench_samples.parquet")
+```
+
+If your samples are using non-numeric values (for example ‘C’ and ‘I’ to
+represent correct and incorrect), you can use the `score_to_float`
+prepare function in `inspect.analysis` to convert the score values to
+floats. For example:
+
+``` python
+from inspect_ai.analysis import samples_df, log_viewer, model_info, score_to_float, prepare, EvalModel, SampleSummary
+
+df = samples_df("logs", columns=SampleSummary + EvalModel)
+df = prepare(df, 
+    model_info(), 
+    log_viewer("sample", {"logs": "https://samples.meridianlabs.ai/"}),
+    score_to_float("score_includes")
+  )
+```
+
+Note that both the log viewer links and model names are optional (the
+plot will render without links and use raw model strings if the data
+isn’t prepared with `log_viewer()` and `model_info()`).
+
+## Function Reference
+
+Creates a heatmap plot of success rate of eval data.
+
+[Source](https://github.com/meridianlabs-ai/inspect_viz/blob/5cf5a16581af368184b964d7563a28208d0aaf3d/src/inspect_viz/view/beta/_sample_heatmap.py#L15)
+
+``` python
+def sample_heatmap(
+    data: Data,
+    id: str = "id",
+    id_label: str | None | NotGiven = None,
+    model_name: str = "model_display_name",
+    model_label: str | None | NotGiven = None,
+    score_value: str | None = None,
+    cell: CellOptions | None = None,
+    tip: bool = True,
+    title: str | Title | None = None,
+    marks: Marks | None = None,
+    height: float | None = None,
+    width: float | None = None,
+    legend: Legend | NotGiven | None = NOT_GIVEN,
+    sort: Literal["ascending", "descending"] | SortOrder | None = "ascending",
+    orientation: Literal["horizontal", "vertical"] = "horizontal",
+    **attributes: Unpack[PlotAttributes],
+) -> Component
+```
+
+`data` [Data](reference/inspect_viz.qmd#data)  
+Evals data table.
+
+`id` str  
+Name of column to use for displaying the sample id.
+
+`id_label` str \| None \| NotGiven  
+x-axis label (defaults to None).
+
+`model_name` str  
+Name of column to use for rows.
+
+`model_label` str \| None \| NotGiven  
+y-axis label (defaults to None).
+
+`score_value` str \| None  
+Name of the column to use as values to determine cell color.
+
+`cell` [CellOptions](reference/inspect_viz.view.qmd#celloptions) \| None  
+Options for the cell marks.
+
+`tip` bool  
+Whether to show a tooltip with the value when hovering over a cell
+(defaults to True).
+
+`title` str \| [Title](reference/inspect_viz.mark.qmd#title) \| None  
+Title for plot (`str` or mark created with the `title()` function)
+
+`marks` [Marks](reference/inspect_viz.mark.qmd#marks) \| None  
+Additional marks to include in the plot.
+
+`height` float \| None  
+The outer height of the plot in pixels, including margins. The default
+is width / 1.618 (the [golden
+ratio](https://en.wikipedia.org/wiki/Golden_ratio)).
+
+`width` float \| None  
+The outer width of the plot in pixels, including margins. Defaults to
+700.
+
+`legend` [Legend](reference/inspect_viz.plot.qmd#legend) \| NotGiven \| None  
+Options for the legend. Pass None to disable the legend.
+
+`sort` Literal\['ascending', 'descending'\] \| SortOrder \| None  
+Sort order for the x and y axes. If ascending, the highest values will
+be sorted to the top right. If descending, the highest values will
+appear in the bottom left. If None, no sorting is applied. If a
+SortOrder is provided, it will be used to sort the x and y axes.
+
+`orientation` Literal\['horizontal', 'vertical'\]  
+The orientation of the heatmap. If “horizontal”, the tasks will be on
+the x-axis and models on the y-axis. If “vertical”, the tasks will be on
+the y-axis and models on the x-axis.
+
+`**attributes` Unpack\[[PlotAttributes](reference/inspect_viz.plot.qmd#plotattributes)\]  
+Additional \`PlotAttributes
+
+## Implementation
+
+The [Sample Heatmap](examples/inspect/sample-heatmap/index.qmd) example
 demonstrates how this view was implemented using lower level plotting
 components.
 
@@ -3776,11 +4001,11 @@ Place the value as text centered in the cell.
 Line 28  
 Remove plot padding so the inset along controls spacing between cells.
 
-# Tool Calls
+# Sample Tool Calls
 
 
 This example illustrates the code behind the
-[`tool_calls()`](../../../reference/inspect_viz.view.qmd#tool_calls)
+[`sample_tool_calls()`](../../../reference/inspect_viz.view.qmd#sample_tool_calls)
 pre-built view function. If you want to include this plot in your
 notebooks or websites you should start with that function rather than
 the lower-level code below.
@@ -3835,7 +4060,7 @@ plot(
 
 Line 7  
 Read tool call data (see [Data
-Preparation](../../../view-tool-calls.qmd#data-preparation) for
+Preparation](../../../view-sample-tool-calls.qmd#data-preparation) for
 details).
 
 Lines 12,17  
@@ -3856,6 +4081,88 @@ Set some custom labels and ensure that tools follow our designed order.
 
 Line 37  
 Specify which tools we should show and in what order.
+
+# Sample Heatmap
+
+
+This example illustrates the code behind the
+[`sample_heatmap()`](../../../view-sample-heatmap.qmd) pre-built view
+function. If you want to include this plot in your notebooks or websites
+you should start with that function rather than the lower-level code
+below.
+
+**Code**
+
+``` python
+from inspect_viz import Data
+from inspect_viz.plot import plot, legend
+from inspect_viz.mark import cell, text
+from inspect_viz.transform import avg
+from inspect_ai.analysis import samples_df,SampleSummary, EvalModel
+from inspect_ai.analysis import prepare, model_info, log_viewer
+
+
+samples_data = Data.from_file("writing_bench_samples.parquet")
+
+channels = {
+    "Model": "model_display_name",
+    "Score": "score_multi_scorer_wrapper",
+    "Log viewer": "log_viewer"
+}
+
+plot(
+    cell(
+        samples_data,
+        x="id",
+        y="model_display_name",
+        fill="score_multi_scorer_wrapper",
+        channels=channels,
+        tip=True,
+        inset=1, 
+        sort={
+            "y": {  "value": "fill",
+                    "reduce": "sum",
+                    "reverse": True
+                },
+            "x": {  "value": "fill",
+                    "reduce": "sum",
+                    "reverse": False
+                }
+        }   
+    ),
+    padding=0,
+    color_scheme="greens",
+    height=250,
+    margin_left=50,
+    x_label=None,
+    y_label=None,
+    x_scale="band",
+    legend=legend("color", frame_anchor="bottom", border=False)
+
+)
+```
+
+Line 9  
+Read the data (the parquet file was generated using `samples_df` with
+`SampleSummary` and `EvalModel` column definitions.)
+
+Lines 11-14  
+Channels are used to customize what is display in the tooltip for each
+cell.
+
+Line 18  
+Use a cell mark to create each colored cell.
+
+Line 22  
+The fill is used to compute the color for each cell.
+
+Lines 27-30  
+Sorts the y-axis by the total score for each model, with the highest
+score at the top.
+
+Lines 31-33  
+Sorts the x-axis by the total score for each question, witht he highest
+score at the right.
 
 # Penguins Explorer
 
