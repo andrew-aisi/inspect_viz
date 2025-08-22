@@ -1335,7 +1335,7 @@
     "href": "index.html#installation",
     "title": "Inspect Viz",
     "section": "Installation",
-    "text": "Installation\nFirst, install the inspect_viz package from GitHub as follows:\npip install git+https://github.com/meridianlabs-ai/inspect_viz\nInspect Viz plots are interactive Jupyter Widgets and can be authored in variety of ways:\n\nIn any Jupyter Notebook (JupyterLab, VS Code, Colab, etc.)\nIn VS Code with the Jupyter: Run Current File in Interactive Window command.\nIn VS Code within a Quarto executable markdown document.\n\nSee the article on LLM Assistance for best practices on using language models to help with creating plots. See the articles on Publishing for details on including plots in documents as static images or within websites and dashboards as interactive widgets.",
+    "text": "Installation\nFirst, install the inspect_viz package as follows:\npip install inspect-viz\nInspect Viz plots are interactive Jupyter Widgets and can be authored in variety of ways:\n\nIn any Jupyter Notebook (JupyterLab, VS Code, Colab, etc.)\nIn VS Code with the Jupyter: Run Current File in Interactive Window command.\nIn VS Code within a Quarto executable markdown document.\n\nSee the article on LLM Assistance for best practices on using language models to help with creating plots. See the articles on Publishing for details on including plots in documents as static images or within websites and dashboards as interactive widgets.",
     "crumbs": [
       "Getting Started",
       "Welcome"

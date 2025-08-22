@@ -18,10 +18,10 @@ or view the underlying Inspect log for the evals.
 
 ## Installation
 
-First, install the `inspect_viz` package from GitHub as follows:
+First, install the `inspect_viz` package as follows:
 
 ``` bash
-pip install git+https://github.com/meridianlabs-ai/inspect_viz
+pip install inspect-viz
 ```
 
 Inspect Viz plots are interactive Jupyter Widgets and can be authored in
