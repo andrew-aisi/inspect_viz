@@ -22,7 +22,7 @@ To work on development of Inspect Viz, clone the repository and install with the
 
 ```bash
 git clone https://github.com/meridianlabs-ai/inspect_viz
-cd inspect_ai
+cd inspect_viz
 pip install -e ".[dev]"
 ```
 
