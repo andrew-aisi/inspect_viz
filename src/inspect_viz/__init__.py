@@ -24,4 +24,5 @@ __all__ = [
     "options",
     "options_context",
     "Options",
+    "__version__",
 ]
