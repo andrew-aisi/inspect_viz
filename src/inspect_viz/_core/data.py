@@ -1,6 +1,6 @@
 import os
 from os import PathLike
-from typing import Any, cast
+from typing import Any, Union, cast
 
 import narwhals as nw
 import pandas as pd
@@ -31,7 +31,7 @@ class Data:
         return Data(df)
 
     @classmethod
-    def from_file(cls, file: str | PathLike[str]) -> "Data":
+    def from_file(cls, file: Union[str, PathLike[str]]) -> "Data":
         """Create `Data` from a data file (e.g. csv, parquet, feather, etc.).
 
         Args:
@@ -39,7 +39,7 @@ class Data:
         """
         return Data(file)
 
-    def __init__(self, data: IntoDataFrame | str | PathLike[str]) -> None:
+    def __init__(self, data: Union[IntoDataFrame, str, PathLike[str]]) -> None:
         # assign a unique table name
         self._table = uuid()
 
