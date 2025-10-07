@@ -1,5 +1,6 @@
 from typing import Literal
 
+import pandas as pd
 from typing_extensions import Unpack
 
 from inspect_viz import Component, Data
@@ -36,7 +37,7 @@ def scores_timeline(
     score_stderr: str = "score_headline_stderr",
     organizations: list[str] | None = None,
     filters: bool | list[Literal["task", "organization"]] = True,
-    ci: float | bool = 0.95,
+    ci: float | bool | NotGiven = NOT_GIVEN,
     time_label: str = "Release Date",
     score_label: str = "Score",
     eval_label: str = "Eval",
@@ -77,17 +78,38 @@ def scores_timeline(
     if task_name == "task_display_name" and task_name not in data.columns:
         task_name = "task_name"
 
+    # resolve the confidence interval
+    max = data.column_max(score_stderr)
+    min = data.column_min(score_stderr)
+    if isinstance(ci, NotGiven):
+        # See if the stderr field contains actual values
+        if pd.isna(max) or pd.isna(min):
+            # no values, just disable CI
+            ci = False
+        else:
+            # use the default ci
+            ci = 0.95
+
+    # Validate that stderr values are present if ci is requested
+    if ci is not False and (pd.isna(max) or pd.isna(min)):
+        raise ValueError(
+            f"Confidence intervals requested (ci={ci}) but no values found in '{score_stderr}' column."
+        )
+
     # validate the required fields
-    for field in [
+    required_fields = [
         model_name,
         model_organization,
         model_release_date,
         task_name,
         score_name,
         score_value,
-        score_stderr,
-    ]:
-        if field not in data.columns:
+    ]
+    if ci is not False:
+        required_fields.append(score_stderr)
+
+    for field in required_fields:
+        if field is not None and field not in data.columns:
             raise ValueError(f"Field '{field}' not provided in passed 'data'.")
 
     model_date_transform: str | Transform = model_release_date
@@ -133,8 +155,10 @@ def scores_timeline(
         "Release Date": model_release_date,
         "Scorer": score_name,
         "Score": score_value,
-        "Stderr": score_stderr,
     }
+    if ci is not False:
+        channels["Stderr"] = score_stderr
+
     resolve_log_viewer_channel(data, channels)
 
     # start with dot plot
@@ -197,10 +221,18 @@ def scores_timeline(
             )
         )
 
+    # resolve the y-axis domain
+    y_min = data.column_min(score_value)
+    y_max = data.column_max(score_value)
+    if y_min >= 0 and y_max <= 1.0:
+        y_domain = [0, 1.0]
+    else:
+        y_domain = [y_min + (0.1 * y_min), y_max + (0.1 * y_max)]
+
     # resolve defaults
     defaults: PlotAttributes = {
         "x_domain": "fixed",
-        "y_domain": [0, 1.0],
+        "y_domain": y_domain,
         "y_inset_top": 10,
         "color_label": "Organizations",
         "color_domain": organizations or "fixed",
