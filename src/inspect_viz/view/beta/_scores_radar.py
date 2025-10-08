@@ -1,10 +1,11 @@
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
-from typing_extensions import Unpack
+from typing_extensions import TypedDict, Unpack
 
+from inspect_viz._core import Param
 from inspect_viz._core.component import Component
 from inspect_viz._core.data import Data
 from inspect_viz._core.selection import Selection
@@ -12,10 +13,20 @@ from inspect_viz._util.channels import resolve_log_viewer_channel
 from inspect_viz._util.notgiven import NOT_GIVEN, NotGiven
 from inspect_viz.mark import circle, line, text
 from inspect_viz.mark._title import Title
+from inspect_viz.mark._types import TextOverflow, TextStyles
 from inspect_viz.plot import plot
 from inspect_viz.plot._attributes import PlotAttributes
 from inspect_viz.plot._legend import Legend
 from inspect_viz.plot._legend import legend as create_legend
+
+
+class LabelStyles(TypedDict, total=False):
+    """Label styling options. It's a subset of `TextStyles`."""
+
+    line_width: float | Param
+    """The line width in ems (e.g., 10 for about 20 characters); defaults to infinity, disabling wrapping and clipping. If **text_overflow** is null, lines will be wrapped at the specified length. If a line is split at a soft hyphen (\xad), a hyphen (-) will be displayed at the end of the line. If **text_overflow** is not null, lines will be clipped according to the given strategy."""
+    text_overflow: TextOverflow | Param
+    """Text overflow behavior."""
 
 
 def scores_radar_df(
@@ -124,14 +135,52 @@ def compute_angles(num_axes: int, endpoint: bool = True) -> NDArray[np.floating[
     return np.linspace(0, 2 * np.pi, num_axes, endpoint=endpoint)
 
 
-def labels_coordinates(metrics: list[str]) -> dict[str, list[str] | list[float]]:
-    """Computes coordinates for labels to be used in a radar chart."""
+def labels_coordinates(
+    metrics: list[str], width: float = 400, margin: float = 0
+) -> list[dict[str, Any]]:
+    """Computes coordinates for labels to be used in a radar chart.
+
+    Args:
+        metrics: List of metric names for label text.
+        width: Chart width in pixels, used to calculate radius.
+        margin: Margin in pixels (defaults to 0) to substract from width.
+
+    Returns:
+        List of dictionaries, each containing text mark arguments for one label.
+    """
     angles = compute_angles(len(metrics), endpoint=False)
-    return {
-        "metric": metrics,
-        "x": (1.24 * np.cos(angles)).tolist(),
-        "y": (1.24 * np.sin(angles)).tolist(),
-    }
+
+    # 15px offset regardless of chart size
+    chart_radius_px = (width - 2 * margin) / 2
+    label_offset_px = 15
+
+    # convert to coordinate space: boundary circle is at radius 1.0
+    label_radius = 1.0 + (label_offset_px / chart_radius_px)
+
+    labels = []
+    for metric, angle in zip(metrics, angles, strict=True):
+        angle_deg = np.degrees(angle) % 360
+
+        # determine frame_anchor based on quadrant
+        if 315 <= angle_deg or angle_deg < 45:  # right side
+            frame_anchor = "left"
+        elif 45 <= angle_deg < 135:  # top
+            frame_anchor = "bottom"
+        elif 135 <= angle_deg < 225:  # left side
+            frame_anchor = "right"
+        else:  # 225 <= angle_deg < 315, bottom
+            frame_anchor = "top"
+
+        labels.append(
+            {
+                "metric": [metric],
+                "x": [float(label_radius * np.cos(angle))],
+                "y": [float(label_radius * np.sin(angle))],
+                "frame_anchor": frame_anchor,
+            }
+        )
+
+    return labels
 
 
 def axes_coordinates(num_axes: int) -> dict[str, list[float]]:
@@ -160,8 +209,9 @@ def scores_radar(
     data: Data,
     model: str = "model_display_name",
     title: str | Title | None = None,
-    width: float | None = 400,
+    width: float = 400,
     legend: Legend | NotGiven | None = NOT_GIVEN,
+    label_styles: LabelStyles | None = None,
     **attributes: Unpack[PlotAttributes],
 ) -> Component:
     """
@@ -171,10 +221,12 @@ def scores_radar(
         data: A `Data` object prepared using the `scores_radar_df` function.
         model: Name of field holding the model (defaults to "model_display_name").
         title: Title for plot (`str` or mark created with the `title()` function)
-        width: The outer width of the plot in pixels, including margins. Defaults to 500.
+        width: The outer width of the plot in pixels, including margins. Defaults to 400.
                Height is automatically set to match width to maintain square aspect ratio.
         legend: Options for the legend. Pass None to disable the legend.
+        label_styles: Label styling options. It accepts `line_width` and `text_overflow`.
         **attributes: Additional `PlotAttributes`.
+                      Use `margin` to set custom margin (defaults to max(30, width * 0.12)).
     """
     if "model_display_name" not in data.columns:
         model = "model"
@@ -184,10 +236,20 @@ def scores_radar(
     if missing_columns:
         raise ValueError(f"Required columns not found in data: {missing_columns}")
 
+    # use margin from attributes or calculate default
+    margin_attr = attributes.get("margin")
+    plot_margin = int(margin_attr) if margin_attr else max(60, int(width * 0.12))
+
+    # wrap label text if any metric name is longer than 10 characters
+    if not label_styles and any(
+        len(metric) > 10 for metric in data.column_unique("metric")
+    ):
+        label_styles = LabelStyles(line_width=8)
+
     metrics = data.column_unique("metric")
     axes = axes_coordinates(num_axes=len(metrics))
     grid_circles = grid_circles_coordinates()
-    labels = labels_coordinates(metrics=metrics)
+    labels = labels_coordinates(metrics=metrics, width=width, margin=plot_margin)
 
     model_selection = Selection.single()
 
@@ -264,11 +326,16 @@ def scores_radar(
             tip=False,
         ),
         # axis labels
-        text(
-            x=labels["x"],
-            y=labels["y"],
-            text=labels["metric"],
-        ),
+        *[
+            text(
+                x=label["x"],
+                y=label["y"],
+                text=label["metric"],
+                frame_anchor=label["frame_anchor"],
+                styles=cast(TextStyles, label_styles) if label_styles else None,
+            )
+            for label in labels
+        ],
     ]
 
     plot_legend = (
@@ -279,7 +346,7 @@ def scores_radar(
 
     # resolve default attributes
     defaults: PlotAttributes = {
-        "margin": max(30, int(width * 0.12)) if width else 36,
+        "margin": plot_margin,
         "x_axis": False,
         "y_axis": False,
     }
