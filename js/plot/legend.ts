@@ -199,7 +199,6 @@ const applyLegendStyles = (legendEl: HTMLElement): void => {
     } else {
         legendContainerEl.style.padding = '0.3em';
     }
-    legendContainerEl.style.position = 'absolute';
     legendContainerEl.style.width = 'max-content';
 
     // Background and border
@@ -295,7 +294,7 @@ const responsiveScaleLegend = (
 ): void => {
     // Apply the anchor styles
     const anchor = options.frameAnchor || 'right';
-    const config = kLegendAnchorConfig[anchor];
+    const config = getAnchorConfig(anchor, options);
     Object.assign(legendContainerEl.style, config.position);
     if (config.centerTransform) {
         legendContainerEl.style.transform = 'translateX(-50%)';
@@ -329,10 +328,15 @@ const responsiveScaleLegend = (
         return;
     }
 
-    // Compute the scale factor based the based with vs the actual width
+    // Compute the scale factor based on the base width vs the actual width
     const parentRect = parentEl.getBoundingClientRect();
-    const actualWidth = parentRect.width;
-    const scaleFactor = actualWidth / parseFloat(baseWidth);
+    const svgWidth = svgEl.getBoundingClientRect().width;
+    const rawScaleFactor = svgWidth / parseFloat(baseWidth);
+
+    // Calculate scale factor
+    // Don't allow the scaleFactor to grow (since there is a max
+    // size for a plot, we shouldn't scale the legend beyond that)
+    const scaleFactor = Math.min(1, rawScaleFactor);
 
     // Accumulate any styles
     const styles: Partial<CSSStyleDeclaration> = {};
@@ -454,38 +458,62 @@ const kParentAnchorConfig: Record<FrameAnchor, { paddingType: string }> = {
     middle: { paddingType: '' },
 };
 
-// The style information for the legend element based on the anchor position.
-const kLegendAnchorConfig: Record<
-    FrameAnchor,
-    {
-        position: { [key: string]: string };
-        parentPadding?: string;
-        centerTransform?: boolean;
-        transformOrigin?: string;
+interface AnchorConfig {
+    position: { [key: string]: string };
+    parentPadding?: string;
+    centerTransform?: boolean;
+    transformOrigin?: string;
+}
+
+const getAnchorConfig = (anchor: FrameAnchor, options: ResolvedLegendOptions): AnchorConfig => {
+    switch (anchor) {
+        case 'top-left':
+            return {
+                position: { position: 'absolute', top: '0', left: '0' },
+                transformOrigin: 'top left',
+            };
+        case 'top':
+            return {
+                position: { position: 'absolute', top: '0', left: '50%' },
+                centerTransform: true,
+                transformOrigin: 'top center',
+            };
+        case 'top-right':
+            return {
+                position: { position: 'absolute', top: '0', right: '0' },
+                transformOrigin: 'top right',
+            };
+        case 'right':
+            if (options.inset) {
+                return { position: { position: 'absolute', right: '0' } };
+            } else {
+                return { position: {} };
+            }
+        case 'bottom-right':
+            return {
+                position: { position: 'absolute', bottom: '0', right: '0' },
+                transformOrigin: 'bottom right',
+            };
+        case 'bottom':
+            return {
+                position: { position: 'absolute', bottom: '0', left: '50%' },
+                centerTransform: true,
+                transformOrigin: 'bottom center',
+            };
+        case 'bottom-left':
+            return {
+                position: { position: 'absolute', bottom: '0', left: '0' },
+                transformOrigin: 'bottom left',
+            };
+        case 'left':
+            return {
+                position: { position: 'absolute', left: '0' },
+                transformOrigin: 'center left',
+            };
+        case 'middle':
+            return { position: { position: 'absolute' } };
     }
-> = {
-    'top-left': { position: { top: '0', left: '0' }, transformOrigin: 'top left' },
-    top: {
-        position: { top: '0', left: '50%' },
-        centerTransform: true,
-        transformOrigin: 'top center',
-    },
-    'top-right': { position: { top: '0', right: '0' }, transformOrigin: 'top right' },
-    right: {
-        position: { right: '0', transformOrigin: 'center right' },
-    },
-    'bottom-right': { position: { bottom: '0', right: '0' }, transformOrigin: 'bottom right' },
-    bottom: {
-        position: { bottom: '0', left: '50%' },
-        centerTransform: true,
-        transformOrigin: 'bottom center',
-    },
-    'bottom-left': { position: { bottom: '0', left: '0' }, transformOrigin: 'bottom left' },
-    left: {
-        position: { left: '0' },
-        transformOrigin: 'center left',
-    },
-    middle: { position: {} },
+    return { position: { position: 'absolute' } };
 };
 
 function emplaceLegendContainers(frameLegends: Record<string, HTMLElement[]>, specEl: HTMLElement) {
