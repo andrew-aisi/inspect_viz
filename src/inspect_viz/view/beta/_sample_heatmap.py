@@ -68,6 +68,8 @@ def sample_heatmap(
             # fallback to using the raw model string
             model_name = "model"
             margin_left = 220
+    else:
+        margin_left = 120
 
     # Compute the color domain
     min_value = data.column_min(score_value)

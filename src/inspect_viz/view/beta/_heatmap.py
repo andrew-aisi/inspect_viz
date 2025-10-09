@@ -147,7 +147,7 @@ def heatmap(
             legend="color",
             frame_anchor="bottom",
             columns="auto",
-            width=370,
+            width=(width / 2 if width is not None else 370),
             border=False,
             background=False,
         )
