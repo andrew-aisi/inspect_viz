@@ -37,11 +37,11 @@ from inspect_ai.analysis import (
 )
 
 df = evals_df("logs")
-df = prepare(df, 
+df = prepare(df, [
     model_info(),
     frontier(),
-    log_viewer("eval", {"logs": "https://samples.meridianlabs.ai/"}),
-)
+    log_viewer("eval", {"logs": "https://samples.meridianlabs.ai/"})
+])
 df.to_parquet("{{< meta datafile>}}")
 ```
 
